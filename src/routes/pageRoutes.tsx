@@ -28,11 +28,14 @@ export const protectedRoutes: RouteObject[] = [
     children: [
       {
         path: 'prompt',
-        element: <lazyRoutes.MyPromtPage />,
+        element: <lazyRoutes.MyPromptPage />,
       },
       { path: 'review', element: <lazyRoutes.MyReviewPage /> },
       { path: 'pay', element: <lazyRoutes.MyPayPage /> },
-      { path: 'message', element: <lazyRoutes.MyMessagePage /> },
+      { path: 'message/message', element: <lazyRoutes.MyMessagePage type="message" /> },
+      { path: 'message/message/:id', element: <lazyRoutes.MyMessageDetailPage type="message" /> },
+      { path: 'message/notification', element: <lazyRoutes.MyMessagePage type="notification" /> },
+      { path: 'message/notification/:id', element: <lazyRoutes.MyMessageDetailPage type="notification" /> },
       { path: 'info', element: <lazyRoutes.MyInfoPage /> },
     ],
   },
