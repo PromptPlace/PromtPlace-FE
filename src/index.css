@@ -78,3 +78,17 @@
     cursor: pointer;
   }
 }
+
+::-webkit-scrollbar {
+  width: 16px;
+}
+
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+::-webkit-scrollbar-thumb {
+  height: 16px;
+  background: #999898;
+  border-radius: 15px;
+}
