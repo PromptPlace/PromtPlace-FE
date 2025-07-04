@@ -1,3 +1,4 @@
+import ModelButton from '@components/Button/ModelButton';
 import PrimaryButton from '@components/Button/PrimaryButton';
 
 const TestPage = () => {
@@ -14,6 +15,9 @@ const TestPage = () => {
       <PrimaryButton buttonType="square" text="내역보기" onClick={() => {}} />
       <PrimaryButton buttonType="square" text="로그아웃" onClick={() => {}} />
       <PrimaryButton buttonType="square" text="탈퇴하기" onClick={() => {}} />
+
+      <h3>🔹 ModelButton.tsx</h3>
+      <ModelButton text="ChatGPT" />
     </div>
   );
 };
