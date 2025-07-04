@@ -1,5 +1,5 @@
-import { LOCAL_STORAGE_KEY } from '@/constants/key';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { LOCAL_STORAGE_KEY } from '@constants/key';
+import { useLocalStorage } from '@hooks/useLocalStorage';
 import { createContext, useContext, useState, type PropsWithChildren } from 'react';
 
 /**

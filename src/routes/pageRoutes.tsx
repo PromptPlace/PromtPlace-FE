@@ -2,6 +2,7 @@ import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 import { lazyRoutes } from './routes';
 import HomeLayout from '@/layouts/HomeLayout';
 import ProtectedLayout from '@/layouts/ProtectedLayout';
+import TestPage from '@/pages/TestPage';
 
 export const publicRoutes: RouteObject[] = [
   {
@@ -17,6 +18,7 @@ export const publicRoutes: RouteObject[] = [
       { path: 'guide/notice', element: <lazyRoutes.PromptGuidePage type="notice" /> },
       { path: 'guide/notice/:id', element: <lazyRoutes.PromptGuideDetailPage type="notice" /> },
       { path: 'profile/:id', element: <lazyRoutes.ProfilePage /> },
+      { path: '/test', element: <TestPage /> },
     ],
   },
 ];
