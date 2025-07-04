@@ -17,6 +17,7 @@ import CopyIcon from '@assets/icon-copy.svg?react';
  * 각 버튼에 들어가는 이미지 종류입니다. 없을 땐 none을 넘기면 됩니다.
  * @param {TextButton} textButton -- 예, 아니오 버튼에 대해서만 사용되는 배경 색
  * @param {string} text -- 버튼 내용
+ * @param {function} onClick -- 버튼 클릭 시 실행될 함수
  *
  * @example
  * <IconButton

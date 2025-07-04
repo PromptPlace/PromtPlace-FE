@@ -1,10 +1,11 @@
+import GradientButton from '@components/Button/GradientButton';
 import IconButton from '@components/Button/IconButton';
 import ModelButton from '@components/Button/ModelButton';
 import PrimaryButton from '@components/Button/PrimaryButton';
 
 const TestPage = () => {
   return (
-    <div className="flex flex-col gap-3 items-center">
+    <div className="flex flex-col gap-3 items-center mb-10">
       <h3>🔹 PrimaryButton.tsx</h3>
       <PrimaryButton
         buttonType="login"
@@ -40,6 +41,10 @@ const TestPage = () => {
       <IconButton buttonType="squareMd" style="red" imgType="alert" text="프롬프트 신고하기" onClick={() => {}} />
       <IconButton buttonType="squareMini" style="fill" imgType="upload" text="이미지 업로드" onClick={() => {}} />
       <IconButton buttonType="squareMini" style="fill" imgType="copy" text="복사하기" onClick={() => {}} />
+
+      <h3>🔹 GradientButton.tsx</h3>
+      <GradientButton buttonType="imgButton" text="프롬프트 작성하기" onClick={() => {}} />
+      <GradientButton buttonType="textButton" text="출금하기" onClick={() => {}} />
     </div>
   );
 };
