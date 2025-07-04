@@ -4,7 +4,8 @@ import IconButton from '@components/Button/IconButton';
 import ModelButton from '@components/Button/ModelButton';
 import PrimaryButton from '@components/Button/PrimaryButton';
 import { useState } from 'react';
-import Rating from '@/components/Rating';
+import Rating from '@components/Rating';
+import Count from '@components/Count';
 
 const TestPage = () => {
   const [tags, setTags] = useState<string[]>(['#스타트업', '#수채화', '#이미지', '#그림', '#누르면삭제']);
@@ -72,6 +73,12 @@ const TestPage = () => {
       <Rating star={4.5} />
       <Rating star={2.5} />
       <Rating star={0} />
+
+      <h3>🟢 Count.tsx</h3>
+      <div className="flex gap-[10px]">
+        <Count imgType="eye" count={2109} />
+        <Count imgType="download" count={120} />
+      </div>
     </div>
   );
 };
