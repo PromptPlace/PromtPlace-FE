@@ -6,6 +6,7 @@ import PrimaryButton from '@components/Button/PrimaryButton';
 import { useState } from 'react';
 import Rating from '@components/Rating';
 import Count from '@components/Count';
+import TextModal from '@components/Modal/TextModal';
 
 const TestPage = () => {
   const [tags, setTags] = useState<string[]>(['#스타트업', '#수채화', '#이미지', '#그림', '#누르면삭제']);
@@ -13,6 +14,9 @@ const TestPage = () => {
   const handleDelete = (text: string) => {
     setTags(tags.filter((tag) => tag !== text));
   };
+
+  const [showModal, setShowModal] = useState(false);
+  const [showModal2, setShowModal2] = useState(false);
 
   return (
     <div className="flex flex-col gap-3 items-center mb-10">
@@ -79,6 +83,13 @@ const TestPage = () => {
         <Count imgType="eye" count={2109} />
         <Count imgType="download" count={120} />
       </div>
+
+      <h3>🟣 TextModal.tsx</h3>
+      <button onClick={() => setShowModal(true)}>모달 보기 click</button>
+      {showModal && <TextModal text="업로드 세부 설정을 완료해 주세요." onClick={() => setShowModal(false)} />}
+
+      <button onClick={() => setShowModal2(true)}>모달 보기2 click</button>
+      {showModal2 && <TextModal text="지금은 리뷰를 수정하실 수 없습니다." onClick={() => setShowModal2(false)} />}
     </div>
   );
 };
