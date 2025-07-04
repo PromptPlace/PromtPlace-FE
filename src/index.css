@@ -88,7 +88,6 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  height: 16px;
   background: #999898;
   border-radius: 15px;
 }
