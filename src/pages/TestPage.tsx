@@ -1,3 +1,4 @@
+import IconButton from '@components/Button/IconButton';
 import ModelButton from '@components/Button/ModelButton';
 import PrimaryButton from '@components/Button/PrimaryButton';
 
@@ -18,6 +19,27 @@ const TestPage = () => {
 
       <h3>🔹 ModelButton.tsx</h3>
       <ModelButton text="ChatGPT" />
+
+      <h3>🔹 IconButton.tsx</h3>
+      <IconButton
+        buttonType="round"
+        style="outline"
+        imgType="settings"
+        text="업로드 세부 설정"
+        onClick={() => {
+          alert('업로그 세부 설정 클릭');
+        }}
+      />
+      <IconButton buttonType="round" style="fill" imgType="upload" text="업로드 하기" onClick={() => {}} />
+      <IconButton buttonType="round" style="outline" imgType="settings" text="설정 완료" onClick={() => {}} />
+      <IconButton buttonType="round" style="outline" imgType="none" textButton="white" text="예" onClick={() => {}} />
+      <IconButton buttonType="round" style="fill" imgType="none" textButton="blue" text="아니오" onClick={() => {}} />
+      <IconButton buttonType="squareMd" style="fill" imgType="list" text="목록" onClick={() => {}} />
+      <IconButton buttonType="squareMd" style="outline" imgType="attach" text="첨부" onClick={() => {}} />
+      <IconButton buttonType="squareBig" style="fill" imgType="download" text="다운로드" onClick={() => {}} />
+      <IconButton buttonType="squareMd" style="red" imgType="alert" text="프롬프트 신고하기" onClick={() => {}} />
+      <IconButton buttonType="squareMini" style="fill" imgType="upload" text="이미지 업로드" onClick={() => {}} />
+      <IconButton buttonType="squareMini" style="fill" imgType="copy" text="복사하기" onClick={() => {}} />
     </div>
   );
 };

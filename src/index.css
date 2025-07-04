@@ -61,6 +61,7 @@
   --shadow-button: 0px 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-button-hover: 0px 4px 8px rgba(0, 0, 0, 0.12);
   --shadow-primary: 2px 2px 30px rgba(0, 0, 0, 0.25);
+  --shadow-alert: 2px 2px 5px 0px rgba(0, 0, 0, 0.1);
   --inset-shadow-inner: inset 0px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
