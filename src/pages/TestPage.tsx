@@ -1,4 +1,4 @@
-import TagButton from '@/components/Button/TagButton';
+import TagButton from '@components/Button/TagButton';
 import GradientButton from '@components/Button/GradientButton';
 import IconButton from '@components/Button/IconButton';
 import ModelButton from '@components/Button/ModelButton';
@@ -25,6 +25,9 @@ const TestPage = () => {
       <PrimaryButton buttonType="square" text="내역보기" onClick={() => {}} />
       <PrimaryButton buttonType="square" text="로그아웃" onClick={() => {}} />
       <PrimaryButton buttonType="square" text="탈퇴하기" onClick={() => {}} />
+      <PrimaryButton buttonType="squareMini" text="완료" onClick={() => {}} />
+      <PrimaryButton buttonType="squareMini" text="등록" onClick={() => {}} />
+      <PrimaryButton buttonType="review" text="리뷰 작성하기" onClick={() => {}} />
 
       <h3>🔹 ModelButton.tsx</h3>
       <ModelButton text="ChatGPT" />
