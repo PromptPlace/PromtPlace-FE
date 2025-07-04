@@ -1,9 +1,17 @@
+import TagButton from '@/components/Button/TagButton';
 import GradientButton from '@components/Button/GradientButton';
 import IconButton from '@components/Button/IconButton';
 import ModelButton from '@components/Button/ModelButton';
 import PrimaryButton from '@components/Button/PrimaryButton';
+import { useState } from 'react';
 
 const TestPage = () => {
+  const [tags, setTags] = useState<string[]>(['#스타트업', '#수채화', '#이미지', '#그림', '#누르면삭제']);
+
+  const handleDelete = (text: string) => {
+    setTags(tags.filter((tag) => tag !== text));
+  };
+
   return (
     <div className="flex flex-col gap-3 items-center mb-10">
       <h3>🔹 PrimaryButton.tsx</h3>
@@ -45,6 +53,15 @@ const TestPage = () => {
       <h3>🔹 GradientButton.tsx</h3>
       <GradientButton buttonType="imgButton" text="프롬프트 작성하기" onClick={() => {}} />
       <GradientButton buttonType="textButton" text="출금하기" onClick={() => {}} />
+
+      <h3>🔹 TagButton.tsx</h3>
+      <TagButton hasDelete={false} text="#글쓰기" onClick={() => {}} />
+      <TagButton hasDelete={false} text="#일러스트" onClick={() => {}} />
+      <div className="flex gap-4">
+        {tags.map((tag, idx) => (
+          <TagButton key={idx} hasDelete={true} text={tag} onClick={() => handleDelete(tag)} />
+        ))}
+      </div>
     </div>
   );
 };
