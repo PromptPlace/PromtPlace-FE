@@ -9,15 +9,8 @@ import PencilIcon from '@assets/icon-edit.svg';
  * @param {function} onClick -- 버튼 클릭 시 실행될 함수
  *
  * @example
- * <IconButton
- *    buttonType="round"
- *    style="outline"
- *    imgType="settings"
- *    text="업로드 세부 설정"
- *    onClick={() => {
- *        alert('업로그 세부 설정 클릭');
- *    }}
- * />
+ * <GradientButton buttonType="imgButton" text="프롬프트 작성하기" onClick={() => {}} />
+ *
  *
  * @author 김진효
  * **/
