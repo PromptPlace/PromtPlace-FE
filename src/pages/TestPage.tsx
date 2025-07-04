@@ -7,6 +7,7 @@ import { useState } from 'react';
 import Rating from '@components/Rating';
 import Count from '@components/Count';
 import TextModal from '@components/Modal/TextModal';
+import DualModal from '@components/Modal/DualModal';
 
 const TestPage = () => {
   const [tags, setTags] = useState<string[]>(['#스타트업', '#수채화', '#이미지', '#그림', '#누르면삭제']);
@@ -17,6 +18,7 @@ const TestPage = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
+  const [showModal3, setShowModal3] = useState(false);
 
   return (
     <div className="flex flex-col gap-3 items-center mb-10">
@@ -90,6 +92,12 @@ const TestPage = () => {
 
       <button onClick={() => setShowModal2(true)}>모달 보기2 click</button>
       {showModal2 && <TextModal text="지금은 리뷰를 수정하실 수 없습니다." onClick={() => setShowModal2(false)} />}
+
+      <h3>🟣 DualModal.tsx</h3>
+      <button onClick={() => setShowModal3(true)}>모달3 보기 click</button>
+      {showModal3 && (
+        <DualModal text="업로드 하시겠습니까?" onClickYes={() => alert('예')} onClickNo={() => setShowModal3(false)} />
+      )}
     </div>
   );
 };
