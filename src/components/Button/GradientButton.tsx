@@ -17,7 +17,8 @@ import PencilIcon from '@assets/icon-edit.svg';
 
 const gradientButtonTheme = {
   buttonType: {
-    imgButton: 'rounded-[50px] p-[10px] gap-[10px] text-xl font-normal leading-[25px] h-[69px] min-w-[235px]',
+    imgButton:
+      'rounded-[50px] py-[22px] px-[24.5px] gap-[10px] text-xl font-normal leading-[25px] h-[69px] max-w-[235px] w-full',
     textButton: 'rounded-[10px] py-[16px] px-[40px] text-2xl font-bold leading-[30px]',
   },
 };

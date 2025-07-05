@@ -35,7 +35,7 @@ const primaryButtonTheme = {
     login: 'rounded-[40px] max-w-[171px] w-full py-[10px]',
     tip: 'rounded-[40px] max-w-[127px] w-full py-[10px]',
     square: 'rounded-[10px] max-w-[136px] w-full py-[10px]',
-    squareMini: 'rounded-[10px] w-[37.887px] h-[32px]',
+    squareMini: 'rounded-[10px] py-[2px] px-[14px]',
     review: 'rounded-[50px] h-[41px] py-[5px] max-w-[152px] w-full text-xl leading-[25px]',
   },
 };

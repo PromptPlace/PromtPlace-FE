@@ -5,6 +5,7 @@ import AttachIcon from '@assets/icon-attach-file-blue.svg?react';
 import DownloadIcon from '@assets/icon-download-white.svg?react';
 import AlertIcon from '@assets/icon-alert.svg?react';
 import CopyIcon from '@assets/icon-copy.svg?react';
+import clsx from 'clsx';
 
 /**
  * 아이콘과 함께 사용되는 버튼과 예, 아니오에 대한 버튼 컴포넌트입니다.
@@ -35,16 +36,16 @@ import CopyIcon from '@assets/icon-copy.svg?react';
 
 const iconButtonTheme = {
   buttonType: {
-    round: 'px-[29px] rounded-[50px] text-xl font-medium h-[69px] gap-[15px]',
-    squareBig: 'px-[29px] rounded-[10px] h-[60px] text-2xl font-bold gap-[15px]',
-    squareMd: 'px-[20px] rounded-[10px] h-[45px] text-xl font-medium gap-[15px]',
-    squareMini: 'py-[5px] px-[10px] rounded-[4px] gap-[5px] text-lg font-normal',
+    round: 'px-[29px] py-[22px] rounded-[50px] text-xl font-medium leading-[25px] gap-[15px]',
+    squareBig: 'px-[29px] py-[15px] rounded-[10px] text-2xl font-bold leading-[30px] gap-[15px]',
+    squareMd: 'px-[20px] py-[10px] rounded-[10px] h-[45px] text-xl font-medium leading-[25px] gap-[15px]',
+    squareMini: 'py-[5px] pl-[14px] pr-[10px] rounded-[4px] gap-[5px] text-lg leading-[23px] font-normal',
   },
   style: {
     outline:
-      'border border-primary hover:border-primary-hover active:border-primary-pressed text-primary hover:text-primary-hover active:text-primary-pressed active:bg-secondary ',
+      'border border-priㄴmary hover:border-primary-hover active:border-primary-pressed text-primary hover:text-primary-hover active:text-primary-pressed active:bg-secondary ',
     fill: 'bg-primary hover:bg-primary-hover active:bg-primary-pressed text-white',
-    red: 'bg-alert text-white px-[29px] leading-[25px]',
+    red: 'bg-alert text-white px-[29px] leading-[24px]',
   },
   textButton: {
     white: 'min-w-[160px] bg-white',
@@ -73,14 +74,16 @@ const IconButton = ({ buttonType, style, imgType, textButton, text, onClick }: I
       {imgType === 'settings' && (
         <SettingsIcon className="w-[24px] h-[24px] text-primary group-hover:text-primary-hover group-active:text-primary-pressed" />
       )}
-      {imgType === 'upload' && <UploadIcon className="w-[24px] h-[24px]" />}
+      {imgType === 'upload' && (
+        <UploadIcon className={clsx(buttonType === 'squareMini' ? 'w-[16px] h-[16px]' : ' w-[20px] h-[20px]')} />
+      )}
       {imgType === 'list' && <ListIcon className="w-[24px] h-[24px]" />}
       {imgType === 'attach' && (
         <AttachIcon className="w-[24px] h-[24px] text-primary group-hover:text-primary-hover group-active:text-primary-pressed" />
       )}
-      {imgType === 'download' && <DownloadIcon className="w-[24px] h-[24px]" />}
+      {imgType === 'download' && <DownloadIcon className="w-[20px] h-[20px]" />}
       {imgType === 'alert' && <AlertIcon className="w-[24px] h-[24px]" />}
-      {imgType === 'copy' && <CopyIcon className="w-[24px] h-[24px]" />}
+      {imgType === 'copy' && <CopyIcon className="w-[20px] h-[20px]" />}
       {text}
     </button>
   );
