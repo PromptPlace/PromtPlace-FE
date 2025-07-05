@@ -8,6 +8,7 @@ import Rating from '@components/Rating';
 import Count from '@components/Count';
 import TextModal from '@components/Modal/TextModal';
 import DualModal from '@components/Modal/DualModal';
+import FollowButton from '@components/Button/FollowButton';
 
 const TestPage = () => {
   const [tags, setTags] = useState<string[]>(['#스타트업', '#수채화', '#이미지', '#그림', '#누르면삭제']);
@@ -19,6 +20,8 @@ const TestPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
   const [showModal3, setShowModal3] = useState(false);
+
+  const [follow, setFollow] = useState(false);
 
   return (
     <div className="flex flex-col gap-3 items-center mb-10">
@@ -73,6 +76,14 @@ const TestPage = () => {
           <TagButton key={idx} hasDelete={true} text={tag} onClick={() => handleDelete(tag)} />
         ))}
       </div>
+
+      <h3>🔹 FollowButton.tsx</h3>
+      <FollowButton
+        follow={follow}
+        onClick={() => {
+          setFollow((prev) => !prev);
+        }}
+      />
 
       <h3>🔶 Rating.tsx</h3>
       <Rating star={5} />
