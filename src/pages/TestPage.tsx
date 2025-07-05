@@ -39,6 +39,8 @@ const TestPage = () => {
       <PrimaryButton buttonType="squareMini" text="완료" onClick={() => {}} />
       <PrimaryButton buttonType="squareMini" text="등록" onClick={() => {}} />
       <PrimaryButton buttonType="review" text="리뷰 작성하기" onClick={() => {}} />
+      <PrimaryButton buttonType="reviewDelete" text="리뷰삭제" onClick={() => {}} />
+      <PrimaryButton buttonType="plus" text="+" onClick={() => {}} />
 
       <h3>🔹 ModelButton.tsx</h3>
       <ModelButton text="ChatGPT" />
