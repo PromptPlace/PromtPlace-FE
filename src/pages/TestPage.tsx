@@ -1,14 +1,16 @@
+import { useState } from 'react';
+
 import TagButton from '@components/Button/TagButton';
 import GradientButton from '@components/Button/GradientButton';
 import IconButton from '@components/Button/IconButton';
 import ModelButton from '@components/Button/ModelButton';
 import PrimaryButton from '@components/Button/PrimaryButton';
-import { useState } from 'react';
 import Rating from '@components/Rating';
 import Count from '@components/Count';
 import TextModal from '@components/Modal/TextModal';
 import DualModal from '@components/Modal/DualModal';
 import FollowButton from '@components/Button/FollowButton';
+import CircleButton from '@components/Button/CircleButton';
 
 const TestPage = () => {
   const [tags, setTags] = useState<string[]>(['#스타트업', '#수채화', '#이미지', '#그림', '#누르면삭제']);
@@ -86,6 +88,11 @@ const TestPage = () => {
           setFollow((prev) => !prev);
         }}
       />
+
+      <h3>🔹 CircleButton.tsx</h3>
+      <CircleButton buttonType="send" size="md" onClick={() => {}} />
+      <CircleButton buttonType="edit" size="md" onClick={() => {}} />
+      <CircleButton buttonType="edit" size="sm" onClick={() => {}} />
 
       <h3>🔶 Rating.tsx</h3>
       <Rating star={5} />
