@@ -1,4 +1,5 @@
 import CancelIcon from '@assets/icon-cancel.svg';
+import clsx from 'clsx';
 
 /**
  * 태그가 달린 버튼에서 사용하는 버튼 컴포넌트입니다.
@@ -23,7 +24,11 @@ interface TagButtonProps {
 
 const TagButton = ({ hasDelete, text, onClick }: TagButtonProps) => {
   return (
-    <div className="py-[2px] px-[10px] flex justify-center items-center gap-[5px] rounded-[50px] border border-text-on-background bg-white text-sm font-normal leading-[18px] text-text-on-background">
+    <div
+      className={clsx(
+        'py-[2px] px-[10px] flex justify-center items-center gap-[5px] rounded-[50px] border border-text-on-background bg-white text-sm font-normal leading-[18px] text-text-on-background shrink-0',
+        hasDelete && 'shadow-button-hover',
+      )}>
       {text}
       {hasDelete && (
         <div className="cursor-pointer w-[12px] h-[12px]">
