@@ -22,6 +22,7 @@ const TestPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
   const [showModal3, setShowModal3] = useState(false);
+  const [showModal4, setShowModal4] = useState(false);
 
   const [follow, setFollow] = useState(false);
 
@@ -108,15 +109,34 @@ const TestPage = () => {
 
       <h3>🟣 TextModal.tsx</h3>
       <button onClick={() => setShowModal(true)}>모달 보기 click</button>
-      {showModal && <TextModal text="업로드 세부 설정을 완료해 주세요." onClick={() => setShowModal(false)} />}
+      {showModal && (
+        <TextModal text="업로드 세부 설정을 완료해 주세요." onClick={() => setShowModal(false)} size="lg" />
+      )}
 
       <button onClick={() => setShowModal2(true)}>모달 보기2 click</button>
-      {showModal2 && <TextModal text="지금은 리뷰를 수정하실 수 없습니다." onClick={() => setShowModal2(false)} />}
+      {showModal2 && (
+        <TextModal text="지금은 리뷰를 수정하실 수 없습니다." onClick={() => setShowModal2(false)} size="sm" />
+      )}
 
       <h3>🟣 DualModal.tsx</h3>
       <button onClick={() => setShowModal3(true)}>모달3 보기 click</button>
       {showModal3 && (
         <DualModal text="업로드 하시겠습니까?" onClickYes={() => alert('예')} onClickNo={() => setShowModal3(false)} />
+      )}
+
+      <button onClick={() => setShowModal4(true)}>모달4 보기 click</button>
+      {showModal4 && (
+        <DualModal
+          text={
+            <>
+              탈퇴하시면 회원님의 모든 데이터가 삭제되어 다시 복구할 수 없습니다.
+              <br />
+              정말 탈퇴하시겠습니까?
+            </>
+          }
+          onClickYes={() => alert('예')}
+          onClickNo={() => setShowModal4(false)}
+        />
       )}
     </div>
   );
