@@ -171,11 +171,9 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
 
   // 게시글 클릭시 상세로 이동
   const handleRowClick = (id: number) => {
-    if (type === 'tip') {
-      navigate(`/guide/tip/${id}`);
-    } else {
-      navigate(`/guide/notice/${id}`);
-    }
+    navigate(`/guide/${type}/${id}`, { state: { type } });
+    //이렇게 안 하면 pageRoutes에서 <Route path="/guide/:type/:id" element={<PromptGuideDetailPage />} />
+    //이런 식으로 해야 함 (아마도?)
   };
 
   return (
