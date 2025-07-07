@@ -171,8 +171,13 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
 
   // 게시글 클릭시 상세로 이동
   const handleRowClick = (id: number) => {
-    navigate(`/posts/${id}`);
+    if (type === 'tip') {
+      navigate(`/guide/tip/${id}`);
+    } else {
+      navigate(`/guide/notice/${id}`);
+    }
   };
+
   return (
     <>
       <div className="flex justify-between items-center w-[360px] h-[60px] ml-[102px] mt-[92px]">
