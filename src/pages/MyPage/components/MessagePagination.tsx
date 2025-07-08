@@ -92,7 +92,7 @@ export function MessageTableList({ data, onRowClick }: { data: MessageList[]; on
 }
 
 //  페이지네이션 컴포넌트
-export function Pagination({
+export function MessagePagination({
   currentPage,
   totalPages,
   onPageChange,

@@ -7,7 +7,8 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageTableList, Pagination } from './components/MessagePagination';
+import { MessageTableList, MessagePagination } from './components/MessagePagination';
+import { NotificationTableList, NotificationPagination } from './components/notificationPagination';
 
 interface MyMessagePageProps {
   type: 'message' | 'notification';
@@ -52,10 +53,35 @@ const allMessages: Message[] = [
     update_at: '2025-04-12',
   },
 ];
+//알림
+interface Notification {
+  id: number; //notification_id
+  content: string;
+  create_at: string;
+  user_id: string;
+}
 
+const allNotification: Notification[] = [
+  { id: 1, content: '프롬프트에 새로운 문의가 도착했습니다.', create_at: '2025-07-22', user_id: '주토피아노' },
+  { id: 2, content: '신고가 접수되었습니다.', create_at: '2025-07-22', user_id: '주토피아노' },
+  { id: 3, content: '‘홍길동’님이 새 프롬프트를 업로드하셨습니다. ', create_at: '2025-07-22', user_id: '주토피아노' },
+  { id: 4, content: '‘콩쥐’님이 새 프롬프트를 업로드하셨습니다.', create_at: '2025-07-22', user_id: '주토피아노' },
+  { id: 5, content: '‘뽀또’님이 회원님을 팔로우합니다.', create_at: '2025-07-22', user_id: '주토피아노' },
+  { id: 6, content: '프롬프트에 새로운 문의가 도착했습니다. ', create_at: '2025-07-22', user_id: '주토피아노' },
+  { id: 7, content: '프롬프트에 새로운 문의가 도착했습니다.', create_at: '2025-07-22', user_id: '주토피아노' },
+  { id: 8, content: '신고가 접수되었습니다.', create_at: '2025-07-22', user_id: '주토피아노' },
+  {
+    id: 9,
+    content: '‘아메리카노’님이 새 프롬프트를 업로드하셨습니다. ',
+    create_at: '2025-07-22',
+    user_id: '주토피아노',
+  },
+  { id: 10, content: '프롬프트에 새로운 문의가 도착했습니다.', create_at: '2025-07-22', user_id: '주토피아노' },
+];
 // 페이지 값 계산
 const PAGE_SIZE = 8;
-const TOTAL_PAGES = Math.ceil(allMessages.length / PAGE_SIZE);
+const TOTAL_MESSAGE_PAGES = Math.ceil(allMessages.length / PAGE_SIZE);
+const TOTAL_Notification_PAGES = Math.ceil(allNotification.length / PAGE_SIZE);
 
 const MyMessagePage = ({ type }: MyMessagePageProps) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -69,7 +95,8 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
   };
 
   // 페이지별 데이터 슬라이싱
-  const pageData = allMessages.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const pageMessageData = allMessages.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const pageNotificationData = allNotification.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   // 페이지네이션에서 페이지 변경시
   const handlePageChange = (page: number) => {
@@ -106,8 +133,25 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
       </div>
 
       <div>
-        <MessageTableList data={pageData} onRowClick={handleRowClick} />
-        <Pagination currentPage={currentPage} totalPages={TOTAL_PAGES} onPageChange={handlePageChange} />
+        {type === 'message' ? (
+          <>
+            <MessageTableList data={pageMessageData} onRowClick={handleRowClick} />
+            <MessagePagination
+              currentPage={currentPage}
+              totalPages={TOTAL_MESSAGE_PAGES}
+              onPageChange={handlePageChange}
+            />
+          </>
+        ) : (
+          <>
+            <NotificationTableList data={pageNotificationData} />
+            <NotificationPagination
+              currentPage={currentPage}
+              totalPages={TOTAL_Notification_PAGES}
+              onPageChange={handlePageChange}
+            />
+          </>
+        )}
       </div>
     </div>
   );
