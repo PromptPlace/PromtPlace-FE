@@ -1,4 +1,3 @@
-// pages/PromptDetailPage.tsx
 import PromptHeader from './components/PromptHeader';
 import PromptInfo from './components/PromptInfo';
 import PromptActions from './components/PromptActions';
@@ -28,9 +27,9 @@ const PromptDetailPage = () => {
   const prompt = mockPrompt;
 
   return (
-    <div className="flex gap-10 p-10 max-w-7xl mx-auto bg-[#FFFEFB]">
+    <div className="flex gap-10 p-10 max-w-7xl mx-auto bg-[#F5F5F5]">
       {/* 왼쪽: 정보 */}
-      <div className="flex-1">
+      <div className="w-[711px] bg-[#FFFEFB]">
         <PromptHeader title={prompt.title} views={prompt.views} downloads={prompt.downloads} />
         <PromptInfo
           promptResult={prompt.prompt_result}
@@ -40,8 +39,9 @@ const PromptDetailPage = () => {
       </div>
 
       {/* 오른쪽: 액션 */}
-      <div className="w-[300px] shrink-0">
+      <div className="w-[300px] h-[654px] bg-[#FFFEFB] shrink-0">
         <PromptActions
+          title={prompt.title}
           price={prompt.price}
           isFree={prompt.is_free}
           downloads={prompt.downloads}
