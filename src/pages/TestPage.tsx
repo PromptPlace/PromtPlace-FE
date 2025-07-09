@@ -11,6 +11,7 @@ import TextModal from '@components/Modal/TextModal';
 import DualModal from '@components/Modal/DualModal';
 import FollowButton from '@components/Button/FollowButton';
 import CircleButton from '@components/Button/CircleButton';
+import SocialLoginModal from '@components/Modal/SocialLoginModal';
 
 const TestPage = () => {
   const [tags, setTags] = useState<string[]>(['#스타트업', '#수채화', '#이미지', '#그림', '#누르면삭제']);
@@ -23,6 +24,7 @@ const TestPage = () => {
   const [showModal2, setShowModal2] = useState(false);
   const [showModal3, setShowModal3] = useState(false);
   const [showModal4, setShowModal4] = useState(false);
+  const [showModal5, setShowModal5] = useState(false);
 
   const [follow, setFollow] = useState(false);
 
@@ -138,8 +140,15 @@ const TestPage = () => {
           onClickNo={() => setShowModal4(false)}
         />
       )}
+
+      <h3>🟣 SocialLoginModal.tsx</h3>
+      <button onClick={() => setShowModal5(true)}>모달5 보기 click</button>
+      {showModal5 && (
+        <SocialLoginModal isOpen={showModal5} onClose={() => setShowModal5(false)} onClick={() => {}} />
+      )}
     </div>
   );
 };
+
 
 export default TestPage;
