@@ -9,7 +9,7 @@ interface Props {
 
 const PromptInfo = ({ promptResult, description, usageGuide }: Props) => {
   return (
-    <div className="w-[711px] bg-[#FFFEFB] px-8">
+    <div className="w-[711px]  bg-[#FFFEFB] px-8">
       {/* 결과 미리 보기 */}
       <section className="h-[264px]">
         <h4 className="font-semibold text-[24px] pt-[15px]">프롬프트 결과 미리 보기</h4>
