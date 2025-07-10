@@ -22,7 +22,7 @@ interface ReviewListProps {
   title: string;
 }
 
-const ReviewList = ({ reviews, reviewCounts, onClose, title }: ReviewListProps) => {
+const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title }: ReviewListProps) => {
   const [openMenuIdx, setOpenMenuIdx] = useState<number | null>(null);
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
 
@@ -33,6 +33,8 @@ const ReviewList = ({ reviews, reviewCounts, onClose, title }: ReviewListProps) 
   const [selectedReviewIdx, setSelectedReviewIdx] = useState<number | null>(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+
+  const [reviews, setReviews] = useState<Review[]>(initialReviews);
 
   // 메뉴 열기/닫기 토글
   const toggleMenu = (idx: number) => {
@@ -66,10 +68,19 @@ const ReviewList = ({ reviews, reviewCounts, onClose, title }: ReviewListProps) 
     setShowUpdateModal(true);
   };
 
-  // 실제 저장 처리 (API 연동 필요 시 부모 콜백 호출하는 구조 권장)
   const handleSave = (newRating: number, newComment: string) => {
     if (selectedReviewIdx === null) return;
-    alert(`리뷰 수정 완료\n별점: ${newRating}\n리뷰: ${newComment}`);
+
+    const updatedReviews = [...reviews];
+    updatedReviews[selectedReviewIdx] = {
+      ...updatedReviews[selectedReviewIdx],
+      rating: newRating,
+      comment: newComment,
+      updatedAt: new Date().toISOString(), // 업데이트 시간도 갱신
+    };
+
+    setReviews(updatedReviews);
+    setSelectedReview(updatedReviews[selectedReviewIdx]);
     setShowUpdateModal(false);
   };
 

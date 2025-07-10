@@ -14,7 +14,7 @@ const PromptHeader = ({ title, views, downloads }: Props) => (
       {/* ChatGPT 버튼 + X 버튼 */}
       <div className="flex items-center justify-between w-full pt-[35px]">
         <ModelButton text="ChatGPT" />
-        <button className="text-xl font-bold text-[#121212]">×</button>
+        <button className="text-xl font-bold text-[#121212] focus:outline-none">×</button>
       </div>
 
       {/* 제목 + 카운트 */}

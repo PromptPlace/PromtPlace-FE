@@ -29,7 +29,7 @@ const UpdateModal = ({ isOpen, onClose, title, rating, initialReviewText, onSave
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-40 p-4">
+    <div className=" bg-overlay fixed inset-0 z-50 flex items-center justify-center bg-opacity-40 p-4">
       <div
         className="relative bg-white rounded-2xl shadow-xl flex flex-col"
         style={{ width: '760px', maxHeight: '90vh', overflowY: 'auto' }}>
