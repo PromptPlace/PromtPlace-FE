@@ -25,7 +25,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className=" bg-overlay fixed inset-0 z-50 flex items-center justify-center bg-opacity-40">
       <div className="relative flex flex-col bg-white rounded-[16px] shadow-lg px-[64px] py-[48px] w-[758px] h-[639px] text-[#121212]">
         {/* 닫기 버튼 */}
         <button
