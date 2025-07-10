@@ -19,12 +19,7 @@ const MainPage = () => {
         </div>
       </div>
 
-      <PrompterBar
-        creators={[
-          { id: '1', name: '프롬프터1', avatar: '', followed: false },
-          { id: '2', name: '프롬프터2', avatar: '', followed: true },
-        ]}
-      />
+      <PrompterBar creators={dummyCreators} />
     </div>
   );
 };

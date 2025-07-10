@@ -78,4 +78,6 @@ export const dummyCreators: Creator[] = [
   { id: 2, name: "이해인", avatar: "/avatars/u2.jpg", followers: 120, followed: false },
   { id: 3, name: "폴로", avatar: "/avatars/u3.jpg", followers: 222, followed: true },
   { id: 4, name: "올랄라", avatar: "/avatars/u4.jpg", followers: 90, followed: true },
+  { id: 5, name: "안민수", avatar: "/avatars/u5.jpg", followers: 23, followed: false },
+  { id: 6, name: "뽀또", avatar: "/avatars/u6.jpg", followers: 42, followed: true },
 ];
