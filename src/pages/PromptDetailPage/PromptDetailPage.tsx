@@ -27,9 +27,9 @@ const PromptDetailPage = () => {
   const prompt = mockPrompt;
 
   return (
-    <div className="flex gap-10 p-10 max-w-7xl mx-auto bg-[#F5F5F5]">
+    <div className="flex gap-10 p-10 max-w-7xl mx-auto bg-[#F5F5F5] ">
       {/* 왼쪽: 정보 */}
-      <div className="w-[711px] bg-[#FFFEFB]">
+      <div className="w-[711px] bg-[#FFFEFB] ">
         <PromptHeader title={prompt.title} views={prompt.views} downloads={prompt.downloads} />
         <PromptInfo
           promptResult={prompt.prompt_result}

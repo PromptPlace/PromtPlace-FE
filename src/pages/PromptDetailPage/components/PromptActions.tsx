@@ -5,6 +5,8 @@ import Rating from '@components/Rating';
 import profile from '../assets/profile.jpg';
 import TagButton from '@components/Button/TagButton';
 import { AiOutlineHeart } from 'react-icons/ai';
+import ReviewList from './ReviewList';
+import ReportModal from '../components/ReportModal';
 
 interface Props {
   title: string;
@@ -30,77 +32,28 @@ const PromptActions = ({ title, price, isFree, downloads, likes, reviewCounts, r
   const [follow, setFollow] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
   const [tags, setTags] = useState<string[]>(['#수묵화', '#수채화', '#디자인', '#일러스트', '#그림', '#이미지']);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false); // 신고 모달 상태
 
   const handleDelete = (text: string) => {
     setTags(tags.filter((tag) => tag !== text));
   };
 
+  const handleReportButtonClick = () => {
+    setIsReportModalOpen(true); // 신고 모달 열기
+  };
+
+  const handleCloseReportModal = () => {
+    setIsReportModalOpen(false); // 신고 모달 닫기
+  };
+
   if (showReviews) {
     return (
-      <div className="w-[459px] bg-[#FFFEFB] h-[654px] px-8 py-6 flex flex-col">
-        {/* 상단 버튼+타이틀 영역 */}
-        <div className="flex items-center mb-4">
-          <button
-            onClick={() => setShowReviews(false)}
-            className="text-2xl font-bold leading-none hover:opacity-70"
-            aria-label="뒤로가기">
-            &lt;
-          </button>
-          <h2 className="font-bold text-[20px] ml-3 inline-flex items-center gap-2">
-            구매자 리뷰
-            <span className="w-[37px] h-[28px] px-[10px] py-[5px] border border-[#999999] rounded-full text-[16px] text-[#999898] flex items-center justify-center">
-              {reviewCounts}
-            </span>
-          </h2>
-        </div>
-
-        <div className="h-[1px] bg-[#CCCCCC] w-full mb-4" />
-
-        {/* 스크롤박스 */}
-        <div
-          className="flex-1 overflow-y-auto pr-2"
-          style={{
-            scrollbarWidth: 'thin', // Firefox
-            scrollbarColor: '#fff transparent', // Firefox
-          }}>
-          {/* Chrome, Edge, Safari 등 Webkit 계열 스크롤바 스타일 */}
-          <style>{`
-          .custom-scrollbar::-webkit-scrollbar {
-            width: 8px;
-          }
-          .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-          }
-          .custom-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #fff; 
-            border-radius: 10px;
-            border: 2px solid transparent;
-            background-clip: content-box;
-          }
-        `}</style>
-
-          <div className="custom-scrollbar">
-            {dummyReviews.map((review, idx) => (
-              <div key={idx}>
-                <div className="flex gap-3 mb-4 last:mb-0">
-                  <img src={review.profile} alt={`${review.user} 프로필`} className="w-12 h-12 rounded-full" />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-semibold">{review.user}</p>
-                      <Rating star={review.rating} />
-                      <span className="text-gray-400 ml-auto">(4.0)</span>
-                    </div>
-                    <p className="mt-1 text-gray-700">{review.comment}</p>
-                  </div>
-                </div>
-
-                {/* 마지막 아이템이 아니면 구분선 추가 */}
-                {idx !== dummyReviews.length - 1 && <div className="h-[1px] bg-[#CCCCCC] w-full my-4" />}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <ReviewList
+        reviews={dummyReviews}
+        title="동양풍 일러스트 이미지 생성"
+        reviewCounts={reviewCounts}
+        onClose={() => setShowReviews(false)}
+      />
     );
   }
 
@@ -116,10 +69,13 @@ const PromptActions = ({ title, price, isFree, downloads, likes, reviewCounts, r
       </div>
       <div className="h-[1px] bg-[#CCCCCC] w-full" />
 
+      {/* 제목 */}
       <div className="font-bold text-[24px] pt-[20px] pb-[10px]">{`[${title}]`}</div>
 
+      {/* 가격 */}
       <div className="text-[24px] pt-[20px] pb-[20px] font-bold">{isFree ? '무료' : `${price.toLocaleString()}원`}</div>
 
+      {/* 다운로드 & 좋아요 */}
       <div className="h-[96px] box-border flex items-center gap-3">
         <IconButton
           buttonType="squareBig"
@@ -131,11 +87,11 @@ const PromptActions = ({ title, price, isFree, downloads, likes, reviewCounts, r
         <AiOutlineHeart className="ml-[30px] w-[28px] h-[25px] text-[24px] text-[#999898]" />
       </div>
 
+      {/* 별점 및 리뷰보기 */}
       <div>
         <div className="mt-[25px] flex justify-start">
           <Rating star={rating} />
         </div>
-
         <div
           className="pt-[20px] text-[20px] flex items-center gap-[10px] cursor-pointer"
           onClick={() => setShowReviews(true)}>
@@ -146,19 +102,24 @@ const PromptActions = ({ title, price, isFree, downloads, likes, reviewCounts, r
         </div>
       </div>
 
+      {/* 태그 */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-[40px] mb-[30px]">
         {tags.map((tag, idx) => (
           <TagButton key={idx} hasDelete={true} text={tag} onClick={() => handleDelete(tag)} />
         ))}
       </div>
 
+      {/* 신고 버튼 */}
       <IconButton
         buttonType="squareMd"
         style="red"
         imgType="alert"
         text="프롬프트 신고하기"
-        onClick={() => alert('신고')}
+        onClick={handleReportButtonClick}
       />
+
+      {/* 신고 모달 */}
+      <ReportModal isOpen={isReportModalOpen} onClose={handleCloseReportModal} />
     </div>
   );
 };
