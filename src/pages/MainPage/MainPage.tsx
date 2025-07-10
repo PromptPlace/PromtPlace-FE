@@ -6,7 +6,7 @@ import { dummyPrompts, dummyCreators } from './components/../dummyData';
 
 const MainPage = () => {
   return (
-    <div className="flex gap-6 justify-center bg-F5F5F5">
+    <div className="flex gap-6 justify-center bg-[#F5F5F5]">
       <div className="w-[832px]">
         <FilterBar />
         <div className="mt-4">

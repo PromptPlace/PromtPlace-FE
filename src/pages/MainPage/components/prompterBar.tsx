@@ -2,7 +2,7 @@ import React from 'react'
 import CircleButton from '@components/Button/CircleButton.tsx'
 
 const PrompterBar = ({ creators }: { creators: { id: string; name: string; avatar: string; followed: boolean }[] }) => (
-    <aside className="flex flex-col gap-6 bg-white">
+    <aside className="flex flex-col gap-6">
         {/* 인기 프롬프터 */}
         <section className="w-[313px] rounded-2xl p-4 shadow-sm bg-white">
             <h4 className="border-b pb-2 font-semibold">이달의 인기 프롬프터</h4>
