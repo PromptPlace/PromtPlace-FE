@@ -5,6 +5,7 @@ import AttachIcon from '@assets/icon-attach-file-blue.svg?react';
 import DownloadIcon from '@assets/icon-download-white.svg?react';
 import AlertIcon from '@assets/icon-alert.svg?react';
 import CopyIcon from '@assets/icon-copy.svg?react';
+import LogoutIcon from '@assets/icon-sidebar-FiLogOut.svg?react';
 import clsx from 'clsx';
 
 /**
@@ -39,6 +40,8 @@ const iconButtonTheme = {
     round: 'px-[29px] py-[22px] rounded-[50px] text-xl font-medium leading-[25px] gap-[15px]',
     squareBig: 'px-[29px] py-[15px] rounded-[10px] text-2xl font-bold leading-[30px] gap-[15px]',
     squareMd: 'px-[20px] py-[10px] rounded-[10px] h-[45px] text-xl font-medium leading-[25px] gap-[15px]',
+    squreSm:
+      'px-[18px] py-[10px] rounded-[10px] flex items-center justify-center gap-[15px] text-base font-normal leading-[26px] tracking-[0.46px]',
     squareMini: 'py-[5px] pl-[14px] pr-[10px] rounded-[4px] gap-[5px] text-lg leading-[23px] font-normal',
   },
   style: {
@@ -60,7 +63,7 @@ type TextButton = keyof typeof iconButtonTheme.textButton;
 interface IconButtonProps {
   buttonType: ButtonType;
   style: Style;
-  imgType: 'settings' | 'upload' | 'none' | 'list' | 'attach' | 'download' | 'alert' | 'copy';
+  imgType: 'settings' | 'upload' | 'none' | 'list' | 'attach' | 'download' | 'alert' | 'copy' | 'LogoutIcon';
   textButton?: TextButton;
   text: string;
   onClick: () => void;
@@ -84,6 +87,7 @@ const IconButton = ({ buttonType, style, imgType, textButton, text, onClick }: I
       {imgType === 'download' && <DownloadIcon className="w-[20px] h-[20px]" />}
       {imgType === 'alert' && <AlertIcon className="w-[24px] h-[24px]" />}
       {imgType === 'copy' && <CopyIcon className="w-[20px] h-[20px]" />}
+      {imgType === 'LogoutIcon' && <LogoutIcon className="w-[24px] h-[24px]" />}
       {text}
     </button>
   );
