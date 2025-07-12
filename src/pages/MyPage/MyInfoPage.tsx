@@ -2,7 +2,6 @@ import iconPerson from '@assets/icon-person-blue.svg';
 import InfoRow from './components/InfoRow';
 import { useState } from 'react';
 import DualModal from '@/components/Modal/DualModal';
-import TextModal from '@/components/Modal/TextModal';
 import SingleModal from './components/singleModal';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,7 +12,7 @@ const userInfo: {
   provider: 'google' | 'kakao' | 'naver';
 } = {
   nickname: '주토피아노',
-  email: 'kyaassddff0934@gamil.com',
+  email: 'kyaassddff0934@gmail.com',
   provider: 'google',
 };
 
@@ -27,11 +26,12 @@ const MyPageInfo = () => {
   const deleteAccount = () => {
     // 실제 API 호출 로직
     setDeleteStep('complete');
+   
   };
   const navigate = useNavigate();
   const closeModal = () => {
     setDeleteStep(null);
-    navigate('/');
+    
   };
 
   return (
@@ -48,7 +48,7 @@ const MyPageInfo = () => {
         <InfoRow label="닉네임" nickname={userInfo.nickname} />
         <InfoRow label="가입한 계정" email={userInfo.email} provider={userInfo.provider} />
         <InfoRow label="계정 바꾸기" email={userInfo.email} provider={userInfo.provider} hasArrow />
-        <InfoRow label="결제내역" actionText="내역보기" onAction={() => { /* 내역보기 로직 */ }} />
+        <InfoRow label="결제내역" actionText="내역보기" onAction={() => { navigate('/mypage/paymentHistory') }} />
         <InfoRow label="로그아웃" actionText="로그아웃" onAction={() => { /* 로그아웃 로직 */ }} />
         <InfoRow label="계정 탈퇴" actionText="탈퇴하기" onAction={confirmDelete} isDestructive />
         {deleteStep === 'confirm' && (
@@ -72,7 +72,10 @@ const MyPageInfo = () => {
         />
       )}
       {deleteStep === 'complete' && (
-        <SingleModal text="탈퇴가 완료되었습니다." onClick={closeModal} />
+        <SingleModal text="탈퇴가 완료되었습니다." onClick={() => {
+          closeModal();
+          navigate('/');
+        }} />
       )}
            </div>
         </div>
