@@ -7,11 +7,18 @@ import CloseIcon from '@assets/icon-close.svg';
 import { LuChevronRight } from 'react-icons/lu';
 import IconButton from '@/components/Button/IconButton';
 import { useNavigate } from 'react-router-dom';
+import DualModal from '@/components/Modal/DualModal';
 
 const PromptCreatePage = () => {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
-  const [allcheck, setAllcheck] = useState<boolean>(false);
+
+  const [alertModal, setAlertModal] = useState<boolean>(false); // 알림 모달
+  const [modalText, setModalText] = useState<string>(''); // 알림 모달 텍스트
+  const [showDualModal, setShowDualModal] = useState(false); // DualModal 띄움 여부
+
+  const [canUpload, setCanUpload] = useState<boolean>(false); //업로드 세부 설정 완료
+  const [userSayOk, setUserSayOk] = useState<boolean>(false); // 유저 선택 : true=예, false=아니오
 
   const [tip, setTip] = useState(true);
 
@@ -26,6 +33,29 @@ const PromptCreatePage = () => {
 
   const handleTip = () => {
     navigate('/guide/tip');
+  };
+  const handleUploadCheck = (canUpload: boolean) => {
+    if (canUpload) {
+      //업로드 세부설정이 완료 되었을 때
+      setShowDualModal(true);
+    } else {
+      setModalText('업로드 세부 설정을 완료해 주세요.');
+      setAlertModal(true);
+    }
+  };
+
+  // DualModal에서 "예" 클릭시
+  const handleDualYes = () => {
+    setUserSayOk(true);
+    setShowDualModal(false);
+    setModalText('업로드가 완료되었습니다.');
+    setAlertModal(true);
+  };
+
+  // DualModal에서 "아니오" 클릭시
+  const handleDualNo = () => {
+    setUserSayOk(false);
+    setShowDualModal(false);
   };
 
   return (
@@ -77,6 +107,7 @@ const PromptCreatePage = () => {
                     text="업로드 세부 설정"
                     onClick={() => {
                       alert('업로그 세부 설정 클릭');
+                      setCanUpload(true);
                     }}
                   />
                 </div>
@@ -86,9 +117,7 @@ const PromptCreatePage = () => {
                     style="fill"
                     imgType="upload"
                     text="업로드하기"
-                    onClick={() => {
-                      alert('업로그 세부 설정 클릭');
-                    }}
+                    onClick={() => handleUploadCheck(canUpload)}
                   />
                 </div>
               </div>
@@ -96,6 +125,12 @@ const PromptCreatePage = () => {
           </div>
         </div>
       </div>
+
+      {/* DualModal: showDualModal이 true일 때만 */}
+      {showDualModal && <DualModal text="업로드 하시겠습니까?" onClickYes={handleDualYes} onClickNo={handleDualNo} />}
+
+      {/* TextModal: alertModal이 true일 때만 */}
+      {alertModal && <TextModal text={modalText} onClick={() => setAlertModal(false)} size="lg" />}
     </div>
   );
 };
