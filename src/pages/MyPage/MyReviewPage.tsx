@@ -27,10 +27,10 @@ const MyReviewPage = () => {
   }, [activeTab]);
 
   return (
-    <div className="flex justify-center h-screen bg-background w-full ">
+    <div className="flex justify-center h-screen bg-background  ">
 
 
-      <div className="flex flex-col w-full max-w-[1236px] pt-[92px]">
+      <div className="flex flex-col w-full max-w-[1236px] pt-[92px] h-full">
 
 
         <div className="shrink-0">
@@ -54,6 +54,7 @@ const MyReviewPage = () => {
           />
         ))}
       </div>
+      
       </div>
     </div>
   );
