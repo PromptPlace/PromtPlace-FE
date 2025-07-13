@@ -30,7 +30,7 @@ interface InfoRowProps {
     const [isModalOpen, setIsModalOpen] = useState(false);
   
     return (
-      <div className="flex items-center py-5 border-b border-gray-200">
+      <div className="flex items-center py-5 border-b-[1px] border-white-stroke bg-white h-[90px]">
         <span className="text-[24px] w-[704px] pl-[40px] text-text-on-white font-bold">{label}</span>
         
         {/* 값, 이메일, 버튼 중 하나를 조건부로 렌더링 */}
