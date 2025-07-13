@@ -19,7 +19,7 @@ interface ReviewCardProps {
 
 const ReviewCard: React.FC<ReviewCardProps> = ({ type, reviewData }) => {
   return (
-    <div className="flex flex-col border-b-[1px] border-white-stroke py-[10px] pl-[40px] gap-[10px]">
+    <div className="flex flex-col border-b-[1px] border-white-stroke py-[10px] pl-[40px] gap-[10px] bg-white">
       <div className="mt-[20px]">
         <CardHeader
           date={reviewData.createdAt}

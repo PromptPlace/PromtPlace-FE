@@ -14,7 +14,7 @@ interface Sale {
   
   const SalesHistoryCard: React.FC<SalesHistoryCardProps> = ({ sale }) => {
     return (
-      <div className="flex items-center  pl-[40px] border-b-[1px] border-white-stroke">
+      <div className="flex items-center  pl-[40px] border-b-[1px] border-white-stroke bg-white">
 
         <div className="w-[635px]">
           <CardHeader

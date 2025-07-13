@@ -21,6 +21,7 @@ const DUMMY_SALES_HISTORY = [
   { id: 8, date: '2025.06.06', title: '사업 아이디어 시장 검증 프롬프트', price: 1800, buyer: '지나가던 개발자' },
   { id: 9, date: '2025.06.05', title: '사업 아이디어 시장 검증 프롬프트', price: 1800, buyer: '지나가던 개발자' },
   { id: 10, date: '2025.06.04', title: '사업 아이디어 시장 검증 프롬프트', price: 1800, buyer: '지나가던 개발자' },
+ 
 
 ];
 
@@ -60,7 +61,7 @@ const handleWithdraw = () => {
       <div className="text-[24px] text-primary-hover font-bold pl-[40px] py-[20px] border-b-[1px] border-primary-hover">판매 내역</div>
       </div>
 
-      <div className="bg-white overflow-y-auto flex-grow">
+      <div className="overflow-y-auto flex-grow">
         {salesHistory.map(sale => (
           <SalesHistoryCard key={sale.id} sale={sale} />
         ))}

@@ -34,7 +34,7 @@ const MyReviewPage = () => {
 
 
         <div className="shrink-0">
-        <div className="flex gap-[10px] mb-[56px] ">
+        <div className="flex items-center gap-[10px] mb-[56px] ">
           <img src={archiveIcon} alt="archive icon" className="w-[32px] h-[32px]" />
           <div className="text-[32px] text-primary-hover font-bold">내 리뷰관리</div>
         </div>
@@ -45,7 +45,7 @@ const MyReviewPage = () => {
      
      
       
-      <div className="bg-white overflow-y-auto flex-grow">
+      <div className="overflow-y-auto flex-grow">
         {reviews.map(review => (
           <ReviewCard 
             key={review.id} 
@@ -54,7 +54,7 @@ const MyReviewPage = () => {
           />
         ))}
       </div>
-      
+
       </div>
     </div>
   );
