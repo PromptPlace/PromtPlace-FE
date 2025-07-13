@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PossiblepayAmount from './components/PossiblepayAmount';
 import SalesHistoryCard from './components/SalesHistoryCard';
 import iconReceipt from '@assets/icon-receipt-primary.svg';
-import PrimaryButton from '@/components/Button/PrimaryButton';
 import TextModal from '@/components/Modal/TextModal';
 
 // 더미 데이터 예시
@@ -36,7 +35,7 @@ const handleWithdraw = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-background">
-    <div className=" w-full max-w-[1231px] ">
+    <div className=" w-full max-w-[1236px] ">
 
       <div className="flex items-center gap-[4px] mb-[23px] py-[10px]">
         <img src={iconReceipt} alt="receipt" className="w-[32px] h-[32px] flex items-center justify-center" />
