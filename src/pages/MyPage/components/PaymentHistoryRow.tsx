@@ -23,7 +23,7 @@ interface Transaction {
             date={displayDate}
             dateFormat="dateOnly"
             title={transaction.title}
-            linkUrl={`/guide/notice/${transaction.prompt_id}`}
+            linkUrl={`/prompt/${transaction.prompt_id}`}
           />
          
         </div>
