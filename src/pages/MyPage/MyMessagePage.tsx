@@ -8,7 +8,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageTableList, MessagePagination } from './components/MessagePagination';
-import { NotificationTableList, NotificationPagination } from './components/notificationPagination';
+import { NotificationTableList, NotificationPagination } from './components/NotificationPagination';
 
 interface MyMessagePageProps {
   type: 'message' | 'notification';
