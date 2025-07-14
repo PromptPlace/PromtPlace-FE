@@ -13,9 +13,11 @@ const FilterBar = () => {
     태그: ['#글쓰기', '#디자인', '#스타트업', '#IT'],
   };
 
+  type filterLabel = keyof typeof dropdownItems;
+
   return (
     <section className="relative flex w-full items-center gap-4">
-      {['모델', '필터', '태그'].map((label) => (
+      {(['모델', '필터', '태그'] as filterLabel[]).map((label) => (
         <div key={label} className="relative">
           <button
             onClick={() => toggleDropdown(label)}
@@ -26,7 +28,7 @@ const FilterBar = () => {
 
           {selectedFilter === label && (
             <div className="absolute z-10 mt-1 bg-white border rounded shadow w-32">
-              {dropdownItems[label].map((item) => (
+              {(dropdownItems[label] as string[]).map((item) => (
                 <div
                   key={item}
                   className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
