@@ -29,7 +29,7 @@ const FilterBar = () => {
           {selectedFilter === label && (
             <div className="absolute z-10 mt-1 bg-white border rounded shadow w-32">
               {(dropdownItems[label] as string[]).map((item) => (
-                <div
+                <div 
                   key={item}
                   className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
                 >
