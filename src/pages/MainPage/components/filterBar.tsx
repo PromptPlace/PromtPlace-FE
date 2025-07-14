@@ -23,7 +23,7 @@ const FilterBar = () => {
             onClick={() => toggleDropdown(label)}
             className="flex items-center gap-1 px-2 py-1 border rounded hover:bg-gray-100"
           >
-            {label}
+            {label} 
           </button>
 
           {selectedFilter === label && (
