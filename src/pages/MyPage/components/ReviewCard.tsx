@@ -54,3 +54,4 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ type, reviewData }) => {
 };
 
 export default ReviewCard;
+
