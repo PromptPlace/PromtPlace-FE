@@ -24,11 +24,11 @@ const NotFoundPage = () => {
           </div>
         </div>
         <div className="flex flex-col gap-[16px] w-full">
-          <p className="text-primary text-[32px] font-semibold leading-[40px] tracking-[4.8px]">
+          <p className="text-primary text-[32px] font-bold leading-[40px] tracking-[3.3px]">
             죄송합니다. 페이지를 찾을 수 없습니다.
           </p>
-          <div className="text-text-on-background font-semibold text-[22px] leading-[28px] tracking-[6px] max-w-[787px]">
-            존재하지 않는 주소를 입력하셨거나, 요청하신 주소가 변경, 삭제 되어 찾을 수 없습니다.
+          <div className="text-text-on-background font-bold text-[22px] leading-[28px] tracking-[3.3px] max-w-[798px]">
+            존재하지 않는 주소를 입력하셨거나, 요청하신 페이지의 주소가 변경, 삭제 되어 찾을 수 없습니다.
           </div>
         </div>
 
@@ -57,7 +57,7 @@ const NotFoundPage = () => {
       </div>
 
       <div className="absolute inset-0 w-full h-full z-30">
-        <img src={NotFoundBg} alt="404페이지" className="object-cover" />
+        <img src={NotFoundBg} alt="404페이지" className="object-cover w-full h-full" />
       </div>
     </div>
   );
