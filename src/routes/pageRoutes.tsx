@@ -34,6 +34,7 @@ export const protectedRoutes: RouteObject[] = [
       },
       { path: 'review', element: <lazyRoutes.MyReviewPage /> },
       { path: 'pay', element: <lazyRoutes.MyPayPage /> },
+      { path: 'paymentHistory', element: <lazyRoutes.MyPaymentHistory /> },
       { path: 'message/message', element: <lazyRoutes.MyMessagePage type="message" /> },
       { path: 'message/message/:id', element: <lazyRoutes.MyMessageDetailPage type="message" /> },
       { path: 'message/notification', element: <lazyRoutes.MyMessagePage type="notification" /> },
