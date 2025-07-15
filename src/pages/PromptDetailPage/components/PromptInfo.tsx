@@ -23,14 +23,17 @@ const PromptInfo = ({ promptResult, description, usageGuide }: Props) => {
 
       {/* 프롬프트 설명 */}
       <section className="h-[130px] overflow-hidden">
+
         <h4 className="font-semibold pt-[15px] text-[24px]">프롬프트 설명</h4>
         <div className="font-normal text-[16px] pt-[15px] whitespace-pre-line">{description}</div>
+
       </section>
 
       <div className="h-[1px] bg-[#CCCCCC] w-full" />
 
       {/* 프롬프트 활용법 */}
       <section className="h-[210px] overflow-hidden">
+
         <h4 className="font-semibold text-[24px] pt-[15px]">프롬프트 활용법</h4>
         <div className="font-normal pt-[15px] text-[16px] whitespace-pre-line">{usageGuide}</div>
 

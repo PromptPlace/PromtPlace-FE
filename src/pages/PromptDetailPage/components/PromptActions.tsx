@@ -20,6 +20,7 @@ interface Props {
   userId: number;
 }
 
+
 const dummyReviews = Array(8).fill({
   id: 1,
   user: '홍길동',
@@ -110,6 +111,7 @@ const PromptActions = ({ title, price, isFree, downloads, likes, reviewCounts, r
       </div>
 
       {/* 신고 버튼 */}
+
       <IconButton
         buttonType="squareMd"
         style="red"
@@ -120,6 +122,7 @@ const PromptActions = ({ title, price, isFree, downloads, likes, reviewCounts, r
 
       {/* 신고 모달 */}
       <ReportModal isOpen={isReportModalOpen} onClose={handleCloseReportModal} />
+
     </div>
   );
 };
