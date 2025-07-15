@@ -32,7 +32,7 @@ const SocialButton = ({
     onClick={onClick}
     className="w-full h-[64px] border-[1px] border-text-on-white rounded-[50px] py-3 flex items-center justify-center gap-[3.5px] hover:bg-gray-50"
   >
-    <img src={icon} alt="" className="w-[32px] h-[32px]" />
+    <img src={icon} alt="소셜 로고" className="w-[32px] h-[32px]" />
     <span className="w-[216px] h-[25px] text-text-on-white text-[20px] font-medium">{text}</span>
   </button>
 );

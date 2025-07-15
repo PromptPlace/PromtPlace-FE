@@ -8,6 +8,7 @@ interface Props {
 }
 
 const PromptHeader = ({ title, views, downloads }: Props) => (
+
   <div className="w-[711px] bg-[#FFFEFB] px-8">
     {/* 실제 내용 높이 고정 */}
     <div className="h-[132px] box-border flex flex-col justify-between">
@@ -31,5 +32,6 @@ const PromptHeader = ({ title, views, downloads }: Props) => (
     <div className="h-[1px] bg-[#CCCCCC] w-full" />
   </div>
 );
+
 
 export default PromptHeader;
