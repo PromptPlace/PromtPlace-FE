@@ -5,11 +5,13 @@ import { useState } from 'react';
 
 import ProfileIcon from '@assets/icon-profile-blue-big.svg';
 import UserProfileIcon from '@assets/img-example-profile2.jpg';
-import MailIcon from '@assets/icon-sidebar-mail.svg';
-import PersonIcon from '@assets/icon-sidebar-person.svg';
-import ReceiptIcon from '@assets/icon-sidebar-BiReceipt.svg';
-import ChatIcon from '@assets/icon-sidebar-chat-bubble.svg';
-import ArchiveIcon from '@assets/icon-sidebar-archive.svg';
+
+import MailIcon from '@assets/icon-sidebar-mail.svg?react';
+import PersonIcon from '@assets/icon-sidebar-person.svg?react';
+import ReceiptIcon from '@assets/icon-sidebar-BiReceipt.svg?react';
+import ChatIcon from '@assets/icon-sidebar-chat-bubble.svg?react';
+import ArchiveIcon from '@assets/icon-sidebar-archive.svg?react';
+
 import PrimaryButton from '@components/Button/PrimaryButton';
 import IconButton from '@components/Button/IconButton';
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
@@ -26,11 +28,11 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
   const [loginModalShow, setLoginModalShow] = useState(false);
 
   const LINKS = [
-    { to: '/mypage/prompt', label: '내 프롬프트', icon: ArchiveIcon },
-    { to: '/mypage/review', label: '내 리뷰 관리', icon: ChatIcon },
-    { to: '/mypage/pay', label: '정산 관리', icon: ReceiptIcon },
-    { to: '/mypage/message/message', label: '메시지함', icon: MailIcon },
-    { to: '/mypage/info', label: '회원정보', icon: PersonIcon },
+    { to: '/mypage/prompt', label: '내 프롬프트', icon: <ArchiveIcon /> },
+    { to: '/mypage/review', label: '내 리뷰 관리', icon: <ChatIcon /> },
+    { to: '/mypage/pay', label: '정산 관리', icon: <ReceiptIcon /> },
+    { to: '/mypage/message/message', label: '메시지함', icon: <MailIcon /> },
+    { to: '/mypage/info', label: '회원정보', icon: <PersonIcon /> },
   ];
 
   const handleNavigate = (url: string) => {
@@ -99,12 +101,16 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
                           'before:absolute before:left-0 before:top-0 before:w-[6px] before:h-full before:bg-primary-gradient',
                       )
                     }>
-                    <div className="pl-[64px] py-[9px] flex gap-[10px] items-center justify-start ">
-                      <div className="w-[24px] h-[24px]">
-                        <img src={icon} alt={`${icon}`} className="w-full h-full object-contain" />
+                    {({ isActive }) => (
+                      <div
+                        className={clsx(
+                          'pl-[64px] py-[9px] flex gap-[10px] items-center justify-start',
+                          isActive && 'text-primary-hover',
+                        )}>
+                        {icon}
+                        {label}
                       </div>
-                      {label}
-                    </div>
+                    )}
                   </NavLink>
                 ))}
               </div>
