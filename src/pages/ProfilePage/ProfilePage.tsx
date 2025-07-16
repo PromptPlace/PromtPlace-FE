@@ -15,6 +15,7 @@ import clsx from 'clsx';
 import PromptCard from './components/PromptCard';
 import RecordCard from './components/RecordCard';
 import AskCard from './components/AskCard';
+import SnsCard from './components/SnsCard';
 
 const USER = {
   member_id: 12345,
@@ -133,6 +134,25 @@ const DESCRIPTION = [
   { history_id: 6, description: '2023년 심포니 해커톤 준우승' },
 ];
 
+const SNS = [
+  {
+    sns_id: 1,
+    user_id: 1024,
+    url: 'https://instagram.com/username',
+    description: '인스타그램에 여러 꿀팁 공유 중이니 놀러오세요~',
+    created_at: '2024-01-15T10:30:00Z',
+    updated_at: '2024-01-15T10:30:00Z',
+  },
+  {
+    sns_id: 2,
+    user_id: 1024,
+    url: 'https://youtube.com/username',
+    description: 'AI프롬프트 무료 강의 공유합니다',
+    created_at: '2024-01-15T10:30:00Z',
+    updated_at: '2024-01-15T10:30:00Z',
+  },
+];
+
 const ProfilePage = () => {
   const { id } = useParams();
   const myId = localStorage.getItem('user_id'); // 로그인 시 저장 필요
@@ -220,7 +240,7 @@ const ProfilePage = () => {
           </div>
 
           {menuId === 0 && (
-            <div className="w-full max-h-[368px] overflow-y-scroll">
+            <div className="w-full max-h-[368px] overflow-y-auto">
               {PROMPT.map((prompt) => (
                 <PromptCard
                   key={prompt.prompt_id}
@@ -234,7 +254,7 @@ const ProfilePage = () => {
           )}
 
           {menuId === 1 && (
-            <div className="w-full max-h-[368px] overflow-y-scroll">
+            <div className="w-full max-h-[368px] overflow-y-auto">
               {DESCRIPTION.map((description) => (
                 <RecordCard key={description.history_id} description={description.description} />
               ))}
@@ -242,7 +262,14 @@ const ProfilePage = () => {
           )}
 
           {menuId === 2 && <AskCard prompts={PROMPT} />}
-          {menuId === 3 && <div>sns</div>}
+
+          {menuId === 3 && (
+            <div className="w-full max-h-[368px] overflow-y-auto">
+              {SNS.map((sns) => (
+                <SnsCard key={sns.sns_id} description={sns.description} url={sns.url} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
