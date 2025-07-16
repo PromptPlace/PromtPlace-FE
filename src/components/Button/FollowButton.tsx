@@ -7,6 +7,8 @@ import FollowCheckIcon from '@assets/icon-follow-check.svg';
  *
  * @param {boolean} follow -- 팔로우 상태. 팔로우하고 있다면 true, 아니면 false
  * @param {function} onClick -- 버튼 클릭 시 실행될 함수
+ * @param {string} size -- 팔로우 버튼 크기, 기본은 "sm"이며 프롬프트 TIP에서만 "lg" 사이즈 사용.
+ *                         프롬프트 TIP페이지 외에서는 size 넘기지 않아도 됨.
  *
  * @example
  * <FollowButton
@@ -22,16 +24,22 @@ import FollowCheckIcon from '@assets/icon-follow-check.svg';
 interface FollowButtonProps {
   follow: boolean;
   onClick: () => void;
+  size?: string;
 }
 
-const FollowButton = ({ follow, onClick }: FollowButtonProps) => {
+const FollowButton = ({ follow, onClick, size = 'sm' }: FollowButtonProps) => {
   return (
     <button
       onClick={onClick}
       className={clsx(
-        'h-[28px] w-[77px] px-[10px] rounded-[50px] text-sm font-normal leading-[18px] transition-all duration-300 ease-in-out flex items-center justify-center',
-        !follow && 'py-[5px] border border-primary hover:border-primary-hover text-primary hover:text-primary-hover',
+        'rounded-[50px] transition-all duration-300 ease-in-out flex items-center justify-center',
+        size === 'sm' && 'h-[28px] w-[77px] px-[10px] text-sm font-normal leading-[18px]',
+        size === 'lg' && 'h-[37px] w-[108px] px-[17px] py-[5px] text-[20px] font-bold leading-[25px]',
+        !follow &&
+          'bg-white py-[5px] border border-primary hover:border-primary-hover text-primary hover:text-primary-hover',
+        !follow && size === 'lg' && 'border border-primary-hover text-primary-hover',
         follow && 'bg-primary hover:bg-primary-hover text-white gap-[5.89px]',
+        follow && size === 'lg' && 'bg-primary-hover',
       )}>
       {!follow && <>팔로우 +</>}
       {follow && (
