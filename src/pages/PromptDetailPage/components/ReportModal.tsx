@@ -14,7 +14,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose }) => {
 
   const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedOption(event.target.value);
-    setDescription(''); // 항목 바꾸면 내용 초기화
+    setDescription('');
   };
 
   const handleSubmit = () => {
