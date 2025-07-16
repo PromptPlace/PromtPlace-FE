@@ -7,6 +7,7 @@ import TagButton from '@components/Button/TagButton';
 import { AiOutlineHeart } from 'react-icons/ai';
 import ReviewList from './ReviewList';
 import ReportModal from '../components/ReportModal';
+import DownloadModal from '../components/DownloadModal';
 
 interface Props {
   title: string;
@@ -33,7 +34,61 @@ const PromptActions = ({ title, price, isFree, downloads, likes, reviewCounts, r
   const [follow, setFollow] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
   const [tags, setTags] = useState<string[]>(['#수묵화', '#수채화', '#디자인', '#일러스트', '#그림', '#이미지']);
-  const [isReportModalOpen, setIsReportModalOpen] = useState(false); // 신고 모달 상태
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+  const [downloadData, setDownloadData] = useState<{
+    title: string;
+    downloadUrl: string;
+    content: string;
+  } | null>(null);
+
+  const handleDownloadClick = async () => {
+    try {
+      // const promptId = 1024;
+      // const token = localStorage.getItem('accessToken');
+      // if (!token) {
+      //   alert('로그인이 필요합니다.');
+      //   return;
+      // }
+
+      // const response = await axios.post(
+      //   `/api/prompts/${promptId}/downloads`,
+      //   { prompt_id: promptId },
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   },
+      // );
+
+      // const { download_url, title } = response.data;
+
+      // ✅ 테스트용 더미 데이터
+      const title = '동양풍 일러스트 이미지 생성';
+      const download_url = 'https://cdn.promptplace.com/prompts/1024.txt';
+
+      setDownloadData({
+        title,
+        downloadUrl: download_url,
+        content: `
+1. 전통 동양풍 인물 일러스트
+a graceful Korean noblewoman wearing hanbok, sitting under a cherry blossom tree, Joseon dynasty style, soft lighting, detailed fabric texture, traditional hair style, serene atmosphere, oriental illustration --v 5 --ar 2:3
+a Korean dragon soaring through the clouds, traditional ink painting style, dynamic cloud motion, golden scales shimmering in sunlight, East Asian mythology, majestic and ancient aura --v 5 --ar 3:2 --style scenic
+
+2. 동양풍 마을/배경 일러스트
+a peaceful traditional Japanese village in spring, sakura trees in full bloom, tiled rooftops, soft morning light, misty mountain background, Ghibli-style aesthetic, detailed background art --v 5 --ar 16:9
+
+3. 퓨전 동양풍 일러스트
+a futuristic city blending Korean traditional architecture and cyberpunk neon lights, hanok buildings with glowing signs, digital screens, night setting, rain-soaked street, Blade Runner meets Joseon, concept art --v 5 --ar 21:9
+      `.trim(),
+      });
+
+      setIsDownloadModalOpen(true);
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || '다운로드 중 오류가 발생했습니다.';
+      alert(msg);
+    }
+  };
 
   const handleDelete = (text: string) => {
     setTags(tags.filter((tag) => tag !== text));
@@ -83,8 +138,20 @@ const PromptActions = ({ title, price, isFree, downloads, likes, reviewCounts, r
           style="fill"
           imgType="download"
           text="다운로드"
-          onClick={() => alert('다운로드')}
+          onClick={handleDownloadClick}
         />
+
+        {/* 다운로드 모달 */}
+        {downloadData && (
+          <DownloadModal
+            isOpen={isDownloadModalOpen}
+            onClose={() => setIsDownloadModalOpen(false)}
+            title={downloadData.title}
+            downloadUrl={downloadData.downloadUrl}
+            content={downloadData.content}
+          />
+        )}
+
         <AiOutlineHeart className="ml-[30px] w-[28px] h-[25px] text-[24px] text-[#999898]" />
       </div>
 
