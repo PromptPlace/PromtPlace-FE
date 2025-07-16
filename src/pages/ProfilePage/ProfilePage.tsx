@@ -13,6 +13,7 @@ import AlarmOnIcon from '@assets/icon-alarm-on.svg';
 import { useState } from 'react';
 import clsx from 'clsx';
 import PromptCard from './components/PromptCard';
+import RecordCard from './components/RecordCard';
 
 const USER = {
   member_id: 12345,
@@ -117,6 +118,15 @@ const PROMPT = [
   },
 ];
 
+const DESCRIPTION = [
+  { history_id: 1, description: '2023년 심포니 해커톤 준우승' },
+  { history_id: 2, description: '2024년 프롬프트 엔지니어 자격증 취득' },
+  { history_id: 3, description: '2023년 심포니 해커톤 준우승' },
+  { history_id: 4, description: '2023년 심포니 해커톤 준우승' },
+  { history_id: 5, description: '2023년 심포니 해커톤 준우승' },
+  { history_id: 6, description: '2023년 심포니 해커톤 준우승' },
+];
+
 const ProfilePage = () => {
   const { id } = useParams();
   const myId = localStorage.getItem('user_id'); // 로그인 시 저장 필요
@@ -210,7 +220,14 @@ const ProfilePage = () => {
               ))}
             </div>
           )}
-          {menuId === 1 && <div>이력</div>}
+
+          {menuId === 1 && (
+            <div className="w-full max-h-[368px] overflow-scroll">
+              {DESCRIPTION.map((description) => (
+                <RecordCard key={description.history_id} description={description.description} />
+              ))}
+            </div>
+          )}
           {menuId === 2 && <div>문의하기</div>}
           {menuId === 3 && <div>sns</div>}
         </div>
