@@ -23,7 +23,7 @@ const USER = {
 const PROMPT = [
   {
     prompt_id: 1,
-    title: '파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트',
+    title: '29자 넘어가면 말 줄임표 파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트',
     model: 'Claude',
     tags: [
       {

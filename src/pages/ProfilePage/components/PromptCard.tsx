@@ -12,8 +12,10 @@ const PromptCard = ({ title, model, tags }: PrompCardProps) => {
   const [isLike, setIsLike] = useState(false);
 
   return (
-    <div className="bg-white border-b border-b-white-stroke py-[10px] flex justify-between">
-      <div className="text-text-on-white text-[22px] font-bold leading-[28px] py-[20px] px-[80px]">{title}</div>
+    <div className="bg-white border-b border-b-white-stroke py-[10px] flex justify-between items-center">
+      <div className="text-text-on-white text-[22px] font-bold leading-[28px] py-[20px] px-[80px] truncate max-w-[664px] truncate">
+        {title}
+      </div>
       <div className="text-text-on-background text-[20px] font-medium leading-[25px] py-[20px] px-[10px]">{model}</div>
       <div className="flex gap-[1px] py-[20px] px-[10px]">
         {tags.map((tag) => (
