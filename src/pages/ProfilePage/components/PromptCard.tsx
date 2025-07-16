@@ -1,18 +1,27 @@
 import HeartEmpty from '@assets/icon-heart-none-small.svg';
 import HeartBlue from '@assets/icon-heart-blue-small.svg';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface PrompCardProps {
+  id: number;
   title: string;
   model: string;
   tags: { tag_id: number; name: string }[];
 }
 
-const PromptCard = ({ title, model, tags }: PrompCardProps) => {
+const PromptCard = ({ id, title, model, tags }: PrompCardProps) => {
   const [isLike, setIsLike] = useState(false);
+  const navigate = useNavigate();
+
+  const handleNavigate = (id: number) => {
+    navigate(`/prompt/${id}`);
+  };
 
   return (
-    <div className="bg-white border-b border-b-white-stroke py-[10px] flex justify-between items-center">
+    <div
+      onClick={() => handleNavigate(id)}
+      className="bg-white border-b border-b-white-stroke py-[10px] flex justify-between items-center cursor-pointer">
       <div className="text-text-on-white text-[22px] font-bold leading-[28px] py-[20px] px-[80px] truncate max-w-[664px] truncate">
         {title}
       </div>

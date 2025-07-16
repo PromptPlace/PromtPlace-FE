@@ -216,7 +216,13 @@ const ProfilePage = () => {
           {menuId === 0 && (
             <div className="w-full max-h-[368px] overflow-scroll">
               {PROMPT.map((prompt) => (
-                <PromptCard key={prompt.prompt_id} title={prompt.title} model={prompt.model} tags={prompt.tags} />
+                <PromptCard
+                  key={prompt.prompt_id}
+                  id={prompt.prompt_id}
+                  title={prompt.title}
+                  model={prompt.model}
+                  tags={prompt.tags}
+                />
               ))}
             </div>
           )}
