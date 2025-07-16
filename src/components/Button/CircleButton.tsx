@@ -29,7 +29,7 @@ interface CircleButtonProps {
   buttonType: 'send' | 'edit';
   size: Size;
   onClick: () => void;
-  type: 'button' | 'submit';
+  type?: 'button' | 'submit';
 }
 
 const CircleButton = ({ buttonType, size, onClick, type = 'button' }: CircleButtonProps) => {

@@ -14,6 +14,7 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import PromptCard from './components/PromptCard';
 import RecordCard from './components/RecordCard';
+import AskCard from './components/AskCard';
 
 const USER = {
   member_id: 12345,
@@ -23,8 +24,9 @@ const USER = {
 const PROMPT = [
   {
     prompt_id: 1,
-    title: '29자 넘어가면 말 줄임표 파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트',
+    title: '파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트',
     model: 'Claude',
+    purchased_at: '2025-07-04T09:30:00.000Z',
     tags: [
       {
         tag_id: 1,
@@ -42,8 +44,9 @@ const PROMPT = [
   },
   {
     prompt_id: 2,
-    title: '파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트',
+    title: '29자 넘어가면 말 줄임표 파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트',
     model: 'Claude',
+    purchased_at: '2025-07-04T09:30:00.000Z',
     tags: [
       {
         tag_id: 1,
@@ -63,6 +66,7 @@ const PROMPT = [
     prompt_id: 3,
     title: '파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트',
     model: 'Claude',
+    purchased_at: '2025-07-04T09:30:00.000Z',
     tags: [
       {
         tag_id: 1,
@@ -79,9 +83,10 @@ const PROMPT = [
     ],
   },
   {
-    prompt_id: 3,
+    prompt_id: 4,
     title: '파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트',
     model: 'Claude',
+    purchased_at: '2025-07-04T09:30:00.000Z',
     tags: [
       {
         tag_id: 1,
@@ -98,9 +103,10 @@ const PROMPT = [
     ],
   },
   {
-    prompt_id: 3,
+    prompt_id: 5,
     title: '파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트',
     model: 'Claude',
+    purchased_at: '2025-07-04T09:30:00.000Z',
     tags: [
       {
         tag_id: 1,
@@ -198,7 +204,7 @@ const ProfilePage = () => {
 
       <div className="flex flex-col items-center justify-center px-[102px] mt-[40px]">
         <div className="w-full">
-          <div className="flex w-full justify-between">
+          <div className="flex w-full justify-between border-b border-text-on-background">
             {menuList.map((menu) => (
               <div
                 key={menu.id}
@@ -214,7 +220,7 @@ const ProfilePage = () => {
           </div>
 
           {menuId === 0 && (
-            <div className="w-full max-h-[368px] overflow-scroll">
+            <div className="w-full max-h-[368px] overflow-y-scroll">
               {PROMPT.map((prompt) => (
                 <PromptCard
                   key={prompt.prompt_id}
@@ -228,13 +234,14 @@ const ProfilePage = () => {
           )}
 
           {menuId === 1 && (
-            <div className="w-full max-h-[368px] overflow-scroll">
+            <div className="w-full max-h-[368px] overflow-y-scroll">
               {DESCRIPTION.map((description) => (
                 <RecordCard key={description.history_id} description={description.description} />
               ))}
             </div>
           )}
-          {menuId === 2 && <div>문의하기</div>}
+
+          {menuId === 2 && <AskCard prompts={PROMPT} />}
           {menuId === 3 && <div>sns</div>}
         </div>
       </div>
