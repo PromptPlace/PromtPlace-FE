@@ -21,6 +21,7 @@ interface Props {
   userId: number;
 }
 
+
 const dummyReviews = Array(8).fill({
   id: 1,
   user: '홍길동',
@@ -177,6 +178,7 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
       </div>
 
       {/* 신고 버튼 */}
+
       <IconButton
         buttonType="squareMd"
         style="red"
@@ -187,6 +189,7 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
 
       {/* 신고 모달 */}
       <ReportModal isOpen={isReportModalOpen} onClose={handleCloseReportModal} />
+
     </div>
   );
 };

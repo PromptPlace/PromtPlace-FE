@@ -15,6 +15,7 @@ const HomeLayout = () => {
 
 export default HomeLayout;*/
 
+import ScrollToTop from '@/utils/scrollToTop';
 import Navbar from '@components/Navbar';
 import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
@@ -22,6 +23,7 @@ import { Outlet } from 'react-router-dom';
 const HomeLayout = () => {
   return (
     <>
+      <ScrollToTop />
       <Navbar />
       <div className="bg-[#F5F5F5] min-h-screen">
         <Suspense fallback={null}>
