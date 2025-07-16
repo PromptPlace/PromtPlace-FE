@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiSend } from 'react-icons/fi'; // 전송 아이콘
+import sendIcon from '../assets/BiSend.png';
 
 interface ReportModalProps {
   isOpen: boolean;
@@ -26,7 +26,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className=" bg-overlay fixed inset-0 z-50 flex items-center justify-center bg-opacity-40">
-      <div className="relative flex flex-col bg-white rounded-[16px] shadow-lg px-[64px] py-[48px] w-[758px] h-[639px] text-[#121212]">
+      <div className="relative flex flex-col bg-white rounded-[16px] shadow-lg px-[48px] py-[48px] w-[758px] h-[639px] text-[#121212]">
         {/* 닫기 버튼 */}
         <button
           className="absolute top-[20px] right-[20px] text-[28px] font-bold hover:opacity-60"
@@ -35,11 +35,15 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose }) => {
           ×
         </button>
 
-        {/* 헤더 */}
-        <h2 className="text-[24px] font-bold mb-[40px]">프롬프트 신고하기</h2>
+        <div className="flex items-center mb-[40px]">
+          <button onClick={onClose} className="text-2xl font-bold leading-none hover:opacity-70" aria-label="뒤로가기">
+            &lt;
+          </button>
+          <h2 className="text-[24px] font-bold ml-[15px]">프롬프트 신고하기</h2>
+        </div>
 
         {/* 라디오 항목 */}
-        <div className="flex flex-col gap-[24px]">
+        <div className="flex flex-col gap-[24px] px-8">
           {[
             {
               value: '허위 또는 과장된 콘텐츠',
@@ -85,13 +89,14 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose }) => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="신고 내용을 입력하세요(구체적으로 작성)"
-                    className="w-full h-[96px] bg-[#F5F5F5] border border-gray-300 rounded-[8px] p-4 resize-none focus:outline-blue-500 focus:ring-2 focus:ring-blue-300 transition text-[14px]"
+                    className="w-full h-[96px] bg-[#F5F5F5] border border-gray-300 rounded-[8px] p-4 resize-none focus:outline-none focus:ring-0 transition text-[14px]"
                   />
+
                   <button
                     onClick={handleSubmit}
                     disabled={!description.trim()}
-                    className="absolute bottom-[12px] right-[12px] text-gray-700 hover:text-black disabled:opacity-30">
-                    <FiSend className="text-[20px]" />
+                    className="absolute bottom-[12px] right-[12px] disabled:opacity-30 text-black">
+                    <img src={sendIcon} alt="send" className="w-[20px] h-[20px]" />
                   </button>
                 </div>
               )}

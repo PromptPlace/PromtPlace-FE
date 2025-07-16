@@ -146,12 +146,12 @@ const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title }: R
               <div className="absolute top-8 right-0 bg-secondary text-text-on-background rounded-md shadow-md z-20 w-[88px]">
                 <ul className="text-sm py-1">
                   <li
-                    className="px-4 py-[6px] hover:bg-secondary-pressed hover:text-black cursor-pointer rounded-t-md"
+                    className="px-4 py-[6px] active:bg-secondary-pressed hover:text-black cursor-pointer rounded-t-md"
                     onClick={() => onClickDelete(idx)}>
                     삭제하기
                   </li>
                   <li
-                    className="px-4 py-[6px] hover:bg-secondary-pressed hover:text-black cursor-pointer rounded-b-md"
+                    className="px-4 py-[6px] active:bg-secondary-pressed hover:text-black cursor-pointer rounded-b-md"
                     onClick={() => onClickEdit(idx)}>
                     수정하기
                   </li>
