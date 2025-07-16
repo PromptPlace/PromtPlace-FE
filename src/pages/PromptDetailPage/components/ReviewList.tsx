@@ -41,11 +41,11 @@ const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title }: R
     setOpenMenuIdx((prev) => (prev === idx ? null : idx));
   };
 
-  // 24시간 이내 수정/삭제 가능 여부 체크
-  const isWithin24Hours = (updatedAt: string) => {
+  // 30일 이내 수정/삭제 가능 여부 체크
+  const isWithin30Days = (updatedAt: string) => {
     const updatedTime = new Date(updatedAt).getTime();
     const now = Date.now();
-    return now - updatedTime <= 24 * 60 * 60 * 1000;
+    return now - updatedTime <= 30 * 24 * 60 * 60 * 1000; // 30일
   };
 
   // 삭제 버튼 클릭 시
@@ -53,7 +53,7 @@ const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title }: R
     setOpenMenuIdx(null);
     setSelectedReviewIdx(idx);
 
-    if (!reviews[idx]?.updatedAt || !isWithin24Hours(reviews[idx].updatedAt)) {
+    if (!reviews[idx]?.updatedAt || !isWithin30Days(reviews[idx].updatedAt)) {
       setShowExpiredModal(true);
       return;
     }
@@ -133,7 +133,9 @@ const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title }: R
                     <Rating star={review.rating} />
                   </div>
                   {hoverIdx === idx && (
-                    <button onClick={() => toggleMenu(idx)} className="hover:opacity-80">
+                    <button
+                      onClick={() => toggleMenu(idx)}
+                      className="hover:bg-secondary-pressed rounded-full p-1 transition-colors duration-150">
                       <BsThreeDotsVertical className="text-lg text-gray-500" />
                     </button>
                   )}

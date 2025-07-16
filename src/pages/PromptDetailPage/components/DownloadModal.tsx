@@ -8,7 +8,7 @@ interface DownloadModalProps {
   content: string;
 }
 
-const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose, title, downloadUrl, content }) => {
+const DownloadModal = ({ isOpen, onClose, title, downloadUrl, content }: DownloadModalProps) => {
   if (!isOpen) return null;
 
   return (
@@ -34,7 +34,7 @@ const DownloadModal: React.FC<DownloadModalProps> = ({ isOpen, onClose, title, d
           />
         </div>
 
-        <div className="text-[20px] pt-[15px] font-medium whitespace-pre-wrap leading-relaxed">{content}</div>
+        <div className="text-[20px] pt-[40px] font-medium whitespace-pre-wrap leading-relaxed">{content}</div>
       </div>
     </div>
   );

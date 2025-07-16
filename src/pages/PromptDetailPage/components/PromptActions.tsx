@@ -8,7 +8,6 @@ import { AiOutlineHeart } from 'react-icons/ai';
 import ReviewList from './ReviewList';
 import ReportModal from '../components/ReportModal';
 import DownloadModal from '../components/DownloadModal';
-import axios from 'axios';
 
 interface Props {
   title: string;
