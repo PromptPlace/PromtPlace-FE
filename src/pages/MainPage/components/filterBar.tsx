@@ -20,7 +20,7 @@ const FilterBar = () => {
       {(['모델', '필터', '태그'] as filterLabel[]).map((label) => (
         <div key={label} className="relative">
           <button
-            onClick={() => toggleDropdown(label)}
+            onClick={() => toggleDropdown(label)} 
             className="flex items-center gap-1 px-2 py-1 border rounded hover:bg-gray-100"
           >
             {label} 
