@@ -6,14 +6,15 @@ import arrowDown from '@/assets/icon-arrow-down.svg';
 type FilterBarProps = {
   onModelChange : (model: string|null) => void;
   onSortChange : (sort: string|null) => void;
+  onlyFree?: boolean;
+  setOnlyFree: (free: boolean) => void;
 };
 
-const FilterBar = ({ onModelChange, onSortChange }: FilterBarProps) => {
+const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: FilterBarProps) => {
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [onlyFree, setOnlyFree] = useState<boolean>(false);
   const [tags, setTags] = useState<string[]>([]);
 
   const toggleDropdown = (label: string) => {
@@ -91,7 +92,7 @@ const FilterBar = ({ onModelChange, onSortChange }: FilterBarProps) => {
           {/* 태그 드롭다운 */}
           {selectedFilter === label && label === '태그' && (
             <div
-              className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-lg shadow-md outline outline-1 outline-white-stroke p-4 z-10"
+              className="absolute top-full left-0 w-[400px] rounded-lg p-4 z-10"
               onClick={(e) => e.stopPropagation()}
             >
               <TagFilter

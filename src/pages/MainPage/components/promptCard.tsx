@@ -9,8 +9,10 @@ import iconEye from '@/assets/icon-eye.svg'
 import iconDownload from '@/assets/icon-download-gray.svg'
 import Rating from '@/components/Rating'
 import profileImage from '@/assets/icon-profile-gray.svg'
-import likeIcon from '@/assets/icon-heart-blue-small.svg'
-import unLikeIcon from '@/assets/icon-heart-none-small.svg'
+import likeIcon from '@/assets/icon-heart-blue-big.svg'
+import unLikeIcon from '@/assets/icon-heart-none-big.svg'
+import TagButton from '@/components/Button/TagButton'
+import ModelButton from '@/components/Button/ModelButton'
 
 type props = {
     prompt: Prompt;
@@ -26,37 +28,35 @@ const promptCard = ({ prompt }: props) => {
     }
 
     return (
-        <div className="flex flex-col w-[832px] mb-6">
+        <div className="flex flex-col w-[832px] mt-[42px]">
             {/* 작성자 정보 (카드 바깥쪽) */}
-            <div className="flex items-center mb-2 px-2">
+            <div className="inline-flex justify-start items-center gap-3.5">
                 <img
                     src={authorImg ? authorImg : profileImage}
                     alt="authorImage"
-                    className="w-[48px] h-[48px] rounded-full mr-3"
+                    className="w-14 h-14 rounded-[100px] inline-flex flex-col justify-center items-center"
                 />
                 <span className="text-[18px] font-medium">{authorName}</span>
             </div>
 
             {/* 카드 본문 */}
-            <div className="relative w-[780px] bg-white rounded-xl shadow-md p-4 ml-2 ml-auto">
-                <div className="flex flex-wrap gap-2 mb-3">
-                    <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded">
-                        {model}
-                    </span>
+            <div className="relative w-[780px] max-h-[320px] bg-white rounded-xl shadow-md p-4 ml-2 ml-auto">
+                <div className="flex flex-wrap items-center px-2.5 py-0.5 gap-2.5 mb-[14px]">
+
+                    <ModelButton text={model} />
                     {tags.map((tag, index) => (
                         <span
                             key={index}
-                            className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded"
                         >
-                            #{tag}
+                            <TagButton hasDelete={false} text={`#${tag}`} onClick={() => { }} />
                         </span>
                     ))}
                 </div>
-                
+
                 <div className="flex justify-between items-center mb-2">
-                    <span className="text-lg font-bold">{title}</span>
+                    <span className="text-xl">{title}</span>
                     <div className="flex items-center gap-4 text-sm text-gray-600">
-                        <span>{price}원</span>
+                        <div className='flex items-center gap-1 text-lg'>{price !== 0 ? `${price}원` : '무료'}</div>
                         <div><Rating star={rating} /></div>
                         <div className='flex items-center gap-1'><img src={iconEye} className='w-4 h-4' /> {views}</div>
                         <div className='flex items-center gap-1'><img src={iconDownload} className='w-4 h-4' /> {downloadCount}</div>
@@ -68,7 +68,7 @@ const promptCard = ({ prompt }: props) => {
                 <button
                     onClick={handleLike}
                     className='absolute right-4 bottom-4 z-10'>
-                        <img src={isLiked ? likeIcon : unLikeIcon} className='w-4 h-4'/>
+                    <img src={isLiked ? likeIcon : unLikeIcon} className='w-4 h-4' />
                 </button>
             </div>
         </div>
