@@ -4,10 +4,12 @@ type FilterDropdownProps = {
   label: string;
   items: string[];
   selected: boolean;
+  selectedModel?: string;
   onToggle: () => void;
+  onSelect: (item: string) => void;
 };
 
-function FilterDropdown({ label, items, selected, onToggle }: FilterDropdownProps) {
+function FilterDropdown({ label, items, selected, onToggle, onSelect, selectedModel }: FilterDropdownProps) {
   return (
     <div className="relative inline-block">
       {/* Dropdown List */}
@@ -24,7 +26,14 @@ function FilterDropdown({ label, items, selected, onToggle }: FilterDropdownProp
                 ${index === 0 ? 'rounded-tl rounded-tr' : ''}
                 ${index === items.length - 1 ? 'rounded-bl rounded-br' : 'border-b border-white-stroke'}
                 inline-flex justify-center items-center gap-2.5
-                hover:bg-[#f5f5f5] cursor-pointer`}
+                ${selectedModel === item ? 'bg-[#f5f5f5]' : 'hover:bg-[#f5f5f5]'}
+                cursor-pointer`}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onSelect(item);
+                onToggle();
+              }}
             >
               <div className="justify-start text-text-on-background text-lg font-normal font-['Spoqa_Han_Sans_Neo']">
                 {item}

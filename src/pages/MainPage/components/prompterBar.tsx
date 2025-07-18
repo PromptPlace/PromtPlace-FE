@@ -4,10 +4,18 @@ import FollowButton from '@/components/Button/FollowButton';
 import profileImage from '@/assets/icon-profile-gray.svg';
 
 const PrompterBar = ({ creators }: { creators: Creator[] }) => {
-  const [ isFollowed, setIsFollowed ] = useState(false);
+  const [ isFollowed, setIsFollowed ] = useState<Record<number, boolean>>(
+    () => creators.reduce((acc, creator) => {
+      acc[creator.id] = creator.followed;
+      return acc;
+    }, {} as Record<number, boolean>)
+  );
 
-  const handleFollow = () => {
-    setIsFollowed(prev => !prev);
+  const handleFollow = (id:number) => {
+    setIsFollowed(prev => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
     // 팔로우 기능 서버 연동
   }
 
@@ -33,12 +41,12 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
                 </div>
               </div>
               <FollowButton 
-                follow={c.followed}
+                follow={isFollowed[c.id]}
                 onClick={() => {
-                  // 버튼 클릭 시 팔로우/언팔로우 로직 처리
+                  handleFollow(c.id);
                 }}
               >
-                {c.followed ? '완료 ✔' : '팔로우 +'}
+                {isFollowed[c.id] ? '완료 ✔' : '팔로우 +'}
               </FollowButton>
             </li>
           ))}

@@ -8,7 +8,7 @@
 
 **/
 
-import React from 'react';
+import React, { use, useState } from 'react';
 import PromptCard from './components/promptCard';
 import FilterBar from './components/filterBar';
 import PrompterBar from './components/prompterBar';
@@ -16,12 +16,38 @@ import { dummyPrompts, dummyCreators } from './components/../dummyData';
 import GradientButton from '@/components/Button/GradientButton';
 
 const MainPage = () => {
+
+  const [ selectedModel, setSelectedModel ] = useState<string | null>(null);
+  const [ selectedSort, setSelectedSort ] = useState<string | null>(null);
+
+  const filterPromptsByModel = selectedModel
+    ? dummyPrompts.filter(prompt => prompt.model === selectedModel)
+    : dummyPrompts;
+
+  const sortPromptByFilter = [...filterPromptsByModel].sort((a, b) => {
+    switch (selectedSort) {
+      case '조회순':
+        return b.views - a.views;
+      case '별점순':
+        return b.rating - a.rating;
+      case '다운로드순':
+        return b.downloadCount - a.downloadCount;
+      case '가격 낮은 순':
+        return a.price - b.price;
+      case '가격 높은 순':
+        return b.price - a.price;
+      default:
+        return 0; // 기본 정렬
+    }
+  });
+
   return (
     <div className="flex gap-6 justify-center bg-[#F5F5F5] relative overflow-hidden">
       <div className="w-[858px] h-[820px] mt-[17px] overflow-y-auto pb-32">
-        <FilterBar />
+        <FilterBar onModelChange={setSelectedModel} onSortChange={setSelectedSort} />
+
         <div className="mt-6 scroll-auto">
-          {dummyPrompts.map((prompt) => (
+          {filterPromptsByModel.map((prompt) => (
             <PromptCard
               key={prompt.id}
               prompt={prompt}

@@ -3,8 +3,15 @@ import FilterDropdown from './FilterDropdown';
 import TagFilter from './TagFilter';
 import arrowDown from '@/assets/icon-arrow-down.svg';
 
-const FilterBar = () => {
+type FilterBarProps = {
+  onModelChange : (model: string|null) => void;
+  onSortChange : (sort: string|null) => void;
+};
+
+const FilterBar = ({ onModelChange, onSortChange }: FilterBarProps) => {
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+  const [selectedModel, setSelectedModel] = useState<string | null>(null);
+  const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [onlyFree, setOnlyFree] = useState<boolean>(false);
   const [tags, setTags] = useState<string[]>([]);
@@ -17,6 +24,19 @@ const FilterBar = () => {
     setSelectedTags((prev) =>
       prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
     );
+  };
+
+  const handleModelSelect = (model : string) => {
+    const isModel = selectedModel === model ? null : model;
+    setSelectedModel(isModel);
+    onModelChange(isModel);
+    setSelectedFilter(null); // 드롭다운 닫기
+  }
+
+  const handleSortSelect = (sort: string) => {
+    const isSort = selectedSort === sort ? null : sort;
+    setSelectedSort(isSort);
+    onSortChange(isSort);
   };
 
   const dropdownItems = {
@@ -48,12 +68,23 @@ const FilterBar = () => {
           </div>
 
           {/* 일반 드롭다운 */}
-          {selectedFilter === label && label !== '태그' && (
+          {selectedFilter === label && label === '모델' && (
             <FilterDropdown
               label={label}
               items={dropdownItems[label]}
               selected={selectedFilter === label}
               onToggle={() => toggleDropdown(label)}
+              onSelect={label === '모델' ? handleModelSelect : () => {}}
+            />
+          )}
+
+          {selectedFilter === label && label === '필터' && (
+            <FilterDropdown
+              label={label}
+              items={dropdownItems[label]}
+              selected={selectedFilter === label}
+              onToggle={() => toggleDropdown(label)}
+              onSelect={label === '필터' ? handleSortSelect : () => {}}
             />
           )}
 
