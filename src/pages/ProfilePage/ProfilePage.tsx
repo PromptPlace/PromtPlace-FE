@@ -10,12 +10,15 @@ import ProfileIcon from '@assets/icon-profile-gray.svg';
 import FollowButton from '@/components/Button/FollowButton';
 import AlarmOffIcon from '@assets/icon-alarm-off.svg';
 import AlarmOnIcon from '@assets/icon-alarm-on.svg';
+import UserProfileIcon from '@assets/img-example-profile2.jpg';
+
 import { useState } from 'react';
 import clsx from 'clsx';
 import PromptCard from './components/PromptCard';
 import RecordCard from './components/RecordCard';
 import AskCard from './components/AskCard';
 import SnsCard from './components/SnsCard';
+import CircleButton from '@/components/Button/CircleButton';
 
 const USER = {
   member_id: 12345,
@@ -39,6 +42,10 @@ const PROMPT = [
       },
       {
         tag_id: 3,
+        name: '코딩',
+      },
+      {
+        tag_id: 4,
         name: '코딩',
       },
     ],
@@ -156,7 +163,7 @@ const SNS = [
 const ProfilePage = () => {
   const { id } = useParams();
   const myId = localStorage.getItem('user_id'); // 로그인 시 저장 필요
-  const isMyProfile = id === myId;
+  const isMyProfile = id === myId; // 현재 10인 경우 본인 페이지로 이동됨
   console.log(isMyProfile);
 
   const [isFollow, setIsFollow] = useState(false);
@@ -181,45 +188,79 @@ const ProfilePage = () => {
 
   return (
     <div className="flex flex-col pt-[120px]">
-      <div className="p-[10px] pl-[220px] flex gap-[60px] items-center">
-        <div className="flex gap-[28px]">
-          <div className="w-[80px] h-[80px]">
-            <img src={ProfileIcon} alt="프로필 이미지" className="w-full h-full object-contain" />
+      <div
+        className={clsx(
+          'p-[10px] pl-[220px] flex items-center',
+          !isMyProfile && 'gap-[60px]',
+          isMyProfile && 'gap-[100px]',
+        )}>
+        <div className="flex gap-[28px] items-center">
+          <div className="w-[80px] h-[80px] rounded-full overflow-hidden">
+            {isMyProfile && <img src={UserProfileIcon} alt="프로필 이미지" className="w-full h-full object-contain" />}
+            {!isMyProfile && <img src={ProfileIcon} alt="프로필 이미지" className="w-full h-full object-contain" />}
           </div>
           <div className="flex flex-col gap-[5px] text-text-on-white">
             <p className="text-[32px] font-bold leading-[40px]">{USER.name}</p>
             <p className="text-[20px] font-medium leading-[25px]">5년차 백엔드 개발자!</p>
           </div>
+          {isMyProfile && (
+            <div className="ml-[-4px]">
+              <CircleButton buttonType="edit" size="sm" onClick={() => {}} />
+            </div>
+          )}
         </div>
 
-        <div className="flex flex-col gap-[5px] items-center">
-          <p className="text-primary-hover text-[18px] font-normal leading-[23px]">팔로워</p>
-          <div className="px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center">
-            90
-          </div>
-        </div>
+        {!isMyProfile && (
+          <>
+            <div className="flex flex-col gap-[5px] items-center">
+              <p className="text-primary-hover text-[18px] font-normal leading-[23px]">팔로워</p>
+              <div className="px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center">
+                90
+              </div>
+            </div>
 
-        <div className="flex gap-[24px] items-center">
-          <FollowButton
-            follow={isFollow}
-            onClick={() => {
-              setIsFollow((prev) => !prev);
-            }}
-            size="lg"
-          />
+            <div className="flex gap-[24px] items-center">
+              <FollowButton
+                follow={isFollow}
+                onClick={() => {
+                  setIsFollow((prev) => !prev);
+                }}
+                size="lg"
+              />
 
-          <div
-            onClick={() =>
-              setIsAlarmOn((prev) => ({ state: !prev.state, icon: prev.state ? AlarmOffIcon : AlarmOnIcon }))
-            }
-            className={clsx(
-              'w-[48px] h-[48px] bg-white rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out',
-              !isAlarmOn.state && 'border border-text-on-background',
-              isAlarmOn.state && 'border border-primary bg-red-500',
-            )}>
-            <img src={isAlarmOn.icon} alt="알림" />
-          </div>
-        </div>
+              <div
+                onClick={() =>
+                  setIsAlarmOn((prev) => ({ state: !prev.state, icon: prev.state ? AlarmOffIcon : AlarmOnIcon }))
+                }
+                className={clsx(
+                  'w-[48px] h-[48px] bg-white rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out',
+                  !isAlarmOn.state && 'border border-text-on-background',
+                  isAlarmOn.state && 'border border-primary bg-red-500',
+                )}>
+                <img src={isAlarmOn.icon} alt="알림" />
+              </div>
+            </div>
+          </>
+        )}
+
+        {isMyProfile && (
+          <>
+            <div className="flex gap-[28px]">
+              <div className="flex flex-col gap-[5px] items-center">
+                <p className="text-primary-hover text-[18px] font-normal leading-[23px]">팔로워</p>
+                <div className="px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center">
+                  1091
+                </div>
+              </div>
+              <div className="flex flex-col gap-[5px] items-center">
+                <p className="text-primary-hover text-[18px] font-normal leading-[23px]">팔로잉</p>
+                <div className="px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center">
+                  215
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       <div className="flex flex-col items-center justify-center px-[102px] mt-[40px]">
@@ -248,6 +289,7 @@ const ProfilePage = () => {
                   title={prompt.title}
                   model={prompt.model}
                   tags={prompt.tags}
+                  isMyProfile={isMyProfile}
                 />
               ))}
             </div>
