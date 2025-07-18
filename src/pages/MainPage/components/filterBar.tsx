@@ -27,7 +27,7 @@ const FilterBar = () => {
   type filterLabel = keyof typeof dropdownItems;
 
   return (
-    <section className="h-11 px-5 inline-flex justify-start items-center gap-3.5 font-['Spoqa_Han_Sans_Neo'] text-text-on-background text-xl font-medium">
+    <section className="h-11 px-5 inline-flex justify-center items-center gap-3.5 font-['Spoqa_Han_Sans_Neo'] text-text-on-background text-xl font-medium">
       {(['모델', '필터', '태그'] as filterLabel[]).map((label) => (
         <div
           key={label}
@@ -74,7 +74,7 @@ const FilterBar = () => {
       ))}
 
       {/* 무료만 보기 */}
-      <label className="ml-2 flex items-center gap-1 px-2 py-1 text-sm cursor-pointer">
+      <label className="ml-2 flex items-center gap-1 px-2 py-1 text-lg cursor-pointer">
         <span>무료만 보기</span>
         <input
           type="checkbox"

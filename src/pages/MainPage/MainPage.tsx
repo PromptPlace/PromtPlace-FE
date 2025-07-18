@@ -1,3 +1,13 @@
+/**
+* Todo(07/18):
+* 1. 프롬프트 카드 검색기능 구현
+* 2. 프롬프트 카드 작성자 데이터 구조 변경
+* 3. 프롬프터 바 작성자 데이터 구조 변경 + 프롬프터 바 추가/삭제 기능 관리자 페이지 이관
+
+* Author @곽도윤
+
+**/
+
 import React from 'react';
 import PromptCard from './components/promptCard';
 import FilterBar from './components/filterBar';

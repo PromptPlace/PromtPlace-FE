@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { Creator } from '@/types/prompt.ts';
 import FollowButton from '@/components/Button/FollowButton';
+import profileImage from '@/assets/icon-profile-gray.svg';
 
 const PrompterBar = ({ creators }: { creators: Creator[] }) => {
+  const [ isFollowed, setIsFollowed ] = useState(false);
+
+  const handleFollow = () => {
+    setIsFollowed(prev => !prev);
+    // 팔로우 기능 서버 연동
+  }
+
   return (
     <aside className="flex flex-col gap-6 mt-[17px] w-[313px]">
       {/* 🔥 이달의 인기 프롬프터 */}
@@ -15,7 +23,7 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
             <li key={c.id} className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <img
-                  src={c.avatar}
+                  src={c.avatar ? c.avatar : profileImage}
                   alt={c.name}
                   className="size-8 rounded-full object-cover"
                 />
@@ -47,7 +55,7 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
             <li key={c.id} className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <img
-                  src={c.avatar}
+                  src={c.avatar ? c.avatar : profileImage}
                   alt={c.name}
                   className="size-8 rounded-full object-cover"
                 />
@@ -59,10 +67,10 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
               <FollowButton 
                 follow={c.followed}
                 onClick={() => {
-                  // 버튼 클릭 시 팔로우/언팔로우 로직 처리
+                  handleFollow();
                 }}
               >
-                {c.followed ? '완료 ✔' : '팔로우 +'}
+                {isFollowed ? '완료 ✔' : '팔로우 +'}
               </FollowButton>
             </li>
           ))}

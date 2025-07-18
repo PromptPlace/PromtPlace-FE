@@ -1,6 +1,6 @@
 export interface Prompt {
     id: number;
-    authorImg: string;
+    authorImg: string|null;
     authorName: string;
     model: string;
     title: string;
@@ -16,7 +16,7 @@ export interface Prompt {
 export interface Creator {
     id: number;
     name: string;
-    avatar: string;
+    avatar: string|null;
     followers: number;
     followed: boolean;
 }
