@@ -19,6 +19,7 @@ import RecordCard from './components/RecordCard';
 import AskCard from './components/AskCard';
 import SnsCard from './components/SnsCard';
 import CircleButton from '@/components/Button/CircleButton';
+import PrimaryButton from '@/components/Button/PrimaryButton';
 
 const USER = {
   member_id: 12345,
@@ -164,7 +165,8 @@ const ProfilePage = () => {
   const { id } = useParams();
   const myId = localStorage.getItem('user_id'); // 로그인 시 저장 필요
   const isMyProfile = id === myId; // 현재 10인 경우 본인 페이지로 이동됨
-  console.log(isMyProfile);
+
+  const [descriptions, setDescriptions] = useState(DESCRIPTION.map((d) => ({ ...d, isEditing: false })));
 
   const [isFollow, setIsFollow] = useState(false);
 
@@ -186,6 +188,28 @@ const ProfilePage = () => {
 
   const [menuId, setMenuId] = useState(0);
 
+  const handleAddNewDescription = () => {
+    const newId = descriptions.length ? descriptions[descriptions.length - 1].history_id + 1 : 1;
+
+    const newDescription = {
+      history_id: newId,
+      description: '',
+      isEditing: true,
+    };
+
+    setDescriptions([...descriptions, newDescription]);
+  };
+
+  const handleDeleteDescription = (id: number) => {
+    setDescriptions((prev) => prev.filter((d) => d.history_id !== id));
+  };
+
+  const handleUpdateDescription = (id: number, value: string) => {
+    setDescriptions((prev) =>
+      prev.map((item) => (item.history_id === id ? { ...item, description: value, isEditing: false } : item)),
+    );
+  };
+
   return (
     <div className="flex flex-col pt-[120px]">
       <div
@@ -205,7 +229,7 @@ const ProfilePage = () => {
           </div>
           {isMyProfile && (
             <div className="ml-[-4px]">
-              <CircleButton buttonType="edit" size="sm" onClick={() => {}} />
+              <CircleButton buttonType="edit" size="md" onClick={() => {}} />
             </div>
           )}
         </div>
@@ -296,10 +320,28 @@ const ProfilePage = () => {
           )}
 
           {menuId === 1 && (
-            <div className="w-full max-h-[368px] overflow-y-auto">
-              {DESCRIPTION.map((description) => (
-                <RecordCard key={description.history_id} description={description.description} />
-              ))}
+            <div className="flex flex-col items-center">
+              <div
+                className={clsx(
+                  'w-full overflow-y-auto',
+                  !isMyProfile && 'max-h-[368px]',
+                  isMyProfile && 'max-h-[279px]',
+                )}>
+                {descriptions.map((description) => (
+                  <RecordCard
+                    key={description.history_id}
+                    history_id={description.history_id}
+                    description={description.description}
+                    isMyProfile={isMyProfile}
+                    isEditing={description.isEditing}
+                    handleDelete={handleDeleteDescription}
+                    setDescriptions={handleUpdateDescription}
+                  />
+                ))}
+              </div>
+              <div className="mt-[50px]">
+                <PrimaryButton buttonType="plus" text="+" onClick={handleAddNewDescription} />
+              </div>
             </div>
           )}
 
