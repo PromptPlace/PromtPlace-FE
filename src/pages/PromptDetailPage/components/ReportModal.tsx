@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import sendIcon from '../assets/BiSend.png';
+import BiRadioCircle from '../assets/BiRadioCircle.png';
+import BiRadioCircleMarked from '../assets/BiRadioCircleMarked.png';
 
 interface ReportModalProps {
   isOpen: boolean;
@@ -27,26 +29,18 @@ const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
 
   return (
     <div className=" bg-overlay fixed inset-0 z-50 flex items-center justify-center bg-opacity-40">
-      <div className="relative flex flex-col bg-white rounded-[16px] shadow-lg px-[48px] py-[48px] w-[758px] h-[639px] text-[#121212]">
-        {/* 닫기 버튼 */}
-        <button
-          className="absolute top-[20px] right-[20px] text-[28px] font-bold hover:opacity-60"
-          onClick={onClose}
-          aria-label="닫기">
-          ×
-        </button>
-
+      <div className="relative flex flex-col bg-white rounded-[16px] shadow-lg px-[42px] py-[45px] w-[758px] h-[635px] text-[#121212]">
         <div className="flex items-center mb-[40px]">
           <button onClick={onClose} className="text-2xl font-bold leading-none hover:opacity-70" aria-label="뒤로가기">
             &lt;
           </button>
-          <h2 className="text-[24px] font-bold ml-[15px]">프롬프트 신고하기</h2>
+          <h2 className="text-[24px] font-bold ml-[10px]">프롬프트 신고하기</h2>
         </div>
 
         {!isSubmitted ? (
-          <div className="flex flex-col gap-[24px] px-8">
+          <div className="flex flex-col gap-[24px] px-[25px]">
             {/* 라디오 항목 */}
-            <div className="flex flex-col gap-[24px] px-8">
+            <div className="flex flex-col gap-[24px]">
               {[
                 {
                   value: '허위 또는 과장된 콘텐츠',
@@ -70,18 +64,26 @@ const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
                 },
               ].map((item) => (
                 <label key={item.value} className="flex flex-col gap-[6px] cursor-pointer">
-                  <div className="flex items-start gap-[12px]">
+                  <div className="flex items-start gap-[12px]  text-[#000000]">
                     <input
                       type="radio"
                       name="reportOption"
                       value={item.value}
                       checked={selectedOption === item.value}
                       onChange={handleOptionChange}
-                      className="mt-[6px]"
+                      className="hidden"
                     />
+                    {/*라디오 아이콘 */}
+                    <img
+                      src={selectedOption === item.value ? BiRadioCircleMarked : BiRadioCircle}
+                      alt="radio"
+                      onClick={() => setSelectedOption(item.value)}
+                      className="w-[20px] h-[20px] mt-[6px] cursor-pointer"
+                    />
+
                     <div>
-                      <p className="font-semibold text-[18px]">{item.label}</p>
-                      {item.desc && <p className="text-[14px] text-gray-500 mt-[4px]">{item.desc}</p>}
+                      <p className="text-[24px] font-bold">{item.label}</p>
+                      {item.desc && <p className="font-medium text-[20px] mt-[4px]">{item.desc}</p>}
                     </div>
                   </div>
 
@@ -98,7 +100,7 @@ const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
                       <button
                         onClick={handleSubmit}
                         disabled={!description.trim()}
-                        className="absolute bottom-[12px] right-[12px] disabled:opacity-30 text-black">
+                        className="absolute bottom-[12px] right-[12px] text-black opacity-100 transition-opacity">
                         <img src={sendIcon} alt="send" className="w-[20px] h-[20px]" />
                       </button>
                     </div>
