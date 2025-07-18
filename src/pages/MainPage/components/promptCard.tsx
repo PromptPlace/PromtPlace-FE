@@ -1,5 +1,7 @@
 import React from 'react'
 import type { Prompt } from '@/types/prompt.ts'
+import iconEye from '@/assets/icon-eye.svg'
+import iconDownload from '@/assets/icon-download-gray.svg'
 
 type props = {
     prompt: Prompt;
@@ -40,8 +42,8 @@ const promptCard = ({ prompt }: props) => {
                     <div className="flex items-center gap-4 text-sm text-gray-600">
                         <span>{price}원</span>
                         <span>⭐ {rating.toFixed(1)}</span>
-                        <span>👁 {views}</span>
-                        <span>⬇ {downloadCount}</span>
+                        <div className='flex items-center gap-1'><img src={iconEye} className='w-4 h-4' /> {views}</div>
+                        <div className='flex items-center gap-1'><img src={iconDownload} className='w-4 h-4' /> {downloadCount}</div>
                     </div>
                 </div>
 
