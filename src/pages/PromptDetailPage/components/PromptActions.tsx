@@ -4,7 +4,8 @@ import FollowButton from '@components/Button/FollowButton';
 import Rating from '@components/Rating';
 import profile from '../assets/profile.jpg';
 import TagButton from '@components/Button/TagButton';
-import { AiOutlineHeart } from 'react-icons/ai';
+import heartNone from '../assets/heart-none.png';
+import heartOnClick from '../assets/heart-onClick.png';
 import ReviewList from './ReviewList';
 import ReportModal from '../components/ReportModal';
 import DownloadModal from '../components/DownloadModal';
@@ -21,13 +22,44 @@ interface Props {
   userId: number;
 }
 
-const dummyReviews = Array(8).fill({
-  id: 1,
-  user: '홍길동',
-  rating: 4,
-  comment: '가격도 저렴하고 퀄리티 좋아요. 잘 쓰고 있습니다. 근데 좀 단조로운 것 같아요.',
-  profile,
-});
+const dummyReviews = [
+  {
+    review_id: 101,
+    writer_id: 1,
+    writer_profile_image_url: profile,
+    writer_nickname: '홍길동',
+    rating: 4.0,
+    content: '가격도 저렴하고 퀄리티 좋아요. 잘 쓰고 있어요.',
+    created_at: '2025-07-06T12:34:56',
+  },
+  {
+    review_id: 100,
+    writer_id: 2,
+    writer_profile_image_url: profile,
+    writer_nickname: '김땡땡',
+    rating: 4.5,
+    content: '최고에요',
+    created_at: '2025-07-08T12:34:51',
+  },
+  {
+    review_id: 99,
+    writer_id: 3,
+    writer_profile_image_url: profile,
+    writer_nickname: '이수지',
+    rating: 3.5,
+    content: '괜찮긴 한데 원하는 느낌은 아니었어요.',
+    created_at: '2025-07-09T09:20:00',
+  },
+  {
+    review_id: 98,
+    writer_id: 4,
+    writer_profile_image_url: profile,
+    writer_nickname: '박보검',
+    rating: 5.0,
+    content: '진짜 완벽해요. 이런 퀄리티 처음 봐요!',
+    created_at: '2025-07-10T16:45:30',
+  },
+];
 
 const PromptActions = ({ title, price, isFree, downloads, likes, reviewCounts, rating, updatedAt, userId }: Props) => {
   const [follow, setFollow] = useState(false);
@@ -35,6 +67,7 @@ const PromptActions = ({ title, price, isFree, downloads, likes, reviewCounts, r
   const [tags, setTags] = useState<string[]>(['#수묵화', '#수채화', '#디자인', '#일러스트', '#그림', '#이미지']);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+  const [liked, setLiked] = useState(false);
   const [downloadData, setDownloadData] = useState<{
     title: string;
     downloadUrl: string;
@@ -108,6 +141,7 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
         title="동양풍 일러스트 이미지 생성"
         reviewCounts={reviewCounts}
         onClose={() => setShowReviews(false)}
+        currentUserId={1}
       />
     );
   }
@@ -151,7 +185,12 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
           />
         )}
 
-        <AiOutlineHeart className="ml-[30px] w-[28px] h-[25px] text-[24px] text-[#999898]" />
+        <img
+          src={liked ? heartOnClick : heartNone}
+          alt="heart"
+          className="ml-[34px] w-[28px] h-[25px] cursor-pointer"
+          onClick={() => setLiked((prev) => !prev)}
+        />
       </div>
 
       {/* 별점 및 리뷰보기 */}
