@@ -21,7 +21,6 @@ interface Props {
   userId: number;
 }
 
-
 const dummyReviews = Array(8).fill({
   id: 1,
   user: '홍길동',
@@ -160,11 +159,13 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
         <div className="mt-[25px] flex justify-start">
           <Rating star={rating} />
         </div>
-        <div
-          className="pt-[20px] text-[20px] flex items-center gap-[10px] cursor-pointer"
-          onClick={() => setShowReviews(true)}>
-          <p>리뷰보기</p>
-          <span className="w-[37px] h-[28px] px-[10px] py-[5px] border border-[#999999] rounded-full text-[16px] text-[#999898] flex items-center justify-center">
+        <div className="pt-[20px] text-[20px] flex items-center gap-[10px]">
+          <p className="cursor-pointer" onClick={() => setShowReviews(true)}>
+            리뷰보기
+          </p>
+          <span
+            className="w-[37px] h-[28px] px-[10px] py-[5px] border border-[#999999] rounded-full text-[16px] text-[#999898] flex items-center justify-center cursor-pointer"
+            onClick={() => setShowReviews(true)}>
             {reviewCounts}
           </span>
         </div>
@@ -173,7 +174,7 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
       {/* 태그 */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-[40px] mb-[30px]">
         {tags.map((tag, idx) => (
-          <TagButton key={idx} hasDelete={true} text={tag} onClick={() => handleDelete(tag)} />
+          <TagButton key={idx} hasDelete={false} text={tag} onClick={() => {}} />
         ))}
       </div>
 
@@ -189,7 +190,6 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
 
       {/* 신고 모달 */}
       <ReportModal isOpen={isReportModalOpen} onClose={handleCloseReportModal} />
-
     </div>
   );
 };
