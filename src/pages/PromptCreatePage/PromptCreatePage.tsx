@@ -8,35 +8,68 @@ import { LuChevronRight } from 'react-icons/lu';
 import IconButton from '@/components/Button/IconButton';
 import { useNavigate } from 'react-router-dom';
 import DualModal from '@/components/Modal/DualModal';
+import UploadModal from './components/UploadModal';
 
 const PromptCreatePage = () => {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
 
+  const [uploadModal, setuploadModal] = useState<boolean>(false); //업로드 세부 설정 모달
+  const [canUpload, setCanUpload] = useState<boolean>(false); //업로드 세부 설정 완료 (개발 초기 사용)
+
   const [alertModal, setAlertModal] = useState<boolean>(false); // 알림 모달
   const [modalText, setModalText] = useState<string>(''); // 알림 모달 텍스트
   const [showDualModal, setShowDualModal] = useState(false); // DualModal 띄움 여부
 
-  const [canUpload, setCanUpload] = useState<boolean>(false); //업로드 세부 설정 완료
-  const [userSayOk, setUserSayOk] = useState<boolean>(false); // 유저 선택 : true=예, false=아니오
-
   const [tip, setTip] = useState(true);
 
+  // 모달에서 작성되는 state
+  const [selectedModels, setSelectedModels] = useState<string[]>([]);
+
+  const [priceType, setPriceType] = useState<'무료' | '유료' | null>(null);
+  const [cost, setCost] = useState<number | null>(null);
+
+  const [tags, setTags] = useState<string[]>([]);
+
+  const [withImage, setWithImage] = useState<boolean>(false);
+  const [files, setFiles] = useState<File[]>([]);
+  const [previewText, setPreviewText] = useState<string>('');
+
+  const [discriptionText, setDescriptionText] = useState<string>('');
+  const [howToUseText, setHowToUseText] = useState<string>('');
+
+  // useEffect(() => {
+  //   console.log('title 변경됨:', title);
+  // }, [title]);
   useEffect(() => {
-    console.log('title 변경됨:', title);
-  }, [title]);
-  useEffect(() => {
-    console.log('렌더링');
-  }, []);
+    console.log(files);
+  }, [files.length]);
 
   const navigate = useNavigate();
 
   const handleTip = () => {
     navigate('/guide/tip');
   };
+
+  const handleOption = () => {
+    setuploadModal(true);
+  };
+
+  //업로드 조건 확인
   const handleUploadCheck = (canUpload: boolean) => {
-    if (canUpload) {
-      //업로드 세부설정이 완료 되었을 때
+    const valid = !!(
+      title.trim() !== '' &&
+      content.trim() !== '' &&
+      selectedModels.length > 0 &&
+      priceType &&
+      (priceType === '무료' || (priceType === '유료' && cost !== null)) &&
+      previewText.trim() !== '' &&
+      discriptionText.trim() !== ''
+    );
+
+    setCanUpload(valid);
+
+    if (valid) {
       setShowDualModal(true);
     } else {
       setModalText('업로드 세부 설정을 완료해 주세요.');
@@ -46,7 +79,6 @@ const PromptCreatePage = () => {
 
   // DualModal에서 "예" 클릭시
   const handleDualYes = () => {
-    setUserSayOk(true);
     setShowDualModal(false);
     setModalText('업로드가 완료되었습니다.');
     setAlertModal(true);
@@ -54,7 +86,6 @@ const PromptCreatePage = () => {
 
   // DualModal에서 "아니오" 클릭시
   const handleDualNo = () => {
-    setUserSayOk(false);
     setShowDualModal(false);
   };
 
@@ -106,7 +137,7 @@ const PromptCreatePage = () => {
                     imgType="settings"
                     text="업로드 세부 설정"
                     onClick={() => {
-                      alert('업로그 세부 설정 클릭');
+                      handleOption();
                       setCanUpload(true);
                     }}
                   />
@@ -126,10 +157,33 @@ const PromptCreatePage = () => {
         </div>
       </div>
 
-      {/* DualModal: showDualModal이 true일 때만 */}
+      {/* 업로드 세부 설정 모달 */}
+      {uploadModal && (
+        <UploadModal
+          setuploadModal={setuploadModal}
+          selectedModels={selectedModels}
+          setSelectedModels={setSelectedModels}
+          priceType={priceType}
+          setPriceType={setPriceType}
+          cost={cost}
+          setCost={setCost}
+          tags={tags}
+          setTags={setTags}
+          withImage={withImage}
+          setWithImage={setWithImage}
+          files={files}
+          setFiles={setFiles}
+          previewText={previewText}
+          setPreviewText={setPreviewText}
+          discriptionText={discriptionText}
+          setDescriptionText={setDescriptionText}
+          howToUseText={howToUseText}
+          setHowToUseText={setHowToUseText}
+        />
+      )}
+      {/* DualModal */}
       {showDualModal && <DualModal text="업로드 하시겠습니까?" onClickYes={handleDualYes} onClickNo={handleDualNo} />}
-
-      {/* TextModal: alertModal이 true일 때만 */}
+      {/* TextModal */}
       {alertModal && <TextModal text={modalText} onClick={() => setAlertModal(false)} size="lg" />}
     </div>
   );

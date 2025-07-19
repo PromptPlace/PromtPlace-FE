@@ -29,7 +29,7 @@ export const Editor = ({ placeholder, onChange }: { placeholder: string; onChang
   }
   return (
     <div
-      className={`w-full mx-auto mt-5 rounded text-black relative leading-[30px] font-normal text-left rounded-tl-[10px] rounded-tr-[10px]`}>
+      className={`w-full mx-auto mt-5 rounded text-black relative leading-[36px] font-normal text-left rounded-tl-[10px] rounded-tr-[10px]`}>
       <div className="bg-white relative">
         <LexicalComposer initialConfig={initialConfig}>
           <RichTextPlugin
