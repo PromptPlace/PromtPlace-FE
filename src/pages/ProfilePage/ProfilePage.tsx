@@ -12,7 +12,7 @@ import AlarmOffIcon from '@assets/icon-alarm-off.svg';
 import AlarmOnIcon from '@assets/icon-alarm-on.svg';
 import UserProfileIcon from '@assets/img-example-profile2.jpg';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import clsx from 'clsx';
 import PromptCard from './components/PromptCard';
 import RecordCard from './components/RecordCard';
@@ -28,10 +28,12 @@ import INQUIRY from '@data/ProfilePage/inquiry.json';
 import InquiryCard from './components/InquiryCard';
 import Arrow from '@assets/icon-vector-bottom.svg?react';
 import InquiryDetailCard from './components/InquiryDetailCard';
+import useImgUpload from '@/hooks/useImgUpload';
 
 const USER = {
   member_id: 12345,
   name: '울랄라',
+  description: '5년차 백엔드 개발자!',
 };
 
 type Inquiry = {
@@ -69,6 +71,12 @@ const ProfilePage = () => {
   const [showInquiryDetail, setShowInquiryDetail] = useState<Inquiry | null>(null);
 
   const [sns, setSns] = useState(SNS.map((s) => ({ ...s, isEditing: false })));
+
+  const { selectedImg, handleUpload } = useImgUpload();
+  const [profileEdit, setProfileEdit] = useState(false);
+  const [userName, setUserName] = useState(USER.name);
+  const [userDescription, setUserDescription] = useState(USER.description);
+  const imageRef = useRef<HTMLInputElement>(null);
 
   const menuList = [
     {
@@ -139,20 +147,80 @@ const ProfilePage = () => {
         className={clsx(
           'p-[10px] pl-[220px] flex items-center',
           !isMyProfile && 'gap-[60px]',
-          isMyProfile && 'gap-[100px]',
+          isMyProfile && 'gap-[7vw]',
         )}>
-        <div className="flex gap-[28px] items-center">
-          <div className="w-[80px] h-[80px] rounded-full overflow-hidden">
-            {isMyProfile && <img src={UserProfileIcon} alt="프로필 이미지" className="w-full h-full object-contain" />}
-            {!isMyProfile && <img src={ProfileIcon} alt="프로필 이미지" className="w-full h-full object-contain" />}
+        <div className={clsx('flex gap-[28px] items-center', profileEdit && 'items-center')}>
+          <div className="flex flex-col items-center w-full">
+            <div className="w-[80px] h-[80px] rounded-full overflow-hidden">
+              {isMyProfile && (
+                <img
+                  src={selectedImg?.thumbnail || UserProfileIcon}
+                  alt="프로필 이미지"
+                  className="w-full h-full object-cover"
+                />
+              )}
+              {!isMyProfile && <img src={ProfileIcon} alt="프로필 이미지" className="w-full h-full object-contain" />}
+              {profileEdit && <img src={selectedImg?.thumbnail} alt="프로필 이미지" />}
+            </div>
+            {profileEdit && (
+              <div className="mt-[10px]">
+                <PrimaryButton
+                  buttonType="change"
+                  text="사진 변경하기"
+                  onClick={() => {
+                    imageRef.current?.click();
+                  }}
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={imageRef}
+                  onChange={handleUpload}
+                  style={{ display: 'none' }}
+                />
+              </div>
+            )}
           </div>
-          <div className="flex flex-col gap-[5px] text-text-on-white">
-            <p className="text-[32px] font-bold leading-[40px]">{USER.name}</p>
-            <p className="text-[20px] font-medium leading-[25px]">5년차 백엔드 개발자!</p>
+
+          <div className="flex flex-col gap-[5px] text-text-on-white shrink-0">
+            {!profileEdit && <p className="text-[32px] font-bold leading-[40px]">{userName}</p>}
+            {profileEdit && (
+              <input
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                className="text-[32px] font-bold leading-[40px] outline-none text-primary placeholder:text-primary w-[175px]"
+                placeholder={USER.name}
+              />
+            )}
+            {!profileEdit && <p className="text-[20px] font-medium leading-[25px]">{userDescription}</p>}
+            {profileEdit && (
+              <input
+                value={userDescription}
+                onChange={(e) => setUserDescription(e.target.value)}
+                placeholder={userDescription}
+                className="text-[20px] font-medium leading-[25px] placeholder:text-primary outline-none text-primary w-[219px]"
+              />
+            )}
           </div>
           {isMyProfile && (
-            <div className="ml-[-4px]">
-              <CircleButton buttonType="edit" size="md" onClick={() => {}} />
+            <div className="shrink-0 flex flex-col gap-[13px] items-center">
+              <CircleButton
+                buttonType="edit"
+                size="md"
+                onClick={() => {
+                  setProfileEdit(true);
+                }}
+                isActive={profileEdit}
+              />
+              {profileEdit && (
+                <PrimaryButton
+                  buttonType="squareMini"
+                  text="완료"
+                  onClick={() => {
+                    setProfileEdit(false);
+                  }}
+                />
+              )}
             </div>
           )}
         </div>
