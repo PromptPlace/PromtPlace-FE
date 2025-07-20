@@ -4,7 +4,7 @@ export const dummyPrompts: Prompt[] = [
   {
     id: 1,
     authorName: "홍길동",
-    authorImg: "/avatars/1.jpg",
+    authorImg: null,
     model: "ChatGPT",
     tags: ["책요약", "자산계획서", "프로토타입", "IT"],
     title: "IT사업계획서 작성 프롬프트",
@@ -12,13 +12,13 @@ export const dummyPrompts: Prompt[] = [
     rating: 5,
     views: 2109,
     likes: 120,
-    content: "1. 사업 개요\n사업명: 00상품 이름...",
+    content: "사업 개요 \n사업명: (쇼핑몰 이름) \n형태: 온라인 쇼핑몰 \n주요 상품: 20대 여성을 타겟으로 한 다양한 스타일의 원피스 \n목표 시장: 국내 온라인 패션 시장, 20대 여성 고객 \n판매 채널: 자체 웹사이트, 인스타그램, 네이버 스마트스토어, 무신사, 지그재그 등 \n운영 방식: 자체 제작 및 도매 구매 혼합 운영...\nddd\nddd",
     downloadCount: 120,
   },
   {
     id: 2,
     authorName: "디자인킹",
-    authorImg: "/avatars/2.jpg",
+    authorImg: null,
     model: "Midjourney",
     tags: ["추상화", "수묵화", "레디자인", "무드레퍼런스"],
     title: "동양풍 일러스트 이미지 생성",
@@ -32,7 +32,7 @@ export const dummyPrompts: Prompt[] = [
   {
     id: 3,
     authorName: "정문장",
-    authorImg: "/avatars/3.jpg",
+    authorImg: null,
     model: "ChatGPT",
     tags: ["글쓰기", "자기계발", "GPT", "습관"],
     title: "하루 15분 글쓰기 훈련 프롬프트",
@@ -46,7 +46,7 @@ export const dummyPrompts: Prompt[] = [
   {
     id: 4,
     authorName: "한개발",
-    authorImg: "/avatars/4.jpg",
+    authorImg: null,
     model: "GPT-4",
     tags: ["프론트엔드", "면접", "시뮬레이션", "코딩"],
     title: "프론트엔드 면접 시뮬레이터",
@@ -60,7 +60,7 @@ export const dummyPrompts: Prompt[] = [
   {
     id: 5,
     authorName: "박사랑",
-    authorImg: "/avatars/5.jpg",
+    authorImg: null,
     model: "ChatGPT",
     tags: ["연애", "조언", "감정", "상담"],
     title: "GPT 연애 상담 프롬프트",
@@ -74,10 +74,10 @@ export const dummyPrompts: Prompt[] = [
 ];
 
 export const dummyCreators: Creator[] = [
-  { id: 1, name: "주토피아노", avatar: "/avatars/u1.jpg", followers: 1092, followed: false },
-  { id: 2, name: "이해인", avatar: "/avatars/u2.jpg", followers: 120, followed: false },
-  { id: 3, name: "폴로", avatar: "/avatars/u3.jpg", followers: 222, followed: true },
-  { id: 4, name: "올랄라", avatar: "/avatars/u4.jpg", followers: 90, followed: true },
-  { id: 5, name: "안민수", avatar: "/avatars/u5.jpg", followers: 23, followed: false },
-  { id: 6, name: "뽀또", avatar: "/avatars/u6.jpg", followers: 42, followed: true },
+  { id: 1, name: "주토피아노", avatar: null, followers: 1092, followed: false },
+  { id: 2, name: "이해인", avatar: null, followers: 120, followed: false },
+  { id: 3, name: "폴로", avatar: null, followers: 222, followed: true },
+  { id: 4, name: "올랄라", avatar: null, followers: 90, followed: true },
+  { id: 5, name: "안민수", avatar: null, followers: 23, followed: false },
+  { id: 6, name: "뽀또", avatar: null, followers: 42, followed: true },
 ];
