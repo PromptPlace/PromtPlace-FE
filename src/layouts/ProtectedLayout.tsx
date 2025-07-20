@@ -15,9 +15,11 @@ const ProtectedLayout = () => {
     <>
       <ScrollToTop />
       <Navbar />
-      <Suspense fallback={null}>
-        <Outlet />
-      </Suspense>
+      <div className="bg-background" style={{ height: 'calc(100vh - 75px)' }}>
+        <Suspense fallback={null}>
+          <Outlet />
+        </Suspense>
+      </div>
     </>
   );
 };

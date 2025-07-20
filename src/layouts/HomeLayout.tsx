@@ -25,7 +25,7 @@ const HomeLayout = () => {
     <>
       <ScrollToTop />
       <Navbar />
-      <div className="bg-[#F5F5F5] min-h-screen">
+      <div className="bg-background" style={{ height: 'calc(100vh - 75px)' }}>
         <Suspense fallback={null}>
           <Outlet />
         </Suspense>
