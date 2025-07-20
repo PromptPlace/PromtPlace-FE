@@ -4,8 +4,8 @@ import FollowButton from '@components/Button/FollowButton';
 import Rating from '@components/Rating';
 import profile from '../assets/profile.jpg';
 import TagButton from '@components/Button/TagButton';
-import heartNone from '../assets/heart-none.png';
-import heartOnClick from '../assets/heart-onClick.png';
+import heartNone from '../../../assets/icon-heart-none-big.svg';
+import heartOnClick from '../../../assets/icon-heart-blue-big.svg';
 import ReviewList from './ReviewList';
 import ReportModal from '../components/ReportModal';
 import DownloadModal from '../components/DownloadModal';
@@ -147,10 +147,6 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
       const msg = err?.response?.data?.message || '다운로드 중 오류가 발생했습니다.';
       alert(msg);
     }
-  };
-
-  const handleDelete = (text: string) => {
-    setTags(tags.filter((tag) => tag !== text));
   };
 
   const handleReportButtonClick = () => {

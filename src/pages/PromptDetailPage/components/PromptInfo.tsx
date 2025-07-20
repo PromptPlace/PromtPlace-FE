@@ -33,7 +33,7 @@ const PromptInfo = ({ promptResult, description, usageGuide }: Props) => {
       <section>
         <h4 className="font-semibold text-[24px]">프롬프트 활용법</h4>
         <div className="font-normal pt-[15px] text-[16px] whitespace-pre-line">{usageGuide}</div>
-        <p className="text-[16px] font-medium pt-[10px] pb-[20px] text-blue-500 underline cursor-pointer">
+        <p className="text-[16px] font-medium pt-[10px] pb-[20px] text-primary underline cursor-pointer">
           해당 프롬프트를 구매하고 마저 확인하세요
         </p>
       </section>
