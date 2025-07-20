@@ -68,6 +68,8 @@ const ProfilePage = () => {
   const [inquiries, setInquiries] = useState(INQUIRY);
   const [showInquiryDetail, setShowInquiryDetail] = useState<Inquiry | null>(null);
 
+  const [sns, setSns] = useState(SNS.map((s) => ({ ...s, isEditing: false })));
+
   const menuList = [
     {
       id: 0,
@@ -105,6 +107,30 @@ const ProfilePage = () => {
     setDescriptions((prev) =>
       prev.map((item) => (item.history_id === id ? { ...item, description: value, isEditing: false } : item)),
     );
+  };
+
+  const handleDeleteSns = (id: number) => {
+    setSns((prev) => prev.filter((s) => s.sns_id !== id));
+  };
+
+  const handleAddSns = () => {
+    const sns_newId = sns.length ? sns[sns.length - 1].sns_id + 1 : 1;
+
+    const newSns = {
+      sns_id: sns_newId,
+      user_id: 1024,
+      url: '',
+      created_at: '2024-01-15T10:30:00Z',
+      updated_at: '2024-01-15T10:30:00Z',
+      description: '',
+      isEditing: true,
+    };
+
+    setSns([...sns, newSns]);
+  };
+
+  const handleUpdateSns = (id: number, value: string, url: string) => {
+    setSns((prev) => prev.map((s) => (s.sns_id === id ? { ...s, description: value, isEditing: false, url: url } : s)));
   };
 
   return (
@@ -237,9 +263,11 @@ const ProfilePage = () => {
                   />
                 ))}
               </div>
-              <div className="mt-[50px]">
-                <PrimaryButton buttonType="plus" text="+" onClick={handleAddNewDescription} />
-              </div>
+              {isMyProfile && (
+                <div className="mt-[50px]">
+                  <PrimaryButton buttonType="plus" text="+" onClick={handleAddNewDescription} />
+                </div>
+              )}
             </div>
           )}
 
@@ -297,10 +325,26 @@ const ProfilePage = () => {
           )}
 
           {menuId === 3 && (
-            <div className="w-full max-h-[368px] overflow-y-auto">
-              {SNS.map((sns) => (
-                <SnsCard key={sns.sns_id} description={sns.description} url={sns.url} />
-              ))}
+            <div className="flex flex-col items-center">
+              <div className="w-full max-h-[368px] overflow-y-auto">
+                {sns.map((sns) => (
+                  <SnsCard
+                    key={sns.sns_id}
+                    sns_id={sns.sns_id}
+                    description={sns.description}
+                    url={sns.url}
+                    isMyProfile={isMyProfile}
+                    handleDeleteSns={() => handleDeleteSns(sns.sns_id)}
+                    handleUpdateSns={() => handleUpdateSns(sns.sns_id, sns.description, sns.url)}
+                    isEditing={sns.isEditing}
+                  />
+                ))}
+              </div>
+              {isMyProfile && (
+                <div onClick={handleAddSns} className="mt-[50px]">
+                  <PrimaryButton buttonType="plus" text="+" onClick={() => {}} />
+                </div>
+              )}
             </div>
           )}
         </div>
