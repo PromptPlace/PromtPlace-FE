@@ -27,7 +27,7 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
     <div className="bg-white border-b border-b-white-stroke py-[10px] flex justify-between items-center cursor-pointer">
       <div
         onClick={() => handleNavigate(id)}
-        className="text-text-on-white text-[22px] font-bold leading-[28px] py-[20px] px-[80px] truncate max-w-[635px] w-full truncate">
+        className="text-text-on-white text-[22px] font-bold leading-[28px] py-[20px] px-[51px] truncate max-w-[606px] w-full truncate">
         {title}
       </div>
       <div className="text-text-on-background text-[20px] font-medium leading-[25px] py-[20px] px-[10px] max-w-[223px] w-full text-center">
