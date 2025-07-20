@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import HeartEmpty from '@assets/icon-heart-none-small.svg';
 import HeartBlue from '@assets/icon-heart-blue-small.svg';
 import Dots from '@assets/icon-dot.svg';

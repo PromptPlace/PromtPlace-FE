@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from 'react';
+
 import InstaIcon from '@assets/icon-instagram-logo.svg';
 import YoutubeIcon from '@assets/icon-youtube-logo.svg';
 import FacebookIcon from '@assets/icon-facebook-logo.svg';
@@ -5,9 +7,9 @@ import KakaoIcon from '@assets/icon-kakao-logo.svg';
 import XIcon from '@assets/icon-x-logo.svg';
 import GoogleIcon from '@assets/icon-google-logo.svg';
 import NaverIcon from '@assets/icon-naver-logo.svg';
-import CircleButton from '@/components/Button/CircleButton';
 import CloseIcon from '@assets/icon-close.svg';
-import { useEffect, useRef, useState } from 'react';
+
+import CircleButton from '@/components/Button/CircleButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 
 interface SnsCardProps {

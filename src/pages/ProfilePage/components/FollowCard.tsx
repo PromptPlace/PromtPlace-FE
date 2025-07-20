@@ -1,7 +1,8 @@
+import { useState } from 'react';
+
 import FollowButton from '@/components/Button/FollowButton';
 import ArrowIcon from '@assets/icon-arrow-left-black.svg?react';
 import ProfileIcon from '@assets/icon-profile-gray.svg?react';
-import { useState } from 'react';
 
 type Following = {
   follow_id: number;

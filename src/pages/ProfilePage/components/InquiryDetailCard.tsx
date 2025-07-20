@@ -1,7 +1,8 @@
+import { useState } from 'react';
+
 import CircleButton from '@/components/Button/CircleButton';
 import TextModal from '@/components/Modal/TextModal';
 import CloseIcon from '@assets/icon-arrow-left-black.svg';
-import { useState } from 'react';
 
 type Inquiry = {
   inquiry_id: number;

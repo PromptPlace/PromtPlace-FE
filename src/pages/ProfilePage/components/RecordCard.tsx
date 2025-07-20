@@ -1,6 +1,7 @@
-import CircleButton from '@/components/Button/CircleButton';
-import CloseIcon from '@assets/icon-close.svg';
 import { useState } from 'react';
+
+import CircleButton from '@components/Button/CircleButton';
+import CloseIcon from '@assets/icon-close.svg';
 
 interface RecordCardProps {
   history_id: number;

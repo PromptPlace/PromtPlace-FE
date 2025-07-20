@@ -1,6 +1,7 @@
-import CircleButton from '@/components/Button/CircleButton';
-import DotsIcon from '@assets/icon-dot.svg?react';
 import { useState } from 'react';
+
+import CircleButton from '@components/Button/CircleButton';
+import DotsIcon from '@assets/icon-dot.svg?react';
 
 type promptsType = {
   prompt_id: number;

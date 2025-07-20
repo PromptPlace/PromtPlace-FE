@@ -5,33 +5,35 @@
  * @author 김진효
  * **/
 
+import { useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import clsx from 'clsx';
+
 import ProfileIcon from '@assets/icon-profile-gray.svg';
-import FollowButton from '@/components/Button/FollowButton';
 import AlarmOffIcon from '@assets/icon-alarm-off.svg';
 import AlarmOnIcon from '@assets/icon-alarm-on.svg';
 import UserProfileIcon from '@assets/img-example-profile2.jpg';
+import Arrow from '@assets/icon-vector-bottom.svg?react';
 
-import { useRef, useState } from 'react';
-import clsx from 'clsx';
+import FollowButton from '@components/Button/FollowButton';
 import PromptCard from './components/PromptCard';
 import RecordCard from './components/RecordCard';
 import AskCard from './components/AskCard';
 import SnsCard from './components/SnsCard';
-import CircleButton from '@/components/Button/CircleButton';
-import PrimaryButton from '@/components/Button/PrimaryButton';
+import CircleButton from '@components/Button/CircleButton';
+import PrimaryButton from '@components/Button/PrimaryButton';
+import InquiryCard from './components/InquiryCard';
+import InquiryDetailCard from './components/InquiryDetailCard';
+import FollowCard from './components/FollowCard';
 
 import DESCRIPTION from '@data/ProfilePage/description.json';
 import PROMPT from '@data/ProfilePage/prompt.json';
 import SNS from '@data/ProfilePage/sns.json';
 import INQUIRY from '@data/ProfilePage/inquiry.json';
-import InquiryCard from './components/InquiryCard';
-import Arrow from '@assets/icon-vector-bottom.svg?react';
-import InquiryDetailCard from './components/InquiryDetailCard';
-import useImgUpload from '@/hooks/useImgUpload';
 import FOLLOWING from '@data/ProfilePage/following.json';
 import FOLLOWER from '@data/ProfilePage/follower.json';
-import FollowCard from './components/FollowCard';
+
+import useImgUpload from '@hooks/useImgUpload';
 
 const USER = {
   member_id: 12345,

@@ -1,6 +1,7 @@
+import clsx from 'clsx';
+
 import CheckIcon from '@assets/icon-check-circle.svg';
 import DotsIcon from '@assets/icon-dot.svg';
-import clsx from 'clsx';
 
 interface InquiryCardProps {
   sender_nickname: string;
