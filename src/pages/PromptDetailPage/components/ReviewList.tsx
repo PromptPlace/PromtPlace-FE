@@ -147,8 +147,8 @@ const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title, cur
 
             {/* 점 버튼 메뉴 */}
             {openMenuIdx === idx && (
-              <div className="absolute top-8 right-0 bg-secondary text-text-on-background rounded-md shadow-md z-20 w-[88px]">
-                <ul className="text-sm py-1">
+              <div className="absolute top-8 right-0 bg-secondary text-text-on-background rounded-md shadow-md z-20 w-[91px] h-[72px]">
+                <ul className="text-[16px]">
                   <li
                     className="px-4 py-[6px] active:bg-secondary-pressed hover:text-black cursor-pointer rounded-t-md"
                     onClick={() => onClickDelete(idx)}>

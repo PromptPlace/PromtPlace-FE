@@ -59,6 +59,33 @@ const dummyReviews = [
     content: '진짜 완벽해요. 이런 퀄리티 처음 봐요!',
     created_at: '2025-07-10T16:45:30',
   },
+  {
+    review_id: 50,
+    writer_id: 5,
+    writer_profile_image_url: profile,
+    writer_nickname: '김민지',
+    rating: 5.0,
+    content: '진짜 완벽해요. 이런 퀄리티 처음 봐요!',
+    created_at: '2025-07-10T16:45:30',
+  },
+  {
+    review_id: 51,
+    writer_id: 6,
+    writer_profile_image_url: profile,
+    writer_nickname: '김도영',
+    rating: 5.0,
+    content: '너무 만족합니다.',
+    created_at: '2025-07-10T16:45:30',
+  },
+  {
+    review_id: 52,
+    writer_id: 7,
+    writer_profile_image_url: profile,
+    writer_nickname: '박땡땡',
+    rating: 3.5,
+    content: '좋았어요',
+    created_at: '2025-07-10T16:45:30',
+  },
 ];
 
 const PromptActions = ({ title, price, isFree, downloads, likes, reviewCounts, rating, updatedAt, userId }: Props) => {
