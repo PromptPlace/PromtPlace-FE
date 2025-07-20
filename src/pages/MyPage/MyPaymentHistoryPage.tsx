@@ -85,10 +85,13 @@ const PaymentHistoryPage = () => {
         </div>
         </div>
         </div>
-      <div className="overflow-y-auto flex-grow max-h-[580px]">
+
+       <div className="flex-grow min-h-0 p-[8px] bg-white">
+      <div className="overflow-y-auto h-full">
         {paymentHistory.map(item => (
           <PaymentHistoryRow key={item.prompt_id} transaction={item} />
         ))}
+      </div>
       </div>
       </div>
     </div>

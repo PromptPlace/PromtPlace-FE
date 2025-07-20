@@ -60,18 +60,19 @@ const handleWithdraw = () => {
 
       <div className="text-[24px] text-primary-hover font-bold pl-[40px] py-[20px] border-b-[1px] border-primary-hover">판매 내역</div>
       </div>
-
-      <div className="overflow-y-auto flex-grow">
+      
+      <div className="bg-white flex-1 min-h-0">
+      <div className="mr-[8px] overflow-y-auto max-h-[564px]">
         {salesHistory.map(sale => (
           <SalesHistoryCard key={sale.id} sale={sale} />
         ))}
       </div>
-
+      </div>
     </div>
 
 
     {showModal && userInfo.balance < 10000 && (
-      <TextModal text="10000원부터 출금하실 수 있습니다." onClick={() => setShowModal(false)} size="lg" />
+      <TextModal text="10,000원부터 출금하실 수 있습니다." onClick={() => setShowModal(false)} size="lg" />
     )}
     </div>
   );

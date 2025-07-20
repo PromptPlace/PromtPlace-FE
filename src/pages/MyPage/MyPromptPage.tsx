@@ -4,6 +4,7 @@ import type { Prompt } from './components/PromptCard';
 import { useState, useEffect } from 'react';
 import BlueArchiveIcon from '@/assets/icon-archive-blue.svg'
 
+
 /**
  * TODO:
  * 
@@ -19,16 +20,16 @@ import BlueArchiveIcon from '@/assets/icon-archive-blue.svg'
     { id: 3, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
   ];
   const DUMMY_LIKED_PROMPTS2: Prompt[] = [
-    { id: 1, title: '강아지 그림 그려주는 프롬프트', model: 'DALL-E',tags:['개발','파이썬','코딩'],author:'홍길동' },
-    { id: 2, title: '여행 계획 짜주는 프롬프트', model: 'ChatGPT-4o',tags:['개발','파이썬','코딩'],author:'매튜' },
+    { id: 1, title: '강아지 그림 그려주는 프롬프트', model: 'ChatGPT',tags:['개발','파이썬','코딩'],author:'홍길동' },
+    { id: 2, title: '여행 계획 짜주는 프롬프트', model: 'ChatGPT',tags:['개발','파이썬','코딩'],author:'매튜' },
     { id: 3, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
     { id: 4, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
-    { id: 1, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
-    { id: 1, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
-    { id: 1, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
-    { id: 1, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
-    { id: 1, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
-    { id: 1, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 5, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 6, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 7, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 8, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 9, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 10, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
   ];
 
 
@@ -42,14 +43,18 @@ import BlueArchiveIcon from '@/assets/icon-archive-blue.svg'
 const MyPromptPage = () => {
 
   const [activeTab, setActiveTab] = useState<'authored' | 'downloaded' | 'liked'>('authored'); // 'authored', 'downloaded', 'liked'
-  const [prompts, setPrompts] = useState(DUMMY_LIKED_PROMPTS);
- 
+  const [prompts, setPrompts] = useState(DUMMY_LIKED_PROMPTS2);
+
+  const DeleteLikedPrompt= (id: number) => {
+    setPrompts(prevPrompts => prevPrompts.filter(prompt => prompt.id !== id));
+  };
+  
 
   useEffect(() => {
     // 탭이 바뀔 때마다 해당 데이터를 API로 호출하는 로직
     // const fetchedData = await api.getPrompts(activeTab);
     // setPrompts(fetchedData);
-    setPrompts(DUMMY_LIKED_PROMPTS2);
+   
   }, [activeTab]);
 
 
@@ -63,10 +68,12 @@ const MyPromptPage = () => {
       </div>
       <MyPromptsTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       
-      <div className="overflow-y-auto max-h-[368px]">
+      <div className=" bg-white">
+        <div className="mr-[8px] overflow-y-auto max-h-[368px]">
         {prompts.map(prompt => (
-          <PromptCard key={prompt.id} type={activeTab} promptData={prompt} DeletePrompt={()=>{}} EditPrompt={()=>{}} DeleteLike={()=>{}} />
+          <PromptCard key={prompt.id} type={activeTab} promptData={prompt} DeletePrompt={()=>{}} EditPrompt={()=>{}} DeleteLike={() => DeleteLikedPrompt(prompt.id)} />
         ))}
+        </div>
       </div>
     </div>
     </div>

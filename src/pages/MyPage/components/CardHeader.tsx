@@ -7,9 +7,10 @@ interface ContentHeaderProps {
   title: string;
   linkUrl: string; // 이동할 경로를 props로 받음
   dateFormat?: 'dateOnly' | 'full'
+  showArrow?: boolean; // 화살표 아이콘 표시 여부
 }
 
-const CardHeader: React.FC<ContentHeaderProps> = ({ date, title, linkUrl, dateFormat = 'dateOnly' }) => {
+const CardHeader: React.FC<ContentHeaderProps> = ({ date, title, linkUrl, dateFormat = 'dateOnly', showArrow = true }) => {
   // 날짜 포맷 변경 로직
   const [displayDate, timePart] = date.split('T');
   const displayTime = timePart ? timePart.substring(0, 5) : '';
@@ -22,7 +23,7 @@ const CardHeader: React.FC<ContentHeaderProps> = ({ date, title, linkUrl, dateFo
       </span>
       <Link to={linkUrl} className="text-[22px] font-bold text-text-on-white flex items-center gap-[10px] w-fit">
         {title}
-        <img src={iconArrow} alt="arrow" className="w-[16px] h-[16px] rotate-180" />
+        {showArrow && <img src={iconArrow} alt="arrow" className="w-[16px] h-[16px] rotate-180" />}
       </Link>
     </div>
   );

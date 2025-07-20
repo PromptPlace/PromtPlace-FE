@@ -4,6 +4,8 @@ import ReviewTabs from './components/ReviewTabs';
 import ReviewCard from './components/ReviewCard';
 import archiveIcon from '@assets/icon-archive-blue.svg';
 import UserProfileIcon from '@assets/img-example-profile2.jpg';
+import DualModal from '@/components/Modal/DualModal';
+import TextModal from '@/components/Modal/TextModal';
 
 const DUMMY_REVIEWS = [
   { id: 1, promptTitle: '프롬프트 1', rating: 4.5, content: '프롬프트 1에 대한 리뷰', createdAt: '2025-07-06T12:34:56', author: { name: '홍길동', avatar: UserProfileIcon } },
@@ -20,17 +22,40 @@ const DUMMY_REVIEWS = [
 const MyReviewPage = () => {
   const [activeTab, setActiveTab] = useState<'written' | 'received'>('written'); // 'written' or 'received'
   const [reviews, setReviews] = useState(DUMMY_REVIEWS);
+  const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null);
 
   useEffect(() => {
     // 탭이 바뀔 때마다 해당 데이터를 API로 호출
+
     
   }, [activeTab]);
 
+  const [deleteStep, setDeleteStep] = useState<'confirm' | 'complete' | null>(null);
+    const confirmDelete = (reviewId:number) => {
+      setSelectedReviewId(reviewId);
+      setDeleteStep('confirm');
+    };
+
+    const deleteReview = () => {
+      if (selectedReviewId !== null) {
+        //더미 데이터 삭제
+        setReviews(prevReviews => prevReviews.filter(review => review.id !== selectedReviewId));
+        setDeleteStep('complete');
+      }
+    };
+    const closeModal = () => {
+      setDeleteStep(null);
+      setSelectedReviewId(null);
+    };
+
   return (
+    
+    
+    
     <div className="flex justify-center h-screen bg-background  ">
 
 
-      <div className="flex flex-col w-full max-w-[1236px] pt-[92px] h-full">
+      <div className="flex flex-col w-full max-w-[1236px] pt-[92px] h-full ">
 
 
         <div className="shrink-0">
@@ -44,21 +69,48 @@ const MyReviewPage = () => {
       
      
      
-      
-      <div className="overflow-y-auto flex-grow">
+     <div className="flex-grow min-h-0 p-[8px]  bg-white">
+      <div className="overflow-y-auto h-full">
 
         {reviews.map(review => (
           <ReviewCard 
             key={review.id} 
             type={activeTab} 
             reviewData={review} 
+            onDelete={() => confirmDelete(review.id)}
           />
+
+
         ))}
       </div>
+      </div>
+    
 
       </div>
-    </div>
+   
+
+
+    {deleteStep === 'confirm' && (
+        <DualModal 
+          text="리뷰를 삭제하시겠습니까?"
+          onClickYes={deleteReview} 
+          onClickNo={closeModal}   
+        />
+      )}
+
+      {deleteStep === 'complete' && (
+        <TextModal 
+          text="리뷰가 삭제되었습니다." 
+          onClick={closeModal}
+          size="lg"
+        />
+      )}
+
+       </div>
+  
+    
   );
+
 };
 
 export default MyReviewPage;
