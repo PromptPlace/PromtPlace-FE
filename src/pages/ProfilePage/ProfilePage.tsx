@@ -21,145 +21,30 @@ import SnsCard from './components/SnsCard';
 import CircleButton from '@/components/Button/CircleButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 
+import DESCRIPTION from '@data/ProfilePage/description.json';
+import PROMPT from '@data/ProfilePage/prompt.json';
+import SNS from '@data/ProfilePage/sns.json';
+import INQUIRY from '@data/ProfilePage/inquiry.json';
+import InquiryCard from './components/InquiryCard';
+import Arrow from '@assets/icon-vector-bottom.svg?react';
+import InquiryDetailCard from './components/InquiryDetailCard';
+
 const USER = {
   member_id: 12345,
   name: '울랄라',
 };
 
-const PROMPT = [
-  {
-    prompt_id: 1,
-    title: '파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
-    purchased_at: '2025-07-04T09:30:00.000Z',
-    tags: [
-      {
-        tag_id: 1,
-        name: '개발',
-      },
-      {
-        tag_id: 2,
-        name: '파이썬',
-      },
-      {
-        tag_id: 3,
-        name: '코딩',
-      },
-      {
-        tag_id: 4,
-        name: '코딩',
-      },
-    ],
-  },
-  {
-    prompt_id: 2,
-    title: '29자 넘어가면 말 줄임표 파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
-    purchased_at: '2025-07-04T09:30:00.000Z',
-    tags: [
-      {
-        tag_id: 1,
-        name: '개발',
-      },
-      {
-        tag_id: 2,
-        name: '파이썬',
-      },
-      {
-        tag_id: 3,
-        name: '코딩',
-      },
-    ],
-  },
-  {
-    prompt_id: 3,
-    title: '파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
-    purchased_at: '2025-07-04T09:30:00.000Z',
-    tags: [
-      {
-        tag_id: 1,
-        name: '개발',
-      },
-      {
-        tag_id: 2,
-        name: '파이썬',
-      },
-      {
-        tag_id: 3,
-        name: '코딩',
-      },
-    ],
-  },
-  {
-    prompt_id: 4,
-    title: '파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
-    purchased_at: '2025-07-04T09:30:00.000Z',
-    tags: [
-      {
-        tag_id: 1,
-        name: '개발',
-      },
-      {
-        tag_id: 2,
-        name: '파이썬',
-      },
-      {
-        tag_id: 3,
-        name: '코딩',
-      },
-    ],
-  },
-  {
-    prompt_id: 5,
-    title: '파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
-    purchased_at: '2025-07-04T09:30:00.000Z',
-    tags: [
-      {
-        tag_id: 1,
-        name: '개발',
-      },
-      {
-        tag_id: 2,
-        name: '파이썬',
-      },
-      {
-        tag_id: 3,
-        name: '코딩',
-      },
-    ],
-  },
-];
-
-const DESCRIPTION = [
-  { history_id: 1, description: '2023년 심포니 해커톤 준우승' },
-  { history_id: 2, description: '2024년 프롬프트 엔지니어 자격증 취득' },
-  { history_id: 3, description: '2023년 심포니 해커톤 준우승' },
-  { history_id: 4, description: '2023년 심포니 해커톤 준우승' },
-  { history_id: 5, description: '2023년 심포니 해커톤 준우승' },
-  { history_id: 6, description: '2023년 심포니 해커톤 준우승' },
-];
-
-const SNS = [
-  {
-    sns_id: 1,
-    user_id: 1024,
-    url: 'https://instagram.com/username',
-    description: '인스타그램에 여러 꿀팁 공유 중이니 놀러오세요~',
-    created_at: '2024-01-15T10:30:00Z',
-    updated_at: '2024-01-15T10:30:00Z',
-  },
-  {
-    sns_id: 2,
-    user_id: 1024,
-    url: 'https://youtube.com/username',
-    description: 'AI프롬프트 무료 강의 공유합니다',
-    created_at: '2024-01-15T10:30:00Z',
-    updated_at: '2024-01-15T10:30:00Z',
-  },
-];
+type Inquiry = {
+  inquiry_id: number;
+  sender_id: number;
+  sender_nickname: string;
+  type: string;
+  status: string;
+  title: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+};
 
 const ProfilePage = () => {
   const { id } = useParams();
@@ -175,6 +60,14 @@ const ProfilePage = () => {
     icon: AlarmOffIcon,
   });
 
+  const [prompts, setPrompts] = useState(PROMPT);
+
+  const [isBuyer, setIsBuyer] = useState(true);
+  const [isArrowClicked, setIsArrowClicked] = useState(false);
+
+  const [inquiries, setInquiries] = useState(INQUIRY);
+  const [showInquiryDetail, setShowInquiryDetail] = useState<Inquiry | null>(null);
+
   const menuList = [
     {
       id: 0,
@@ -182,11 +75,15 @@ const ProfilePage = () => {
       selected: true,
     },
     { id: 1, label: '프롬프터 이력', selected: false },
-    { id: 2, label: '문의하기', selected: false },
+    { id: 2, label: `${isMyProfile ? '문의함' : '문의하기'}`, selected: false },
     { id: 3, label: 'SNS', selected: false },
   ];
 
   const [menuId, setMenuId] = useState(0);
+
+  const handleDeletePrompts = (id: number) => {
+    setPrompts((prev) => prev.filter((p) => p.prompt_id !== id));
+  };
 
   const handleAddNewDescription = () => {
     const newId = descriptions.length ? descriptions[descriptions.length - 1].history_id + 1 : 1;
@@ -306,7 +203,7 @@ const ProfilePage = () => {
 
           {menuId === 0 && (
             <div className="w-full max-h-[368px] overflow-y-auto">
-              {PROMPT.map((prompt) => (
+              {prompts.map((prompt) => (
                 <PromptCard
                   key={prompt.prompt_id}
                   id={prompt.prompt_id}
@@ -314,6 +211,7 @@ const ProfilePage = () => {
                   model={prompt.model}
                   tags={prompt.tags}
                   isMyProfile={isMyProfile}
+                  handleDeletePrompts={() => handleDeletePrompts(prompt.prompt_id)}
                 />
               ))}
             </div>
@@ -345,7 +243,58 @@ const ProfilePage = () => {
             </div>
           )}
 
-          {menuId === 2 && <AskCard prompts={PROMPT} />}
+          {menuId === 2 && !isMyProfile && <AskCard prompts={PROMPT} isMyProfile={isMyProfile} />}
+          {menuId === 2 && isMyProfile && (
+            <>
+              <div className="relative text-text-on-white text-[20px] font-bold leading-[30px] flex gap-[10px] p-[10px] items-center py-[30px] px-[80px] bg-white">
+                {isBuyer && <p>구매자 문의</p>}
+                {!isBuyer && <p>비구매자 문의</p>}
+                <div
+                  onClick={() => setIsArrowClicked(true)}
+                  className="w-[24px] h-[24px] py-[8px] px-[6px] rounded-full cursor-pointer hover:bg-primary-hover hover:text-white hover:shadow-gradient active:bg-primary-pressed active:shadow-gradient active:text-white">
+                  <Arrow />
+                </div>
+                {isArrowClicked && (
+                  <div
+                    onClick={() => {
+                      setIsBuyer((prev) => !prev);
+                      setIsArrowClicked(false);
+                      setShowInquiryDetail(null);
+                    }}
+                    className="absolute top-[64.5px] left-[110px] cursor-pointer rounded-[8px] border border-white-stroke bg-white shadow-button-hover py-[10px] px-[20px] text-text-on-background text-[18px] font-normal leading-[23px] hover:bg-secondary active:bg-secondary-pressed active:text-text-on-white">
+                    {isBuyer ? '비구매자 문의' : '구매자 문의'}
+                  </div>
+                )}
+              </div>
+              <div className="max-h-[316px] overflow-auto">
+                {showInquiryDetail === null &&
+                  inquiries
+                    .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non-buyer'))
+                    .map((i) => (
+                      <InquiryCard
+                        key={i.inquiry_id}
+                        created_at={i.created_at}
+                        status={i.status}
+                        sender_nickname={i.sender_nickname}
+                        onClick={() => setShowInquiryDetail(i)}
+                      />
+                    ))}
+              </div>
+              <div>
+                {showInquiryDetail !== null && (
+                  <InquiryDetailCard
+                    inquiry={showInquiryDetail}
+                    onClick={() => {
+                      setShowInquiryDetail(null);
+                      setInquiries((prev) =>
+                        prev.map((i) => (i.inquiry_id === showInquiryDetail.inquiry_id ? { ...i, status: 'read' } : i)),
+                      );
+                    }}
+                  />
+                )}
+              </div>
+            </>
+          )}
 
           {menuId === 3 && (
             <div className="w-full max-h-[368px] overflow-y-auto">

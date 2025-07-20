@@ -20,6 +20,7 @@ export default defineConfig({
       { find: '@routes', replacement: '/src/routes' },
       { find: '@types', replacement: '/src/types' },
       { find: '@utils', replacement: '/src/utils' },
+      { find: '@data', replacement: '/src/data' },
     ],
   },
 });
