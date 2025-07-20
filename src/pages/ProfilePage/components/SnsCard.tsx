@@ -52,8 +52,8 @@ const SnsCard = ({
         const rect = clickPosition.current.getBoundingClientRect();
 
         setModalPosition({
-          top: rect.top + window.scrollY + 32,
-          left: rect.left + window.scrollX - 480,
+          top: rect.top + 32,
+          left: rect.left + window.scrollX - 500,
         });
       }
     };

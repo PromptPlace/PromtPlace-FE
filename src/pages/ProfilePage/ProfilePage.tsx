@@ -322,47 +322,51 @@ const ProfilePage = () => {
           </div>
 
           {menuId === 0 && (
-            <div className="w-full max-h-[368px] overflow-y-auto">
-              {prompts.map((prompt) => (
-                <PromptCard
-                  key={prompt.prompt_id}
-                  id={prompt.prompt_id}
-                  title={prompt.title}
-                  model={prompt.model}
-                  tags={prompt.tags}
-                  isMyProfile={isMyProfile}
-                  handleDeletePrompts={() => handleDeletePrompts(prompt.prompt_id)}
-                />
-              ))}
+            <div className="pr-[8px] bg-white">
+              <div className="w-full max-h-[368px] overflow-y-auto">
+                {prompts.map((prompt) => (
+                  <PromptCard
+                    key={prompt.prompt_id}
+                    id={prompt.prompt_id}
+                    title={prompt.title}
+                    model={prompt.model}
+                    tags={prompt.tags}
+                    isMyProfile={isMyProfile}
+                    handleDeletePrompts={() => handleDeletePrompts(prompt.prompt_id)}
+                  />
+                ))}
+              </div>
             </div>
           )}
 
           {menuId === 1 && (
-            <div className="flex flex-col items-center">
-              <div
-                className={clsx(
-                  'w-full overflow-y-auto',
-                  !isMyProfile && 'max-h-[368px]',
-                  isMyProfile && 'max-h-[279px]',
-                )}>
-                {descriptions.map((description) => (
-                  <RecordCard
-                    key={description.history_id}
-                    history_id={description.history_id}
-                    description={description.description}
-                    isMyProfile={isMyProfile}
-                    isEditing={description.isEditing}
-                    handleDelete={handleDeleteDescription}
-                    setDescriptions={handleUpdateDescription}
-                  />
-                ))}
+            <>
+              <div className="flex flex-col items-center pr-[8px] bg-white h-full">
+                <div
+                  className={clsx(
+                    'w-full overflow-y-auto bg-white',
+                    !isMyProfile && 'max-h-[368px]',
+                    isMyProfile && 'max-h-[279px]',
+                  )}>
+                  {descriptions.map((description) => (
+                    <RecordCard
+                      key={description.history_id}
+                      history_id={description.history_id}
+                      description={description.description}
+                      isMyProfile={isMyProfile}
+                      isEditing={description.isEditing}
+                      handleDelete={handleDeleteDescription}
+                      setDescriptions={handleUpdateDescription}
+                    />
+                  ))}
+                </div>
               </div>
               {isMyProfile && (
-                <div className="mt-[50px]">
+                <div className="mt-[50px] w-full flex justify-center">
                   <PrimaryButton buttonType="plus" text="+" onClick={handleAddNewDescription} />
                 </div>
               )}
-            </div>
+            </>
           )}
 
           {menuId === 2 && !isMyProfile && <AskCard prompts={PROMPT} isMyProfile={isMyProfile} />}
@@ -388,20 +392,23 @@ const ProfilePage = () => {
                   </div>
                 )}
               </div>
-              <div className="max-h-[316px] overflow-auto">
-                {showInquiryDetail === null &&
-                  inquiries
-                    .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non-buyer'))
-                    .map((i) => (
-                      <InquiryCard
-                        key={i.inquiry_id}
-                        created_at={i.created_at}
-                        status={i.status}
-                        sender_nickname={i.sender_nickname}
-                        onClick={() => setShowInquiryDetail(i)}
-                      />
-                    ))}
+              <div className="pr-[8px] bg-white">
+                <div className="max-h-[316px] overflow-auto">
+                  {showInquiryDetail === null &&
+                    inquiries
+                      .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non-buyer'))
+                      .map((i) => (
+                        <InquiryCard
+                          key={i.inquiry_id}
+                          created_at={i.created_at}
+                          status={i.status}
+                          sender_nickname={i.sender_nickname}
+                          onClick={() => setShowInquiryDetail(i)}
+                        />
+                      ))}
+                </div>
               </div>
+
               <div>
                 {showInquiryDetail !== null && (
                   <InquiryDetailCard

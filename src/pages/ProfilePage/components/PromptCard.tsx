@@ -29,10 +29,10 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
         className="text-text-on-white text-[22px] font-bold leading-[28px] py-[20px] px-[80px] truncate max-w-[635px] w-full truncate">
         {title}
       </div>
-      <div className="text-text-on-background text-[20px] font-medium leading-[25px] py-[20px] px-[10px] max-w-[223px] w-full">
+      <div className="text-text-on-background text-[20px] font-medium leading-[25px] py-[20px] px-[10px] max-w-[223px] w-full text-center">
         {model}
       </div>
-      <div className="flex gap-[1px] py-[20px] px-[10px] max-w-[263px] w-full">
+      <div className="flex gap-[1px] py-[20px] px-[10px] max-w-[263px] w-full text-center truncate">
         {tags.map((tag) => (
           <div key={String(tag.tag_id)} className="text-text-on-background text-[20px] font-medium leading-[25px]">
             #{tag.name}
@@ -43,7 +43,7 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
       {!isMyProfile && (
         <div
           onClick={() => setIsLike((prev) => !prev)}
-          className="py-[25px] px-[45px] cursor-pointer w-[115px] h-[72px] flex items-center justify-center">
+          className="py-[25px] px-[45px] cursor-pointer w-[115px] h-[72px] flex items-center justify-center shrink-0">
           <img src={isLike ? HeartBlue : HeartEmpty} alt="좋아요" />
         </div>
       )}
