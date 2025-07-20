@@ -48,7 +48,7 @@ const iconButtonTheme = {
     outline:
       'border border-priㄴmary hover:border-primary-hover active:border-primary-pressed text-primary hover:text-primary-hover active:text-primary-pressed active:bg-secondary ',
     fill: 'bg-primary hover:bg-primary-hover active:bg-primary-pressed text-white',
-    red: 'bg-alert text-white px-[29px] leading-[24px]',
+    red: 'bg-alert text-white px-[29px] leading-[24px] shadow-none hover:shadow-none',
   },
   textButton: {
     white: 'min-w-[160px] bg-white',

@@ -39,7 +39,7 @@ const primaryButtonTheme = {
     square: 'rounded-[10px] max-w-[136px] w-full py-[10px]',
     squareMini: 'rounded-[10px] py-[2px] px-[14px]',
     review: 'rounded-[50px] h-[41px] py-[5px] max-w-[152px] w-full text-xl leading-[25px]',
-    reviewDelete: 'rounded-[50px] px-[9px] py-[4px]',
+    reviewDelete: 'rounded-[50px] px-[9px] py-[4px] hover:shadow-none',
     plus: 'rounded-[50px] px-[53px] text-[32px] font-bold leading-[40px]',
     change: 'rounded-[50px] px-[10px] py-[5px] text-[14px] leading-[18px]',
   },
