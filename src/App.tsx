@@ -11,7 +11,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <div className="max-lg:max-w-[425px] max-lg:w-full max-lg:mx-auto">
+          <RouterProvider router={router} />
+        </div>
         {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
       </AuthProvider>
     </QueryClientProvider>
