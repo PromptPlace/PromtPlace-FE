@@ -29,6 +29,9 @@ import InquiryCard from './components/InquiryCard';
 import Arrow from '@assets/icon-vector-bottom.svg?react';
 import InquiryDetailCard from './components/InquiryDetailCard';
 import useImgUpload from '@/hooks/useImgUpload';
+import FOLLOWING from '@data/ProfilePage/following.json';
+import FOLLOWER from '@data/ProfilePage/follower.json';
+import FollowCard from './components/FollowCard';
 
 const USER = {
   member_id: 12345,
@@ -77,6 +80,9 @@ const ProfilePage = () => {
   const [userName, setUserName] = useState(USER.name);
   const [userDescription, setUserDescription] = useState(USER.description);
   const imageRef = useRef<HTMLInputElement>(null);
+
+  const [showFollowing, setShowFollowing] = useState(false);
+  const [showFollower, setShowFollower] = useState(false);
 
   const menuList = [
     {
@@ -263,17 +269,37 @@ const ProfilePage = () => {
             <div className="flex gap-[28px]">
               <div className="flex flex-col gap-[5px] items-center">
                 <p className="text-primary-hover text-[18px] font-normal leading-[23px]">팔로워</p>
-                <div className="px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center">
+                <div
+                  onClick={() => setShowFollower(true)}
+                  className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center">
                   1091
                 </div>
               </div>
               <div className="flex flex-col gap-[5px] items-center">
                 <p className="text-primary-hover text-[18px] font-normal leading-[23px]">팔로잉</p>
-                <div className="px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center">
+                <div
+                  onClick={() => setShowFollowing(true)}
+                  className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center">
                   215
                 </div>
               </div>
             </div>
+            {showFollower && (
+              <FollowCard
+                title={`${userName}님의 팔로워 목록`}
+                list={FOLLOWER}
+                setShow={setShowFollower}
+                status={false}
+              />
+            )}
+            {showFollowing && (
+              <FollowCard
+                title={`${userName}님의 팔로잉 목록`}
+                list={FOLLOWING}
+                setShow={setShowFollowing}
+                status={true}
+              />
+            )}
           </>
         )}
       </div>
