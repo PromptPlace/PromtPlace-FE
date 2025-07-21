@@ -9,7 +9,7 @@
 
 **/
 
-import React, { use, useState } from 'react';
+import { useState } from 'react';
 import PromptCard from './components/promptCard';
 import FilterBar from './components/filterBar';
 import PrompterBar from './components/prompterBar';
@@ -21,8 +21,7 @@ const MainPage = () => {
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const [onlyFree, setOnlyFree] = useState<boolean>(false);
-  const [search, setSearch] = useState("");
-
+ 
   const filterPromptsByModel = dummyPrompts.filter(prompt => {
     const matchModel = selectedModel ? prompt.model === selectedModel : true;
     const matchFree = onlyFree ? prompt.price === 0 : true;
@@ -35,7 +34,7 @@ const MainPage = () => {
       case '조회순':
         return b.views - a.views;
       case '별점순':
-        return b.rating - a.rating;
+        return b.rating_avg - a.rating_avg;
       case '다운로드순':
         return b.downloadCount - a.downloadCount;
       case '가격 낮은 순':

@@ -60,9 +60,9 @@ const SearchPage = () => {
     return <div className="mt-20">Error</div>
   }
 
-  const filteredByKeyword = dummyPrompts.filter(prompt =>
-    prompt.keyword.includes(keyword || '')
-  );
+  const filteredByKeyword = dummyPrompts.filter(prompt =>{
+    return prompt.keyword?.includes(keyword || '')
+  });
 
   const filterPromptsByModel = filteredByKeyword.filter(prompt => {
     const matchModel = selectedModel ? prompt.model === selectedModel : true;

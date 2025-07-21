@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import FilterDropdown from './FilterDropdown';
 import TagFilter from './TagFilter';
 import arrowDown from '@/assets/icon-arrow-down.svg';
