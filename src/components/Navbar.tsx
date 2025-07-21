@@ -9,6 +9,7 @@ import PrimaryButton from '@components/Button/PrimaryButton';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import Sidebar from '@components/Sidebar';
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
+import clsx from 'clsx';
 
 const Navbar = () => {
   const [search, setSearch] = useState<string>('');
@@ -50,12 +51,12 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="flex items-center gap-[38px] py-[7.5px] pl-[61.25px] pr-[36px]">
-        <div onClick={() => handleNavigate('/')} className="cursor-pointer w-[227px]">
+      <nav className="flex justify-between items-center gap-[2.6vw] py-[7.5px] pl-[61.25px] pr-[36px] max-lg:p-0">
+        <div onClick={() => handleNavigate('/')} className="cursor-pointer w-[227px] shrink-0 max-lg:hidden">
           <img src={LogoIcon} alt="로고" className="w-full h-full object-cover" />
         </div>
 
-        <div className="flex items-center relative flex-1 ml-[61.26px]">
+        <div className="flex items-center relative ml-[61.26px] w-full max-lg:m-[0] max-w-[1000px]">
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -91,7 +92,7 @@ const Navbar = () => {
           <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
         )}
 
-        <div className="cursor-pointer w-[60px] rounded-full overflow-hidden">
+        <div className="cursor-pointer w-[60px] rounded-full overflow-hidden shrink-0 max-lg:hidden">
           {!accessToken && (
             <img
               src={ProfileIcon}
