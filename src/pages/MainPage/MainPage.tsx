@@ -50,10 +50,6 @@ const MainPage = () => {
   return (
     <div className="flex gap-[59px] justify-center bg-[#F5F5F5] relative overflow-hidden">
       <div className="w-[858px] h-[820px] mt-[53px] mb-[42px] overflow-y-auto pb-32">
-
-        <div className="justify-start text-black text-2xl font-bold mb-[42px]">
-          '블로그' 검색 결과
-        </div>
         <FilterBar
           onModelChange={setSelectedModel}
           onSortChange={setSelectedSort}
