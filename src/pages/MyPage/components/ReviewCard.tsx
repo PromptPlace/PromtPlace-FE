@@ -3,6 +3,7 @@ import Rating from '@/components/Rating';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 
 
+
 interface Review {
   id: number;
   promptTitle: string;
@@ -15,9 +16,10 @@ interface Review {
 interface ReviewCardProps {
   type: 'written' | 'received';
   reviewData: Review;
+  onDelete: () => void;
 }
 
-const ReviewCard: React.FC<ReviewCardProps> = ({ type, reviewData }) => {
+const ReviewCard: React.FC<ReviewCardProps> = ({ type, reviewData, onDelete }) => {
   return (
     <div className="flex flex-col border-b-[1px] border-white-stroke py-[10px] pl-[40px] gap-[10px] bg-white">
       <div className="mt-[20px]">
@@ -25,7 +27,8 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ type, reviewData }) => {
           date={reviewData.createdAt}
           title={reviewData.promptTitle}
           linkUrl={`/prompt/${reviewData.id}`} // 상세 페이지 경로 전달
-          dateFormat="full"
+          dateFormat="dateOnly"
+          showArrow={type === 'written'} // '작성한 리뷰'일 때만 화살표 아이콘 표시
         />
       </div>
 
@@ -42,7 +45,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ type, reviewData }) => {
         <Rating star={reviewData.rating} />
         
         {type === 'written' && (
-          <PrimaryButton buttonType="reviewDelete" text="리뷰 삭제" onClick={() => {}} />
+          <PrimaryButton buttonType="reviewDelete" text="리뷰 삭제" onClick={onDelete} />
         )}
         </div>
 

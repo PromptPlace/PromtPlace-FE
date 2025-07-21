@@ -30,10 +30,12 @@ const SocialButton = ({
 }) => (
   <button
     onClick={onClick}
-    className="w-full h-[64px] border-[1px] border-text-on-white rounded-[50px] py-3 flex items-center justify-center gap-[3.5px] hover:bg-gray-50"
+    className="w-full h-[64px] border-[1px] border-text-on-white rounded-[50px] py-3 flex items-center justify-center gap-[3.5px] shadow-[0_1px_3px_0_rgba(0,0,0,0.8)]
+    hover:bg-secondary hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.12)] 
+    active:bg-secondary-pressed"
   >
     <img src={icon} alt="소셜 로고" className="w-[32px] h-[32px]" />
-    <span className="w-[216px] h-[25px] text-text-on-white text-[20px] font-medium">{text}</span>
+    <span className="w-[216px] h-[25px] text-text-on-white text-[20px] font-medium ">{text}</span>
   </button>
 );
 
@@ -46,20 +48,20 @@ const SocialLoginModal = ({ isOpen, onClose, onClick }: SocialLoginModalProps) =
  
       <div className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-50 p-4">
    
-        <div className="relative flex w-[563px] h-[757px]   flex-col items-center rounded-[16px] bg-white shadow-gradient ">
+        <div className="relative flex w-[563px] h-[757px]   flex-col  rounded-[16px] bg-white shadow-gradient ">
           
           <button className="absolute top-[34px] right-[34px]" onClick={onClose}>
             <img src={CloseIcon} alt="닫기" className="h-[24px] w-[24px]" />
           </button>
     
-          <div className="mb-[59px] mt-[105px] flex flex-col items-center gap-[15px]">
+          <div className="mb-[48px] mt-[105px] flex flex-col items-center gap-[15px]">
             <img src={PromptPlaceLogo} alt="PromptPlace 로고" className="w-[72px] h-[72px]" />
             
             <img src={HeaderLogo} alt="PromptPlace 헤더 로고" className="h-[35px] w-[350px]" />
           </div>
     
          
-          <div className="flex flex-col w-[334px]  gap-[28px] mb-[223px] mx-[114px]">
+          <div className="flex flex-col w-[334px]  gap-[32px] mb-[226px] mx-[114px]">
             <SocialButton icon={KakaoIcon} text="카카오톡으로 로그인" onClick={() => onClick('kakao')} />
             <SocialButton icon={GoogleIcon} text="구글로 로그인" onClick={() => onClick('google')} />
             <SocialButton icon={NaverIcon} text="네이버로 로그인" onClick={() => onClick('naver')} />

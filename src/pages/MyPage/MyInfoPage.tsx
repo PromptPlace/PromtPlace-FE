@@ -54,8 +54,8 @@ const MyPageInfo = () => {
         {deleteStep === 'confirm' && (
         <DualModal 
           text="회원을 탈퇴하시겠습니까?"
-          onClickYes={showWarning}  // '예'를 누르면 경고 단계로
-          onClickNo={closeModal}    // '아니오'를 누르면 모달 닫기
+          onClickYes={showWarning}  
+          onClickNo={closeModal}   
         />
       )}
       {deleteStep === 'warning' && (
