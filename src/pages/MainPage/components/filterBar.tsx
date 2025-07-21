@@ -90,7 +90,7 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
           )}
 
           {/* 태그 드롭다운 */}
-          {selectedFilter === label && label === '태그' && (
+          {selectedFilter === label && label !== '필터' && label !== '모델' && (
             <div
               className="absolute top-full left-0 w-[400px] rounded-lg p-4 z-10"
               onClick={(e) => e.stopPropagation()}

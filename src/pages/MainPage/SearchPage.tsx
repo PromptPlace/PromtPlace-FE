@@ -74,7 +74,7 @@ const MainPage = () => {
         <GradientButton
           buttonType="imgButton"
           text="프롬프트 작성하기"
-          onClick={() => { 
+          onClick={() => {
             // 프롬프트 작성하기 버튼 클릭 시 실행될 함수
             console.log('프롬프트 작성하기 클릭됨');
           }}

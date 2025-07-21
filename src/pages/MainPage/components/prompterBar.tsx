@@ -46,9 +46,7 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
                 onClick={() => {
                   handleFollow(c.id);
                 }}
-              >
-                {isFollowed[c.id] ? '완료 ✔' : '팔로우 +'}
-              </FollowButton>
+              />
             </li>
           ))}
         </ul>
@@ -78,9 +76,7 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
                 onClick={() => {
                   handleFollow(c.id);
                 }}
-              >
-                {isFollowed[c.id] ? '완료 ✔' : '팔로우 +'}
-              </FollowButton>
+              />
             </li>
           ))}
         </ul>
