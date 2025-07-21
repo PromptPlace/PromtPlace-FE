@@ -1,0 +1,18 @@
+[
+  {
+    "sns_id": 1,
+    "user_id": 1024,
+    "url": "https://instagram.com/username",
+    "description": "인스타그램에 여러 꿀팁 공유 중이니 놀러오세요~",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z"
+  },
+  {
+    "sns_id": 2,
+    "user_id": 1024,
+    "url": "https://youtube.com/username",
+    "description": "AI프롬프트 무료 강의 공유합니다",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z"
+  }
+]
