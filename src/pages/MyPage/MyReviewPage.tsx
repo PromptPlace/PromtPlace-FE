@@ -7,7 +7,19 @@ import UserProfileIcon from '@assets/img-example-profile2.jpg';
 import DualModal from '@/components/Modal/DualModal';
 import TextModal from '@/components/Modal/TextModal';
 
-const DUMMY_REVIEWS = [
+const DUMMY_WRITTEN_REVIEWS = [
+  { id: 1, promptTitle: '프롬프트 1', rating: 4.5, content: '프롬프트 1에 대한 리뷰', createdAt: '2025-07-06T12:34:56', author: { name: '홍길동', avatar: UserProfileIcon } },
+  { id: 2, promptTitle: '프롬프트 2', rating: 5, content: '프롬프트 2에 대한 리뷰', createdAt: '2025-07-06T12:34:56', author: { name: '홍길동', avatar: UserProfileIcon } },
+  { id: 3, promptTitle: '프롬프트 3', rating: 3, content: '프롬프트 3에 대한 리뷰', createdAt: '2025-07-06T12:34:56', author: { name: '홍길동', avatar: UserProfileIcon } },
+  { id: 4, promptTitle: '프롬프트 4', rating: 2, content: '프롬프트 4에 대한 리뷰', createdAt: '2025-07-06T12:34:56', author: { name: '홍길동', avatar: UserProfileIcon } },
+  { id: 5, promptTitle: '프롬프트 5', rating: 1, content: '프롬프트 5에 대한 리뷰', createdAt: '2025-07-06T12:34:56', author: { name: '홍길동', avatar: UserProfileIcon } },
+  { id: 6, promptTitle: '프롬프트 6', rating: 4, content: '프롬프트 6에 대한 리뷰', createdAt: '2025-07-06T12:34:56', author: { name: '홍길동', avatar: UserProfileIcon } },
+  { id: 7, promptTitle: '프롬프트 7', rating: 3, content: '프롬프트 7에 대한 리뷰', createdAt: '2025-07-06T12:34:56', author: { name: '홍길동', avatar: UserProfileIcon } },
+  { id: 8, promptTitle: '프롬프트 8', rating: 2, content: '프롬프트 8에 대한 리뷰', createdAt: '2025-07-06T12:34:56', author: { name: '홍길동', avatar: UserProfileIcon } },
+  { id: 9, promptTitle: '프롬프트 9', rating: 1, content: '프롬프트 9에 대한 리뷰', createdAt: '2025-07-06T12:34:56', author: { name: '홍길동', avatar: UserProfileIcon } },
+];
+
+const DUMMY_RECEIVED_REVIEWS = [
   { id: 1, promptTitle: '프롬프트 1', rating: 4.5, content: '프롬프트 1에 대한 리뷰', createdAt: '2025-07-06T12:34:56', author: { name: '홍길동', avatar: UserProfileIcon } },
   { id: 2, promptTitle: '프롬프트 2', rating: 5, content: '프롬프트 2에 대한 리뷰', createdAt: '2025-07-06T12:34:56', author: { name: '홍길동', avatar: UserProfileIcon } },
   { id: 3, promptTitle: '프롬프트 3', rating: 3, content: '프롬프트 3에 대한 리뷰', createdAt: '2025-07-06T12:34:56', author: { name: '홍길동', avatar: UserProfileIcon } },
@@ -21,11 +33,16 @@ const DUMMY_REVIEWS = [
 
 const MyReviewPage = () => {
   const [activeTab, setActiveTab] = useState<'written' | 'received'>('written'); // 'written' or 'received'
-  const [reviews, setReviews] = useState(DUMMY_REVIEWS);
+  const [reviews, setReviews] = useState(DUMMY_WRITTEN_REVIEWS);
   const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null);
 
   useEffect(() => {
     // 탭이 바뀔 때마다 해당 데이터를 API로 호출
+    if (activeTab === 'written') {
+      setReviews(DUMMY_WRITTEN_REVIEWS);
+    } else {
+      setReviews(DUMMY_RECEIVED_REVIEWS);
+    }
 
     
   }, [activeTab]);

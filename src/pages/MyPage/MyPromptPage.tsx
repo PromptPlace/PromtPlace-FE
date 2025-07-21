@@ -14,10 +14,30 @@ import BlueArchiveIcon from '@/assets/icon-archive-blue.svg'
  * **/
 
 //더미데이터
-  const DUMMY_LIKED_PROMPTS: Prompt[] = [
-    { id: 1, title: '강아지 그림 그려주는 프롬프트', model: 'DALL-E',tags:['개발','파이썬','코딩'],author:'홍길동' },
-    { id: 2, title: '여행 계획 짜주는 프롬프트', model: 'ChatGPT-4o',tags:['개발','파이썬','코딩'],author:'매튜' },
-    { id: 3, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+  
+  const DUMMY_AUTHORED_PROMPTS2: Prompt[] = [
+    { id: 1, title: '강아지 그림 그려주는 프롬프트', model: 'ChatGPT',tags:['개발','파이썬','코딩'],author:'홍길동' },
+    { id: 2, title: '여행 계획 짜주는 프롬프트', model: 'ChatGPT',tags:['개발','파이썬','코딩'],author:'매튜' },
+    { id: 3, title: '파이썬으로 3분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 4, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 5, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 6, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 7, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 8, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 9, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 10, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+  ];
+  const DUMMY_DOWNLOADED_PROMPTS2: Prompt[] = [
+    { id: 1, title: '강아지 그림 그려주는 프롬프트', model: 'ChatGPT',tags:['개발','파이썬','코딩'],author:'홍길동' },
+    { id: 2, title: '여행 계획 짜주는 프롬프트', model: 'ChatGPT',tags:['개발','파이썬','코딩'],author:'매튜' },
+    { id: 3, title: '파이썬으로 4분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 4, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 5, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 6, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 7, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 8, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 9, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
+    { id: 10, title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트', model: 'Claude',tags:['개발','파이썬','코딩'],author:'오타니' },
   ];
   const DUMMY_LIKED_PROMPTS2: Prompt[] = [
     { id: 1, title: '강아지 그림 그려주는 프롬프트', model: 'ChatGPT',tags:['개발','파이썬','코딩'],author:'홍길동' },
@@ -54,6 +74,20 @@ const MyPromptPage = () => {
     // 탭이 바뀔 때마다 해당 데이터를 API로 호출하는 로직
     // const fetchedData = await api.getPrompts(activeTab);
     // setPrompts(fetchedData);
+    // 예시로 더미 데이터를 사용
+    switch (activeTab) {
+      case 'authored':
+        setPrompts(DUMMY_AUTHORED_PROMPTS2);
+        break;
+      case 'downloaded':
+        setPrompts(DUMMY_DOWNLOADED_PROMPTS2);
+        break;
+      case 'liked':
+        setPrompts(DUMMY_LIKED_PROMPTS2);
+        break;
+      default:
+        setPrompts(DUMMY_AUTHORED_PROMPTS2);
+    }
    
   }, [activeTab]);
 
