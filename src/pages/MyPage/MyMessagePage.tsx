@@ -85,6 +85,7 @@ const TOTAL_Notification_PAGES = Math.ceil(allNotification.length / PAGE_SIZE);
 
 const MyMessagePage = ({ type }: MyMessagePageProps) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [messages, setMessages] = useState<Message[]>(allMessages); // allMessages 복제
   const navigate = useNavigate();
 
   const handleTypeChange = (nextType: 'message' | 'notification') => {
@@ -95,7 +96,7 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
   };
 
   // 페이지별 데이터 슬라이싱
-  const pageMessageData = allMessages.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const pageMessageData = messages.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
   const pageNotificationData = allNotification.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   // 페이지네이션에서 페이지 변경시
@@ -106,52 +107,69 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
     navigate(`/mypage/message/message/${id}`);
   };
 
+  // 메시지 삭제
+  const handleDelete = (id: number) => {
+    setMessages((prev) => prev.filter((msg) => msg.id !== id));
+  };
+
+  // 메시지 읽음
+  const handleRead = (id: number) => {
+    setMessages((prev) => prev.map((msg) => (msg.id === id ? { ...msg, is_read: true } : msg)));
+  };
+
   return (
-    <div className="min-w-[1440px] min-h-[1024px] w-full h-full bg-[var(--color-background)]">
-      <div className="flex justify-between items-center">
-        <div className=" w-[360px] h-[60px] mt-[92px] ml-[102px]">
-          <button
-            onClick={() => handleTypeChange('message')}
-            className={`${
-              type === 'message'
-                ? 'text-[var(--color-primary-hover)] font-bold text-[32px] border-r-[2px] border-r-[var(--color-primary-hover)]'
-                : 'text-[var(--color-text-on-background)] font-bold text-[24px]'
-            } h-[60px] pt-[10px] pb-[10px] pr-[40px]  -translate-y-[10px]`}>
-            <p className="h-[40px]  -translate-y-[6px]">메시지함</p>
-          </button>
+    <div className="">
+      <div className="min-w-[1440px] min-h-[1024px] w-full h-full bg-background">
+        <div className="flex justify-between items-center">
+          <div className=" w-[360px] h-[60px] mt-[92px] ml-[102px]">
+            <button
+              onClick={() => handleTypeChange('message')}
+              className={`${
+                type === 'message'
+                  ? 'text-primary-hover font-bold text-[32px] border-r-[2px] border-r-primary-hover'
+                  : 'text-text-on-background font-bold text-[24px]'
+              } h-[60px] pt-[10px] pb-[10px] pr-[40px]  -translate-y-[10px]`}>
+              <p className="h-[40px]  -translate-y-[6px]">메시지함</p>
+            </button>
 
-          <button
-            onClick={() => handleTypeChange('notification')}
-            className={`${
-              type === 'notification'
-                ? 'text-[var(--color-primary-hover)] font-bold text-[32px] border-l-[2px] border-l-[var(--color-primary-hover)]'
-                : 'text-[var(--color-text-on-background)] font-bold text-[24px] '
-            } h-[60px] pt-[10px] pb-[10px] pl-[40px]  -translate-y-[10px]`}>
-            <p className="h-[40px] -translate-y-[6px]">알림</p>
-          </button>
+            <button
+              onClick={() => handleTypeChange('notification')}
+              className={`${
+                type === 'notification'
+                  ? 'text-primary-hover font-bold text-[32px] border-l-[2px] border-l-primary-hover'
+                  : 'text-text-on-background font-bold text-[24px] '
+              } h-[60px] pt-[10px] pb-[10px] pl-[40px]  -translate-y-[10px]`}>
+              <p className="h-[40px] -translate-y-[6px]">알림</p>
+            </button>
+          </div>
         </div>
-      </div>
 
-      <div>
-        {type === 'message' ? (
-          <>
-            <MessageTableList data={pageMessageData} onRowClick={handleRowClick} />
-            <MessagePagination
-              currentPage={currentPage}
-              totalPages={TOTAL_MESSAGE_PAGES}
-              onPageChange={handlePageChange}
-            />
-          </>
-        ) : (
-          <>
-            <NotificationTableList data={pageNotificationData} />
-            <NotificationPagination
-              currentPage={currentPage}
-              totalPages={TOTAL_Notification_PAGES}
-              onPageChange={handlePageChange}
-            />
-          </>
-        )}
+        <div className="flex flex-col justify-center items-center">
+          {type === 'message' ? (
+            <>
+              <MessageTableList
+                data={pageMessageData}
+                onRowClick={handleRowClick}
+                onDelete={handleDelete}
+                onRead={handleRead}
+              />
+              <MessagePagination
+                currentPage={currentPage}
+                totalPages={TOTAL_MESSAGE_PAGES}
+                onPageChange={handlePageChange}
+              />
+            </>
+          ) : (
+            <>
+              <NotificationTableList data={pageNotificationData} />
+              <NotificationPagination
+                currentPage={currentPage}
+                totalPages={TOTAL_Notification_PAGES}
+                onPageChange={handlePageChange}
+              />
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ const DownloadModal = ({ isOpen, onClose, title, downloadUrl, content }: Downloa
           ×
         </button>
 
-        <h2 className="text-[32px] font-bold mb-[32px]">{title} 이미지 생성</h2>
+        <h2 className="text-[32px] font-bold mb-[32px]">{title}</h2>
         <div className="h-[1px] bg-[#CCCCCC] w-full mb-[30px]" />
 
         <div className="ml-[790px]">

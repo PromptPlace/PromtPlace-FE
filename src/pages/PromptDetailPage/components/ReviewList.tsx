@@ -4,15 +4,16 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import DualModal from '@components/Modal/DualModal';
 import TextModal from '@components/Modal/TextModal';
 import UpdateModal from './UpdateModal';
-import profile from '../assets/profile.jpg'; // 기본 프로필 이미지
+import defaultProfile from '../assets/profile.jpg';
 
 interface Review {
-  id: number;
-  user: string;
+  review_id: number;
+  writer_id: number;
+  writer_profile_image_url: string;
+  writer_nickname: string;
   rating: number;
-  comment: string;
-  profile: string;
-  updatedAt: string;
+  content: string;
+  created_at: string;
 }
 
 interface ReviewListProps {
@@ -20,9 +21,10 @@ interface ReviewListProps {
   reviewCounts: number;
   onClose: () => void;
   title: string;
+  currentUserId: number;
 }
 
-const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title }: ReviewListProps) => {
+const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title, currentUserId }: ReviewListProps) => {
   const [openMenuIdx, setOpenMenuIdx] = useState<number | null>(null);
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
 
@@ -36,31 +38,28 @@ const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title }: R
 
   const [reviews, setReviews] = useState<Review[]>(initialReviews);
 
-  // 메뉴 열기/닫기 토글
   const toggleMenu = (idx: number) => {
     setOpenMenuIdx((prev) => (prev === idx ? null : idx));
   };
 
-  // 30일 이내 수정/삭제 가능 여부 체크
-  const isWithin30Days = (updatedAt: string) => {
-    const updatedTime = new Date(updatedAt).getTime();
+  const isWithin30Days = (createdAt: string) => {
+    const createdTime = new Date(createdAt).getTime();
     const now = Date.now();
-    return now - updatedTime <= 30 * 24 * 60 * 60 * 1000; // 30일
+    return now - createdTime <= 30 * 24 * 60 * 60 * 1000;
   };
 
-  // 삭제 버튼 클릭 시
   const onClickDelete = (idx: number) => {
     setOpenMenuIdx(null);
     setSelectedReviewIdx(idx);
 
-    if (!reviews[idx]?.updatedAt || !isWithin30Days(reviews[idx].updatedAt)) {
+    if (!reviews[idx]?.created_at || !isWithin30Days(reviews[idx].created_at)) {
       setShowExpiredModal(true);
       return;
     }
+
     setShowDeleteModal(true);
   };
 
-  // 수정 버튼 클릭 시
   const onClickEdit = (idx: number) => {
     setOpenMenuIdx(null);
     setSelectedReviewIdx(idx);
@@ -75,8 +74,8 @@ const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title }: R
     updatedReviews[selectedReviewIdx] = {
       ...updatedReviews[selectedReviewIdx],
       rating: newRating,
-      comment: newComment,
-      updatedAt: new Date().toISOString(), // 업데이트 시간도 갱신
+      content: newComment,
+      created_at: new Date().toISOString(),
     };
 
     setReviews(updatedReviews);
@@ -99,10 +98,7 @@ const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title }: R
       {/* 리뷰 리스트 */}
       <div
         className="flex-1 overflow-y-auto pr-2 custom-scrollbar relative"
-        style={{
-          scrollbarWidth: 'thin',
-          scrollbarColor: '#fff transparent',
-        }}>
+        style={{ scrollbarWidth: 'thin', scrollbarColor: '#fff transparent' }}>
         <style>{`
           .custom-scrollbar::-webkit-scrollbar {
             width: 8px;
@@ -120,19 +116,24 @@ const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title }: R
 
         {reviews.map((review, idx) => (
           <div
-            key={`${review.id}-${idx}`}
+            key={`${review.review_id}-${idx}`}
             className="relative group"
             onMouseEnter={() => setHoverIdx(idx)}
             onMouseLeave={() => setHoverIdx(null)}>
             <div className="flex gap-3 mb-4 last:mb-0">
-              <img src={review.profile || profile} alt={`${review.user} 프로필`} className="w-12 h-12 rounded-full" />
+              <img
+                src={review.writer_profile_image_url || defaultProfile}
+                alt={`${review.writer_nickname} 프로필`}
+                className="w-12 h-12 rounded-full"
+              />
               <div className="flex-1">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <p className="font-semibold">{review.user}</p>
+                    <p className="font-semibold">{review.writer_nickname}</p>
                     <Rating star={review.rating} />
                   </div>
-                  {hoverIdx === idx && (
+
+                  {hoverIdx === idx && review.writer_id === currentUserId && (
                     <button
                       onClick={() => toggleMenu(idx)}
                       className="hover:bg-secondary-pressed rounded-full p-1 transition-colors duration-150">
@@ -140,13 +141,14 @@ const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title }: R
                     </button>
                   )}
                 </div>
-                <p className="mt-1 text-gray-700">{review.comment}</p>
+                <p className="mt-1 text-gray-700">{review.content}</p>
               </div>
             </div>
 
+            {/* 점 버튼 메뉴 */}
             {openMenuIdx === idx && (
-              <div className="absolute top-8 right-0 bg-secondary text-text-on-background rounded-md shadow-md z-20 w-[88px]">
-                <ul className="text-sm py-1">
+              <div className="absolute top-8 right-0 bg-secondary text-text-on-background rounded-md shadow-md z-20 w-[91px] h-[72px]">
+                <ul className="text-[16px]">
                   <li
                     className="px-4 py-[6px] active:bg-secondary-pressed hover:text-black cursor-pointer rounded-t-md"
                     onClick={() => onClickDelete(idx)}>
@@ -171,7 +173,6 @@ const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title }: R
         <DualModal
           text="리뷰를 삭제하시겠습니까?"
           onClickYes={() => {
-            // 실제 삭제 로직 추가 가능
             setShowDeleteModal(false);
             setShowDeleteSuccessModal(true);
           }}
@@ -198,7 +199,7 @@ const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title }: R
           views={2109}
           downloads={120}
           rating={selectedReview.rating}
-          initialReviewText={selectedReview.comment}
+          initialReviewText={selectedReview.content}
           onSave={handleSave}
         />
       )}

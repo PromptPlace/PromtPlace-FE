@@ -1,6 +1,7 @@
 import PromptHeader from './components/PromptHeader';
 import PromptInfo from './components/PromptInfo';
 import PromptActions from './components/PromptActions';
+import { useNavigate } from 'react-router-dom';
 
 const mockPrompt = {
   prompt_id: 123,
@@ -24,15 +25,19 @@ const mockPrompt = {
 };
 
 const PromptDetailPage = () => {
+  const navigate = useNavigate();
   const prompt = mockPrompt;
 
   return (
-
     <div className="flex gap-10 p-10 max-w-7xl mx-auto bg-[#F5F5F5] ">
       {/* 왼쪽: 정보 */}
-      <div className="w-[711px] bg-[#FFFEFB] ">
-
-        <PromptHeader title={prompt.title} views={prompt.views} downloads={prompt.downloads} />
+      <div className="w-[711px] bg-[#FFFEFB] rounded-[16px] overflow-hidden">
+        <PromptHeader
+          title={prompt.title}
+          views={prompt.views}
+          downloads={prompt.downloads}
+          onClose={() => navigate(-1)}
+        />
         <PromptInfo
           promptResult={prompt.prompt_result}
           description={prompt.description}
@@ -41,10 +46,9 @@ const PromptDetailPage = () => {
       </div>
 
       {/* 오른쪽: 액션 */}
-      <div className="w-[300px] h-[654px] bg-[#FFFEFB] shrink-0">
+      <div className="w-[459px] h-[654px] bg-[#FFFEFB] shrink-0 rounded-[16px] overflow-hidden">
         <PromptActions
           title={prompt.title}
-
           price={prompt.price}
           isFree={prompt.is_free}
           downloads={prompt.downloads}

@@ -14,11 +14,11 @@ import { LuChevronLeft } from 'react-icons/lu';
 import { useNavigate, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 
-import url from './img/linkhub logo.svg';
-import instagram from './img/instagram.svg';
-import facebook from './img/Facebook.svg';
-import kakaotalk from './img/kakao_talk.svg';
-import twitter from './img/Frame 298.svg';
+import url from '@assets/icon-linkhub-logo.svg';
+import instagram from '@assets/icon-instagram-logo.svg';
+import facebook from '@assets/icon-facebook-logo.svg';
+import kakaotalk from '@assets/icon-kakao-logo.svg';
+import twitter from '@assets/icon-x-logo.svg';
 
 interface PromptGuideDetailPageProps {
   type: 'tip' | 'notice';
@@ -61,7 +61,7 @@ AI가 해당 프롬프트를 정상적으로 처리할 수 있도록 구성되�
     create_at: '2025-07-01',
     update_at: '2025-07-01,',
     is_visible: true,
-    file_url: 'a',
+    file_url: null,
     view_count: 1,
   });
 
@@ -72,36 +72,36 @@ AI가 해당 프롬프트를 정상적으로 처리할 수 있도록 구성되�
   };
 
   return (
-    <div className=" min-h-screen bg-[#F5F5F5] flex justify-center items-center">
-      <div className="w-[994px] h-[750px] bg-[var(--color-white)] rounded-t-[16px] rounded-b-[16px]">
-        <div className="w-[994px] mh-[105px]  pt-[55px] pl-[20px] pr-[10px]">
-          <div className="w-[187px] h-[50px] flex items-center gap-[10px] p-[10px]" onClick={handleNavigate}>
+    <div className="min-h-screen flex justify-center items-center">
+      <div className="w-full max-w-[994px] h-[750px] bg-white rounded-t-[16px] rounded-b-[16px]">
+        <div className="w-full max-w-[994px] mh-[105px]  pt-[55px] pl-[20px] pr-[10px]">
+          <div
+            className="w-[187px] h-[50px] flex items-center gap-[10px] p-[10px] cursor-pointer"
+            onClick={handleNavigate}>
             <LuChevronLeft size={24} />
-            <span className="text-[var(--color-text-on-white)] font-bold text-[24px] ">{`${type === 'tip' ? '프롬프트 TIP' : '공지사항'}`}</span>
+            <span className="text-text-on-white font-bold text-[24px] ">{`${type === 'tip' ? '프롬프트 TIP' : '공지사항'}`}</span>
           </div>
         </div>
 
-        <div className="w-[994px] h-[135px] border-b-[1px] border-[var(--color-white-stroke)] px-[65px]">
-          <h1 className="font-bold text-[32px] text-[var(--color-text-on-white)] pt-[30px]">{post.title}</h1>
-          <p className="font-medium text-[20px] text-[var(--color-text-on-background)] pt-[10px] pb-[30px]">
-            {post.create_at}
-          </p>
+        <div className="w-full max-w-[994px] h-[135px] border-b-[1px] border-white-stroke px-[65px]">
+          <h1 className="font-bold text-[32px] text-text-on-white pt-[30px]">{post.title}</h1>
+          <p className="font-medium text-[20px] text-text-on-background pt-[10px] pb-[30px]">{post.create_at}</p>
         </div>
 
-        <div className="w-[994px] h-[385px] flex justify-center overflow-y-auto prose prose-neutral max-w-none text-base">
-          <div className="w-[864px] border-b-[1px] border-[var(--color-white-stroke)] font-medium text-[20px] text-[var(--color-text-on-white)] py-[30px]">
+        <div className="w-full max-w-[994px] h-[385px] flex justify-center overflow-y-auto prose prose-neutral text-base">
+          <div className="w-[864px] border-b-[1px] border-white-stroke font-medium text-[20px] text-text-on-white py-[30px]">
             {post.content}
           </div>
           {/**추후 다시 markdown 적용해보기... */}
         </div>
 
         {/**하단 */}
-        <div className="w-[994px] h-[125px]  flex justify-center">
+        <div className="w-full max-w-[994px] h-[125px]  flex justify-center">
           <div className="w-[864px] h-[45px] flex justify-between mt-[33px] mb-[47px]">
             {typeof post.file_url === 'string' && post.file_url.trim() !== '' ? (
-              <button className="w-[116px] h-[45px] flex justify-center gap-[2px] items-center rounded-lg border-[1px] border-[var(--color-primary)] bg-[var(--color-white)] text-[var(--color-primary)]">
+              <button className="w-[116px] h-[45px] flex justify-center gap-[2px] items-center rounded-lg border-[1px] border-primary bg-white text-primary">
                 <BsPaperclip className="mr-2" size={20} />
-                <p className="font-medium text-[var(--color-primary)] text-[20px]">첨부</p>
+                <p className="font-medium text-primary text-[20px]">첨부</p>
               </button>
             ) : (
               <div className="w-[116px] h-[45px]">{/* file_url이 null, undefined, ""일 때만 보여줌 */}</div>
