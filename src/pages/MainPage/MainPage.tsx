@@ -48,7 +48,7 @@ const MainPage = () => {
   });
 
   return (
-    <div className="flex gap-6 justify-center bg-[#F5F5F5] relative overflow-hidden">
+    <div className="flex gap-[59px] justify-center bg-[#F5F5F5] relative overflow-hidden">
       <div className="w-[858px] h-[820px] mt-[53px] mb-[42px] overflow-y-auto pb-32">
         <FilterBar
           onModelChange={setSelectedModel}
@@ -56,10 +56,10 @@ const MainPage = () => {
           onlyFree={onlyFree}
           setOnlyFree={setOnlyFree} />
 
-        <div className="scroll-auto">
+        <div className="scroll-auto">  
           {sortPromptByFilter.map((prompt) => (
             <PromptCard
-              key={prompt.id}
+              key={prompt.prompt_id}
               prompt={prompt}
             />
           ))}
