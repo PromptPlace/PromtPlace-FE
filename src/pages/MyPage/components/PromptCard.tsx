@@ -31,7 +31,7 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
     <div className="flex items-center   border-b-[1px] border-b-white-stroke w-full  py-[10px] h-[92px] bg-white">
       <Link to={`/prompt/${promptData.id}`} className='flex flex-row'>
 
-        <div className="flex items-center justify-center text-text-on-white text-[22px]  font-bold w-[635px]">{promptData.title}</div>
+        <div className="flex items-center  text-text-on-white text-[22px] pl-[80px] font-bold w-[635px]">{promptData.title}</div>
         <div className="flex items-center justify-center text-text-on-background text-[20px] font-medium  w-[223px]">{promptData.model}</div>
     
 
@@ -49,16 +49,16 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
             <div className="relative">
           <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className={`flex items-center justify-center h-[28px] w-[28px] rounded-[50px]  ${isDropdownOpen ? 'bg-secondary-pressed' : 'bg-transparent'}`}><img src={kebabMenu} alt="케밥 메뉴"  /></button> 
           {isDropdownOpen && (
-            <div className="absolute  top-full mt-[11px] w-[91px] bg-white rounded-md shadow-lg z-10">
+            <div className="absolute  right-0 top-full mt-[11px] w-[91px] bg-white rounded-md shadow-lg z-10">
               <button 
                 onClick={() => {DeletePrompt(promptData.id); setIsDropdownOpen(false)}} 
-                className="block w-full h-[36px] text-[16px] border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary hover:bg-secondary-pressed"
+                className="block w-full h-[36px] text-[16px] border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary active:bg-secondary-pressed rounded-t-[4px]"
               >
                 삭제하기
               </button>
               <button 
                 onClick={() => {EditPrompt(promptData.id); setIsDropdownOpen(false)}} 
-                className="block w-full h-[36px] text-[16px] text-text-on-background bg-secondary hover:bg-secondary-pressed"
+                className="block w-full h-[36px] text-[16px] text-text-on-background bg-secondary active:bg-secondary-pressed rounded-b-[4px]"
               >
                 수정하기
               </button>
