@@ -9,6 +9,7 @@ import PrimaryButton from '@components/Button/PrimaryButton';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import Sidebar from '@components/Sidebar';
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
+import clsx from 'clsx';
 
 const Navbar = () => {
   const [search, setSearch] = useState<string>('');
@@ -55,7 +56,7 @@ const Navbar = () => {
           <img src={LogoIcon} alt="로고" className="w-full h-full object-cover" />
         </div>
 
-        <div className="flex items-center relative ml-[61.26px] max-w-[696px] w-full max-lg:m-[0]">
+        <div className="flex items-center relative ml-[61.26px] w-full max-lg:m-[0] max-w-[1000px]">
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
