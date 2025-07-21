@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import type { Creator } from '@/types/prompt.ts';
 import FollowButton from '@/components/Button/FollowButton';
 import profileImage from '@/assets/icon-profile-gray.svg';
-import allowRight from '@/assets/icon-arrow-right.svg';
 
 const SearchPrompter = ({ creators }: { creators: Creator[] }) => {
   const [isFollowed, setIsFollowed] = useState<Record<number, boolean>>(
@@ -22,10 +21,10 @@ const SearchPrompter = ({ creators }: { creators: Creator[] }) => {
 
   return (
     <aside className="flex flex-col gap-6 mt-[17px] w-[313px]">
-      {/* 🔥 이달의 인기 프롬프터 */}
+      {/* 키워드 관련 프롬프터 */}
       <section className="w-[313px] rounded-2xl p-4 shadow-sm bg-white">
         <div className="pb-2 font-bold text-xl flex items-center gap-1">
-          {keyword} 관련 프롬프터
+          키워드 관련 프롬프터
         </div>
         <ul className="mt-4 space-y-4">
           {creators.slice(0, 4).map((c) => (

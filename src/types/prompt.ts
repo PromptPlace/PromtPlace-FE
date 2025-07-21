@@ -19,7 +19,7 @@ export interface Prompt {
     created_at: string;
     updated_at: string;
     images?: PromptImage[];
-    tags?: string[];
+    tags: string[];
     keyword?: string; // 검색 기능을 위한 키워드
 }
 

@@ -19,7 +19,7 @@ type props = {
 }
 
 const PromptCard = ({ prompt }: props) => {
-    const { authorname, authorimage, prompt_id, title, description, has_image, is_free, model, price, downloadCount, views, likes, rating_avg, created_at, updated_at, images, tags } = prompt;
+    const { authorname, authorimage, title, description, is_free, model, price, downloadCount, views, rating_avg, tags } = prompt;
     const [isLiked, setIsLiked] = useState(false);
 
     const handleLike = () => {
@@ -56,7 +56,7 @@ const PromptCard = ({ prompt }: props) => {
                 <div className="flex justify-between items-center mb-2">
                     <span className="text-xl">{title}</span>
                     <div className="flex items-center gap-4 text-sm text-gray-600">
-                        <div className='flex items-center gap-1 text-lg'>{price !== 0 ? `${price}원` : '무료'}</div>
+                        <div className='flex items-center gap-1 text-lg'>{is_free ? '무료' : `${price}원`}</div>
                         <div><Rating star={rating_avg} /></div>
                         <div className='flex items-center gap-1'><img src={iconEye} className='w-4 h-4' /> {views}</div>
                         <div className='flex items-center gap-1'><img src={iconDownload} className='w-4 h-4' /> {downloadCount}</div>
