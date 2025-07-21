@@ -1,16 +1,26 @@
+export interface PromptImage {
+    image_url: string;
+}
+
 export interface Prompt {
-    id: number;
-    authorImg: string|null;
-    authorName: string;
-    model: string;
+    authorname: string;
+    authorimage: string|null;
+    prompt_id: number;
     title: string;
+    description: string;
+    has_image: boolean;
+    is_free: boolean;
+    model: string;
     price: number;
-    rating: number;
-    views: number;
     downloadCount: number;
-    content: string;
+    views: number;
     likes: number;
-    tags: string[];
+    rating_avg: number;
+    created_at: string;
+    updated_at: string;
+    images?: PromptImage[];
+    tags?: string[];
+    keyword?: string; // 검색 기능을 위한 키워드
 }
 
 export interface Creator {

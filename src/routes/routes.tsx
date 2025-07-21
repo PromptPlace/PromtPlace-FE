@@ -2,6 +2,7 @@ import React from 'react';
 
 export const lazyRoutes = {
   MainPage: React.lazy(() => import('../pages/MainPage/MainPage')),
+  SearchPage: React.lazy(() => import('../pages/MainPage/SearchPage')),
   MyInfoPage: React.lazy(() => import('../pages/MyPage/MyInfoPage')),
   MyMessagePage: React.lazy(() => import('../pages/MyPage/MyMessagePage')),
   MyMessageDetailPage: React.lazy(() => import('../pages/MyPage/MyMessageDetailPage')),
