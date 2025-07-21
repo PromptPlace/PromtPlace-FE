@@ -52,30 +52,30 @@ const MyMessageDetailPage = ({ type }: MyMessageDetailPageProps) => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-24px)] bg-[#F5F5F5] flex justify-center items-center ">
+    <div className="min-h-[calc(100vh-24px)] bg-background flex justify-center items-center ">
       {/**min-h-[calc(100vh-24px)] : 추후 min-h 부분은 navbar에 따라서 수정 필요 */}
-      <div className="w-[994px] h-[868px] bg-[var(--color-white)] rounded-t-[16px] rounded-b-[16px]">
+      <div className="w-[994px] h-[868px] bg-white rounded-t-[16px] rounded-b-[16px]">
         <div className="w-[994px] h-[105px] pt-[35px] pl-[20px] pr-[10px]">
           <div className="w-[187px] h-[50px] flex items-center gap-[10px] p-[10px]" onClick={handleNavigate}>
             <LuChevronLeft size={24} />
-            <span className="text-[var(--color-text-on-white)] font-bold text-[24px] ">메시지함</span>
+            <span className="text-text-on-white font-bold text-[24px] ">메시지함</span>
           </div>
         </div>
 
-        <div className="w-[994px] h-[153px] flex flex-col justify-center border-b-[1px] border-[var(--color-white-stroke)] px-[65px]">
-          <h1 className="font-bold text-[32px] text-[var(--color-text-on-white)] pt-[30px]">{message.title}</h1>
+        <div className="w-[994px] h-[153px] flex flex-col justify-center border-b-[1px] border-white-stroke px-[65px]">
+          <h1 className="font-bold text-[32px] text-text-on-white pt-[30px]">{message.title}</h1>
           <div className="w-[404px]  flex justify-between gap-[10px] items-center">
-            <p className="w-[197px] font-medium text-[20px] text-[var(--color-text-on-background)] pt-[10px] pb-[30px]">
+            <p className="w-[197px] font-medium text-[20px] text-text-on-background pt-[10px] pb-[30px]">
               {message.create_at}
             </p>
-            <p className="w-[197px] font-medium text-[20px] text-[var(--color-text-on-background)] pt-[10px] pb-[30px]">
-              보낸사람 : {message.sender_id}
+            <p className="w-[197px] font-medium text-[20px] text-text-on-background pt-[10px] pb-[30px]">
+              보낸 사람 : {message.sender_id}
             </p>
           </div>
         </div>
 
         <div className="w-[994px] h-[485px] flex justify-center overflow-y-auto prose prose-neutral max-w-none text-base">
-          <div className="w-[864px] border-b-[1px] border-[var(--color-white-stroke)] font-medium text-[20px] text-[var(--color-text-on-white)] py-[30px]">
+          <div className="w-[864px] border-b-[1px] border-white-stroke font-medium text-[20px] text-text-on-white py-[30px]">
             {message.body}
           </div>
           {/**추후 다시 markdown 적용해보기... */}
