@@ -31,8 +31,25 @@ export default defineConfig({
             purpose: "any maskable"
           }
         ]
-      }
-    })],
+      },
+       workbox: {
+        // 런타임 캐싱 규칙을 정의합니다.
+        runtimeCaching: [
+          {
+            // 이 규칙은 'navigation' 요청 (페이지 이동/새로고침)에만 적용됩니다.
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            // 'NetworkFirst': 네트워크를 먼저 시도하고, 실패 시(오프라인) 캐시를 사용합니다.
+            handler: 'NetworkFirst',
+            options: {
+              // 네비게이션 요청을 위한 캐시 이름
+              cacheName: 'pages-cache',
+            },
+          },
+        ],
+      },
+
+    }),  
+  ],
   resolve: {
     alias: [
       { find: '@', replacement: '/src' },
