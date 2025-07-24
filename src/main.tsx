@@ -14,5 +14,8 @@ createRoot(document.getElementById('root')!).render(
 
 if(import.meta.env.VITE_DEV_MODE==='Production'){
   registerSW()
+  console.log("✅ Production mode detected. Registering service worker...");
+}else{
+  console.log("❌ Not in production mode. Skipping service worker registration.");
 }
 
