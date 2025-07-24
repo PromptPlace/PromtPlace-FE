@@ -63,7 +63,7 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
                 수정하기
               </button>
             </div>
-            
+              
           )}
           </div>
           </div>
