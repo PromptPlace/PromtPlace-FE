@@ -47,6 +47,9 @@ importers:
       tailwindcss:
         specifier: ^4.1.11
         version: 4.1.11
+      workbox-window:
+        specifier: ^7.3.0
+        version: 7.3.0
     devDependencies:
       '@eslint/js':
         specifier: ^9.29.0

@@ -11,7 +11,7 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 );
 
-if(import.meta.env.VITE_APP_ENV==='production'){
+if(import.meta.env.VITE_DEV_MODE==='Production'){
   registerSW()
 }
 
