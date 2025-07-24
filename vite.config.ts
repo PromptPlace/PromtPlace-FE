@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), svgr(), 
     VitePWA({
       registerType: 'autoUpdate',
-      injectRegister: false,
+      injectRegister: 'script',
       includeAssets: ['favicon.svg', 'favicon.ico', 'apple-touch-icon.png', 'favicon-96x96.png','web-app-manifest-192x192.png', 'web-app-manifest-512x512.png'],
       manifest: {
         name: 'PromptPlace',
