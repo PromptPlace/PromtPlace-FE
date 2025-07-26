@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import FilterDropdown from './FilterDropdown';
 import TagFilter from './TagFilter';
 import arrowDown from '@/assets/icon-arrow-down.svg';
@@ -16,6 +16,23 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [tags, setTags] = useState<string[]>([]);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if(
+        dropdownRef.current&&
+        !dropdownRef.current.contains(event.target as Node)
+      ){
+        setSelectedFilter(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const toggleDropdown = (label: string) => {
     setSelectedFilter((prev) => (prev === label ? null : label));
@@ -48,7 +65,9 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
   type filterLabel = keyof typeof dropdownItems;
 
   return (
-    <section className="h-11 px-5 inline-flex justify-center items-center gap-3.5 font-['Spoqa_Han_Sans_Neo'] text-text-on-background text-xl font-medium">
+    <section className="h-11 px-5 inline-flex justify-center items-center gap-3.5 font-['Spoqa_Han_Sans_Neo'] text-text-on-background text-xl font-medium"
+      ref={dropdownRef}
+    >
       {(['모델', '필터', '태그'] as filterLabel[]).map((label) => (
         <div
           key={label}

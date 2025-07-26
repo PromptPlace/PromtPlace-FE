@@ -69,7 +69,9 @@ const MainPage = () => {
         <div className='flex flex-col gap-[14px]'>
           <PrompterBar creators={dummyCreators} />
         </div>
+      </div>
 
+      <div className='hidden lg:flex'>
         <div className='fixed bottom-4 justify-center items-center flex flex-col gap-2.5'>
           <GradientButton
             buttonType="imgButton"
