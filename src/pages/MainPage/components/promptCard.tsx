@@ -28,7 +28,7 @@ const PromptCard = ({ prompt }: props) => {
     }
 
     return (
-        <div className="flex flex-col w-[832px] mt-[42px]">
+        <div className="flex flex-col w-full max-w-[832px] mt-[42px]">
             {/* 작성자 정보 (카드 바깥쪽) */}
             <div className="inline-flex justify-start items-center gap-3.5">
                 <img
@@ -40,7 +40,7 @@ const PromptCard = ({ prompt }: props) => {
             </div>
 
             {/* 카드 본문 */}
-            <div className="relative w-[780px] max-h-[320px] bg-white rounded-xl shadow-md p-4 ml-2 ml-auto">
+            <div className="relative w-full h-full max-w-[780px] max-h-[320px] bg-white rounded-xl shadow-md p-4 overflow-hidden overflow-ellipsis ml-2 ml-auto">
                 <div className="flex flex-wrap items-center px-2.5 py-0.5 gap-2.5 mb-[14px]">
 
                     <ModelButton text={model} />

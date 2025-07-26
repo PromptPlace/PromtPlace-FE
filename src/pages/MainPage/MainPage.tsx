@@ -21,7 +21,7 @@ const MainPage = () => {
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const [onlyFree, setOnlyFree] = useState<boolean>(false);
- 
+
   const filterPromptsByModel = dummyPrompts.filter(prompt => {
     const matchModel = selectedModel ? prompt.model === selectedModel : true;
     const matchFree = onlyFree ? prompt.price === 0 : true;
@@ -55,7 +55,7 @@ const MainPage = () => {
           onlyFree={onlyFree}
           setOnlyFree={setOnlyFree} />
 
-        <div className="scroll-auto">  
+        <div className="scroll-auto">
           {sortPromptByFilter.map((prompt) => (
             <PromptCard
               key={prompt.prompt_id}
@@ -65,19 +65,21 @@ const MainPage = () => {
         </div>
       </div>
 
-      <div className='flex flex-col gap-[14px]'>
-        <PrompterBar creators={dummyCreators} />
-      </div>
+      <div className='hidden lg:flex'>
+        <div className='flex flex-col gap-[14px]'>
+          <PrompterBar creators={dummyCreators} />
+        </div>
 
-      <div className='fixed bottom-4 justify-center items-center flex flex-col gap-2.5'>
-        <GradientButton
-          buttonType="imgButton"
-          text="프롬프트 작성하기"
-          onClick={() => { 
-            // 프롬프트 작성하기 버튼 클릭 시 실행될 함수
-            console.log('프롬프트 작성하기 클릭됨');
-          }}
-        />
+        <div className='fixed bottom-4 justify-center items-center flex flex-col gap-2.5'>
+          <GradientButton
+            buttonType="imgButton"
+            text="프롬프트 작성하기"
+            onClick={() => {
+              // 프롬프트 작성하기 버튼 클릭 시 실행될 함수
+              console.log('프롬프트 작성하기 클릭됨');
+            }}
+          />
+        </div>
       </div>
     </div>
   );
