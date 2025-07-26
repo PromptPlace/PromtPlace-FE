@@ -103,6 +103,8 @@ const PromptActions = ({ title, price, isFree, reviewCounts, rating }: Props) =>
   } | null>(null);
 
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  const [reviewCount, setReviewCount] = useState<number>(reviewCounts);
+  const [reviews, setReviews] = useState(dummyReviews);
 
   const handleDownloadClick = async () => {
     // const promptId = 1024;
@@ -158,11 +160,13 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
   if (showReviews) {
     return (
       <ReviewList
-        reviews={dummyReviews}
+        reviews={reviews}
         title="동양풍 일러스트 이미지 생성"
-        reviewCounts={reviewCounts}
+        reviewCount={reviewCount}
+        setReviews={setReviews}
         onClose={() => setShowReviews(false)}
         currentUserId={1}
+        setReviewCount={setReviewCount}
       />
     );
   }
@@ -235,7 +239,7 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
           <span
             className="w-[37px] h-[28px] px-[10px] py-[5px] border border-[#999999] rounded-full text-[16px] text-[#999898] flex items-center justify-center cursor-pointer"
             onClick={() => setShowReviews(true)}>
-            {reviewCounts}
+            {reviewCount}
           </span>
         </div>
       </div>
