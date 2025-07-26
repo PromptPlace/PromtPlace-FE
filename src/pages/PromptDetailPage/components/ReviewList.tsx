@@ -18,13 +18,15 @@ interface Review {
 
 interface ReviewListProps {
   reviews: Review[];
-  reviewCounts: number;
+  setReviews: React.Dispatch<React.SetStateAction<Review[]>>;
+  reviewCount: number;
   onClose: () => void;
   title: string;
   currentUserId: number;
+  setReviewCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title, currentUserId }: ReviewListProps) => {
+const ReviewList = ({ reviews, reviewCount, onClose, title, currentUserId, setReviewCount }: ReviewListProps) => {
   const [openMenuIdx, setOpenMenuIdx] = useState<number | null>(null);
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
 
@@ -36,7 +38,7 @@ const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title, cur
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
 
-  const [reviews, setReviews] = useState<Review[]>(initialReviews);
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
   const toggleMenu = (idx: number) => {
     setOpenMenuIdx((prev) => (prev === idx ? null : idx));
@@ -90,7 +92,7 @@ const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title, cur
         <button onClick={onClose} className="text-2xl font-bold leading-none hover:opacity-70" aria-label="뒤로가기">
           &lt;
         </button>
-        <h2 className="font-bold text-[20px] ml-3 inline-flex items-center gap-2">구매자 리뷰 ({reviewCounts})</h2>
+        <h2 className="font-bold text-[20px] ml-3 inline-flex items-center gap-2">구매자 리뷰 ({reviewCount})</h2>
       </div>
 
       <div className="h-[1px] bg-[#CCCCCC] w-full mb-4" />
@@ -133,7 +135,7 @@ const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title, cur
                     <Rating star={review.rating} />
                   </div>
 
-                  {hoverIdx === idx && review.writer_id === currentUserId && (
+                  {hoverIdx === idx && (review.writer_id === currentUserId || isAdmin) && (
                     <button
                       onClick={() => toggleMenu(idx)}
                       className="hover:bg-secondary-pressed rounded-full p-1 transition-colors duration-150">
@@ -171,8 +173,16 @@ const ReviewList = ({ reviews: initialReviews, reviewCounts, onClose, title, cur
       {/* 삭제 확인 모달 */}
       {showDeleteModal && (
         <DualModal
-          text="리뷰를 삭제하시겠습니까?"
+          text={isAdmin ? '리뷰를 삭제 조치하시겠습니까?' : '리뷰를 삭제하시겠습니까?'}
           onClickYes={() => {
+            if (selectedReviewIdx !== null) {
+              const updated = [...reviews];
+              updated.splice(selectedReviewIdx, 1);
+              setReviews(updated);
+              setReviewCount((prev) => prev - 1);
+              setSelectedReviewIdx(null);
+            }
+
             setShowDeleteModal(false);
             setShowDeleteSuccessModal(true);
           }}

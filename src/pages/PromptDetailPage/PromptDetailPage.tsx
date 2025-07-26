@@ -27,6 +27,7 @@ const mockPrompt = {
 const PromptDetailPage = () => {
   const navigate = useNavigate();
   const prompt = mockPrompt;
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
   return (
     <div className="flex gap-10 p-10 max-w-7xl mx-auto bg-[#F5F5F5] ">
@@ -46,7 +47,8 @@ const PromptDetailPage = () => {
       </div>
 
       {/* 오른쪽: 액션 */}
-      <div className="w-[459px] h-[654px] bg-[#FFFEFB] shrink-0 rounded-[16px] overflow-hidden">
+      <div
+        className={`w-[459px] ${isAdmin ? 'h-[548px]' : 'h-[654px]'} bg-[#FFFEFB] shrink-0 rounded-[16px] overflow-hidden`}>
         <PromptActions
           title={prompt.title}
           price={prompt.price}
