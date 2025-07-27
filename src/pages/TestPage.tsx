@@ -138,6 +138,8 @@ const TestPage = () => {
           }
           onClickYes={() => alert('예')}
           onClickNo={() => setShowModal4(false)}
+          colorYesText="white"
+          colorNoText="blue"
         />
       )}
 
