@@ -9,6 +9,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), svgr(), 
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: null,
       includeAssets: ['favicon.svg', 'favicon.ico', 'apple-touch-icon.png', 'favicon-96x96.png','web-app-manifest-192x192.png', 'web-app-manifest-512x512.png'],
       manifest: {
         name: 'PromptPlace',
@@ -31,8 +32,21 @@ export default defineConfig({
             purpose: "any maskable"
           }
         ]
-      }
-    })],
+      },
+       workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'pages-cache',
+            },
+          },
+        ],
+      },
+
+    }),  
+  ],
   resolve: {
     alias: [
       { find: '@', replacement: '/src' },
