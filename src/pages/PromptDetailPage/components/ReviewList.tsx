@@ -20,13 +20,21 @@ interface ReviewListProps {
   reviews: Review[];
   setReviews: React.Dispatch<React.SetStateAction<Review[]>>;
   reviewCount: number;
+  setReviewCount: React.Dispatch<React.SetStateAction<number>>;
   onClose: () => void;
   title: string;
   currentUserId: number;
-  setReviewCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const ReviewList = ({ reviews, reviewCount, onClose, title, currentUserId, setReviewCount }: ReviewListProps) => {
+const ReviewList = ({
+  reviews,
+  setReviews,
+  reviewCount,
+  onClose,
+  title,
+  currentUserId,
+  setReviewCount,
+}: ReviewListProps) => {
   const [openMenuIdx, setOpenMenuIdx] = useState<number | null>(null);
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
 

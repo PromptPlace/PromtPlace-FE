@@ -103,8 +103,9 @@ const PromptActions = ({ title, price, isFree, reviewCounts, rating }: Props) =>
   } | null>(null);
 
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
-  const [reviewCount, setReviewCount] = useState<number>(reviewCounts);
+
   const [reviews, setReviews] = useState(dummyReviews);
+  const [reviewCount, setReviewCount] = useState(reviewCounts);
 
   const handleDownloadClick = async () => {
     // const promptId = 1024;
