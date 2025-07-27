@@ -20,6 +20,7 @@ import clsx from 'clsx';
  * @param {TextButton} textButton -- 예, 아니오 버튼에 대해서만 사용되는 배경 색
  * @param {string} text -- 버튼 내용
  * @param {function} onClick -- 버튼 클릭 시 실행될 함수
+ * @param {string} type -- 버튼 타입, 기본 타입은 button이며 필요에 따라 타입을 지정할 수 있습니다.
  *
  * @example
  * <IconButton
@@ -67,11 +68,13 @@ interface IconButtonProps {
   textButton?: TextButton;
   text: string;
   onClick: () => void;
+  type?: 'button' | 'submit';
 }
 
-const IconButton = ({ buttonType, style, imgType, textButton, text, onClick }: IconButtonProps) => {
+const IconButton = ({ buttonType, style, imgType, textButton, text, onClick, type = 'button' }: IconButtonProps) => {
   return (
     <button
+      type={type}
       onClick={onClick}
       className={`group flex justify-center items-center shadow-button hover:shadow-button-hover transition-all duration-300 ease-in-out ${iconButtonTheme.buttonType[buttonType]} ${iconButtonTheme.style[style]} ${textButton && iconButtonTheme.textButton[textButton]}`}>
       {imgType === 'settings' && (
