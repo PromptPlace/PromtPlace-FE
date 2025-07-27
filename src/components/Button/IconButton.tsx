@@ -1,5 +1,5 @@
 import SettingsIcon from '@assets/icon-settings.svg?react';
-import UploadIcon from '@assets/icon-upload2.svg?react';
+import UploadIcon from '@assets/icon-upload.svg?react';
 import ListIcon from '@assets/icon-list.svg?react';
 import AttachIcon from '@assets/icon-attach-file-blue.svg?react';
 import DownloadIcon from '@assets/icon-download-white.svg?react';
