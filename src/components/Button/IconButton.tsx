@@ -38,8 +38,8 @@ import clsx from 'clsx';
 
 const iconButtonTheme = {
   buttonType: {
-    round: 'px-[29px] py-[22px] rounded-[50px] text-xl font-medium leading-[25px] gap-[15px]',
-    squareBig: 'px-[29px] py-[15px] rounded-[10px] text-2xl font-bold leading-[30px] gap-[15px]',
+    round: 'px-[29px] py-[21px] rounded-[50px] text-xl font-medium leading-[25px] gap-[15px]',
+    squareBig: 'px-[29px] py-[14px] rounded-[10px] text-2xl font-bold leading-[30px] gap-[15px]',
     squareMd: 'px-[20px] py-[10px] rounded-[10px] h-[45px] text-xl font-medium leading-[25px] gap-[15px]',
     squreSm:
       'px-[18px] py-[10px] rounded-[10px] flex items-center justify-center gap-[15px] text-base font-normal leading-[26px] tracking-[0.46px]',
@@ -47,8 +47,8 @@ const iconButtonTheme = {
   },
   style: {
     outline:
-      'border border-priㄴmary hover:border-primary-hover active:border-primary-pressed text-primary hover:text-primary-hover active:text-primary-pressed active:bg-secondary ',
-    fill: 'bg-primary hover:bg-primary-hover active:bg-primary-pressed text-white',
+      'border border-primary hover:border-primary-hover active:border-primary-pressed text-primary hover:text-primary-hover active:text-primary-pressed active:bg-secondary ',
+    fill: 'bg-primary hover:bg-primary-hover active:bg-primary-pressed text-white border border-1px-primary',
     red: 'bg-alert text-white px-[29px] leading-[24px] shadow-none hover:shadow-none',
   },
   textButton: {
