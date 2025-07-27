@@ -2,14 +2,12 @@ import CardHeader from './CardHeader';
 import Rating from '@/components/Rating';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 
-
-
 interface Review {
   id: number;
   promptTitle: string;
   rating: number;
   content: string;
-  author?: { name: string; avatar: string; }; // '받은 리뷰'에만 존재
+  author?: { name: string; avatar: string }; // '받은 리뷰'에만 존재
   createdAt: string;
 }
 
@@ -36,20 +34,19 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ type, reviewData, onDelete }) =
         {/* '받은 리뷰'일 때만 작성자 프로필 표시 */}
         {type === 'received' && reviewData.author && (
           <div className="flex items-center gap-[10px]">
-            <img src={reviewData.author.avatar} alt={reviewData.author.name} className="w-[46px] h-[46px] rounded-full" />
+            <img
+              src={reviewData.author.avatar}
+              alt={reviewData.author.name}
+              className="w-[46px] h-[46px] rounded-full"
+            />
             <span className="text-[20px] font-medium text-text-on-white">{reviewData.author.name}</span>
           </div>
         )}
-       
-        
-        <Rating star={reviewData.rating} />
-        
-        {type === 'written' && (
-          <PrimaryButton buttonType="reviewDelete" text="리뷰 삭제" onClick={onDelete} />
-        )}
-        </div>
 
-      
+        <Rating star={reviewData.rating} />
+
+        {type === 'written' && <PrimaryButton buttonType="reviewDelete" text="리뷰 삭제" onClick={onDelete} />}
+      </div>
 
       <p className="text-[18px] text-text-on-white font-regular">{reviewData.content}</p>
     </div>
@@ -57,4 +54,3 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ type, reviewData, onDelete }) =
 };
 
 export default ReviewCard;
-
