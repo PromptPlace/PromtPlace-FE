@@ -6,6 +6,7 @@ import profile from '../assets/profile.jpg';
 import TagButton from '@components/Button/TagButton';
 import heartNone from '../../../assets/icon-heart-none-big.svg';
 import heartOnClick from '../../../assets/icon-heart-blue-big.svg';
+import contentCheckIcon from '../assets/contentcheck.png';
 import ReviewList from './ReviewList';
 import ReportModal from '../components/ReportModal';
 import DownloadModal from '../components/DownloadModal';
@@ -88,10 +89,10 @@ const dummyReviews = [
   },
 ];
 
-const PromptActions = ({ title, price, isFree, downloads, likes, reviewCounts, rating, updatedAt, userId }: Props) => {
+const PromptActions = ({ title, price, isFree, reviewCounts, rating }: Props) => {
   const [follow, setFollow] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
-  const [tags, setTags] = useState<string[]>(['#수묵화', '#수채화', '#디자인', '#일러스트', '#그림', '#이미지']);
+  const [tags] = useState<string[]>(['#수묵화', '#수채화', '#디자인', '#일러스트', '#그림', '#이미지']);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [liked, setLiked] = useState(false);
@@ -101,35 +102,39 @@ const PromptActions = ({ title, price, isFree, downloads, likes, reviewCounts, r
     content: string;
   } | null>(null);
 
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+
+  const [reviews, setReviews] = useState(dummyReviews);
+  const [reviewCount, setReviewCount] = useState(reviewCounts);
+
   const handleDownloadClick = async () => {
-    try {
-      // const promptId = 1024;
-      // const token = localStorage.getItem('accessToken');
-      // if (!token) {
-      //   alert('로그인이 필요합니다.');
-      //   return;
-      // }
+    // const promptId = 1024;
+    // const token = localStorage.getItem('accessToken');
+    // if (!token) {
+    //   alert('로그인이 필요합니다.');
+    //   return;
+    // }
 
-      // const response = await axios.post(
-      //   `/api/prompts/${promptId}/downloads`,
-      //   { prompt_id: promptId },
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   },
-      // );
+    // const response = await axios.post(
+    //   `/api/prompts/${promptId}/downloads`,
+    //   { prompt_id: promptId },
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   },
+    // );
 
-      // const { download_url, title } = response.data;
+    // const { download_url, title } = response.data;
 
-      // ✅ 테스트용 더미 데이터
-      const title = '동양풍 일러스트 이미지 생성';
-      const download_url = 'https://cdn.promptplace.com/prompts/1024.txt';
+    // ✅ 테스트용 더미 데이터
+    const title = '동양풍 일러스트 이미지 생성';
+    const download_url = 'https://cdn.promptplace.com/prompts/1024.txt';
 
-      setDownloadData({
-        title,
-        downloadUrl: download_url,
-        content: `
+    setDownloadData({
+      title,
+      downloadUrl: download_url,
+      content: `
 1. 전통 동양풍 인물 일러스트
 a graceful Korean noblewoman wearing hanbok, sitting under a cherry blossom tree, Joseon dynasty style, soft lighting, detailed fabric texture, traditional hair style, serene atmosphere, oriental illustration --v 5 --ar 2:3
 a Korean dragon soaring through the clouds, traditional ink painting style, dynamic cloud motion, golden scales shimmering in sunlight, East Asian mythology, majestic and ancient aura --v 5 --ar 3:2 --style scenic
@@ -140,37 +145,35 @@ a peaceful traditional Japanese village in spring, sakura trees in full bloom, t
 3. 퓨전 동양풍 일러스트
 a futuristic city blending Korean traditional architecture and cyberpunk neon lights, hanok buildings with glowing signs, digital screens, night setting, rain-soaked street, Blade Runner meets Joseon, concept art --v 5 --ar 21:9
       `.trim(),
-      });
+    });
 
-      setIsDownloadModalOpen(true);
-    } catch (err: any) {
-      const msg = err?.response?.data?.message || '다운로드 중 오류가 발생했습니다.';
-      alert(msg);
-    }
+    setIsDownloadModalOpen(true);
   };
 
   const handleReportButtonClick = () => {
-    setIsReportModalOpen(true); // 신고 모달 열기
+    setIsReportModalOpen(true);
   };
 
   const handleCloseReportModal = () => {
-    setIsReportModalOpen(false); // 신고 모달 닫기
+    setIsReportModalOpen(false);
   };
 
   if (showReviews) {
     return (
       <ReviewList
-        reviews={dummyReviews}
+        reviews={reviews}
         title="동양풍 일러스트 이미지 생성"
-        reviewCounts={reviewCounts}
+        reviewCount={reviewCount}
+        setReviews={setReviews}
         onClose={() => setShowReviews(false)}
         currentUserId={1}
+        setReviewCount={setReviewCount}
       />
     );
   }
 
   return (
-    <div className="w-[459px] bg-[#FFFEFB] h-[654px] px-8">
+    <div className={isAdmin ? 'w-[459px] bg-[#FFFEFB] px-8 h-[548px]' : 'w-[459px] bg-[#FFFEFB] px-8 h-[654px]'}>
       {/* 유저 정보 */}
       <div className="h-[96px] box-border flex items-center gap-3">
         <img src={profile} alt="profile" className="w-10 h-10 rounded-full" />
@@ -182,30 +185,39 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
       <div className="h-[1px] bg-[#CCCCCC] w-full" />
 
       {/* 제목 */}
-      <div className="font-bold text-[24px] pt-[20px] pb-[10px]">{`[${title}]`}</div>
+      <div className="font-bold text-[24px] pt-[25px]">{`[${title}]`}</div>
 
       {/* 가격 */}
-      <div className="text-[24px] pt-[20px] pb-[20px] font-bold">{isFree ? '무료' : `${price.toLocaleString()}원`}</div>
+      <div className="text-[24px] pt-[30px] font-bold">{isFree ? '무료' : `${price.toLocaleString()}원`}</div>
 
-      {/* 다운로드 & 좋아요 */}
-      <div className="h-[96px] box-border flex items-center gap-3">
-        <IconButton
-          buttonType="squareBig"
-          style="fill"
-          imgType="download"
-          text="다운로드"
-          onClick={handleDownloadClick}
-        />
-
-        {/* 다운로드 모달 */}
-        {downloadData && (
-          <DownloadModal
-            isOpen={isDownloadModalOpen}
-            onClose={() => setIsDownloadModalOpen(false)}
-            title={downloadData.title}
-            downloadUrl={downloadData.downloadUrl}
-            content={downloadData.content}
+      {/* 버튼 영역 */}
+      <div className="h-[96px] pt-[30px] box-border flex items-center">
+        {isAdmin ? (
+          <img
+            src={contentCheckIcon}
+            alt="내용 확인"
+            className="w-[198px] h-[60px] cursor-pointer"
+            onClick={() => alert('내용 확인 버튼 클릭')}
           />
+        ) : (
+          <>
+            <IconButton
+              buttonType="squareBig"
+              style="fill"
+              imgType="download"
+              text="다운로드"
+              onClick={handleDownloadClick}
+            />
+            {downloadData && (
+              <DownloadModal
+                isOpen={isDownloadModalOpen}
+                onClose={() => setIsDownloadModalOpen(false)}
+                title={downloadData.title}
+                downloadUrl={downloadData.downloadUrl}
+                content={downloadData.content}
+              />
+            )}
+          </>
         )}
 
         <img
@@ -218,40 +230,41 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
 
       {/* 별점 및 리뷰보기 */}
       <div>
-        <div className="mt-[25px] flex justify-start">
+        <div className="pt-[30px] flex justify-start gap-[30px]">
           <Rating star={rating} />
         </div>
-        <div className="pt-[20px] text-[20px] flex items-center gap-[10px]">
+        <div className="pt-[30px] text-[20px] flex items-center gap-[10px]">
           <p className="cursor-pointer" onClick={() => setShowReviews(true)}>
             리뷰보기
           </p>
           <span
             className="w-[37px] h-[28px] px-[10px] py-[5px] border border-[#999999] rounded-full text-[16px] text-[#999898] flex items-center justify-center cursor-pointer"
             onClick={() => setShowReviews(true)}>
-            {reviewCounts}
+            {reviewCount}
           </span>
         </div>
       </div>
 
-      {/* 태그 */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-[40px] mb-[30px]">
+      <div
+        className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-[30px] ${isAdmin ? 'mb-[25px]' : 'mb-[30px]'}`}>
         {tags.map((tag, idx) => (
           <TagButton key={idx} hasDelete={false} text={tag} onClick={() => {}} />
         ))}
       </div>
 
-      {/* 신고 버튼 */}
-
-      <IconButton
-        buttonType="squareMd"
-        style="red"
-        imgType="alert"
-        text="프롬프트 신고하기"
-        onClick={handleReportButtonClick}
-      />
-
-      {/* 신고 모달 */}
-      <ReportModal isOpen={isReportModalOpen} onClose={handleCloseReportModal} />
+      {/* 신고 버튼: 일반 사용자만 */}
+      {!isAdmin && (
+        <>
+          <IconButton
+            buttonType="squareMd"
+            style="red"
+            imgType="alert"
+            text="프롬프트 신고하기"
+            onClick={handleReportButtonClick}
+          />
+          <ReportModal isOpen={isReportModalOpen} onClose={handleCloseReportModal} />
+        </>
+      )}
     </div>
   );
 };
