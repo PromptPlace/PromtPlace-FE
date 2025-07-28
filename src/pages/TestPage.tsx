@@ -138,17 +138,16 @@ const TestPage = () => {
           }
           onClickYes={() => alert('예')}
           onClickNo={() => setShowModal4(false)}
+          colorYesText="white"
+          colorNoText="blue"
         />
       )}
 
       <h3>🟣 SocialLoginModal.tsx</h3>
       <button onClick={() => setShowModal5(true)}>모달5 보기 click</button>
-      {showModal5 && (
-        <SocialLoginModal isOpen={showModal5} onClose={() => setShowModal5(false)} onClick={() => {}} />
-      )}
+      {showModal5 && <SocialLoginModal isOpen={showModal5} onClose={() => setShowModal5(false)} onClick={() => {}} />}
     </div>
   );
 };
-
 
 export default TestPage;

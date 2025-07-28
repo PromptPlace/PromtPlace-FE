@@ -9,17 +9,33 @@
 
 **/
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PromptCard from './components/promptCard';
 import FilterBar from './components/filterBar';
 import PrompterBar from './components/prompterBar';
 import { dummyPrompts, dummyCreators } from './components/../dummyData';
 import GradientButton from '@/components/Button/GradientButton';
+import CoachMark from '@/components/CoachMark';
+import { useAuth } from '@/context/AuthContext';
 
 const MainPage = () => {
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const [onlyFree, setOnlyFree] = useState<boolean>(false);
+
+  // 코치마크 관련
+  const { accessToken } = useAuth();
+  const [showCoachMark, setShowCoachMark] = useState(() => {
+    const hasVisited = sessionStorage.getItem('visited');
+    return !hasVisited;
+  });
+
+  // 코치마크 관련
+  useEffect(() => {
+    if (showCoachMark) {
+      sessionStorage.setItem('visited', 'true');
+    }
+  }, [showCoachMark]);
 
   const filterPromptsByModel = dummyPrompts.filter((prompt) => {
     const matchModel = selectedModel ? prompt.model === selectedModel : true;
@@ -46,6 +62,7 @@ const MainPage = () => {
 
   return (
     <div className="flex gap-[59px] justify-center bg-[#F5F5F5] relative overflow-hidden">
+      {showCoachMark && !accessToken && <CoachMark setShowCoachMark={setShowCoachMark} />}
       <div className="w-[858px] h-[820px] mt-[53px] mb-[42px] overflow-y-auto pb-32">
         <FilterBar
           onModelChange={setSelectedModel}
