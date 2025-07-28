@@ -9,7 +9,6 @@ import PrimaryButton from '@components/Button/PrimaryButton';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import Sidebar from '@components/Sidebar';
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
-import clsx from 'clsx';
 
 const Navbar = () => {
   const [search, setSearch] = useState<string>('');

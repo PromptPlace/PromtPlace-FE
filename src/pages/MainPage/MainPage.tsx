@@ -9,25 +9,39 @@
 
 **/
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PromptCard from './components/promptCard';
 import FilterBar from './components/filterBar';
 import PrompterBar from './components/prompterBar';
 import { dummyPrompts, dummyCreators } from './components/../dummyData';
 import GradientButton from '@/components/Button/GradientButton';
+import CoachMark from '@/components/CoachMark';
+import { useAuth } from '@/context/AuthContext';
 
 const MainPage = () => {
-
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const [onlyFree, setOnlyFree] = useState<boolean>(false);
- 
-  const filterPromptsByModel = dummyPrompts.filter(prompt => {
+
+  // 코치마크 관련
+  const { accessToken } = useAuth();
+  const [showCoachMark, setShowCoachMark] = useState(() => {
+    const hasVisited = sessionStorage.getItem('visited');
+    return !hasVisited;
+  });
+
+  // 코치마크 관련
+  useEffect(() => {
+    if (showCoachMark) {
+      sessionStorage.setItem('visited', 'true');
+    }
+  }, [showCoachMark]);
+
+  const filterPromptsByModel = dummyPrompts.filter((prompt) => {
     const matchModel = selectedModel ? prompt.model === selectedModel : true;
     const matchFree = onlyFree ? prompt.price === 0 : true;
     return matchModel && matchFree;
   });
-
 
   const sortPromptByFilter = [...filterPromptsByModel].sort((a, b) => {
     switch (selectedSort) {
@@ -48,32 +62,31 @@ const MainPage = () => {
 
   return (
     <div className="flex gap-[59px] justify-center bg-[#F5F5F5] relative overflow-hidden">
+      {showCoachMark && !accessToken && <CoachMark setShowCoachMark={setShowCoachMark} />}
       <div className="w-[858px] h-[820px] mt-[53px] mb-[42px] overflow-y-auto pb-32">
         <FilterBar
           onModelChange={setSelectedModel}
           onSortChange={setSelectedSort}
           onlyFree={onlyFree}
-          setOnlyFree={setOnlyFree} />
+          setOnlyFree={setOnlyFree}
+        />
 
-        <div className="scroll-auto">  
+        <div className="scroll-auto">
           {sortPromptByFilter.map((prompt) => (
-            <PromptCard
-              key={prompt.prompt_id}
-              prompt={prompt}
-            />
+            <PromptCard key={prompt.prompt_id} prompt={prompt} />
           ))}
         </div>
       </div>
 
-      <div className='flex flex-col gap-[14px]'>
+      <div className="flex flex-col gap-[14px]">
         <PrompterBar creators={dummyCreators} />
       </div>
 
-      <div className='fixed bottom-4 justify-center items-center flex flex-col gap-2.5'>
+      <div className="fixed bottom-4 justify-center items-center flex flex-col gap-2.5">
         <GradientButton
           buttonType="imgButton"
           text="프롬프트 작성하기"
-          onClick={() => { 
+          onClick={() => {
             // 프롬프트 작성하기 버튼 클릭 시 실행될 함수
             console.log('프롬프트 작성하기 클릭됨');
           }}
@@ -83,4 +96,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;  
+export default MainPage;
