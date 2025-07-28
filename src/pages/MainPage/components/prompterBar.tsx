@@ -8,20 +8,23 @@ import { useNavigate } from 'react-router-dom';
 const PrompterBar = ({ creators }: { creators: Creator[] }) => {
   const navigate = useNavigate();
 
-  const [isFollowed, setIsFollowed] = useState<Record<number, boolean>>(
-    () => creators.reduce((acc, creator) => {
-      acc[creator.id] = creator.followed;
-      return acc;
-    }, {} as Record<number, boolean>)
+  const [isFollowed, setIsFollowed] = useState<Record<number, boolean>>(() =>
+    creators.reduce(
+      (acc, creator) => {
+        acc[creator.id] = creator.followed;
+        return acc;
+      },
+      {} as Record<number, boolean>,
+    ),
   );
 
   const handleFollow = (id: number) => {
-    setIsFollowed(prev => ({
+    setIsFollowed((prev) => ({
       ...prev,
       [id]: !prev[id],
     }));
     // 팔로우 기능 서버 연동
-  }
+  };
 
   return (
     <aside className="flex flex-col gap-6 mt-[17px] w-[313px]">
@@ -86,29 +89,32 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
       </section>
 
       <section className="w-[313px] h-[124px] p-[20px] rounded-2xl inline-flex flex-col justify-center shadow-sm bg-white gap-2.5">
-        <h4 className="pb-2 font-bold text-xl flex items-center gap-1">
-          프롬프트 작성 가이드라인
-        </h4>
-        <button className='w-[136px] h-[46px] bg-white rounded-[10px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)] outline outline-1 outline-offset-[-1px] outline-primary inline-flex justify-center items-center gap-3.5'
-          onClick={() => {navigate('/guide/notice')}}
-        >
-          <span className='text-primary'>보러가기</span>
-          <div><img src={allowRight} /></div>
+        <h4 className="pb-2 font-bold text-xl flex items-center gap-1">프롬프트 작성 가이드라인</h4>
+        <button
+          className="w-[136px] h-[46px] bg-white rounded-[10px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)] outline-offset-[-1px] outline-primary inline-flex justify-center items-center gap-3.5"
+          onClick={() => {
+            navigate('/guide/notice');
+          }}>
+          <span className="text-primary">보러가기</span>
+          <div>
+            <img src={allowRight} />
+          </div>
         </button>
       </section>
 
       <section className="w-[313px] h-[124px] p-5 rounded-2xl inline-flex flex-col justify-center shadow-sm bg-white gap-2.5 mt-[-8px]">
-        <h4 className="pb-2 font-bold text-xl flex items-center gap-1">
-          프롬프트 작성 꿀팁
-        </h4>
-        <button className='w-[136px] h-[46px] bg-white rounded-[10px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)] outline outline-1 outline-offset-[-1px] outline-primary inline-flex justify-center items-center gap-3.5'
-          onClick={() => {navigate('/guide/tip')}}
-        >
-          <span className='text-primary'>보러가기</span>
-          <div><img src={allowRight} /></div>
+        <h4 className="pb-2 font-bold text-xl flex items-center gap-1">프롬프트 작성 꿀팁</h4>
+        <button
+          className="w-[136px] h-[46px] bg-white rounded-[10px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)] outline-offset-[-1px] outline-primary inline-flex justify-center items-center gap-3.5"
+          onClick={() => {
+            navigate('/guide/tip');
+          }}>
+          <span className="text-primary">보러가기</span>
+          <div>
+            <img src={allowRight} />
+          </div>
         </button>
       </section>
-
     </aside>
   );
 };

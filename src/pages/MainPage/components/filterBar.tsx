@@ -4,8 +4,8 @@ import TagFilter from './TagFilter';
 import arrowDown from '@/assets/icon-arrow-down.svg';
 
 type FilterBarProps = {
-  onModelChange : (model: string|null) => void;
-  onSortChange : (sort: string|null) => void;
+  onModelChange: (model: string | null) => void;
+  onSortChange: (sort: string | null) => void;
   onlyFree?: boolean;
   setOnlyFree: (free: boolean) => void;
 };
@@ -20,10 +20,7 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if(
-        dropdownRef.current&&
-        !dropdownRef.current.contains(event.target as Node)
-      ){
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setSelectedFilter(null);
       }
     };
@@ -39,17 +36,15 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
   };
 
   const toggleTag = (tag: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
-    );
+    setSelectedTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]));
   };
 
-  const handleModelSelect = (model : string) => {
+  const handleModelSelect = (model: string) => {
     const isModel = selectedModel === model ? null : model;
     setSelectedModel(isModel);
     onModelChange(isModel);
     setSelectedFilter(null); // 드롭다운 닫기
-  }
+  };
 
   const handleSortSelect = (sort: string) => {
     const isSort = selectedSort === sort ? null : sort;
@@ -65,25 +60,20 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
   type filterLabel = keyof typeof dropdownItems;
 
   return (
-    <section className="h-11 px-5 inline-flex justify-center items-center gap-3.5 font-['Spoqa_Han_Sans_Neo'] text-text-on-background text-xl font-medium"
-      ref={dropdownRef}
-    >
+    <section
+      className="h-11 px-5 inline-flex justify-center items-center gap-3.5 text-text-on-background text-xl font-medium"
+      ref={dropdownRef}>
       {(['모델', '필터', '태그'] as filterLabel[]).map((label) => (
         <div
           key={label}
           className="relative p-2.5 flex justify-start items-center gap-2.5 cursor-pointer"
-          onClick={() => toggleDropdown(label)}
-        >
+          onClick={() => toggleDropdown(label)}>
           <span>{label}</span>
 
           {/* 화살표 버튼 */}
           <div
             className={`w-6 h-6 p-1.5 rounded-full flex justify-center items-center
-              ${selectedFilter === label
-                ? 'bg-primary-pressed shadow-[2px_2px_30px_rgba(0,0,0,0.25)]'
-                : ''
-              }`}
-          >
+              ${selectedFilter === label ? 'bg-primary-pressed shadow-[2px_2px_30px_rgba(0,0,0,0.25)]' : ''}`}>
             <img src={arrowDown} alt="arrow" className="w-3 h-3" />
           </div>
 
@@ -112,13 +102,8 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
           {selectedFilter === label && label !== '필터' && label !== '모델' && (
             <div
               className="absolute top-full left-0 w-[400px] rounded-lg p-4 z-10"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <TagFilter
-                tags={tags}
-                setTags={setTags}
-                placeholder="태그를 입력해주세요."
-              />
+              onClick={(e) => e.stopPropagation()}>
+              <TagFilter tags={tags} setTags={setTags} placeholder="태그를 입력해주세요." />
             </div>
           )}
         </div>

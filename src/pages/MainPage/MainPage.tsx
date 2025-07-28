@@ -17,17 +17,15 @@ import { dummyPrompts, dummyCreators } from './components/../dummyData';
 import GradientButton from '@/components/Button/GradientButton';
 
 const MainPage = () => {
-
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const [onlyFree, setOnlyFree] = useState<boolean>(false);
 
-  const filterPromptsByModel = dummyPrompts.filter(prompt => {
+  const filterPromptsByModel = dummyPrompts.filter((prompt) => {
     const matchModel = selectedModel ? prompt.model === selectedModel : true;
     const matchFree = onlyFree ? prompt.price === 0 : true;
     return matchModel && matchFree;
   });
-
 
   const sortPromptByFilter = [...filterPromptsByModel].sort((a, b) => {
     switch (selectedSort) {
@@ -53,26 +51,24 @@ const MainPage = () => {
           onModelChange={setSelectedModel}
           onSortChange={setSelectedSort}
           onlyFree={onlyFree}
-          setOnlyFree={setOnlyFree} />
+          setOnlyFree={setOnlyFree}
+        />
 
         <div className="scroll-auto">
           {sortPromptByFilter.map((prompt) => (
-            <PromptCard
-              key={prompt.prompt_id}
-              prompt={prompt}
-            />
+            <PromptCard key={prompt.prompt_id} prompt={prompt} />
           ))}
         </div>
       </div>
 
-      <div className='hidden lg:flex'>
-        <div className='flex flex-col gap-[14px]'>
+      <div className="hidden lg:flex">
+        <div className="flex flex-col gap-[14px]">
           <PrompterBar creators={dummyCreators} />
         </div>
       </div>
 
-      <div className='hidden lg:flex'>
-        <div className='fixed bottom-4 justify-center items-center flex flex-col gap-2.5'>
+      <div className="hidden lg:flex">
+        <div className="fixed bottom-4 justify-center items-center flex flex-col gap-2.5">
           <GradientButton
             buttonType="imgButton"
             text="프롬프트 작성하기"
@@ -87,4 +83,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;  
+export default MainPage;
