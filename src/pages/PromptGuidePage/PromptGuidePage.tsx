@@ -5,14 +5,17 @@
  * @author 김진효
  * **/
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Pagination, PromptTableList } from './components/Pagination';
+import { LuChevronDown } from 'react-icons/lu';
+import MobileList from './components/MobileList';
 
 /**
  * Memo
  * 1. url : guide/tip, guide/notice
  * 2. 현재 데이터를 더미데이터로 사용하는 중임
+ * 3. 1023 이하일때는 스크롤에 Throttle 처리 필요
  */
 
 interface PromptGuidePageProps {
@@ -176,34 +179,94 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
     //이런 식으로 해야 함 (아마도?)
   };
 
+  // 모바일 화면 관련
+  const [open, setOpen] = useState(false);
+  const [selectedType, setSelectedType] = useState<'tip' | 'notice'>('tip');
+  const ref = useRef<HTMLDivElement>(null);
+
+  // 바깥 클릭시 닫히게
+  // useEffect(() => {
+  //   function handleClickOutside(event: MouseEvent) {
+  //     if (ref.current && !ref.current.contains(event.target as Node)) {
+  //       setOpen(false);
+  //     }
+  //   }
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => document.removeEventListener('mousedown', handleClickOutside);
+  // }, []);
+
   return (
     <>
-      <div className="pl-[102px] pt-[92px]">
-        <div className="flex justify-between items-center w-full max-w-[360px] h-[60px]">
-          <button
-            onClick={() => handleTypeChange('tip')}
-            className={`${
-              type === 'tip'
-                ? 'text-primary-hover font-bold text-[32px] border-r-[2px] border-r-primary-hover'
-                : 'text-text-on-background font-bold text-[24px]'
-            } pt-[10px] pb-[10px] pr-[40px]`}>
-            프롬프트 TIP
-          </button>
+      <div className="hidden lg:block">
+        <div className="pl-[102px] pt-[92px]">
+          <div className="flex justify-between items-center w-full max-w-[360px] h-[60px]">
+            <button
+              onClick={() => handleTypeChange('tip')}
+              className={`${
+                type === 'tip'
+                  ? 'text-primary-hover font-bold text-[32px] border-r-[2px] border-r-primary-hover'
+                  : 'text-text-on-background font-bold text-[24px]'
+              } pt-[10px] pb-[10px] pr-[40px]`}>
+              프롬프트 TIP
+            </button>
 
-          <button
-            onClick={() => handleTypeChange('notice')}
-            className={`${
-              type === 'notice'
-                ? 'text-primary-hover font-bold text-[32px] border-l-[2px] border-l-primary-hover'
-                : 'text-text-on-background font-bold text-[24px]'
-            } pt-[10px] pb-[10px] pl-[40px]`}>
-            공지사항
-          </button>
+            <button
+              onClick={() => handleTypeChange('notice')}
+              className={`${
+                type === 'notice'
+                  ? 'text-primary-hover font-bold text-[32px] border-l-[2px] border-l-primary-hover'
+                  : 'text-text-on-background font-bold text-[24px]'
+              } pt-[10px] pb-[10px] pl-[40px]`}>
+              공지사항
+            </button>
+          </div>
+        </div>
+        <div>
+          <PromptTableList data={pageData} onRowClick={handleRowClick} />
+          <Pagination currentPage={currentPage} totalPages={TOTAL_PAGES} onPageChange={handlePageChange} />
         </div>
       </div>
-      <div>
-        <PromptTableList data={pageData} onRowClick={handleRowClick} />
-        <Pagination currentPage={currentPage} totalPages={TOTAL_PAGES} onPageChange={handlePageChange} />
+
+      {/*모바일 화면 */}
+      <div className="lg:hidden block">
+        <div>
+          <p className="ml-[20px] mt-[12px] text-primary-hover text-[20px] font-bold">프롬프트 TIP</p>
+        </div>
+        <div className="relative inline-block w-full max-w-[108px] h-[31px] mt-[20px] ml-[20px]" ref={ref}>
+          <button
+            type="button"
+            className="flex items-center justify-center gap-[8px] w-full px-[12px] py-[8px] rounded-[8px] bg-white"
+            style={{ boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)' }}
+            onClick={() => setOpen((prev) => !prev)}>
+            <span className="text-[12px] text-text-on-white font-medium">
+              {type === 'tip' ? '프롬프트 TIP' : '공지사항'}
+            </span>
+            <LuChevronDown size={10} />
+          </button>
+
+          {/*이하 드롭다운은 디자인에 추가되면 해야 함 */}
+          {open && (
+            <ul className="absolute left-0 z-10 w-full mt-1 bg-white border rounded shadow">
+              <li
+                onClick={() => {
+                  navigate(`/guide/tip`);
+                  setOpen(false);
+                }}>
+                프롬프트 TIP
+              </li>
+              <li
+                onClick={() => {
+                  navigate(`/guide/notice`);
+                  setOpen(false);
+                }}>
+                공지사항
+              </li>
+            </ul>
+          )}
+        </div>
+        <div className="flex justify-center">
+          <MobileList data={allPosts} onRowClick={handleRowClick} />
+        </div>
       </div>
     </>
   );
