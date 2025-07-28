@@ -36,10 +36,13 @@ const primaryButtonTheme = {
   buttonType: {
     login: 'rounded-[40px] max-w-[171px] w-full py-[9px]',
     tip: 'rounded-[40px] max-w-[127px] w-full py-[9px]',
-    square: 'rounded-[10px] max-w-[136px] w-full py-[9px]',
+    square:
+      'rounded-[10px] max-w-[136px] w-full py-[9px] max-lg:max-w-[77px] max-lg:w-full max-lg:rounded-[4px] max-lg:border-[0.5px] max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px] max-lg:tracking-[0.46px] max-lg:py-[6.5px]',
     squareMini: 'rounded-[10px] py-[2px] px-[14px]',
-    review: 'rounded-[50px] h-[41px] py-[5px] max-w-[152px] w-full text-xl leading-[25px]',
-    reviewDelete: 'rounded-[50px] px-[9px] py-[4px] hover:shadow-none',
+    review:
+      'rounded-[50px] h-[41px] py-[5px] max-w-[152px] w-full text-xl leading-[25px] max-lg:rounded-[24px] max-lg:border-[0.5px] max-lg:h-[17px] max-lg:py-[2px] max-lg:max-w-[58px] max-lg:w-full max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px]',
+    reviewDelete:
+      'rounded-[50px] px-[9px] py-[4px] hover:shadow-none max-lg:rounded-[24px] max-lg:border-[0.5px] max-lg:h-[17px] max-lg:py-[2px] max-lg:max-w-[58px] max-lg:w-full max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px]',
     plus: 'rounded-[50px] px-[53px] text-[32px] font-bold leading-[40px]',
     change: 'rounded-[50px] px-[10px] py-[5px] text-[14px] leading-[18px]',
   },
