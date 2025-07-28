@@ -244,22 +244,33 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
             <LuChevronDown size={10} />
           </button>
 
-          {/*이하 드롭다운은 디자인에 추가되면 해야 함 */}
+          {/*드롭다운 */}
           {open && (
-            <ul className="absolute left-0 z-10 w-full mt-1 bg-white border rounded shadow">
+            <ul
+              className="absolute left-0 z-10 w-[111px] h-[66px] mt-[6px] flex flex-col justify-center items-center
+               bg-white border-[0.5px] border-white-stroke rounded-[8px]"
+              style={{ boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)' }}>
               <li
+                className="w-[87px] h-[27px] flex justify-center items-center border-b-[0.5px] border-white-stroke"
                 onClick={() => {
                   navigate(`/guide/tip`);
                   setOpen(false);
                 }}>
-                프롬프트 TIP
+                <p
+                  className={`text-[12px] font-normal ${type === 'tip' ? 'text-text-on-white' : 'text-text-on-background'}`}>
+                  프롬프트 TIP
+                </p>
               </li>
               <li
+                className="w-[87px] h-[27px] flex justify-center items-center "
                 onClick={() => {
                   navigate(`/guide/notice`);
                   setOpen(false);
                 }}>
-                공지사항
+                <p
+                  className={`text-[12px] font-normal ${type === 'notice' ? 'text-text-on-white' : 'text-text-on-background'}`}>
+                  공지사항
+                </p>
               </li>
             </ul>
           )}
