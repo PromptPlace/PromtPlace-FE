@@ -30,36 +30,38 @@ const PromptDetailPage = () => {
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
   return (
-    <div className="flex gap-10 p-10 max-w-7xl mx-auto bg-[#F5F5F5] ">
-      {/* 왼쪽: 정보 */}
-      <div className="w-[711px] bg-[#FFFEFB] rounded-[16px] overflow-hidden">
-        <PromptHeader
-          title={prompt.title}
-          views={prompt.views}
-          downloads={prompt.downloads}
-          onClose={() => navigate(-1)}
-        />
-        <PromptInfo
-          promptResult={prompt.prompt_result}
-          description={prompt.description}
-          usageGuide={prompt.usage_guide}
-        />
-      </div>
+    <div className="bg-[#F5F5F5]">
+      <div className="flex max-lg:flex-col max-lg:gap-[31px] max-lg:p-5 gap-10 p-10 max-w-7xl mx-auto">
+        {/* 왼쪽: 정보 */}
+        <div className="w-[711px] bg-[#FFFEFB] rounded-[16px] overflow-hidden">
+          <PromptHeader
+            title={prompt.title}
+            views={prompt.views}
+            downloads={prompt.downloads}
+            onClose={() => navigate(-1)}
+          />
+          <PromptInfo
+            promptResult={prompt.prompt_result}
+            description={prompt.description}
+            usageGuide={prompt.usage_guide}
+          />
+        </div>
 
-      {/* 오른쪽: 액션 */}
-      <div
-        className={`w-[459px] ${isAdmin ? 'h-[548px]' : 'h-[654px]'} bg-[#FFFEFB] shrink-0 rounded-[16px] overflow-hidden`}>
-        <PromptActions
-          title={prompt.title}
-          price={prompt.price}
-          isFree={prompt.is_free}
-          downloads={prompt.downloads}
-          likes={prompt.likes}
-          reviewCounts={prompt.review_counts}
-          rating={prompt.rating_avg}
-          updatedAt={prompt.updated_at}
-          userId={prompt.user_id}
-        />
+        {/* 오른쪽: 액션 */}
+        <div
+          className={`w-[459px] ${isAdmin ? 'h-[548px]' : 'h-[654px]'} bg-[#FFFEFB] shrink-0 rounded-[16px] overflow-hidden`}>
+          <PromptActions
+            title={prompt.title}
+            price={prompt.price}
+            isFree={prompt.is_free}
+            downloads={prompt.downloads}
+            likes={prompt.likes}
+            reviewCounts={prompt.review_counts}
+            rating={prompt.rating_avg}
+            updatedAt={prompt.updated_at}
+            userId={prompt.user_id}
+          />
+        </div>
       </div>
     </div>
   );

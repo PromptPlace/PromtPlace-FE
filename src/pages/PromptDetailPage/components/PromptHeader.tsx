@@ -1,7 +1,13 @@
+import { useState } from 'react';
 import Count from '@components/Count';
 import ModelButton from '@components/Button/ModelButton';
 import updateIcon from '../assets/updatebutton.png';
 import deleteIcon from '../assets/deletebutton.png';
+import TagButton from '@components/Button/TagButton';
+import Rating from '@components/Rating';
+import heartNone from '../../../assets/icon-heart-none-big.svg';
+import heartOnClick from '../../../assets/icon-heart-blue-big.svg';
+import rightArrow from '../assets/keyboard_arrow_down.png';
 
 interface Props {
   title: string;
@@ -12,10 +18,16 @@ interface Props {
 
 const PromptHeader = ({ title, views, downloads, onClose }: Props) => {
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  const [liked, setLiked] = useState(false);
+
+  // 모바일용 더미 데이터
+  const tags = ['#수묵화', '#수채화', '#디자인', '#일러스트', '#그림', '#이미지'];
+  const rating = 5.0;
+  const reviewCount = 7;
 
   return (
-    <div className="w-[711px] bg-[#FFFEFB] px-8">
-      <div className="h-[132px] box-border flex flex-col justify-between">
+    <div className="w-[711px] max-lg:w-full bg-[#FFFEFB] px-8 max-lg:px-4">
+      <div className="h-[132px] max-lg:h-auto box-border flex flex-col justify-between">
         <div className="flex items-center justify-between w-full pt-[35px]">
           <ModelButton text="ChatGPT" />
 
@@ -49,7 +61,33 @@ const PromptHeader = ({ title, views, downloads, onClose }: Props) => {
         </div>
       </div>
 
-      {/* 하단 구분선 */}
+      {/* 모바일에서만 표시되는 영역 */}
+      <div className="lg:hidden">
+        {/* 별점 & 하트 & 리뷰보기 아이콘 */}
+        <div className="flex items-center justify-between pt-2">
+          <div className="flex items-center gap-1">
+            <Rating star={rating} />
+            <button className="ml-1 p-1" aria-label="리뷰 보기" onClick={() => alert('리뷰 보기 클릭')}>
+              <img src={rightArrow} alt="arrow" className="w-5 h-5 object-contain" />
+            </button>
+          </div>
+
+          <img
+            src={liked ? heartOnClick : heartNone}
+            alt="heart"
+            className="w-[28px] h-[25px] cursor-pointer"
+            onClick={() => setLiked(!liked)}
+          />
+        </div>
+
+        {/* 해시태그 */}
+        <div className="grid grid-cols-3 gap-2 mt-4 mb-3">
+          {tags.map((tag, idx) => (
+            <TagButton key={idx} hasDelete={false} text={tag} onClick={() => {}} />
+          ))}
+        </div>
+      </div>
+
       <div className="h-[1px] bg-[#CCCCCC] w-full" />
     </div>
   );
