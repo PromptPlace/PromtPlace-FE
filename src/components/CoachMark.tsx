@@ -1,5 +1,3 @@
-import { useEffect, useRef } from 'react';
-
 import { useAuth } from '@/context/AuthContext';
 
 import PrimaryButton from '@components/Button/PrimaryButton';
@@ -25,24 +23,11 @@ interface CoachMarkProps {
 
 const CoachMark = ({ setShowCoachMark }: CoachMarkProps) => {
   const { accessToken } = useAuth();
-  const overlayRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (overlayRef.current && e.target === overlayRef.current) {
-        setShowCoachMark(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   return (
-    <div ref={overlayRef} className="fixed inset-0 bg-overlay-coach-mark z-[20]">
-      <nav className="relative flex justify-between items-center gap-[2.6vw] py-[7.5px] pl-[61.25px] pr-[36px]">
+    <div className="fixed inset-0 bg-overlay-coach-mark z-20">
+      <div className="absolute inset-0 z-30" onClick={() => setShowCoachMark(false)}></div>
+      <nav className="relative flex justify-between items-center gap-[2.6vw] py-[7.5px] pl-[61.25px] pr-[36px] z-[10]">
         <div className="cursor-pointer w-[227px] shrink-0"></div>
 
         <div className="flex items-center relative ml-[61.26px] w-full max-lg:m-[0] max-w-[1000px]">
@@ -196,7 +181,7 @@ const CoachMark = ({ setShowCoachMark }: CoachMarkProps) => {
         </div>
       </nav>
 
-      <div className="fixed bottom-4 justify-center items-center flex flex-col gap-2.5 left-1/2">
+      <div className="fixed bottom-4 justify-center items-center flex flex-col gap-2.5 left-1/2 z-[10]">
         <div className="flex gap-[17.88px] absolute left-[48px] bottom-[91px] whitespace-nowrap w-full">
           <div className="w-[55.73px] h-[43.54px] shrink-0">
             <img src={ArrowCreate} alt="arrow-create" className="w-full h-full object-contain" />
