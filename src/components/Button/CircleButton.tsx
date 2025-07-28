@@ -18,8 +18,8 @@ import clsx from 'clsx';
 
 const circleButtonTheme = {
   size: {
-    sm: 'w-[32px] h-[32px]',
-    md: 'w-[48px] h-[48px]',
+    sm: 'w-[32px] h-[32px] max-lg:w-[20px] max-lg:h-[20px]',
+    md: 'w-[48px] h-[48px] max-lg:w-[20px] max-lg:h-[20px]',
   },
 };
 
@@ -39,9 +39,15 @@ const CircleButton = ({ buttonType, size, onClick, type = 'button', isActive }: 
       type={type}
       onClick={onClick}
       className={`shrink-0 rounded-full border border-primary hover:border-primary-hover active:border-primary-pressed flex justify-center items-center text-primary hover:text-primary-hover active:text-primary-pressed transition-all duration-300 ease-in-out bg-white active:bg-secondary shadow-button hover:shadow-button-hover ${circleButtonTheme.size[size]} ${isActive && 'bg-secondary text-primary-pressed border-primary-pressed'}`}>
-      {buttonType === 'send' && <SendIcon className="w-[25px] h-[24px]" />}
+      {buttonType === 'send' && <SendIcon className="w-[25px] h-[24px] max-lg:w-[10px] max-lg:h-[10px]" />}
       {buttonType === 'edit' && (
-        <PencilIcon className={clsx(size === 'sm' && 'w-[16.5px] h-[16.5px]', size === 'md' && 'w-[22px] h-[22px]')} />
+        <PencilIcon
+          className={clsx(
+            'max-lg:w-[10px] max-lg:h-[10px]',
+            size === 'sm' && 'w-[16.5px] h-[16.5px]',
+            size === 'md' && 'w-[22px] h-[22px]',
+          )}
+        />
       )}
     </button>
   );

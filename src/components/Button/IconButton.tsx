@@ -38,22 +38,26 @@ import clsx from 'clsx';
 
 const iconButtonTheme = {
   buttonType: {
-    round: 'px-[29px] py-[21px] rounded-[50px] text-xl font-medium leading-[25px] gap-[15px]',
-    squareBig: 'px-[29px] py-[14px] rounded-[10px] text-2xl font-bold leading-[30px] gap-[15px]',
-    squareMd: 'px-[20px] py-[10px] rounded-[10px] h-[45px] text-xl font-medium leading-[25px] gap-[15px]',
+    round:
+      'px-[29px] max-lg:px-[12px] py-[21px] max-lg:py-[10px] rounded-[50px] text-xl max-lg:text-[10px] font-medium leading-[25px] max-lg:leading-[13px] gap-[15px] max-lg:gap-[5px]',
+    squareBig:
+      'px-[29px] max-lg:px-[20px] py-[14px] max-lg:py-[8px] rounded-[10px] max-lg:rounded-[4px] text-2xl max-lg:text-[14px] font-bold leading-[30px] max-lg:leading-[18px] gap-[15px] max-lg:gap-[8px]',
+    squareMd:
+      'px-[20px] max-lg:px-[8px] py-[10px] max-lg:py-[2px] rounded-[10px] max-lg:rounded-[4px] h-[45px] max-lg:h-auto text-xl max-lg:text-[10px] font-medium leading-[25px] max-lg:leading-[13px] gap-[15px] max-lg:gap-[4px]',
     squreSm:
       'px-[18px] py-[10px] rounded-[10px] flex items-center justify-center gap-[15px] text-base font-normal leading-[26px] tracking-[0.46px]',
-    squareMini: 'py-[5px] pl-[14px] pr-[10px] rounded-[4px] gap-[5px] text-lg leading-[23px] font-normal',
+    squareMini:
+      'py-[5px] max-lg:py-[4px] pl-[14px] pr-[10px] max-lg:px-[6px] rounded-[4px] gap-[5px] text-lg max-lg:text-[10px] leading-[23px] max-lg:leading-[13px] font-normal',
   },
   style: {
     outline:
       'border border-primary hover:border-primary-hover active:border-primary-pressed text-primary hover:text-primary-hover active:text-primary-pressed active:bg-secondary ',
     fill: 'bg-primary hover:bg-primary-hover active:bg-primary-pressed text-white border border-1px-primary',
-    red: 'bg-alert text-white px-[29px] leading-[24px] shadow-none hover:shadow-none',
+    red: 'bg-alert text-white px-[29px] max-lg:px-[] leading-[24px] shadow-none hover:shadow-none',
   },
   textButton: {
-    white: 'min-w-[160px] bg-white',
-    blue: 'min-w-[160px] bg-primary',
+    white: 'min-w-[160px] max-lg:min-w-[58px] bg-white max-lg:px-[15px] max-lg:h-[25px]',
+    blue: 'min-w-[160px] max-lg:min-w-[58px] bg-primary max-lg:px-[15px] max-lg:h-[25px]',
   },
 };
 
@@ -78,18 +82,23 @@ const IconButton = ({ buttonType, style, imgType, textButton, text, onClick, typ
       onClick={onClick}
       className={`group flex justify-center items-center shadow-button hover:shadow-button-hover transition-all duration-300 ease-in-out ${iconButtonTheme.buttonType[buttonType]} ${iconButtonTheme.style[style]} ${textButton && iconButtonTheme.textButton[textButton]}`}>
       {imgType === 'settings' && (
-        <SettingsIcon className="w-[24px] h-[24px] text-primary group-hover:text-primary-hover group-active:text-primary-pressed" />
+        <SettingsIcon className="w-[24px] h-[24px] max-lg:w-[12px] max-lg:h-[12px] text-primary group-hover:text-primary-hover group-active:text-primary-pressed" />
       )}
       {imgType === 'upload' && (
-        <UploadIcon className={clsx(buttonType === 'squareMini' ? 'w-[16px] h-[16px]' : ' w-[20px] h-[20px]')} />
+        <UploadIcon
+          className={clsx(
+            'max-lg:w-[10px] max-lg:h-[10px]',
+            buttonType === 'squareMini' ? 'w-[16px] h-[16px]' : ' w-[20px] h-[20px]',
+          )}
+        />
       )}
-      {imgType === 'list' && <ListIcon className="w-[24px] h-[24px]" />}
+      {imgType === 'list' && <ListIcon className="w-[24px] h-[24px] max-lg:w-[12px] max-lg:h-[12px]" />}
       {imgType === 'attach' && (
-        <AttachIcon className="w-[24px] h-[24px] text-primary group-hover:text-primary-hover group-active:text-primary-pressed" />
+        <AttachIcon className="w-[24px] h-[24px] max-lg:w-[12px] max-lg:h-[12px] text-primary group-hover:text-primary-hover group-active:text-primary-pressed" />
       )}
-      {imgType === 'download' && <DownloadIcon className="w-[20px] h-[20px]" />}
-      {imgType === 'alert' && <AlertIcon className="w-[24px] h-[24px]" />}
-      {imgType === 'copy' && <CopyIcon className="w-[20px] h-[20px]" />}
+      {imgType === 'download' && <DownloadIcon className="w-[20px] h-[20px] max-lg:w-[14px] max-lg:h-[14px]" />}
+      {imgType === 'alert' && <AlertIcon className="w-[24px] h-[24px] max-lg:w-[12px] max-lg:h-[12px]" />}
+      {imgType === 'copy' && <CopyIcon className="w-[20px] h-[20px] max-lg:w-[13px] max-lg:h-[13px]" />}
       {imgType === 'LogoutIcon' && <LogoutIcon className="w-[24px] h-[24px]" />}
       {text}
     </button>
