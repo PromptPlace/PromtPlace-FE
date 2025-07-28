@@ -14,7 +14,7 @@ const DUMMY_SALES_HISTORY = [
   {
     id: 1,
     date: '2025.06.13',
-    title: '정부지원사업 무조건 선정되는 사업계획서 프롬프트',
+    title: '정부지원사업 무조건 선정되는 사업계획서 프롬프트 정부지원사업 정부지원사업',
     price: 2500,
     buyer: '홍길동',
   },
@@ -40,10 +40,10 @@ const MyPayPage = () => {
   };
 
   return (
-    <div className="flex justify-center h-screen bg-background">
-      <div className="flex flex-col pt-[92px] w-full max-w-[1236px] h-full max-lg:mx-[20px]">
-        <div className="shrink-0">
-          <div className="flex items-center gap-[4px] mb-[23px] py-[10px] max-lg:gap-[2.5px] mb-[20px]">
+    <div className="flex justify-center h-screen bg-background ">
+      <div className="flex flex-col pt-[92px] w-full max-w-[1236px] h-full max-lg:pt-[12px]">
+        <div className="shrink-0 max-lg:mx-[20px]">
+          <div className="flex items-center gap-[4px] mb-[23px] py-[10px] max-lg:gap-[2.5px] max-lg:mb-[20px] max-lg:py-[0px]">
             <img
               src={iconReceipt}
               alt="receipt"
@@ -51,16 +51,32 @@ const MyPayPage = () => {
             />
             <div className=" text-[32px] text-primary-hover font-bold max-lg:text-[20px]">정산관리</div>
           </div>
-
+          <div className="lg:hidden text-[14px] font-medium text-primary-hover mb-[12px]">
+            {userInfo.nickname}님의 출금 가능 금액
+          </div>
           <PossiblepayAmount nickname={userInfo.nickname} balance={userInfo.balance} onWithdraw={handleWithdraw} />
 
-          <div className="text-[24px] text-primary-hover font-bold pl-[40px] py-[20px] border-b-[1px] border-primary-hover">
-            판매 내역
+          <div className="text-[24px] text-primary-hover font-bold pl-[40px] py-[20px] border-b-[1px] border-primary-hover max-lg:text-[14px] max-lg:text-primary max-lg:pl-[12px] max-lg:py-[12px] max-lg:border-b-[0.5px] max-lg:border-primary">
+            <span className="max-lg:hidden">판매 내역</span>
+            <span className="hidden max-lg:inline">판매내역</span>
           </div>
         </div>
 
-        <div className="bg-white flex-1 min-h-0">
-          <div className="mr-[8px] overflow-y-auto max-h-[564px]">
+        <div className="max-lg:hidden bg-white flex-1 min-h-0">
+          <div className="mr-[8px] overflow-y-auto max-h-[564px] max-lg:max-h-[273px] max-lg:mr-[0px]">
+            {salesHistory.map((sale) => (
+              <SalesHistoryCard key={sale.id} sale={sale} />
+            ))}
+          </div>
+        </div>
+
+        <div className="lg:hidden flex-1 min-h-0 overflow-y-auto max-h-[312px] ml-[20px] mr-[12px] ">
+          <div className="bg-white  mr-[4px]">
+            <div className="lg:hidden flex justify-between h-[39px] border-b-[0.5px] border-text-on-white py-[12px] px-[12px] font-bold text-text-on-white text-[12px]">
+              <span className="flex justify-center w-[155px] "> 프롬프트</span>
+              <span className="mx-[12px] w-[23px]">가격</span>
+              <span className="w-[34px]">구매자</span>
+            </div>
             {salesHistory.map((sale) => (
               <SalesHistoryCard key={sale.id} sale={sale} />
             ))}

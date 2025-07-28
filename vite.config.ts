@@ -12,10 +12,7 @@ export default defineConfig({
     svgr(),
     VitePWA({
       registerType: 'autoUpdate',
-<<<<<<< HEAD
       injectRegister: null,
-      includeAssets: ['favicon.svg', 'favicon.ico', 'apple-touch-icon.png', 'favicon-96x96.png','web-app-manifest-192x192.png', 'web-app-manifest-512x512.png'],
-=======
       includeAssets: [
         'favicon.svg',
         'favicon.ico',
@@ -24,7 +21,6 @@ export default defineConfig({
         'web-app-manifest-192x192.png',
         'web-app-manifest-512x512.png',
       ],
->>>>>>> 2ebffd5 (♻️ Refactor:코드 정렬(#53))
       manifest: {
         name: 'PromptPlace',
         short_name: 'PromptPlace',
@@ -43,12 +39,11 @@ export default defineConfig({
             src: 'web-app-manifest-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-<<<<<<< HEAD
-            purpose: "any maskable"
-          }
-        ]
+            purpose: 'any maskable',
+          },
+        ],
       },
-       workbox: {
+      workbox: {
         runtimeCaching: [
           {
             urlPattern: ({ request }) => request.mode === 'navigate',
@@ -59,15 +54,7 @@ export default defineConfig({
           },
         ],
       },
-
-    }),  
-=======
-            purpose: 'any maskable',
-          },
-        ],
-      },
     }),
->>>>>>> 2ebffd5 (♻️ Refactor:코드 정렬(#53))
   ],
   resolve: {
     alias: [
