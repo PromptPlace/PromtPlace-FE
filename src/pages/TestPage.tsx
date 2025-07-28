@@ -70,6 +70,7 @@ const TestPage = () => {
       <IconButton buttonType="squareMd" style="outline" imgType="attach" text="첨부" onClick={() => {}} />
       <IconButton buttonType="squareBig" style="fill" imgType="download" text="다운로드" onClick={() => {}} />
       <IconButton buttonType="squareMd" style="red" imgType="alert" text="프롬프트 신고하기" onClick={() => {}} />
+      <IconButton buttonType="squareMd" style="red" imgType="alert" text="신고하기" onClick={() => {}} />
       <IconButton buttonType="squareMini" style="fill" imgType="upload" text="이미지 업로드" onClick={() => {}} />
       <IconButton buttonType="squareMini" style="fill" imgType="copy" text="복사하기" onClick={() => {}} />
 
