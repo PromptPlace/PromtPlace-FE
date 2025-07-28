@@ -26,7 +26,7 @@ const TagButton = ({ hasDelete, text, onClick }: TagButtonProps) => {
   return (
     <div
       className={clsx(
-        'py-[5px] px-[15px] flex justify-center items-center gap-[5px] rounded-[50px] whitespace-nowrap border border-text-on-background bg-white text-sm font-normal leading-[18px] text-text-on-background shrink-0',
+        'py-[5px] px-[15px] flex justify-center items-center gap-[5px] rounded-[50px] whitespace-nowrap border border-text-on-background bg-white text-[14px] font-normal leading-[18px] text-text-on-background shrink-0 max-lg:shadow-button max-lg:border-none max-lg:px-[6px] max-lg:text-[8px] max-lg:leading-[10px] max-lg:font-medium',
         hasDelete && 'shadow-button-hover',
       )}>
       {text}
