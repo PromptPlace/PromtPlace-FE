@@ -5,10 +5,12 @@
  * @author 김진효
  * **/
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageTableList, MessagePagination } from './components/MessagePagination';
-import { NotificationTableList, NotificationPagination } from './components/NotificationPagination';
+import { MessageTableList, MessagePagination, MobileMessage } from './components/MessagePagination';
+import { NotificationTableList, NotificationPagination, MobileNotification } from './components/NotificationPagination';
+
+import { LuChevronDown } from 'react-icons/lu';
 
 interface MyMessagePageProps {
   type: 'message' | 'notification';
@@ -117,61 +119,132 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
     setMessages((prev) => prev.map((msg) => (msg.id === id ? { ...msg, is_read: true } : msg)));
   };
 
+  //모바일 화면
+  const [openType, setOpenType] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
   return (
-    <div className="">
-      <div className="min-w-[1440px] min-h-[1024px] w-full h-full bg-background">
-        <div className="flex justify-between items-center">
-          <div className=" w-[360px] h-[60px] mt-[92px] ml-[102px]">
-            <button
-              onClick={() => handleTypeChange('message')}
-              className={`${
-                type === 'message'
-                  ? 'text-primary-hover font-bold text-[32px] border-r-[2px] border-r-primary-hover'
-                  : 'text-text-on-background font-bold text-[24px]'
-              } h-[60px] pt-[10px] pb-[10px] pr-[40px]  -translate-y-[10px]`}>
-              <p className="h-[40px]  -translate-y-[6px]">메시지함</p>
-            </button>
+    <>
+      <div className="hidden lg:block">
+        <div className="min-w-[1440px] min-h-[1024px] w-full h-full bg-background">
+          <div className="flex justify-between items-center">
+            <div className=" w-[360px] h-[60px] mt-[92px] ml-[102px]">
+              <button
+                onClick={() => handleTypeChange('message')}
+                className={`${
+                  type === 'message'
+                    ? 'text-primary-hover font-bold text-[32px] border-r-[2px] border-r-primary-hover'
+                    : 'text-text-on-background font-bold text-[24px]'
+                } h-[60px] pt-[10px] pb-[10px] pr-[40px]  -translate-y-[10px]`}>
+                <p className="h-[40px]  -translate-y-[6px]">메시지함</p>
+              </button>
 
-            <button
-              onClick={() => handleTypeChange('notification')}
-              className={`${
-                type === 'notification'
-                  ? 'text-primary-hover font-bold text-[32px] border-l-[2px] border-l-primary-hover'
-                  : 'text-text-on-background font-bold text-[24px] '
-              } h-[60px] pt-[10px] pb-[10px] pl-[40px]  -translate-y-[10px]`}>
-              <p className="h-[40px] -translate-y-[6px]">알림</p>
-            </button>
+              <button
+                onClick={() => handleTypeChange('notification')}
+                className={`${
+                  type === 'notification'
+                    ? 'text-primary-hover font-bold text-[32px] border-l-[2px] border-l-primary-hover'
+                    : 'text-text-on-background font-bold text-[24px] '
+                } h-[60px] pt-[10px] pb-[10px] pl-[40px]  -translate-y-[10px]`}>
+                <p className="h-[40px] -translate-y-[6px]">알림</p>
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-center items-center">
+            {type === 'message' ? (
+              <>
+                <MessageTableList
+                  data={pageMessageData}
+                  onRowClick={handleRowClick}
+                  onDelete={handleDelete}
+                  onRead={handleRead}
+                />
+                <MessagePagination
+                  currentPage={currentPage}
+                  totalPages={TOTAL_MESSAGE_PAGES}
+                  onPageChange={handlePageChange}
+                />
+              </>
+            ) : (
+              <>
+                <NotificationTableList data={pageNotificationData} />
+                <NotificationPagination
+                  currentPage={currentPage}
+                  totalPages={TOTAL_Notification_PAGES}
+                  onPageChange={handlePageChange}
+                />
+              </>
+            )}
           </div>
         </div>
-
-        <div className="flex flex-col justify-center items-center">
-          {type === 'message' ? (
-            <>
-              <MessageTableList
-                data={pageMessageData}
-                onRowClick={handleRowClick}
-                onDelete={handleDelete}
-                onRead={handleRead}
-              />
-              <MessagePagination
-                currentPage={currentPage}
-                totalPages={TOTAL_MESSAGE_PAGES}
-                onPageChange={handlePageChange}
-              />
-            </>
-          ) : (
-            <>
-              <NotificationTableList data={pageNotificationData} />
-              <NotificationPagination
-                currentPage={currentPage}
-                totalPages={TOTAL_Notification_PAGES}
-                onPageChange={handlePageChange}
-              />
-            </>
-          )}
+      </div>
+      {/*모바일 화면 */}
+      <div className="lg:hidden block">
+        <div>
+          <p className="ml-[20px] mt-[12px] text-primary-hover text-[20px] font-bold">프롬프트 TIP</p>
         </div>
       </div>
-    </div>
+      <div className="relative inline-block w-full max-w-[108px] h-[31px] mt-[20px] ml-[20px]" ref={ref}>
+        <button
+          type="button"
+          className="flex items-center justify-center gap-[8px] w-full px-[12px] py-[8px] rounded-[8px] bg-white"
+          style={{ boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)' }}
+          onClick={() => setOpenType((prev) => !prev)}>
+          <span className="text-[12px] text-text-on-white font-medium">
+            {type === 'message' ? '메시지함' : '알림함'}
+          </span>
+          <LuChevronDown size={10} />
+        </button>
+        {/*드롭다운 */}
+        {openType && (
+          <ul
+            className="absolute left-0 z-10 w-[111px] h-[66px] mt-[6px] flex flex-col justify-center items-center
+               bg-white border-[0.5px] border-white-stroke rounded-[8px]"
+            style={{ boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)' }}>
+            <li
+              className="w-[87px] h-[27px] flex justify-center items-center border-b-[0.5px] border-white-stroke"
+              onClick={() => {
+                navigate(`/mypage/message/message`);
+
+                setOpenType(false);
+              }}>
+              <p
+                className={`text-[12px] font-normal ${type === 'message' ? 'text-text-on-white' : 'text-text-on-background'}`}>
+                메시지함
+              </p>
+            </li>
+            <li
+              className="w-[87px] h-[27px] flex justify-center items-center "
+              onClick={() => {
+                navigate(`/mypage/message/notification`);
+                setOpenType(false);
+              }}>
+              <p
+                className={`text-[12px] font-normal ${type === 'notification' ? 'text-text-on-white' : 'text-text-on-background'}`}>
+                알림함
+              </p>
+            </li>
+          </ul>
+        )}
+      </div>
+
+      <div className="flex justify-center">
+        {type === 'message' ? (
+          <>
+            <MobileMessage
+              data={pageMessageData}
+              onRowClick={handleRowClick}
+              onDelete={handleDelete}
+              onRead={handleRead}
+            />
+          </>
+        ) : (
+          <>
+            <MobileNotification data={pageNotificationData} />
+          </>
+        )}
+      </div>
+    </>
   );
 };
 
