@@ -4,24 +4,27 @@ interface accountInfo {
   accountHolder: string;
 }
 
-interface AccountDisplayProps{
-  accountInfo?:accountInfo
-  onEditClick:()=>void
+interface AccountDisplayProps {
+  accountInfo?: accountInfo;
+  onEditClick: () => void;
 }
 
-const AccountDisplay = ({ accountInfo, onEditClick }:AccountDisplayProps) => (
-  <div className="flex flex-col flex-1">
-    <div className="text-lg font-bold text-gray-700 mb-3 max-lg:text-base max-lg:mb-2">등록된 계좌</div>
-    <div className="bg-white border border-gray-200 rounded-lg p-6 max-lg:p-4">
-      <p className="text-gray-800 font-medium max-lg:text-sm">
+const AccountDisplay = ({ accountInfo, onEditClick }: AccountDisplayProps) => (
+  <div className="flex flex-col flex-1 mt-[40px] max-lg:mt-[20px]">
+    <div className="text-[22px] max-lg:text-[14px] font-bold max-lg:font-medium text-[#2A2A2A]  ">등록된 계좌</div>
+    <div className="flex flex-col bg-white mt-[24px] max-lg:mt-[12px] border-[1px] max-lg:border-[0.5px] border-white-stroke rounded-[8px] gap-[20px] max-lg:gap-[10px] py-[24px] max-lg:py-[16px] px-[48px] max-lg:px-[14px] text-[20px] max-lg:text-[12px] text-text-on-white font-medium">
+      <p className="max-lg:text-[14px]">
         {accountInfo?.bank} {accountInfo?.accountNumber}
       </p>
-      <p className="text-gray-500 mt-2 max-lg:text-sm">예금주명: {accountInfo?.accountHolder}</p>
+      <span className="flex">
+        <p className="font-normal">예금주명 : </p>
+        <p>{accountInfo?.accountHolder}</p>
+      </span>
     </div>
-    <div className="self-end mt-[364px]">
+    <div className="lg:self-end mt-[364px] max-lg:mt-[196px]">
       <button
         onClick={onEditClick}
-        className="py-[15px] px-[29px] bg-primary text-white text-[24px] font-bold rounded-[10px]">
+        className="py-[15px] max-lg:py-[10px] px-[29px] max-lg:px-[40px] bg-primary text-white text-[24px] max-lg:text-[16px] font-bold max-lg:font-medium rounded-[10px] max-lg:rounded-[4px] max-lg:w-full">
         변경하기
       </button>
     </div>

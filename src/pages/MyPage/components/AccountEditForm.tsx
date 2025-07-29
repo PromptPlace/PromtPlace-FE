@@ -76,22 +76,22 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
   };
 
   return (
-    <div className="flex flex-col flex-1 gap-[40px] pt-[40px] max-lg:pt-6 max-lg:gap-6">
+    <div className="flex flex-col flex-1 gap-[40px] max-lg:gap-[12px] pt-[40px] max-lg:pt-[20px]">
       {/* 1. 은행 선택 */}
-      <div className="flex justify-between h-[87px] relative">
-        <label className="flex items-center text-[22px] font-bold text-[#2A2A2A]  max-lg:text-base max-lg:mb-2">
+      <div className="flex lg:justify-between max-lg:flex-col h-[87px] relative">
+        <label className="flex items-center text-[22px] max-lg:text-[14px] font-bold max-lg:font-medium text-[#2A2A2A] max-lg:mb-[12px]">
           은행 선택
         </label>
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className="w-[1082px]  pr-[40px] border-[1px] border-white-stroke rounded-[8px] text-[18px] text-right  font-normal  bg-white">
+          className="w-[1082px] max-lg:w-auto pr-[40px] max-lg:px-[12px] max-lg:py-[16px] border-[1px] max-lg:border-[0.5px] border-white-stroke rounded-[8px] text-[18px] max-lg:text-[12px] text-right   font-normal  bg-white">
           {selectedBank ? (
             <span className="text-text-on-white ">{selectedBank}</span>
           ) : (
-            <span className="flex justify-end gap-[8px]">
+            <span className="flex lg:justify-end max-lg:justify-between gap-[8px]">
               <span className="text-text-on-background ">은행을 선택해주세요</span>
               <span
-                className={`flex items-center justify-center rounded-[50px] w-[24px] h-[24px] ${isDropdownOpen ? 'bg-primary-pressed text-white' : 'bg-transparent'}`}>
+                className={`flex items-center justify-center rounded-[50px] w-[24px] max-lg:w-[16px] h-[24px] max-lg:h-[16px] ${isDropdownOpen ? 'bg-primary-pressed text-white' : 'bg-transparent'}`}>
                 <img src={arrowIcon} className="w-[11px] h-[6.5px]" />
               </span>
             </span>
@@ -115,8 +115,8 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
       </div>
 
       {/* 2. 계좌번호 */}
-      <div className="flex justify-between h-[87px]">
-        <label className="flex items-center text-[22px] font-bold text-[#2A2A2A]  max-lg:text-base max-lg:mb-2">
+      <div className="flex lg:justify-between max-lg:flex-col h-[87px]">
+        <label className="flex items-center text-[22px] max-lg:text-[14px] font-bold max-lg:font-medium text-[#2A2A2A] max-lg:mb-[12px]">
           계좌번호 입력
         </label>
         <input
@@ -124,13 +124,13 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
           value={accountNumber}
           onChange={(e) => setAccountNumber(e.target.value)}
           placeholder="계좌번호를 입력해주세요"
-          className="w-[1082px]  pr-[40px] border-[1px] border-white-stroke rounded-[8px] text-[18px] text-right text-text-on-white placeholder:text-text-on-background font-normal  bg-white"
+          className="w-[1082px] max-lg:w-auto pr-[40px] max-lg:px-[12px] max-lg:py-[16px] border-[1px] max-lg:border-[0.5px] border-white-stroke rounded-[8px] text-[18px] max-lg:text-[12px] text-right max-lg:text-left font-normal  bg-white"
         />
       </div>
 
       {/* 3. 예금주명 */}
-      <div className="flex justify-between h-[87px]">
-        <label className="flex items-center text-[22px] font-bold text-[#2A2A2A]  max-lg:text-base max-lg:mb-2">
+      <div className="flex lg:justify-between max-lg:flex-col h-[87px]">
+      <label className="flex items-center text-[22px] max-lg:text-[14px] font-bold max-lg:font-medium text-[#2A2A2A] max-lg:mb-[12px]">
           예금주명 입력
         </label>
         <input
@@ -138,14 +138,14 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
           value={accountHolder}
           onChange={(e) => setAccountHolder(e.target.value)}
           placeholder="예금주명을 입력해주세요"
-          className="w-[1082px]  pr-[40px] border-[1px] border-white-stroke rounded-[8px] text-[18px] text-right text-text-on-white placeholder:text-text-on-background font-normal  bg-white"
+          className="w-[1082px] max-lg:w-auto pr-[40px] max-lg:px-[12px] max-lg:py-[16px] border-[1px] max-lg:border-[0.5px] border-white-stroke rounded-[8px] text-[18px] max-lg:text-[12px] text-right max-lg:text-left font-normal  bg-white"
         />
       </div>
 
-      <div className="mt-[150px] self-end">
+      <div className="mt-[150px] max-lg:mt-[17px] lg:self-end  ">
         <button
-          className="py-[15px] px-[29px] bg-primary text-white text-[24px] font-bold rounded-[10px]"
-          onClick={handleFormSubmit}
+          className="py-[15px] max-lg:py-[10px] px-[29px] max-lg:px-[40px] bg-primary text-white text-[24px] max-lg:text-[16px] font-bold max-lg:font-medium rounded-[10px] max-lg:rounded-[4px] max-lg:w-full"
+          onClick={handleFormSubmit} 
           disabled={isSubmitDisabled}>
           등록 완료
         </button>

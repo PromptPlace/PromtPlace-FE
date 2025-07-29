@@ -15,13 +15,11 @@ const CardHeader: React.FC<ContentHeaderProps> = ({ date, title, linkUrl, dateFo
   const displayTime = timePart ? timePart.substring(0, 5) : '';
 
   return (
-    <div className="flex flex-col w-full gap-[10px]">
-      <span className="text-[14px] text-text-on-background max-lg:hidden">
+    <div className="flex flex-col w-full gap-[10px] max-lg:gap-[6px]">
+      <span className="text-[14px] max-lg:text-[8px] max-lg:font-normal text-text-on-background ">
         {displayDate} {dateFormat === 'full' && ` ${displayTime}`}
       </span>
-      <Link
-        to={linkUrl}
-        className="truncate text-[22px] font-bold text-text-on-white  max-lg:text-[12px] max-lg:font-medium ">
+      <Link to={linkUrl} className="truncate text-[22px] font-bold text-text-on-white  max-lg:text-[12px]">
         {title}
       </Link>
     </div>

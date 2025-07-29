@@ -30,14 +30,14 @@ const MyPageInfo = () => {
   };
 
   return (
-    <div className="flex justify-center pt-[92px] min-h-screen bg-background ">
-      <div className="w-full max-w-[1236px] ">
-        <div className="flex items-center gap-[10px] mb-[70px]">
-          <img src={iconPerson} alt="person icon" className="w-[32px] h-[32px]" />
-          <div className="text-[32px] text-primary-hover font-bold">회원정보</div>
+    <div className="flex justify-center pt-[92px] max-lg:pt-[12px] min-h-screen bg-background ">
+      <div className="w-full max-w-[1236px] max-lg:px-[20px] ">
+        <div className="flex items-center gap-[10px] mb-[70px] max-lg:mb-[20px]">
+          <img src={iconPerson} alt="person icon" className="w-[32px] max-lg:w-[20px] h-[32px] max-lg:h-[20px]" />
+          <div className="text-[32px] max-lg:text-[20px] text-primary-hover font-bold">회원정보</div>
         </div>
 
-        <div className="bg-white border-t-[1px] border-t-primary-hover">
+        <div className="bg-white border-t-[1px] max-lg:border-t-[0px] border-t-primary-hover">
           <InfoRow label="닉네임" nickname={userInfo.nickname} />
           <InfoRow label="가입한 계정" email={userInfo.email} provider={userInfo.provider} />
           <InfoRow label="계정 바꾸기" email={userInfo.email} provider={userInfo.provider} hasArrow />

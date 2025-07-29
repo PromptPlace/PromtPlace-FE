@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import iconPerson from '@assets/icon-person-blue.svg';
 import bluearrowIcon from '@assets/icon-arrow-left-blue.svg'; //추후 디자인 규격에 맞게 수정 필요
+import blackarrowIcon from '@/assets/icon-arrow-left-black.svg';
 import AccountDisplay from './components/AccountDisplay';
 import AccountEditForm from './components/AccountEditForm';
 
@@ -47,22 +48,27 @@ const MyAccountPage = () => {
 
   return (
     <div className="flex justify-center h-screen bg-background ">
-      <div className="flex flex-col w-full max-w-[1236px] pt-[92px] h-full">
-        <div className="flex items-center gap-[10px] mb-[27px]">
+      <div className="flex flex-col w-full max-w-[1236px] pt-[92px] max-lg:pt-[12px] max-lg:px-[12px] h-full">
+        <div className="flex items-center gap-[10px] mb-[27px] max-lg:hidden">
           <img src={iconPerson} alt="person icon" className="w-[32px] h-[32px]" />
           <div className="text-[32px] text-primary-hover font-bold">회원정보</div>
         </div>
 
-        <div className="flex items-center h-[90px] border-b-[1px] border-primary-hover">
-          <div className="flex items-center gap-[10px] h-[50px] ">
-            <button onClick={() => navigate(-1)} className="flex items-center justify-center  w-[24px] h-[24px]">
-              <img src={bluearrowIcon} alt="뒤로가기" />
+        <div className="flex items-center h-[90px] max-lg:h-auto border-b-[1px] max-lg:border-b-[0px] border-primary-hover">
+          <div className="flex items-center max-lg:justify-center gap-[10px] max-lg:gap-[70px] h-[50px] max-lg:h-auto ">
+            <button
+              onClick={() => navigate(-1)}
+              className="flex items-center justify-center  w-[24px] max-lg:w-[20px] h-[24px] max-lg:h-[20px]">
+              <img src={bluearrowIcon} alt="뒤로가기" className="max-lg:hidden" />
+              <img src={blackarrowIcon} alt="뒤로가기" className="lg:hidden" />
             </button>
-            <span className="text-[24px] text-primary-hover font-bold">계좌 정보 등록</span>
+            <span className="text-[24px] max-lg:text-[16px] text-primary-hover max-lg:text-[#2A2A2A] font-bold max-lg:font-medium">
+              계좌 정보 등록
+            </span>
           </div>
         </div>
 
-        <div className="flex flex-col flex-1 gap-[40px] pt-[40px]">
+        <div className="flex  ">
           {mode === 'view' ? (
             <AccountDisplay accountInfo={accountInfo} onEditClick={handleEditClick} />
           ) : (
