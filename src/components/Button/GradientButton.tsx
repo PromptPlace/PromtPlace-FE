@@ -20,7 +20,8 @@ const gradientButtonTheme = {
   buttonType: {
     imgButton:
       'rounded-[50px] py-[22px] px-[24.5px] gap-[10px] text-xl font-normal leading-[25px] h-[69px] max-w-[235px] w-full',
-    textButton: 'rounded-[10px] py-[16px] px-[40px] text-2xl font-bold leading-[30px]',
+    textButton:
+      'rounded-[10px] max-lg:rounded-[4px] py-[16px] max-lg:py-[8px] px-[40px] max-lg:px-[20px] text-2xl max-lg:text-[14px] font-bold leading-[30px] max-lg:leading-[18px]',
   },
 };
 

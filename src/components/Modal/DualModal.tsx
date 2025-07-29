@@ -26,12 +26,14 @@ interface DualModalProps {
 
 const DualModal = ({ text, onClickYes, onClickNo, colorYesText = 'blue', colorNoText = 'white' }: DualModalProps) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div className="fixed inset-0 flex items-center justify-center z-50 max-lg:px-[57px]">
       <div className="absolute inset-0 bg-overlay"></div>
 
-      <div className="relative px-[150px] py-[64px] bg-white rounded-[16px] shadow-gradient z-10 flex flex-col items-center justify-center gap-[24px] text-center">
-        <p className="text-[32px] font-bold leading-[40px] text-text-on-white">{text}</p>
-        <div className="flex gap-[41px]">
+      <div className="relative px-[150px] max-lg:px-[20px] py-[64px] max-lg:py-[20px] bg-white rounded-[16px] shadow-gradient z-10 flex flex-col items-center justify-center gap-[24px] max-lg:gap-[12px] text-center max-lg:w-full">
+        <p className="text-[32px] max-lg:text-[12px] font-bold leading-[40px] max-lg:leading-[15px] text-text-on-white">
+          {text}
+        </p>
+        <div className="flex gap-[41px] max-lg:gap-[20px]">
           <IconButton
             buttonType="round"
             style={colorYesText === 'blue' ? 'fill' : 'outline'}
