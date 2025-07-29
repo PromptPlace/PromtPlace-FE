@@ -42,6 +42,13 @@ const MyPageInfo = () => {
           <InfoRow label="가입한 계정" email={userInfo.email} provider={userInfo.provider} />
           <InfoRow label="계정 바꾸기" email={userInfo.email} provider={userInfo.provider} hasArrow />
           <InfoRow
+            label="계좌 정보 등록"
+            actionText="등록하기"
+            onAction={() => {
+              navigate('/mypage/info/account');
+            }}
+          />
+          <InfoRow
             label="결제내역"
             actionText="내역보기"
             onAction={() => {

@@ -1,27 +1,27 @@
 import { Link } from 'react-router-dom';
 
-
 // 컴포넌트가 받을 props 타입 정의
 interface ContentHeaderProps {
   date: string;
   title: string;
   linkUrl: string; // 이동할 경로를 props로 받음
-  dateFormat?: 'dateOnly' | 'full'
+  dateFormat?: 'dateOnly' | 'full';
   showArrow?: boolean; // 화살표 아이콘 표시 여부
 }
 
-const CardHeader: React.FC<ContentHeaderProps> = ({ date, title, linkUrl, dateFormat = 'dateOnly', showArrow = true }) => {
+const CardHeader: React.FC<ContentHeaderProps> = ({ date, title, linkUrl, dateFormat = 'dateOnly' }) => {
   // 날짜 포맷 변경 로직
   const [displayDate, timePart] = date.split('T');
   const displayTime = timePart ? timePart.substring(0, 5) : '';
 
   return (
-    // 이 컴포넌트는 항상 부모 너비의 100%를 차지하도록 w-full을 사용
     <div className="flex flex-col w-full gap-[10px]">
       <span className="text-[14px] text-text-on-background max-lg:hidden">
         {displayDate} {dateFormat === 'full' && ` ${displayTime}`}
       </span>
-      <Link to={linkUrl} className="truncate text-[22px] font-bold text-text-on-white  max-lg:text-[12px] max-lg:font-medium ">
+      <Link
+        to={linkUrl}
+        className="truncate text-[22px] font-bold text-text-on-white  max-lg:text-[12px] max-lg:font-medium ">
         {title}
       </Link>
     </div>

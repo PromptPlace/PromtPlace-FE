@@ -17,16 +17,7 @@ interface InfoRowProps {
   isDestructive?: boolean;
 }
 
-const InfoRow: React.FC<InfoRowProps> = ({
-  label,
-  nickname,
-  email,
-  provider,
-  hasArrow,
-  actionText,
-  onAction,
-  isDestructive,
-}) => {
+const InfoRow: React.FC<InfoRowProps> = ({ label, nickname, email, provider, hasArrow, actionText, onAction }) => {
   const ICONS = {
     google: GoogleIcon,
     kakao: KakaoIcon,

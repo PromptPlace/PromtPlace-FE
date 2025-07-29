@@ -19,7 +19,9 @@ const SalesHistoryCard: React.FC<SalesHistoryCardProps> = ({ sale }) => {
         <CardHeader date={sale.date} title={sale.title} linkUrl={`/prompt/${sale.id}`} dateFormat="dateOnly" />
       </div>
 
-      <div className="text-center w-[145px] pb-[21.5px] pt-[49.5px] max-lg:w-[43px] max-lg:pt-[0px] max-lg:pb-[0px]">{sale.price.toLocaleString()}원</div>
+      <div className="text-center w-[145px] pb-[21.5px] pt-[49.5px] max-lg:w-[43px] max-lg:pt-[0px] max-lg:pb-[0px]">
+        {sale.price.toLocaleString()}원
+      </div>
       <div className="w-[440px]   pb-[21.5px] pt-[49.5px] pl-[10px] max-lg:hidden">구매자 : {sale.buyer}</div>
       <div className="lg:hidden w-[34px]">{sale.buyer}</div>
     </div>
