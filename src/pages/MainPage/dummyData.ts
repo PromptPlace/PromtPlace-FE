@@ -2,6 +2,7 @@ import type { Prompt, Creator } from '@/types/prompt';
 
 export const dummyPrompts: Prompt[] = [
   {
+    author_id: 1,
     authorname: '주토피아노',
     authorimage: null,
     prompt_id: 1,
@@ -23,6 +24,7 @@ export const dummyPrompts: Prompt[] = [
     keyword: '사업계획서',
   },
   {
+    author_id: 2,
     prompt_id: 2,
     authorimage: null,
     authorname: '홍길동',
@@ -30,7 +32,7 @@ export const dummyPrompts: Prompt[] = [
     description: '- 동양 여성 캐릭터 일러스트 세트\n- 4:5 비율 세로 이미지...',
     has_image: false,
     is_free: false,
-    model: 'DALL-E 3',
+    model: 'midjourney',
     price: 2500,
     downloadCount: 200,
     views: 1145,
@@ -43,6 +45,7 @@ export const dummyPrompts: Prompt[] = [
     keyword: '일러스트',
   },
   {
+    author_id: 3,
     prompt_id: 3,
     authorname: '디자인킹',
     authorimage: null,
@@ -64,6 +67,7 @@ export const dummyPrompts: Prompt[] = [
     keyword: '글쓰기',
   },
   {
+    author_id: 4,
     prompt_id: 4,
     authorname: '코딩마스터',
     authorimage: null,
@@ -84,6 +88,7 @@ export const dummyPrompts: Prompt[] = [
     keyword: '면접',
   },
   {
+    author_id: 5,
     prompt_id: 5,
     title: 'GPT 연애 상담 프롬프트',
     authorname: '연애상담사',

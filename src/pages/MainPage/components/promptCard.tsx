@@ -13,14 +13,29 @@ import likeIcon from '@/assets/icon-heart-blue-big.svg';
 import unLikeIcon from '@/assets/icon-heart-none-big.svg';
 import TagButton from '@/components/Button/TagButton';
 import ModelButton from '@/components/Button/ModelButton';
+import { useNavigate } from 'react-router-dom';
 
 type props = {
   prompt: Prompt;
 };
 
 const PromptCard = ({ prompt }: props) => {
-  const { authorname, authorimage, title, description, is_free, model, price, downloadCount, views, rating_avg, tags } =
-    prompt;
+  const navigate = useNavigate();
+  const {
+    author_id,
+    authorname,
+    prompt_id,
+    authorimage,
+    title,
+    description,
+    is_free,
+    model,
+    price,
+    downloadCount,
+    views,
+    rating_avg,
+    tags,
+  } = prompt;
   const [isLiked, setIsLiked] = useState(false);
 
   const handleLike = () => {
@@ -31,7 +46,9 @@ const PromptCard = ({ prompt }: props) => {
   return (
     <div className="flex flex-col w-full max-w-[832px] mt-[42px]">
       {/* 작성자 정보 (카드 바깥쪽) */}
-      <div className="inline-flex justify-start items-center gap-3.5">
+      <div
+        className="inline-flex justify-start items-center gap-3.5 cursor-pointer"
+        onClick={() => navigate(`/profile/${author_id}`)}>
         <img
           src={authorimage ? authorimage : profileImage}
           alt="authorImage"
@@ -41,7 +58,7 @@ const PromptCard = ({ prompt }: props) => {
       </div>
 
       {/* 카드 본문 */}
-      <div className="relative w-full h-full max-w-[780px] max-h-[320px] bg-white rounded-xl shadow-md p-4 overflow-hidden overflow-ellipsis ml-2 ml-auto">
+      <div className="relative w-full h-full max-w-[780px] max-h-[320px] bg-white rounded-xl shadow-md p-4 overflow-hidden overflow-ellipsis ml-auto">
         <div className="flex flex-wrap items-center px-2.5 py-0.5 gap-2.5 mb-[14px]">
           <ModelButton text={model} />
           {tags.map((tag, index) => (
@@ -51,7 +68,9 @@ const PromptCard = ({ prompt }: props) => {
           ))}
         </div>
 
-        <div className="flex justify-between items-center mb-2">
+        <div
+          className="flex justify-between items-center mb-2 cursor-pointer"
+          onClick={() => navigate(`/prompt/${prompt_id}`)}>
           <span className="text-xl">{title}</span>
           <div className="flex items-center gap-4 text-sm text-gray-600">
             <div className="flex items-center gap-1 text-lg">{is_free ? '무료' : `${price}원`}</div>
@@ -67,7 +86,11 @@ const PromptCard = ({ prompt }: props) => {
           </div>
         </div>
 
-        <p className="text-sm text-gray-800 whitespace-pre-line">{description}</p>
+        <p
+          className="text-sm text-gray-800 whitespace-pre-line cursor-pointer"
+          onClick={() => navigate(`/prompt/${prompt_id}`)}>
+          {description}
+        </p>
 
         <button onClick={handleLike} className="absolute right-4 bottom-4 z-10">
           <img src={isLiked ? likeIcon : unLikeIcon} className="w-4 h-4" />

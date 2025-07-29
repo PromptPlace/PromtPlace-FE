@@ -36,7 +36,7 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
         <ul className="mt-4 space-y-4 ">
           {creators.slice(0, 4).map((c) => (
             <li key={c.id} className="flex items-center justify-between">
-              <div className="flex items-center gap-[10px] mt-[12px]">
+              <div className="flex items-center gap-[10px] mt-[12px] cursor-pointer" onClick={() => navigate(`/profile/${c.id}`)}>
                 <img
                   src={c.avatar ? c.avatar : profileImage}
                   alt={c.name}
@@ -66,7 +66,7 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
         <ul className="mt-4 space-y-4">
           {creators.slice(4, 6).map((c) => (
             <li key={c.id} className="flex items-center justify-between">
-              <div className="flex items-center gap-[10px] mt-[12px]">
+              <div className="flex items-center gap-[10px] mt-[12px] cursor-pointer" onClick={() => navigate(`/profile/${c.id}`)}>
                 <img
                   src={c.avatar ? c.avatar : profileImage}
                   alt={c.name}
@@ -91,7 +91,7 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
       <section className="w-[313px] h-[124px] p-[20px] rounded-2xl inline-flex flex-col justify-center shadow-sm bg-white gap-2.5">
         <h4 className="pb-2 font-bold text-xl flex items-center gap-1">프롬프트 작성 가이드라인</h4>
         <button
-          className="w-[136px] h-[46px] bg-white rounded-[10px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)] outline-offset-[-1px] outline-primary inline-flex justify-center items-center gap-3.5"
+          className="w-[136px] px-4 py-2.5 bg-white rounded-[10px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)] outline outline-1 outline-offset-[-1px] outline-primary inline-flex justify-center items-center gap-3.5"
           onClick={() => {
             navigate('/guide/notice');
           }}>
@@ -105,7 +105,7 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
       <section className="w-[313px] h-[124px] p-5 rounded-2xl inline-flex flex-col justify-center shadow-sm bg-white gap-2.5 mt-[-8px]">
         <h4 className="pb-2 font-bold text-xl flex items-center gap-1">프롬프트 작성 꿀팁</h4>
         <button
-          className="w-[136px] h-[46px] bg-white rounded-[10px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)] outline-offset-[-1px] outline-primary inline-flex justify-center items-center gap-3.5"
+          className="w-[136px] px-4 py-2.5 bg-white rounded-[10px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)] outline outline-1 outline-offset-[-1px] outline-primary inline-flex justify-center items-center gap-3.5"
           onClick={() => {
             navigate('/guide/tip');
           }}>
