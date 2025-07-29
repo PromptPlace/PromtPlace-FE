@@ -73,7 +73,7 @@ const PromptCard = ({ prompt }: props) => {
           onClick={() => navigate(`/prompt/${prompt_id}`)}>
           <span className="text-xl">{title}</span>
           <div className="flex items-center gap-4 text-sm text-gray-600">
-            <div className="flex items-center gap-1 text-lg">{is_free ? '무료' : `${price}원`}</div>
+            <div className="flex items-center gap-1 text-lg">{is_free ? '무료' : `${price.toLocaleString()}원`}</div>
             <div>
               <Rating star={rating_avg} />
             </div>

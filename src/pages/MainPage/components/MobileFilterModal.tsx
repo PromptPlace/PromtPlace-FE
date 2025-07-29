@@ -42,15 +42,10 @@ const MobileFilterModal = ({ visible, onClose }: Props) => {
                 return (
                   <div key={i} className="w-32 flex justify-center">
                     <div
-                      className={classNames(
-                        'w-32 px-9 py-2 rounded outline outline-1 outline-offset-[-1px] flex justify-center items-center gap-2.5',
-                        isSelected ? 'bg-secondary outline-primary' : 'bg-white outline-white-stroke',
-                      )}>
-                      <span
-                        className={classNames(
-                          'text-sm font-normal',
-                          isSelected ? 'text-primary' : 'text-white-stroke',
-                        )}>
+                      className={`w-32 px-9 py-2 rounded outline-1 outline-offset-[-1px] flex justify-center items-center gap-2.5 ${
+                        isSelected ? 'bg-secondary outline-primary' : 'bg-white outline-white-stroke'
+                      }`}>
+                      <span className={`text-sm font-normal ${isSelected ? 'text-primary' : 'text-white-stroke'}`}>
                         {label}
                       </span>
                     </div>
