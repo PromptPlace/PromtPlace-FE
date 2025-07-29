@@ -1,5 +1,7 @@
 import React from 'react';
 import arrow from '@/assets/icon-arrow-down.svg';
+import checkbox from '@/assets/icon-bi-check-square.svg';
+import box from '@/assets/icon-bi-noncheck-square.svg';
 
 type MobileFilterBarProps = {
   onlyFree: boolean;
@@ -15,7 +17,7 @@ const MobileFilterBar = ({ onlyFree, onOnlyFreeToggle, onOpenModel, onOpenSort, 
       {/* 무료만 */}
       <div className="w-7 flex flex-col justify-start items-center cursor-pointer" onClick={onOnlyFreeToggle}>
         <div className="w-5 h-5 relative flex justify-center items-center">
-          <div className={`w-3.5 h-3.5 rounded-sm absolute ${onlyFree ? 'bg-primary' : 'bg-text-on-background'}`} />
+          <img className={`w-3.5 h-3.5 rounded-sm absolute`} src={onlyFree ? box : checkbox} />
         </div>
         <div className="text-[10px] text-text-on-background font-medium text-center">무료만</div>
       </div>
