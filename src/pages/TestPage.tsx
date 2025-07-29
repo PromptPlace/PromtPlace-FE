@@ -12,6 +12,7 @@ import DualModal from '@components/Modal/DualModal';
 import FollowButton from '@components/Button/FollowButton';
 import CircleButton from '@components/Button/CircleButton';
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
+import MobileButton from '@components/Button/MobileButton';
 
 const TestPage = () => {
   const [tags, setTags] = useState<string[]>(['#스타트업', '#수채화', '#이미지', '#그림', '#누르면삭제']);
@@ -44,6 +45,7 @@ const TestPage = () => {
       <PrimaryButton buttonType="squareMini" text="완료" onClick={() => {}} />
       <PrimaryButton buttonType="squareMini" text="등록" onClick={() => {}} />
       <PrimaryButton buttonType="review" text="리뷰 작성하기" onClick={() => {}} />
+      <PrimaryButton buttonType="review" text="리뷰작성" onClick={() => {}} />
       <PrimaryButton buttonType="reviewDelete" text="리뷰삭제" onClick={() => {}} />
       <PrimaryButton buttonType="plus" text="+" onClick={() => {}} />
 
@@ -68,6 +70,7 @@ const TestPage = () => {
       <IconButton buttonType="squareMd" style="outline" imgType="attach" text="첨부" onClick={() => {}} />
       <IconButton buttonType="squareBig" style="fill" imgType="download" text="다운로드" onClick={() => {}} />
       <IconButton buttonType="squareMd" style="red" imgType="alert" text="프롬프트 신고하기" onClick={() => {}} />
+      <IconButton buttonType="squareMd" style="red" imgType="alert" text="신고하기" onClick={() => {}} />
       <IconButton buttonType="squareMini" style="fill" imgType="upload" text="이미지 업로드" onClick={() => {}} />
       <IconButton buttonType="squareMini" style="fill" imgType="copy" text="복사하기" onClick={() => {}} />
 
@@ -96,6 +99,11 @@ const TestPage = () => {
       <CircleButton buttonType="send" size="md" onClick={() => {}} />
       <CircleButton buttonType="edit" size="md" onClick={() => {}} />
       <CircleButton buttonType="edit" size="sm" onClick={() => {}} />
+
+      <h3>🔹 MobileButton.tsx</h3>
+      <MobileButton text="선택 완료하기" />
+      <MobileButton text="작성 완료하기" />
+      <MobileButton text="변경하기" />
 
       <h3>🔶 Rating.tsx</h3>
       <Rating star={5} />
@@ -138,17 +146,16 @@ const TestPage = () => {
           }
           onClickYes={() => alert('예')}
           onClickNo={() => setShowModal4(false)}
+          colorYesText="white"
+          colorNoText="blue"
         />
       )}
 
       <h3>🟣 SocialLoginModal.tsx</h3>
       <button onClick={() => setShowModal5(true)}>모달5 보기 click</button>
-      {showModal5 && (
-        <SocialLoginModal isOpen={showModal5} onClose={() => setShowModal5(false)} onClick={() => {}} />
-      )}
+      {showModal5 && <SocialLoginModal isOpen={showModal5} onClose={() => setShowModal5(false)} onClick={() => {}} />}
     </div>
   );
 };
-
 
 export default TestPage;

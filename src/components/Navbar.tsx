@@ -5,11 +5,12 @@ import { useAuth } from '@/context/AuthContext';
 import LogoIcon from '@assets/icon-header-logo.svg';
 import ProfileIcon from '@assets/icon-profile-blue-small.svg';
 import UserProfileIcon from '@assets/img-example-profile2.jpg';
+import TipIcon from '@assets/mobile/icon-mobile-tip.svg';
+
 import PrimaryButton from '@components/Button/PrimaryButton';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import Sidebar from '@components/Sidebar';
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
-import clsx from 'clsx';
 
 const Navbar = () => {
   const [search, setSearch] = useState<string>('');
@@ -51,7 +52,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="flex justify-between items-center gap-[2.6vw] py-[7.5px] pl-[61.25px] pr-[36px] max-lg:p-0">
+      <nav className="flex justify-between items-center gap-[2.6vw] py-[7.5px] pl-[61.25px] pr-[36px] max-lg:py-[8px] max-lg:px-[20px]">
         <div onClick={() => handleNavigate('/')} className="cursor-pointer w-[227px] shrink-0 max-lg:hidden">
           <img src={LogoIcon} alt="로고" className="w-full h-full object-cover" />
         </div>
@@ -62,7 +63,7 @@ const Navbar = () => {
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => handleKeyDown(e)}
             placeholder="내가 원하는 프롬프트 찾기"
-            className="flex-1 placeholder:font-SpoqaHanSansNeo placeholder:color-text-on-background placeholder:text-base placeholder:font-normal placeholder:leading-[26px] placeholder:tracking-[0.46px] bg-background rounded-[40px] border border-[#ccc] py-[10px] px-[20px] outline-none focus:border focus:border-primary focus:inset-shadow-inner"
+            className="flex-1 placeholder:font-SpoqaHanSansNeo placeholder:color-text-on-background placeholder:text-base placeholder:font-normal placeholder:leading-[26px] placeholder:tracking-[0.46px] bg-background rounded-[40px] border border-[#ccc] py-[10px] px-[20px] outline-none focus:border focus:border-primary focus:inset-shadow-inner max-lg:min-w-[220px] max-lg:w-full"
           />
           <HiMagnifyingGlass
             onClick={handleSearch}
@@ -70,13 +71,21 @@ const Navbar = () => {
           />
         </div>
 
-        <PrimaryButton
-          buttonType="tip"
-          text="프롬프트 TIP"
-          onClick={() => {
-            handleNavigate('/guide/tip');
-          }}
-        />
+        <div
+          onClick={() => navigate('/guide/tip')}
+          className="w-[28px] h-[28px] lg:hidden max-lg:block cursor-pointer shrink-0">
+          <img src={TipIcon} alt="tip" className="w-full h-full object-contain" />
+        </div>
+
+        <div className="w-[127px] shrink-0 max-lg:hidden">
+          <PrimaryButton
+            buttonType="tip"
+            text="프롬프트 TIP"
+            onClick={() => {
+              handleNavigate('/guide/tip');
+            }}
+          />
+        </div>
 
         {!accessToken && (
           <PrimaryButton

@@ -1,4 +1,4 @@
-import CancelIcon from '@assets/icon-cancel.svg';
+import CancelIcon from '@assets/icon-cancel.svg?react';
 import clsx from 'clsx';
 
 /**
@@ -26,13 +26,14 @@ const TagButton = ({ hasDelete, text, onClick }: TagButtonProps) => {
   return (
     <div
       className={clsx(
-        'py-[2px] px-[10px] flex justify-center items-center gap-[5px] rounded-[50px] whitespace-nowrap border border-text-on-background bg-white text-sm font-normal leading-[18px] text-text-on-background shrink-0',
-        hasDelete && 'shadow-button-hover',
+        'py-[5px] px-[15px] flex justify-center items-center gap-[5px] rounded-[50px] whitespace-nowrap border border-text-on-background bg-white text-[14px] font-normal leading-[18px] text-text-on-background shrink-0 max-lg:shadow-button max-lg:px-[6px] max-lg:text-[8px] max-lg:leading-[10px] max-lg:font-medium',
+        !hasDelete && 'max-lg:border-none',
+        hasDelete && 'shadow-button-hover max-lg:border max-lg:border-text-on-background',
       )}>
       {text}
       {hasDelete && (
         <div className="cursor-pointer w-[12px] h-[12px]">
-          <img src={CancelIcon} alt="닫기" onClick={onClick} className="w-full h-full" />
+          <CancelIcon onClick={onClick} className="w-full h-full text-text-on-background" />
         </div>
       )}
     </div>
