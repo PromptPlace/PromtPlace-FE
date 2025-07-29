@@ -16,15 +16,13 @@ import { data, useParams } from 'react-router-dom';
 import SearchPrompter from './components/SearchPrompter';
 
 const SearchPage = () => {
-
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const [onlyFree, setOnlyFree] = useState<boolean>(false);
-  const [search, setSearch] = useState("");
+  const [, setSearch] = useState('');
   const { keyword } = useParams<{ keyword: string }>();
   const [isPending, setIsPending] = useState(true);
   const [isError, setIsError] = useState('');
-
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -57,19 +55,18 @@ const SearchPage = () => {
   }
 
   if (isError) {
-    return <div className="mt-20">Error</div>
+    return <div className="mt-20">Error</div>;
   }
 
-  const filteredByKeyword = dummyPrompts.filter(prompt =>{
-    return prompt.keyword?.includes(keyword || '')
+  const filteredByKeyword = dummyPrompts.filter((prompt) => {
+    return prompt.keyword?.includes(keyword || '');
   });
 
-  const filterPromptsByModel = filteredByKeyword.filter(prompt => {
+  const filterPromptsByModel = filteredByKeyword.filter((prompt) => {
     const matchModel = selectedModel ? prompt.model === selectedModel : true;
     const matchFree = onlyFree ? prompt.price === 0 : true;
     return matchModel && matchFree;
   });
-
 
   const sortPromptByFilter = [...filterPromptsByModel].sort((a, b) => {
     switch (selectedSort) {
@@ -91,31 +88,27 @@ const SearchPage = () => {
   return (
     <div className="flex gap-6 justify-center bg-[#F5F5F5] relative overflow-hidden">
       <div className="w-[858px] h-[820px] mt-[53px] mb-[42px] overflow-y-auto pb-32">
-        <div className='justify-start text-black text-2xl font-bold'>
-          '{keyword}' 검색 결과
-        </div>
+        <div className="justify-start text-black text-2xl font-bold">'{keyword}' 검색 결과</div>
 
         <FilterBar
           onModelChange={setSelectedModel}
           onSortChange={setSelectedSort}
           onlyFree={onlyFree}
-          setOnlyFree={setOnlyFree} />
+          setOnlyFree={setOnlyFree}
+        />
 
         <div className="scroll-auto">
           {sortPromptByFilter.map((prompt) => (
-            <PromptCard
-              key={prompt.prompt_id}
-              prompt={prompt}
-            />
+            <PromptCard key={prompt.prompt_id} prompt={prompt} />
           ))}
         </div>
       </div>
 
-      <div className='flex flex-col gap-[14px]'>
+      <div className="flex flex-col gap-[14px]">
         <SearchPrompter creators={dummyCreators} />
       </div>
 
-      <div className='fixed bottom-4 justify-center items-center flex flex-col gap-2.5'>
+      <div className="fixed bottom-4 justify-center items-center flex flex-col gap-2.5">
         <GradientButton
           buttonType="imgButton"
           text="프롬프트 작성하기"
