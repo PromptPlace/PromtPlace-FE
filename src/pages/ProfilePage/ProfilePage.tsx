@@ -34,6 +34,7 @@ import FOLLOWING from '@data/ProfilePage/following.json';
 import FOLLOWER from '@data/ProfilePage/follower.json';
 
 import useImgUpload from '@hooks/useImgUpload';
+import Select from './components/Select';
 
 const USER = {
   member_id: 12345,
@@ -150,16 +151,20 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex flex-col pt-[120px]">
+    <div className="flex flex-col pt-[120px] max-lg:pt-[12px]">
       <div
         className={clsx(
-          'p-[10px] pl-[220px] flex items-center',
-          !isMyProfile && 'gap-[60px]',
+          'p-[10px] pl-[220px] flex items-center max-lg:flex-col max-lg:justify-center max-lg:p-0',
+          !isMyProfile && 'gap-[60px] max-lg:gap-[8px]',
           isMyProfile && 'gap-[7vw]',
         )}>
-        <div className={clsx('flex gap-[28px] items-center', profileEdit && 'items-center')}>
+        <div
+          className={clsx(
+            'flex gap-[28px] max-lg:gap-[8px] items-center max-lg:flex-col',
+            profileEdit && 'items-center',
+          )}>
           <div className="flex flex-col items-center w-full">
-            <div className="w-[80px] h-[80px] rounded-full overflow-hidden">
+            <div className="w-[80px] h-[80px] rounded-full overflow-hidden max-lg:w-[48px] max-lg:h-[48px]">
               {isMyProfile && (
                 <img
                   src={selectedImg?.thumbnail || UserProfileIcon}
@@ -190,8 +195,25 @@ const ProfilePage = () => {
             )}
           </div>
 
-          <div className="flex flex-col gap-[5px] text-text-on-white shrink-0">
-            {!profileEdit && <p className="text-[32px] font-bold leading-[40px]">{userName}</p>}
+          <div className="flex flex-col gap-[5px] max-lg:gap-[4px] text-text-on-white shrink-0">
+            {!profileEdit && (
+              <div className="flex gap-[4px] max-lg:justify-center">
+                <p className="text-[32px] font-bold leading-[40px] max-lg:text-[16px] max-lg:font-medium max-lg:leading-[20px] ">
+                  {userName}
+                </p>
+                <div
+                  onClick={() =>
+                    setIsAlarmOn((prev) => ({ state: !prev.state, icon: prev.state ? AlarmOffIcon : AlarmOnIcon }))
+                  }
+                  className={clsx(
+                    'lg:hidden w-[20px] h-[20px] bg-white rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out p-[3px]',
+                    !isAlarmOn.state && 'border border-text-on-background',
+                    isAlarmOn.state && 'border border-primary bg-red-500',
+                  )}>
+                  <img src={isAlarmOn.icon} alt="알림" className="w-full h-full object-contain" />
+                </div>
+              </div>
+            )}
             {profileEdit && (
               <input
                 value={userName}
@@ -200,7 +222,11 @@ const ProfilePage = () => {
                 placeholder={USER.name}
               />
             )}
-            {!profileEdit && <p className="text-[20px] font-medium leading-[25px]">{userDescription}</p>}
+            {!profileEdit && (
+              <p className="text-[20px] font-medium leading-[25px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px]">
+                {userDescription}
+              </p>
+            )}
             {profileEdit && (
               <input
                 value={userDescription}
@@ -235,28 +261,42 @@ const ProfilePage = () => {
 
         {!isMyProfile && (
           <>
-            <div className="flex flex-col gap-[5px] items-center">
-              <p className="text-primary-hover text-[18px] font-normal leading-[23px]">팔로워</p>
-              <div className="px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center">
+            <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
+              <p className="text-primary-hover text-[18px] font-normal leading-[23px] max-lg:text-[10px] max-lg:leading-[13px]">
+                팔로워
+              </p>
+              <div className="px-[10px] max-lg:px-[6px] py-[5px] max-lg:py-[2px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center max-lg:text-[12px] max-lg:leading-[15px]">
                 90
+              </div>
+
+              <div className="lg:hidden max-lg:ml-[3px]">
+                <FollowButton
+                  follow={isFollow}
+                  onClick={() => {
+                    setIsFollow((prev) => !prev);
+                  }}
+                  size="sm"
+                />
               </div>
             </div>
 
             <div className="flex gap-[24px] items-center">
-              <FollowButton
-                follow={isFollow}
-                onClick={() => {
-                  setIsFollow((prev) => !prev);
-                }}
-                size="lg"
-              />
+              <div className="max-lg:hidden">
+                <FollowButton
+                  follow={isFollow}
+                  onClick={() => {
+                    setIsFollow((prev) => !prev);
+                  }}
+                  size="lg"
+                />
+              </div>
 
               <div
                 onClick={() =>
                   setIsAlarmOn((prev) => ({ state: !prev.state, icon: prev.state ? AlarmOffIcon : AlarmOnIcon }))
                 }
                 className={clsx(
-                  'w-[48px] h-[48px] bg-white rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out',
+                  'max-lg:hidden w-[48px] h-[48px] bg-white rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out',
                   !isAlarmOn.state && 'border border-text-on-background',
                   isAlarmOn.state && 'border border-primary bg-red-500',
                 )}>
@@ -306,9 +346,13 @@ const ProfilePage = () => {
         )}
       </div>
 
-      <div className="flex flex-col items-center justify-center px-[102px] mt-[40px]">
+      <div className="px-[20px] mt-[4px] flex lg:hidden">
+        <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />
+      </div>
+
+      <div className="flex flex-col items-center justify-center px-[102px] max-lg:pl-[20px] max-lg:pr-[20px] mt-[40px] max-lg:mt-[12px]">
         <div className="w-full">
-          <div className="flex w-full justify-between border-b border-text-on-background">
+          <div className="max-lg:hidden flex w-full justify-between border-b border-text-on-background">
             {menuList.map((menu) => (
               <div
                 key={menu.id}
@@ -324,7 +368,7 @@ const ProfilePage = () => {
           </div>
 
           {menuId === 0 && (
-            <div className="pr-[8px] bg-white">
+            <div className="pr-[8px] bg-white max-lg:bg-transparent max-lg:p-0">
               <div className="w-full max-h-[368px] overflow-y-auto">
                 {prompts.map((prompt) => (
                   <PromptCard
@@ -343,7 +387,7 @@ const ProfilePage = () => {
 
           {menuId === 1 && (
             <>
-              <div className="flex flex-col items-center pr-[8px] bg-white h-full">
+              <div className="flex flex-col items-center pr-[8px] bg-white h-full max-lg:bg-transparent max-lg:p-0">
                 <div
                   className={clsx(
                     'w-full overflow-y-auto bg-white',

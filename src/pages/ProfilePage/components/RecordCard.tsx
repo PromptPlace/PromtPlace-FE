@@ -33,7 +33,7 @@ const RecordCard = ({
   return (
     <>
       {!isMyProfile && (
-        <div className="bg-white border-b border-b-white-stroke py-[30px] pl-[80px] text-text-on-white text-[20px] font-medium leading-[25px]">
+        <div className="bg-white border-b border-b-white-stroke py-[30px] max-lg:p-[12px] pl-[80px] text-text-on-white text-[20px] font-medium leading-[25px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px]">
           {description}
         </div>
       )}

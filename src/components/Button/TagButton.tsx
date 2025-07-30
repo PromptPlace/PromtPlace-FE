@@ -19,7 +19,7 @@ import clsx from 'clsx';
 interface TagButtonProps {
   hasDelete: boolean;
   text: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const TagButton = ({ hasDelete, text, onClick }: TagButtonProps) => {

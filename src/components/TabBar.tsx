@@ -12,6 +12,7 @@ import Sidebar from './Sidebar';
 const getActiveTab = (pathName: string) => {
   if (matchPath('/create/*', pathName)) return '/create';
   if (matchPath('/mypage/*', pathName)) return '/mypage/prompt';
+  if (matchPath({ path: '/profile/*', end: false }, pathName)) return '/';
   if (pathName === '/') return '/';
   return '/';
 };
@@ -109,24 +110,20 @@ const TabBar = () => {
                     key={idx}
                     to={link.to}
                     className="min-w-[64px] py-[11px] flex flex-col gap-[6px] items-center">
-                    {({ isActive }) => (
-                      <>
-                        {isActive && (
-                          <div className="relative bottom-[18px] w-[48px] h-[48px] bg-primary-gradient rounded-full flex items-center justify-center shadow-button-hover">
-                            {link.icon(true)}
-                          </div>
-                        )}
+                    <>
+                      {isActive && (
+                        <div className="relative bottom-[18px] w-[48px] h-[48px] bg-primary-gradient rounded-full flex items-center justify-center shadow-button-hover">
+                          {link.icon(true)}
+                        </div>
+                      )}
 
-                        {!isActive && (
-                          <>
-                            {link.icon(false)}
-                            <p className="text-text-on-background text-[10px] font-normal leading-[13px]">
-                              {link.label}
-                            </p>
-                          </>
-                        )}
-                      </>
-                    )}
+                      {!isActive && (
+                        <>
+                          {link.icon(false)}
+                          <p className="text-text-on-background text-[10px] font-normal leading-[13px]">{link.label}</p>
+                        </>
+                      )}
+                    </>
                   </NavLink>
                 )}
               </div>
