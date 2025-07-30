@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import ReviewTabs from './components/ReviewTabs';
 import ReviewCard from './components/ReviewCard';
-import ChatIcon from '@assets/icon-chat-bubble-blue-big.svg'
+import ChatIcon from '@assets/icon-chat-bubble-blue-big.svg';
 import UserProfileIcon from '@assets/img-example-profile2.jpg';
 import DualModal from '@/components/Modal/DualModal';
 import TextModal from '@/components/Modal/TextModal';
@@ -203,11 +203,15 @@ const MyReviewPage = () => {
             <img src={ChatIcon} alt="Chat icon" className="w-[32px] max-lg:w-[20px] h-[32px] max-lg:h-[20px]" />
             <div className="text-[32px] max-lg:text-[20px] text-primary-hover font-bold">내 리뷰관리</div>
           </div>
-            <div className='max-lg:hidden'>
-          <ReviewTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+          <div className="max-lg:hidden">
+            <ReviewTabs activeTab={activeTab} setActiveTab={setActiveTab} />
           </div>
           <div className="lg:hidden mb-[27px]">
-            <Dropdown options={reviewOptions} selectedValue={activeTab} onSelect={(value) => setActiveTab(value as 'written' | 'received')} />
+            <Dropdown
+              options={reviewOptions}
+              selectedValue={activeTab}
+              onSelect={(value) => setActiveTab(value as 'written' | 'received')}
+            />
           </div>
         </div>
 

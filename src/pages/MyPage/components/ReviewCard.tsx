@@ -39,21 +39,23 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ type, reviewData, onDelete }) =
               alt={reviewData.author.name}
               className="w-[46px] h-[46px] rounded-full max-lg:hidden"
             />
-            <span className="text-[20px] max-lg:text-[12px] font-medium text-text-on-white">{reviewData.author.name}</span>
+            <span className="text-[20px] max-lg:text-[12px] font-medium text-text-on-white">
+              {reviewData.author.name}
+            </span>
           </div>
         )}
 
         <Rating star={reviewData.rating} />
 
-        <div className='max-lg:hidden'>
-        {type === 'written' && <PrimaryButton buttonType="reviewDelete" text="리뷰 삭제" onClick={onDelete} />}
+        <div className="max-lg:hidden">
+          {type === 'written' && <PrimaryButton buttonType="reviewDelete" text="리뷰 삭제" onClick={onDelete} />}
         </div>
       </div>
 
       <p className="text-[18px] max-lg:text-[10px] text-text-on-white font-normal">{reviewData.content}</p>
-      <div className='lg:hidden flex justify-end'>
+      <div className="lg:hidden flex justify-end">
         {type === 'written' && <PrimaryButton buttonType="reviewDelete" text="리뷰 삭제" onClick={onDelete} />}
-        </div>
+      </div>
     </div>
   );
 };
