@@ -43,17 +43,14 @@ const AskCard = ({ prompts, isMyProfile }: AskCardProps) => {
             />
 
             <div className="flex gap-[32px] items-center justify-end w-full absolute right-[32px] bottom-[34px] max-lg:static">
-              <div className="relative bg-primary rounded-[4px] py-[5px] max-lg:py-[6px] px-[10px] max-lg:px-[8px] flex justify-between h-[34px] max-lg:h-[28px] max-w-[631px] max-lg:max-w-none max-lg:w-[calc(100%-24px)] w-full max-lg:absolute max-lg:top-[24px] max-lg:left-1/2 max-lg:-translate-1/2">
-                <p className="text-white text-[18px] font-normal leading-[23px] truncate max-lg:text-[12px] max-lg:leading-[15px]">
+              <div className="relative bg-primary rounded-[4px] py-[5px] max-lg:py-[6px] px-[10px] max-lg:px-[8px] flex justify-between lg:max-h-[34px] lg:truncate max-lg:h-auto max-w-[631px] max-lg:max-w-none max-lg:w-[calc(100%-24px)] w-full max-lg:absolute max-lg:top-[24px] max-lg:left-1/2 max-lg:-translate-1/2">
+                <p className="text-white text-[18px] font-normal leading-[23px] max-lg:text-[12px] max-lg:leading-[15px] lg:truncate">
                   [{prompt.title}] {type === 'buyer' && `${prompt.purchased_at.slice(0, 10).replaceAll('-', '.')}구매`}
                 </p>
                 <div
                   onClick={() => setIsListClicked((prev) => !prev)}
                   className="group w-[24px] h-[24px] max-lg:w-[16px] max-lg:h-[16px] max-lg:py-[2px] max-lg:px-[6px] cursor-pointer flex items-center justify-center hover:bg-secondary-pressed rounded-full">
-                  <img
-                    src={DotsIcon}
-                    className="text-white group-hover:text-text-on-white w-full h-full object-contain"
-                  />
+                  <img src={DotsIcon} className="text-white group-hover:text-text-on-white" />
                 </div>
                 {isListClicked && (
                   <div className="absolute top-[34px] left-0 right-0 rounded-[4px] flex flex-col">
@@ -104,10 +101,7 @@ const AskCard = ({ prompts, isMyProfile }: AskCardProps) => {
                   <div
                     onClick={() => setIsClicked((prev) => !prev)}
                     className="group w-[24px] h-[24px] max-lg:w-[16px] max-lg:h-[16px] cursor-pointer flex items-center justify-center hover:bg-secondary-pressed rounded-full">
-                    <img
-                      src={DotsIcon}
-                      className="text-white group-hover:text-text-on-white w-full h-full object-contain"
-                    />
+                    <img src={DotsIcon} className="text-white group-hover:text-text-on-white" />
                   </div>
 
                   {isClicked && (
