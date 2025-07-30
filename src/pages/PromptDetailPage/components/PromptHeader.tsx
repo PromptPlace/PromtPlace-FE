@@ -65,7 +65,7 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview }: Props
       <div className="lg:hidden max-lg:max-h-[167px]">
         {/* ChatGPT + 조회/다운로드 */}
         <div className="flex items-center gap-[8px]">
-          <div className="w-[54px] h-[23px] flex items-center justify-center">
+          <div className="w-[54px] h-[23px] flex items-center justify-center font-medium text-[10px]">
             <ModelButton text="ChatGPT" />
           </div>
           <div className="flex gap-[8px] text-[8px] font-normal">

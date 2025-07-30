@@ -8,6 +8,7 @@ import IconButton from '@components/Button/IconButton';
 import profile from './assets/profile.jpg';
 import FollowButton from '@components/Button/FollowButton';
 import ArrowLeft from './assets/keyboard_arrow_down _left.svg';
+import ReportModal from './components/ReportModal';
 
 const mockPrompt = {
   prompt_id: 123,
@@ -58,6 +59,11 @@ const PromptDetailPage = () => {
   const [showReviews, setShowReviews] = useState(false);
   const [follow, setFollow] = useState(false);
 
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+
+  const handleOpenReportModal = () => setIsReportModalOpen(true);
+  const handleCloseReportModal = () => setIsReportModalOpen(false);
+
   if (showReviews) {
     return (
       <ReviewList
@@ -98,7 +104,7 @@ const PromptDetailPage = () => {
         </div>
       </div>
 
-      <div className="flex max-lg:flex-col max-lg:gap-[31px] max-w-7xl max-lg:px-[20px] max-lg:pt-0 max-lg:max-w-[320px] gap-10 p-10 mx-auto">
+      <div className="flex max-lg:flex-col max-lg:gap-[20px] max-w-7xl max-lg:px-[20px] max-lg:pt-0 max-lg:max-w-[320px] gap-10 p-10 mx-auto">
         {/* 왼쪽: 정보 */}
         <div className="w-[711px] max-lg:max-w-[280px] max-lg:max-h-[544px] bg-[#FFFEFB] rounded-[16px] overflow-hidden">
           <PromptHeader
@@ -116,7 +122,13 @@ const PromptDetailPage = () => {
         </div>
 
         <div className="lg:hidden flex justify-end">
-          <IconButton buttonType="squareMd" style="red" imgType="alert" text="신고하기" onClick={() => {}} />
+          <IconButton
+            buttonType="squareMd"
+            style="red"
+            imgType="alert"
+            text="신고하기"
+            onClick={handleOpenReportModal}
+          />
         </div>
 
         {/* 오른쪽: 액션 */}
@@ -136,6 +148,18 @@ const PromptDetailPage = () => {
           />
         </div>
       </div>
+
+      {/* 모바일 하단 고정 영역 */}
+      <div className="lg:hidden fixed bottom-0 left-0 bg-white rounded-t-[24px] shadow-[0_-4px_12px_rgba(0,0,0,0.1)] p-[20px] z-50 w-[320px] h-[139px] mx-auto">
+        <div className="flex justify-between items-center w-full">
+          <div className="flex items-center gap-[20px] h-[34px]  ml-[85px]">
+            <span className="text-[16px] font-medium text-black">{prompt.price.toLocaleString()}원</span>
+            <IconButton buttonType="squareBig" style="fill" imgType="download" text="다운로드" onClick={() => {}} />
+          </div>
+        </div>
+      </div>
+
+      <ReportModal isOpen={isReportModalOpen} onClose={handleCloseReportModal} />
     </div>
   );
 };
