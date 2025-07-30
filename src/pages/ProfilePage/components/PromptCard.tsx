@@ -70,7 +70,7 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
             onClick={() => setIsDotsClickes((prev) => !prev)}
             className="relative py-[22px] px-[44px] max-lg:p-0 cursor-pointer max-w-[115px] max-lg:max-w-[16px] w-full h-[72px] max-lg:h-auto flex items-center justify-center">
             <div className="w-[28px] h-[28px] max-lg:w-[16px] max-lg:h-[16px] max-lg:py-[2px] max-lg:px-[6px] hover:bg-secondary-pressed flex items-center justify-center rounded-full">
-              <img src={Dots} alt="좋아요" className="w-full h-full object-contain" />
+              <img src={Dots} alt="좋아요" />
             </div>
             {isDotsClicked && (
               <div className="absolute z-10 top-[60px] right-[44px] max-lg:top-[22px] max-lg:right-[0px] flex flex-col whitespace-nowrap">

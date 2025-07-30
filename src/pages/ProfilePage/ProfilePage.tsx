@@ -90,6 +90,8 @@ const ProfilePage = () => {
 
   const [showImgModal, setShowImgModal] = useState(false);
 
+  const [showMsgModal, setShowMsgModal] = useState(false);
+
   const menuList = [
     {
       id: 0,
@@ -521,7 +523,7 @@ const ProfilePage = () => {
                   </div>
                 )}
               </div>
-              <div className="pr-[8px] bg-white">
+              <div className="pr-[8px] bg-white max-lg:hidden">
                 <div className="max-h-[316px] overflow-auto">
                   {showInquiryDetail === null &&
                     inquiries
@@ -549,7 +551,7 @@ const ProfilePage = () => {
                 </div>
               </div>
 
-              <div>
+              <div className="max-lg:hidden">
                 {showInquiryDetail !== null && (
                   <InquiryDetailCard
                     inquiry={showInquiryDetail}
@@ -559,6 +561,49 @@ const ProfilePage = () => {
                         prev.map((i) => (i.inquiry_id === showInquiryDetail.inquiry_id ? { ...i, status: 'read' } : i)),
                       );
                     }}
+                  />
+                )}
+              </div>
+
+              <div className="pr-[8px] bg-white lg:hidden">
+                <div className="max-h-[316px] overflow-auto">
+                  {inquiries
+                    .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non-buyer'))
+                    .map((i) => (
+                      <InquiryCard
+                        key={i.inquiry_id}
+                        inquiry_id={i.inquiry_id}
+                        created_at={i.created_at}
+                        status={i.status}
+                        sender_nickname={i.sender_nickname}
+                        onClick={() => {
+                          setShowInquiryDetail(i);
+                          setShowMsgModal(true);
+                        }}
+                        onRead={(id) => {
+                          setInquiries((prev) =>
+                            prev.map((item) => (item.inquiry_id === id ? { ...item, status: 'read' } : item)),
+                          );
+                        }}
+                        onDelete={(id) => {
+                          setInquiries((prev) => prev.filter((item) => item.inquiry_id !== id));
+                        }}
+                      />
+                    ))}
+                </div>
+              </div>
+
+              <div className="lg:hidden">
+                {showInquiryDetail !== null && showMsgModal === true && (
+                  <InquiryDetailCard
+                    inquiry={showInquiryDetail}
+                    onClick={() => {
+                      setInquiries((prev) =>
+                        prev.map((i) => (i.inquiry_id === showInquiryDetail.inquiry_id ? { ...i, status: 'read' } : i)),
+                      );
+                      setShowMsgModal(false);
+                    }}
+                    setShowMsgMoldal={setShowMsgModal}
                   />
                 )}
               </div>
