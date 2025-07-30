@@ -1,9 +1,4 @@
 /**
-* Todo(07/18):
-* 1. 프롬프트 카드 검색기능 구현
-* 2. 프롬프트 카드 작성자 데이터 구조 변경
-* 3. 프롬프터 바 작성자 데이터 구조 변경 + 프롬프터 바 추가/삭제 기능 관리자 페이지 이관
-* 4. 태그 입력 창 디자인 수정
 
 * Author @곽도윤
 
@@ -17,11 +12,13 @@ import { dummyPrompts, dummyCreators } from './components/../dummyData';
 import GradientButton from '@/components/Button/GradientButton';
 import CoachMark from '@/components/CoachMark';
 import { useAuth } from '@/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const [onlyFree, setOnlyFree] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   // 코치마크 관련
   const { accessToken } = useAuth();
@@ -78,19 +75,22 @@ const MainPage = () => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-[14px]">
-        <PrompterBar creators={dummyCreators} />
+      <div className="hidden lg:flex">
+        <div className="flex flex-col gap-[14px]">
+          <PrompterBar creators={dummyCreators} />
+        </div>
       </div>
 
-      <div className="fixed bottom-4 justify-center items-center flex flex-col gap-2.5">
-        <GradientButton
-          buttonType="imgButton"
-          text="프롬프트 작성하기"
-          onClick={() => {
-            // 프롬프트 작성하기 버튼 클릭 시 실행될 함수
-            console.log('프롬프트 작성하기 클릭됨');
-          }}
-        />
+      <div className="hidden lg:flex">
+        <div className="fixed bottom-4 justify-center items-center flex flex-col gap-2.5 left-1/2 z-[10]">
+          <GradientButton
+            buttonType="imgButton"
+            text="프롬프트 작성하기"
+            onClick={() => {
+              navigate('/create');
+            }}
+          />
+        </div>
       </div>
     </div>
   );

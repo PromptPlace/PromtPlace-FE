@@ -5,6 +5,8 @@
  * - 게시글 본문에 markdown 적용 필요
  * - 게시글 본문에 스크롤바 ui 적용 필요
  * (tailwind.config.js 설정해야 함)
+ * 추후 모바일 화면의 img-url은 이미지 변경 필요
+ * 게시글 하단의 url 링크 연결 필요
  * @author luii
  * **/
 
@@ -13,6 +15,8 @@ import { BsPaperclip } from 'react-icons/bs';
 import { LuChevronLeft } from 'react-icons/lu';
 import { useNavigate, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+
+import attachfile from '@assets/icon-attach-file-hover.svg';
 
 import url from '@assets/icon-linkhub-logo.svg';
 import instagram from '@assets/icon-instagram-logo.svg';
@@ -61,7 +65,7 @@ AI가 해당 프롬프트를 정상적으로 처리할 수 있도록 구성되�
     create_at: '2025-07-01',
     update_at: '2025-07-01,',
     is_visible: true,
-    file_url: null,
+    file_url: 'null',
     view_count: 1,
   });
 
@@ -72,52 +76,106 @@ AI가 해당 프롬프트를 정상적으로 처리할 수 있도록 구성되�
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center">
-      <div className="w-full max-w-[994px] h-[750px] bg-white rounded-t-[16px] rounded-b-[16px]">
-        <div className="w-full max-w-[994px] mh-[105px]  pt-[55px] pl-[20px] pr-[10px]">
-          <div
-            className="w-[187px] h-[50px] flex items-center gap-[10px] p-[10px] cursor-pointer"
-            onClick={handleNavigate}>
-            <LuChevronLeft size={24} />
-            <span className="text-text-on-white font-bold text-[24px] ">{`${type === 'tip' ? '프롬프트 TIP' : '공지사항'}`}</span>
-          </div>
-        </div>
+    <>
+      <div className="hidden lg:block">
+        <div className="min-h-screen flex justify-center items-center">
+          <div className="w-full max-w-[994px] h-[750px] bg-white rounded-t-[16px] rounded-b-[16px]">
+            {/* 상단 */}
+            <div className="w-full max-w-[994px] mh-[105px]  pt-[55px] pl-[20px] pr-[10px]">
+              <div
+                className="w-[187px] h-[50px] flex items-center gap-[10px] p-[10px] cursor-pointer"
+                onClick={handleNavigate}>
+                <LuChevronLeft size={24} />
+                <span className="text-text-on-white font-bold text-[24px] ">{`${type === 'tip' ? '프롬프트 TIP' : '공지사항'}`}</span>
+              </div>
+            </div>
 
-        <div className="w-full max-w-[994px] h-[135px] border-b-[1px] border-white-stroke px-[65px]">
-          <h1 className="font-bold text-[32px] text-text-on-white pt-[30px]">{post.title}</h1>
-          <p className="font-medium text-[20px] text-text-on-background pt-[10px] pb-[30px]">{post.create_at}</p>
-        </div>
+            <div className="w-full max-w-[994px] h-[135px] border-b-[1px] border-white-stroke px-[65px]">
+              <h1 className="font-bold text-[32px] text-text-on-white pt-[30px]">{post.title}</h1>
+              <p className="font-medium text-[20px] text-text-on-background pt-[10px] pb-[30px]">{post.create_at}</p>
+            </div>
 
-        <div className="w-full max-w-[994px] h-[385px] flex justify-center overflow-y-auto prose prose-neutral text-base">
-          <div className="w-[864px] border-b-[1px] border-white-stroke font-medium text-[20px] text-text-on-white py-[30px]">
-            {post.content}
-          </div>
-          {/**추후 다시 markdown 적용해보기... */}
-        </div>
+            {/* 본문 */}
+            <div className="w-full max-w-[994px] h-[385px] flex justify-center overflow-y-auto prose prose-neutral text-base">
+              <div className="w-[864px] border-b-[1px] border-white-stroke font-medium text-[20px] text-text-on-white py-[30px]">
+                {post.content}
+              </div>
+              {/**추후 다시 markdown 적용해보기... */}
+            </div>
 
-        {/**하단 */}
-        <div className="w-full max-w-[994px] h-[125px]  flex justify-center">
-          <div className="w-[864px] h-[45px] flex justify-between mt-[33px] mb-[47px]">
-            {typeof post.file_url === 'string' && post.file_url.trim() !== '' ? (
-              <button className="w-[116px] h-[45px] flex justify-center gap-[2px] items-center rounded-lg border-[1px] border-primary bg-white text-primary">
-                <BsPaperclip className="mr-2" size={20} />
-                <p className="font-medium text-primary text-[20px]">첨부</p>
-              </button>
-            ) : (
-              <div className="w-[116px] h-[45px]">{/* file_url이 null, undefined, ""일 때만 보여줌 */}</div>
-            )}
+            {/**하단 */}
+            <div className="w-full max-w-[994px] h-[125px]  flex justify-center">
+              <div className="w-[864px] h-[45px] flex justify-between mt-[33px] mb-[47px]">
+                {typeof post.file_url === 'string' && post.file_url.trim() !== '' ? (
+                  <button className="w-[116px] h-[45px] flex justify-center gap-[2px] items-center rounded-lg border-[1px] border-primary bg-white text-primary">
+                    <BsPaperclip className="mr-2" size={20} />
+                    <p className="font-medium text-primary text-[20px]">첨부</p>
+                  </button>
+                ) : (
+                  <div className="w-[116px] h-[45px]">{/* file_url이 null, undefined, ""일 때만 보여줌 */}</div>
+                )}
 
-            <div className="w-[240px] flex justify-between items-center">
-              <img src={url} alt="url" />
-              <img src={instagram} alt="instagram" />
-              <img src={facebook} alt="facebook" />
-              <img src={kakaotalk} alt="kakaotalk" />
-              <img src={twitter} alt="twitter" />
+                <div className="w-[240px] flex justify-between items-center">
+                  <img src={url} alt="url" />
+                  <img src={instagram} alt="instagram" />
+                  <img src={facebook} alt="facebook" />
+                  <img src={kakaotalk} alt="kakaotalk" />
+                  <img src={twitter} alt="twitter" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/*모바일 화면 */}
+      <div className="lg:hidden block">
+        <div className="relative w-full h-12  flex items-center">
+          <button className="ml-[12px] flex items-center cursor-pointer" onClick={handleNavigate}>
+            <LuChevronLeft size={24} />
+          </button>
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-bold text-xl tracking-wide">
+            <p className="text-[16px] text-black font-medium"> {`${type === 'tip' ? '프롬프트 TIP' : '공지사항'}`}</p>
+          </span>
+        </div>
+        <div className=" flex justify-center items-center mt-[20px]">
+          <div className="w-full max-w-[280px] h-full min-h-[420px] bg-white">
+            {/*상단 */}
+            <div className="w-full max-w-[280px] h-full max-h-[80px] border-b-[0.5px] border-white-stroke px-[20px]">
+              <h1 className="font-medium text-[12px] text-text-on-white mt-[20px]">{post.title}</h1>
+              <p className="font-normal text-[8px] text-text-on-background mt-[12px] mb-[23px]">{post.create_at}</p>
+            </div>
+            {/*본문 */}
+            <div className="w-full max-w-[280px] h-full min-h-[275px] border-b-[0.5px] border-white-stroke p-[20px] ">
+              <div className="text-[10px] text-text-on-white font-medium">{post.content}</div>
+            </div>
+            {/*하단  */}
+            <div className="w-full max-w-[280px] h-[64px] flex justify-center">
+              <div className="w-full h-[45px] flex justify-center gap-[45px] items-center">
+                {typeof post.file_url === 'string' && post.file_url.trim() !== '' ? (
+                  <button
+                    className="w-[60px] h-[24px] flex justify-center gap-[4px] items-center rounded-lg border-[1px]
+                   border-primary bg-white text-primary">
+                    <img className="w-[12px] h-[12px]" src={attachfile} alt="attach-file" />
+                    <p className="font-medium text-primary text-[12px]">첨부</p>
+                  </button>
+                ) : (
+                  <div className="w-[60px] h-[24px]">{/* file_url이 null, undefined, ""일 때만 보여줌 */}</div>
+                )}
+
+                <div className="w-[135px] flex justify-between items-center">
+                  <img className="w-[16px] h-[16px]" src={url} alt="url" />
+                  <img className="w-[16px] h-[16px]" src={instagram} alt="instagram" />
+                  <img className="w-[16px] h-[16px]" src={facebook} alt="facebook" />
+                  <img className="w-[16px] h-[16px]" src={kakaotalk} alt="kakaotalk" />
+                  <img className="w-[16px] h-[16px]" src={twitter} alt="twitter" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 

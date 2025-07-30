@@ -17,8 +17,7 @@ function FilterDropdown({ label, items, selected, onToggle, onSelect, selectedMo
         <div
           className="absolute top-[17px] left-1/2 -translate-x-1/2 z-10
           w-36 p-2.5 bg-white rounded-lg shadow-[0px_4px_8px_0px_rgba(0,0,0,0.12)]
-          inline-flex flex-col justify-center items-center"
-        >
+          inline-flex flex-col justify-center items-center">
           {items.map((item, index) => (
             <div
               key={item}
@@ -33,8 +32,7 @@ function FilterDropdown({ label, items, selected, onToggle, onSelect, selectedMo
                 e.stopPropagation();
                 onSelect(item);
                 onToggle();
-              }}
-            >
+              }}>
               <div className="justify-start text-text-on-background text-lg font-normal font-['Spoqa_Han_Sans_Neo']">
                 {item}
               </div>
