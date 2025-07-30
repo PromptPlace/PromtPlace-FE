@@ -33,7 +33,7 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
         </div>
         <div className="lg:hidden flex gap-[5px]">
           {tags.map((tag) => (
-            <div className="text-text-on-background text-[20px] font-medium leading-[25px]">
+            <div key={tag.tag_id} className="text-text-on-background text-[20px] font-medium leading-[25px]">
               <TagButton key={String(tag.tag_id)} hasDelete={false} text={`# ${tag.name}`}></TagButton>
             </div>
           ))}
@@ -68,12 +68,12 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
         {isMyProfile && (
           <div
             onClick={() => setIsDotsClickes((prev) => !prev)}
-            className="relative py-[22px] px-[44px] cursor-pointer max-w-[115px] w-full h-[72px] flex items-center justify-center">
-            <div className="w-[28px] h-[28px] hover:bg-secondary-pressed flex items-center justify-center rounded-full">
-              <img src={Dots} alt="좋아요" />
+            className="relative py-[22px] px-[44px] max-lg:p-0 cursor-pointer max-w-[115px] max-lg:max-w-[16px] w-full h-[72px] max-lg:h-auto flex items-center justify-center">
+            <div className="w-[28px] h-[28px] max-lg:w-[16px] max-lg:h-[16px] max-lg:py-[2px] max-lg:px-[6px] hover:bg-secondary-pressed flex items-center justify-center rounded-full">
+              <img src={Dots} alt="좋아요" className="w-full h-full object-contain" />
             </div>
             {isDotsClicked && (
-              <div className="absolute z-10 top-[60px] right-[44px] flex flex-col whitespace-nowrap">
+              <div className="absolute z-10 top-[60px] right-[44px] max-lg:top-[22px] max-lg:right-[0px] flex flex-col whitespace-nowrap">
                 <button
                   onClick={() => handleDeletePrompts(id)}
                   className="py-[8px] px-[16px] bg-secondary rounded-t-[4px] border-b border-b-white-stroke text-text-on-background text-[16px] font-normal leading-[20px] active:bg-secondary-pressed active:text-text-on-white">

@@ -14,6 +14,7 @@ import AlarmOffIcon from '@assets/icon-alarm-off.svg';
 import AlarmOnIcon from '@assets/icon-alarm-on.svg';
 import UserProfileIcon from '@assets/img-example-profile2.jpg';
 import Arrow from '@assets/icon-vector-bottom.svg?react';
+import EditPhoto from '@assets/mobile/icon-mobile-photo.svg';
 
 import FollowButton from '@components/Button/FollowButton';
 import PromptCard from './components/PromptCard';
@@ -78,7 +79,7 @@ const ProfilePage = () => {
 
   const [sns, setSns] = useState(SNS.map((s) => ({ ...s, isEditing: false })));
 
-  const { selectedImg, handleUpload } = useImgUpload();
+  const { selectedImg, setSelectedImg, handleUpload } = useImgUpload();
   const [profileEdit, setProfileEdit] = useState(false);
   const [userName, setUserName] = useState(USER.name);
   const [userDescription, setUserDescription] = useState(USER.description);
@@ -86,6 +87,8 @@ const ProfilePage = () => {
 
   const [showFollowing, setShowFollowing] = useState(false);
   const [showFollower, setShowFollower] = useState(false);
+
+  const [showImgModal, setShowImgModal] = useState(false);
 
   const menuList = [
     {
@@ -154,29 +157,56 @@ const ProfilePage = () => {
     <div className="flex flex-col pt-[120px] max-lg:pt-[12px]">
       <div
         className={clsx(
-          'p-[10px] pl-[220px] flex items-center max-lg:flex-col max-lg:justify-center max-lg:p-0',
+          'p-[10px] pl-[220px] flex items-center max-lg:flex-col max-lg:justify-center max-lg:p-0 relative',
           !isMyProfile && 'gap-[60px] max-lg:gap-[8px]',
-          isMyProfile && 'gap-[7vw]',
+          isMyProfile && 'gap-[7vw] max-lg:gap-[8px]',
         )}>
+        {profileEdit && (
+          <div className="lg:hidden max-lg:absolute max-lg:bottom-0 max-lg:right-0 z-20 max-lg:top-[33px] max-lg:left-1/2 max-lg:translate-x-1/20">
+            <img onClick={() => setShowImgModal(true)} src={EditPhoto} alt="사진 수정하기" />
+            {showImgModal && (
+              <div className="absolute top-[20px] flex flex-col shadow-button-hover">
+                <div
+                  onClick={() => {
+                    imageRef.current?.click();
+                    setShowImgModal(false);
+                  }}
+                  className="rounded-t-[4px] border-b border-b-white-stroke bg-secondary py-[4px] px-[12px] text-text-on-background text-[10px] font-normal leading-[13px]">
+                  가져오기
+                </div>
+                <div
+                  onClick={() => {
+                    setSelectedImg(null);
+                    setShowImgModal(false);
+                  }}
+                  className="rounded-b-[4px] border-b border-b-white-stroke bg-secondary py-[4px] px-[12px] text-text-on-background text-[10px] font-normal leading-[13px]">
+                  삭제하기
+                </div>
+              </div>
+            )}
+          </div>
+        )}
         <div
           className={clsx(
             'flex gap-[28px] max-lg:gap-[8px] items-center max-lg:flex-col',
             profileEdit && 'items-center',
           )}>
           <div className="flex flex-col items-center w-full">
-            <div className="w-[80px] h-[80px] rounded-full overflow-hidden max-lg:w-[48px] max-lg:h-[48px]">
+            <div className="w-[80px] h-[80px] rounded-full overflow-hidden max-lg:w-[48px] max-lg:h-[48px] max-lg:relative max-lg:10">
               {isMyProfile && (
-                <img
-                  src={selectedImg?.thumbnail || UserProfileIcon}
-                  alt="프로필 이미지"
-                  className="w-full h-full object-cover"
-                />
+                <>
+                  <img
+                    src={selectedImg?.thumbnail || UserProfileIcon}
+                    alt="프로필 이미지"
+                    className="w-full h-full object-cover"
+                  />
+                </>
               )}
               {!isMyProfile && <img src={ProfileIcon} alt="프로필 이미지" className="w-full h-full object-contain" />}
               {profileEdit && <img src={selectedImg?.thumbnail} alt="프로필 이미지" />}
             </div>
             {profileEdit && (
-              <div className="mt-[10px]">
+              <div className="mt-[10px] max-lg:hidden">
                 <PrimaryButton
                   buttonType="change"
                   text="사진 변경하기"
@@ -195,32 +225,60 @@ const ProfilePage = () => {
             )}
           </div>
 
-          <div className="flex flex-col gap-[5px] max-lg:gap-[4px] text-text-on-white shrink-0">
+          <div className="flex flex-col gap-[5px] max-lg:gap-[4px] text-text-on-white shrink-0 max-lg:items-center">
             {!profileEdit && (
               <div className="flex gap-[4px] max-lg:justify-center">
                 <p className="text-[32px] font-bold leading-[40px] max-lg:text-[16px] max-lg:font-medium max-lg:leading-[20px] ">
                   {userName}
                 </p>
-                <div
-                  onClick={() =>
-                    setIsAlarmOn((prev) => ({ state: !prev.state, icon: prev.state ? AlarmOffIcon : AlarmOnIcon }))
-                  }
-                  className={clsx(
-                    'lg:hidden w-[20px] h-[20px] bg-white rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out p-[3px]',
-                    !isAlarmOn.state && 'border border-text-on-background',
-                    isAlarmOn.state && 'border border-primary bg-red-500',
-                  )}>
-                  <img src={isAlarmOn.icon} alt="알림" className="w-full h-full object-contain" />
-                </div>
+                {!isMyProfile && (
+                  <div
+                    onClick={() =>
+                      setIsAlarmOn((prev) => ({ state: !prev.state, icon: prev.state ? AlarmOffIcon : AlarmOnIcon }))
+                    }
+                    className={clsx(
+                      'lg:hidden w-[20px] h-[20px] bg-white rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out p-[3px]',
+                      !isAlarmOn.state && 'border border-text-on-background',
+                      isAlarmOn.state && 'border border-primary bg-red-500',
+                    )}>
+                    <img src={isAlarmOn.icon} alt="알림" className="w-full h-full object-contain" />
+                  </div>
+                )}
+                {isMyProfile && (
+                  <div className="lg:hidden">
+                    <CircleButton
+                      buttonType="edit"
+                      size="md"
+                      onClick={() => {
+                        setProfileEdit(true);
+                      }}
+                      isActive={profileEdit}
+                    />
+                  </div>
+                )}
               </div>
             )}
             {profileEdit && (
-              <input
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                className="text-[32px] font-bold leading-[40px] outline-none text-primary placeholder:text-primary w-[175px]"
-                placeholder={USER.name}
-              />
+              <div className="max-lg:flex max-lg:gap-[4px]">
+                <input
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  className="text-[32px] font-bold leading-[40px] outline-none text-primary placeholder:text-primary w-[175px] max-lg:text-[16px] max-lg:leading-[20px] max-lg:font-medium max-lg:border-b max-lg:w-max max-lg:max-w-[45px]"
+                  placeholder={USER.name}
+                />
+                <div className={clsx('lg:hidden max-lg:relative', showImgModal && 'z-10', !showImgModal && 'z-30')}>
+                  <CircleButton
+                    buttonType="edit"
+                    size="md"
+                    onClick={() => {
+                      console.log(1);
+
+                      setProfileEdit(false);
+                    }}
+                    isActive={profileEdit}
+                  />
+                </div>
+              </div>
             )}
             {!profileEdit && (
               <p className="text-[20px] font-medium leading-[25px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px]">
@@ -232,12 +290,12 @@ const ProfilePage = () => {
                 value={userDescription}
                 onChange={(e) => setUserDescription(e.target.value)}
                 placeholder={userDescription}
-                className="text-[20px] font-medium leading-[25px] placeholder:text-primary outline-none text-primary w-[219px]"
+                className="text-[20px] font-medium leading-[25px] placeholder:text-primary outline-none text-primary w-[219px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px] max-lg:max-w-[79px] max-lg:border-b"
               />
             )}
           </div>
           {isMyProfile && (
-            <div className="shrink-0 flex flex-col gap-[13px] items-center">
+            <div className="shrink-0 flex flex-col gap-[13px] items-center max-lg:hidden">
               <CircleButton
                 buttonType="edit"
                 size="md"
@@ -308,20 +366,24 @@ const ProfilePage = () => {
 
         {isMyProfile && (
           <>
-            <div className="flex gap-[28px]">
-              <div className="flex flex-col gap-[5px] items-center">
-                <p className="text-primary-hover text-[18px] font-normal leading-[23px]">팔로워</p>
+            <div className="flex gap-[28px] max-lg:gap-[16px]">
+              <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
+                <p className="text-primary-hover text-[18px] font-normal leading-[23px] max-lg:text-[10px] max-lg:leading-[13px]">
+                  팔로워
+                </p>
                 <div
                   onClick={() => setShowFollower(true)}
-                  className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center">
+                  className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center max-lg:py-[2px] max-lg:px-[6px] max-lg:text-[12px] max-lg:leading-[15px]">
                   1091
                 </div>
               </div>
-              <div className="flex flex-col gap-[5px] items-center">
-                <p className="text-primary-hover text-[18px] font-normal leading-[23px]">팔로잉</p>
+              <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
+                <p className="text-primary-hover text-[18px] font-normal leading-[23px] max-lg:text-[10px] max-lg:leading-[13px]">
+                  팔로잉
+                </p>
                 <div
                   onClick={() => setShowFollowing(true)}
-                  className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center">
+                  className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center  max-lg:py-[2px] max-lg:px-[6px] max-lg:text-[12px] max-lg:leading-[15px]">
                   215
                 </div>
               </div>
@@ -418,7 +480,28 @@ const ProfilePage = () => {
           {menuId === 2 && !isMyProfile && <AskCard prompts={PROMPT} isMyProfile={isMyProfile} />}
           {menuId === 2 && isMyProfile && (
             <>
-              <div className="relative text-text-on-white text-[20px] font-bold leading-[30px] flex gap-[10px] p-[10px] items-center py-[30px] px-[80px] bg-white">
+              <div className="lg:hidden flex fixed top-[210px] left-1/2 max-[373px]:left-1/3 max-[373px]:translate-x-[30px]">
+                <div
+                  onClick={() => setIsBuyer(true)}
+                  className={clsx(
+                    'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
+                    isBuyer && 'bg-primary-hover text-white',
+                    !isBuyer && 'bg-white text-text-on-white',
+                  )}>
+                  구매자 문의
+                </div>
+                <div
+                  onClick={() => setIsBuyer(false)}
+                  className={clsx(
+                    'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
+                    !isBuyer && 'bg-primary-hover text-white',
+                    isBuyer && 'bg-white text-text-on-white',
+                  )}>
+                  비구매자 문의
+                </div>
+              </div>
+
+              <div className="relative text-text-on-white text-[20px] font-bold leading-[30px] flex gap-[10px] p-[10px] items-center py-[30px] px-[80px] bg-white max-lg:hidden">
                 {isBuyer && <p>구매자 문의</p>}
                 {!isBuyer && <p>비구매자 문의</p>}
                 <div
@@ -446,10 +529,21 @@ const ProfilePage = () => {
                       .map((i) => (
                         <InquiryCard
                           key={i.inquiry_id}
+                          inquiry_id={i.inquiry_id}
                           created_at={i.created_at}
                           status={i.status}
                           sender_nickname={i.sender_nickname}
-                          onClick={() => setShowInquiryDetail(i)}
+                          onClick={() => {
+                            setShowInquiryDetail(i);
+                          }}
+                          onRead={(id) => {
+                            setInquiries((prev) =>
+                              prev.map((item) => (item.inquiry_id === id ? { ...item, status: 'read' } : item)),
+                            );
+                          }}
+                          onDelete={(id) => {
+                            setInquiries((prev) => prev.filter((item) => item.inquiry_id !== id));
+                          }}
                         />
                       ))}
                 </div>

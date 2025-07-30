@@ -39,7 +39,7 @@ const RecordCard = ({
       )}
 
       {isMyProfile && (
-        <div className="flex items-center bg-white border-b border-b-white-stroke py-[30px] pl-[80px] pr-[33px] text-text-on-white text-[20px] font-medium leading-[25px]">
+        <div className="flex items-center bg-white border-b border-b-white-stroke py-[30px] pl-[80px] max-lg:p-[12px] pr-[33px] text-text-on-white text-[20px] font-medium leading-[25px] max-lg:text-[12px] max-lg:leading-[15px]">
           {!edit && <div className="flex-1">{description}</div>}
           {edit && (
             <input
@@ -59,7 +59,7 @@ const RecordCard = ({
               }}
               isActive={edit}
             />
-            <div onClick={() => handleDelete(history_id)} className="w-[17px] h-[17px] cursor-pointer">
+            <div onClick={() => handleDelete(history_id)} className="w-[17px] h-[17px] cursor-pointer max-lg:hidden">
               <img src={CloseIcon} alt="삭제" className="w-full h-full object-contain" />
             </div>
           </div>

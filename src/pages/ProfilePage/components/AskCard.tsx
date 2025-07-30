@@ -76,7 +76,7 @@ const AskCard = ({ prompts, isMyProfile }: AskCardProps) => {
               </div>
 
               <div>
-                <div className="lg:hidden flex fixed top-[214px] left-1/2">
+                <div className="lg:hidden flex fixed top-[214px] left-1/2 max-[373px]:left-1/3 max-[373px]:translate-x-[30px]">
                   <div
                     onClick={() => setType('buyer')}
                     className={clsx(
