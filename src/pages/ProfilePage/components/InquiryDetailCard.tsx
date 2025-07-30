@@ -100,7 +100,7 @@ const InquiryDetailCard = ({ inquiry, onClick, setShowMsgMoldal }: InquiryDetail
               }
             }}
             className="mb-[20px]">
-            <div className="pt-[14px] pb-[10px] rounded-t-[50px] bg-white cursor-grab flex justify-center">
+            <div className="pt-[14px] pb-[10px] rounded-t-[24px] bg-white cursor-grab flex justify-center">
               <div className="w-[40px] h-[4px] rounded-[50px] bg-white-stroke"></div>
             </div>
 

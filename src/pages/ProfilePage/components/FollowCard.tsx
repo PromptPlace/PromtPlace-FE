@@ -79,26 +79,26 @@ const FollowCard = ({ title, list = [], setShow, status }: FollowCardProps) => {
         className="lg:hidden fixed inset-0 bg-overlay max-w-[425px] w-full m-auto"
       />
 
-      <div className="lg:hidden fixed left-0 right-0 bottom-0 z-200 max-w-[425px] w-full mx-auto">
-        <motion.div
-          drag="y"
-          dragConstraints={{ top: 0 }}
-          dragElastic={false}
-          initial={{ y: '100%' }}
-          animate={{ y: 0 }}
-          exit={{ y: '100%' }}
-          transition={{
-            type: 'spring',
-            damping: 30,
-            stiffness: 300,
-          }}
-          onDragEnd={(_, info) => {
-            if (info.point.y > 350) {
-              setShow(false);
-            }
-          }}
-          className="overflow-scroll flex flex-col max-h-[60vh]">
-          <div className="pt-[14px] pb-[10px] rounded-t-[50px] bg-white cursor-grab flex flex-col items-center">
+      <motion.div
+        drag="y"
+        dragConstraints={{ top: 0, bottom: 50 }}
+        dragElastic={false}
+        initial={{ y: '100%' }}
+        animate={{ y: 0 }}
+        exit={{ y: '100%' }}
+        transition={{
+          type: 'spring',
+          damping: 30,
+          stiffness: 300,
+        }}
+        onDragEnd={(_, info) => {
+          if (info.point.y > window.innerHeight - 330) {
+            setShow(false);
+          }
+        }}
+        className="lg:hidden fixed left-0 right-0 bottom-0 z-200 max-w-[425px] w-full mx-auto max-lg:pr-[15px] bg-white rounded-t-[24px]">
+        <div className="overflow-scroll flex flex-col max-h-[47vh]">
+          <div className="pt-[14px] pb-[10px] rounded-t-[24px] bg-white cursor-grab flex flex-col items-center">
             <div className="w-[40px] h-[4px] rounded-[50px] bg-white-stroke"></div>
             <p className="px-[20px] mt-[20px] text-primary text-[10px] font-medium leading-[13px] flex justify-start w-full">
               {title.slice(0, -2)}
@@ -107,7 +107,7 @@ const FollowCard = ({ title, list = [], setShow, status }: FollowCardProps) => {
 
           <div className="bg-white overflow-y-auto pb-[env(safe-area-inset-bottom)] max-h-[50vh] h-full">
             {list?.map((f) => (
-              <div key={f.follow_id} className="flex justify-between items-center px-[50px]">
+              <div key={f.follow_id} className="flex justify-between items-center pl-[50px] pr-[31px]">
                 <div className="flex items-center gap-[10px] max-lg:gap-[5px]">
                   <ProfileIcon className="max-lg:w-[36px] max-lg:h-[36px]" />
                   <div className="flex flex-col items-start py-[12px]">
@@ -129,8 +129,8 @@ const FollowCard = ({ title, list = [], setShow, status }: FollowCardProps) => {
               </div>
             ))}
           </div>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
     </>
   );
 };
