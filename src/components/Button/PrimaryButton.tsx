@@ -34,7 +34,8 @@ interface PrimaryButtonProps {
 
 const primaryButtonTheme = {
   buttonType: {
-    login: 'rounded-[40px] max-w-[171px] w-full py-[9px]',
+    login:
+      'rounded-[40px] max-lg:rounded-[4px] max-w-[171px] max-lg:max-w-[112px] w-full py-[9px] max-lg:py-[8px] max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px] max-lg:tracking-[0.46px] max-lg:border-[0.5px]',
     tip: 'rounded-[40px] max-w-[127px] w-full py-[9px]',
     square:
       'rounded-[10px] max-w-[136px] w-full py-[9px] max-lg:max-w-[77px] max-lg:w-full max-lg:rounded-[4px] max-lg:border-[0.5px] max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px] max-lg:tracking-[0.46px] max-lg:py-[6.5px]',
