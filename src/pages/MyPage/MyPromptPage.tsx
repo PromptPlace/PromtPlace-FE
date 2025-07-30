@@ -3,6 +3,7 @@ import { PromptCard } from './components/PromptCard';
 import type { Prompt } from './components/PromptCard';
 import { useState, useEffect } from 'react';
 import BlueArchiveIcon from '@/assets/icon-archive-blue.svg';
+import Dropdown from './components/Dropdown';
 
 /**
  * TODO:
@@ -213,6 +214,12 @@ const DUMMY_LIKED_PROMPTS2: Prompt[] = [
   },
 ];
 
+const promptOptions = [
+  { value: 'authored', label: '작성한 프롬프트' },
+  { value: 'downloaded', label: '다운받은 프롬프트' },
+  { value: 'liked', label: '찜한 프롬프트' },
+];
+
 const MyPromptPage = () => {
   const [activeTab, setActiveTab] = useState<'authored' | 'downloaded' | 'liked'>('authored'); // 'authored', 'downloaded', 'liked'
   const [prompts, setPrompts] = useState(DUMMY_LIKED_PROMPTS2);
@@ -242,14 +249,26 @@ const MyPromptPage = () => {
   }, [activeTab]);
 
   return (
-    <div className="flex  justify-center pt-[92px] min-h-screen bg-background">
-      <div className=" w-full max-w-[1236px] mx-[102px] ">
-        <div className="flex items-center gap-[10px] mb-[56px]">
-          <img src={BlueArchiveIcon} alt="BlueArchiveIcon" className="w-[24px] h-[24px]" />
-          <h1 className="text-[32px] text-primary-hover font-bold">내 프롬프트</h1>
+    <div className="flex  justify-center pt-[92px] max-lg:pt-[12px] min-h-screen bg-background">
+      <div className=" w-full max-w-[1236px] mx-[102px] max-lg:mx-[0px] max-lg:px-[20px]">
+        <div className="flex items-center gap-[10px] max-lg:gap-[6px] mb-[56px] max-lg:mb-[20px]">
+          <img
+            src={BlueArchiveIcon}
+            alt="BlueArchiveIcon"
+            className="w-[24px] max-lg:w-[20px] h-[24px] max-lg:h-[20px]"
+          />
+          <h1 className="text-[32px] max-lg:text-[20px] text-primary-hover font-bold">내 프롬프트</h1>
         </div>
-        <MyPromptsTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-
+        <div className="max-lg:hidden">
+          <MyPromptsTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+        </div>
+        <div className="lg:hidden mb-[20px]">
+          <Dropdown
+            options={promptOptions}
+            selectedValue={activeTab}
+            onSelect={(value) => setActiveTab(value as 'authored' | 'downloaded'|'liked')}
+          />
+        </div>
         <div className=" bg-white">
           <div className="mr-[8px] overflow-y-auto max-h-[368px]">
             {prompts.map((prompt) => (
