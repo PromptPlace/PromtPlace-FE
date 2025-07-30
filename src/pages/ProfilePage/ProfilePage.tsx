@@ -92,6 +92,8 @@ const ProfilePage = () => {
 
   const [showMsgModal, setShowMsgModal] = useState(false);
 
+  const [type, setType] = useState<'buyer' | 'nonBuyer'>('nonBuyer');
+
   const menuList = [
     {
       id: 0,
@@ -340,7 +342,7 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            <div className="flex gap-[24px] items-center">
+            <div className="flex gap-[24px] items-center max-lg:hidden">
               <div className="max-lg:hidden">
                 <FollowButton
                   follow={isFollow}
@@ -410,11 +412,61 @@ const ProfilePage = () => {
         )}
       </div>
 
-      <div className="px-[20px] mt-[12px] flex lg:hidden">
-        <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />
+      <div className="px-[20px] flex lg:hidden  max-lg:mt-[12px]">
+        {menuId !== 2 && <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />}
+        {menuId === 2 && isMyProfile && (
+          <div className="flex items-start justify-between w-full">
+            <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />
+            <div className="flex mt-[6px]">
+              <div
+                onClick={() => setIsBuyer(true)}
+                className={clsx(
+                  'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
+                  isBuyer && 'bg-primary-hover text-white',
+                  !isBuyer && 'bg-white text-text-on-white',
+                )}>
+                구매자 문의
+              </div>
+              <div
+                onClick={() => setIsBuyer(false)}
+                className={clsx(
+                  'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
+                  !isBuyer && 'bg-primary-hover text-white',
+                  isBuyer && 'bg-white text-text-on-white',
+                )}>
+                비구매자 문의
+              </div>
+            </div>
+          </div>
+        )}
+        {menuId === 2 && !isMyProfile && (
+          <div className="flex items-start justify-between w-full">
+            <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />
+            <div className="flex mt-[6px]">
+              <div
+                onClick={() => setType('buyer')}
+                className={clsx(
+                  'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
+                  type === 'buyer' && 'bg-primary-hover text-white',
+                  type === 'nonBuyer' && 'bg-white text-text-on-white',
+                )}>
+                구매자 문의
+              </div>
+              <div
+                onClick={() => setType('nonBuyer')}
+                className={clsx(
+                  'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
+                  type === 'nonBuyer' && 'bg-primary-hover text-white',
+                  type === 'buyer' && 'bg-white text-text-on-white',
+                )}>
+                비구매자 문의
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="flex flex-col items-center justify-center px-[102px] max-lg:pl-[20px] max-lg:pr-[20px] mt-[40px] max-lg:mt-[12px]">
+      <div className="flex flex-col items-center justify-center px-[102px] max-lg:pl-[20px] max-lg:pr-[20px] mt-[40px] max-lg:mt-[42px]">
         <div className="w-full">
           <div className="max-lg:hidden flex w-full justify-between border-b border-text-on-background">
             {menuList.map((menu) => (
@@ -479,30 +531,11 @@ const ProfilePage = () => {
             </>
           )}
 
-          {menuId === 2 && !isMyProfile && <AskCard prompts={PROMPT} isMyProfile={isMyProfile} />}
+          {menuId === 2 && !isMyProfile && (
+            <AskCard prompts={PROMPT} isMyProfile={isMyProfile} type={type} setType={setType} />
+          )}
           {menuId === 2 && isMyProfile && (
             <>
-              <div className="lg:hidden flex fixed top-[210px] left-1/2 max-[373px]:left-1/3 max-[373px]:translate-x-[30px]">
-                <div
-                  onClick={() => setIsBuyer(true)}
-                  className={clsx(
-                    'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
-                    isBuyer && 'bg-primary-hover text-white',
-                    !isBuyer && 'bg-white text-text-on-white',
-                  )}>
-                  구매자 문의
-                </div>
-                <div
-                  onClick={() => setIsBuyer(false)}
-                  className={clsx(
-                    'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
-                    !isBuyer && 'bg-primary-hover text-white',
-                    isBuyer && 'bg-white text-text-on-white',
-                  )}>
-                  비구매자 문의
-                </div>
-              </div>
-
               <div className="relative text-text-on-white text-[20px] font-bold leading-[30px] flex gap-[10px] p-[10px] items-center py-[30px] px-[80px] bg-white max-lg:hidden">
                 {isBuyer && <p>구매자 문의</p>}
                 {!isBuyer && <p>비구매자 문의</p>}
@@ -565,7 +598,7 @@ const ProfilePage = () => {
                 )}
               </div>
 
-              <div className="pr-[8px] bg-white lg:hidden">
+              <div className="pr-[8px] bg-white lg:hidden max-lg:mt-[-30px]">
                 <div className="max-h-[316px] overflow-auto">
                   {inquiries
                     .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non-buyer'))
