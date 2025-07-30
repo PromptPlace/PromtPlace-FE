@@ -2,10 +2,11 @@
 import { useState, useEffect } from 'react';
 import ReviewTabs from './components/ReviewTabs';
 import ReviewCard from './components/ReviewCard';
-import archiveIcon from '@assets/icon-archive-blue.svg';
+import ChatIcon from '@assets/icon-chat-bubble-blue-big.svg'
 import UserProfileIcon from '@assets/img-example-profile2.jpg';
 import DualModal from '@/components/Modal/DualModal';
 import TextModal from '@/components/Modal/TextModal';
+import Dropdown from './components/Dropdown';
 
 const DUMMY_WRITTEN_REVIEWS = [
   {
@@ -157,6 +158,11 @@ const DUMMY_RECEIVED_REVIEWS = [
   },
 ];
 
+const reviewOptions = [
+  { value: 'written', label: '작성한 리뷰' },
+  { value: 'received', label: '받은 리뷰' },
+];
+
 const MyReviewPage = () => {
   const [activeTab, setActiveTab] = useState<'written' | 'received'>('written'); // 'written' or 'received'
   const [reviews, setReviews] = useState(DUMMY_WRITTEN_REVIEWS);
@@ -191,17 +197,21 @@ const MyReviewPage = () => {
 
   return (
     <div className="flex justify-center h-screen bg-background  ">
-      <div className="flex flex-col w-full max-w-[1236px] pt-[92px] h-full ">
+      <div className="flex flex-col w-full max-w-[1236px] pt-[92px] max-lg:pt-[12px] h-full max-lg:px-[20px]">
         <div className="shrink-0">
-          <div className="flex items-center gap-[10px] mb-[56px] ">
-            <img src={archiveIcon} alt="archive icon" className="w-[32px] h-[32px]" />
-            <div className="text-[32px] text-primary-hover font-bold">내 리뷰관리</div>
+          <div className="flex items-center gap-[10px] max-lg:gap-[2.5px] mb-[56px] max-lg:mb-[20px] ">
+            <img src={ChatIcon} alt="Chat icon" className="w-[32px] max-lg:w-[20px] h-[32px] max-lg:h-[20px]" />
+            <div className="text-[32px] max-lg:text-[20px] text-primary-hover font-bold">내 리뷰관리</div>
           </div>
-
+            <div className='max-lg:hidden'>
           <ReviewTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+          </div>
+          <div className="lg:hidden mb-[27px]">
+            <Dropdown options={reviewOptions} selectedValue={activeTab} onSelect={(value) => setActiveTab(value as 'written' | 'received')} />
+          </div>
         </div>
 
-        <div className="flex-grow min-h-0 p-[8px]  bg-white">
+        <div className="flex-grow min-h-0 p-[8px] max-lg:p-[0px]  bg-white">
           <div className="overflow-y-auto h-full">
             {reviews.map((review) => (
               <ReviewCard

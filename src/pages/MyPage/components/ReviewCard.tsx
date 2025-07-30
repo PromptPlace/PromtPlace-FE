@@ -19,8 +19,8 @@ interface ReviewCardProps {
 
 const ReviewCard: React.FC<ReviewCardProps> = ({ type, reviewData, onDelete }) => {
   return (
-    <div className="flex flex-col border-b-[1px] border-white-stroke py-[10px] pl-[40px] gap-[10px] bg-white">
-      <div className="mt-[20px]">
+    <div className="flex flex-col border-b-[1px] border-white-stroke py-[10px] pl-[40px] max-lg:p-[12px] gap-[10px] max-lg:gap-[6px] bg-white">
+      <div className="mt-[20px] max-lg:mt-[0px]">
         <CardHeader
           date={reviewData.createdAt}
           title={reviewData.promptTitle}
@@ -37,18 +37,23 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ type, reviewData, onDelete }) =
             <img
               src={reviewData.author.avatar}
               alt={reviewData.author.name}
-              className="w-[46px] h-[46px] rounded-full"
+              className="w-[46px] h-[46px] rounded-full max-lg:hidden"
             />
-            <span className="text-[20px] font-medium text-text-on-white">{reviewData.author.name}</span>
+            <span className="text-[20px] max-lg:text-[12px] font-medium text-text-on-white">{reviewData.author.name}</span>
           </div>
         )}
 
         <Rating star={reviewData.rating} />
 
+        <div className='max-lg:hidden'>
         {type === 'written' && <PrimaryButton buttonType="reviewDelete" text="리뷰 삭제" onClick={onDelete} />}
+        </div>
       </div>
 
-      <p className="text-[18px] text-text-on-white font-regular">{reviewData.content}</p>
+      <p className="text-[18px] max-lg:text-[10px] text-text-on-white font-normal">{reviewData.content}</p>
+      <div className='lg:hidden flex justify-end'>
+        {type === 'written' && <PrimaryButton buttonType="reviewDelete" text="리뷰 삭제" onClick={onDelete} />}
+        </div>
     </div>
   );
 };

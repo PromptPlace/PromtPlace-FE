@@ -21,7 +21,7 @@ interface SocialLoginModalProps {
 const SocialButton = ({ icon, text, onClick }: { icon: string; text: string; onClick: () => void }) => (
   <button
     onClick={onClick}
-    className="w-full h-[64px] border-[1px] border-text-on-white rounded-[50px] py-3 flex items-center justify-center gap-[3.5px] shadow-[0_1px_3px_0_rgba(0,0,0,0.8)]
+    className="w-full h-[64px] border-[1px] border-text-on-white rounded-[50px] py-3 flex items-center justify-center gap-[3.5px] shadow-[0_1px_3px_0_rgba(0,0,0,0.08)]
     hover:bg-secondary hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.12)] 
     active:bg-secondary-pressed">
     <img src={icon} alt="소셜 로고" className="w-[32px] h-[32px]" />
