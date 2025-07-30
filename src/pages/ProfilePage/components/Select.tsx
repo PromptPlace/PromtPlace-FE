@@ -18,7 +18,7 @@ const Select = ({ menuList, menuId, setMenuId }: SelectProps) => {
 
   return (
     <div className="relative shrink-0">
-      <div className="absolute z-50 whitespace-nowrap">
+      <div className="absolute z-10 whitespace-nowrap">
         <button
           onClick={() => setShow((prev) => !prev)}
           className="rounded-[8px] bg-white shadow-button cursor-pointer py-[8px] px-[12px] text-text-on-white text-[12px] font-medium leading-[15px] flex gap-[8px] justify-center items-center">
