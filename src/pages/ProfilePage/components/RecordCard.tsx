@@ -50,7 +50,7 @@ const RecordCard = ({
               className="flex-1 placeholder:text-text-on-background text-text-on-background placeholder:font-SpoqaHanSansNeo placeholder:text-[20px] placeholder:font-medium placeholder:leading-[25px] max-lg:placeholder:text-[12px] max-lg:placeholder:leading-[15px] outline-none"
             />
           )}
-          <div className="flex gap-[62px] items-center">
+          <div className="flex gap-[62px] items-center max-lg:gap-[12px]">
             <CircleButton
               buttonType="edit"
               size="sm"
@@ -59,7 +59,7 @@ const RecordCard = ({
               }}
               isActive={edit}
             />
-            <div onClick={() => handleDelete(history_id)} className="w-[17px] h-[17px] cursor-pointer max-lg:hidden">
+            <div onClick={() => handleDelete(history_id)} className="w-[17px] h-[17px] max-lg:p-[4px] cursor-pointer">
               <img src={CloseIcon} alt="삭제" className="w-full h-full object-contain" />
             </div>
           </div>

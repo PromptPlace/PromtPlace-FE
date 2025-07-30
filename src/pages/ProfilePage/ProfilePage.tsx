@@ -410,7 +410,7 @@ const ProfilePage = () => {
         )}
       </div>
 
-      <div className="px-[20px] mt-[4px] flex lg:hidden">
+      <div className="px-[20px] mt-[12px] flex lg:hidden">
         <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />
       </div>
 
@@ -472,7 +472,7 @@ const ProfilePage = () => {
                 </div>
               </div>
               {isMyProfile && (
-                <div className="mt-[50px] w-full flex justify-center">
+                <div className="mt-[50px] max-lg:mt-[12px] w-full flex justify-center">
                   <PrimaryButton buttonType="plus" text="+" onClick={handleAddNewDescription} />
                 </div>
               )}
@@ -627,7 +627,7 @@ const ProfilePage = () => {
                 ))}
               </div>
               {isMyProfile && (
-                <div onClick={handleAddSns} className="mt-[50px]">
+                <div onClick={handleAddSns} className="mt-[50px] max-lg:mt-[12px]">
                   <PrimaryButton buttonType="plus" text="+" onClick={() => {}} />
                 </div>
               )}
