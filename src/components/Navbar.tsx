@@ -88,13 +88,15 @@ const Navbar = () => {
         </div>
 
         {!accessToken && (
-          <PrimaryButton
-            buttonType="login"
-            text="로그인 / 회원가입"
-            onClick={() => {
-              setLoginModalShow(true);
-            }}
-          />
+          <div className="w-[169px] shrink-0 max-lg:hidden">
+            <PrimaryButton
+              buttonType="login"
+              text="로그인 / 회원가입"
+              onClick={() => {
+                setLoginModalShow(true);
+              }}
+            />
+          </div>
         )}
 
         {loginModalShow && (
