@@ -25,7 +25,7 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview }: Props
   const rating = 5.0;
 
   return (
-    <div className="w-[711px] max-lg:max-w-[280px] max-lg:max-h-[191px] bg-[#FFFEFB] px-8 max-lg:p-[12px]">
+    <div className="w-[711px] max-lg:max-w-[280px] max-lg:max-h-[191px] bg-[#FFFEFB] px-8 max-lg:pt-[12px] max-lg:px-[12px]">
       {/* PC */}
       <div className="hidden lg:block h-[132px] box-border flex flex-col justify-between">
         <div className="flex items-center justify-between w-full pt-[35px] pb-[5px]">
@@ -62,7 +62,7 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview }: Props
       </div>
 
       {/* 모바일 레이아웃 */}
-      <div className="lg:hidden pt-4 ">
+      <div className="lg:hidden max-lg:max-h-[167px]">
         {/* ChatGPT + 조회/다운로드 */}
         <div className="flex items-center gap-[8px]">
           <div className="w-[54px] h-[23px] flex items-center justify-center">
@@ -80,7 +80,7 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview }: Props
         </div>
 
         {/* 리뷰/하트/해시태그 */}
-        <div className="lg:hidden">
+        <div className="lg:hidden mt-[8px]">
           <div className="flex items-center justify-between pt-2">
             <div className="flex items-center gap-[6px]">
               <Rating star={rating} />
@@ -97,7 +97,7 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview }: Props
             />
           </div>
 
-          <div className="grid grid-cols-5 gap-2 mt-4 mb-3">
+          <div className="grid grid-cols-5 gap-3 mt-[8px] mb-[12px]">
             <TagButton hasDelete={false} text="#수채화" onClick={() => {}} />
             <TagButton hasDelete={false} text="#수묵화" onClick={() => {}} />
             <TagButton hasDelete={false} text="#디자인" onClick={() => {}} />
@@ -106,11 +106,11 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview }: Props
             <TagButton hasDelete={false} text="#이미지" onClick={() => {}} />
             <TagButton hasDelete={false} text="#수채화" onClick={() => {}} />
           </div>
-          <div className="h-[1px] bg-[#CCCCCC] w-full" />
         </div>
+        <div className="h-[1px] bg-[#CCCCCC] w-full max-lg:p-0 max-lg:m-0" />
       </div>
 
-      <div className="h-[1px] bg-[#CCCCCC] w-full" />
+      <div className="h-[1px] bg-[#CCCCCC] w-full lg:block hidden" />
     </div>
   );
 };

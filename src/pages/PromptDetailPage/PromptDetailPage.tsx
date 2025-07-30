@@ -4,6 +4,10 @@ import PromptActions from './components/PromptActions';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import ReviewList from './components/ReviewList';
+import IconButton from '@components/Button/IconButton';
+import profile from './assets/profile.jpg';
+import FollowButton from '@components/Button/FollowButton';
+import ArrowLeft from './assets/keyboard_arrow_down _left.svg';
 
 const mockPrompt = {
   prompt_id: 123,
@@ -52,6 +56,7 @@ const PromptDetailPage = () => {
   const prompt = mockPrompt;
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
   const [showReviews, setShowReviews] = useState(false);
+  const [follow, setFollow] = useState(false);
 
   if (showReviews) {
     return (
@@ -69,7 +74,31 @@ const PromptDetailPage = () => {
 
   return (
     <div className="bg-[#F5F5F5]">
-      <div className="flex max-lg:flex-col max-lg:gap-[31px] max-w-7xl max-lg:px-[20px] max-lg:pt-[60px] max-lg:max-w-[320px] gap-10 p-10 mx-auto">
+      {/* 모바일 유저 정보 섹션 */}
+      <div className="lg:hidden max-w-[280px] max-h-[60px] pt-[12px] mx-auto">
+        <div className="box-border flex items-center max-h-[48px] py-[6px]">
+          {/* 아이콘 */}
+          <img
+            src={ArrowLeft}
+            alt="뒤로가기"
+            className="w-[20px] h-[48px] cursor-pointer mr-[10px]"
+            onClick={() => navigate(-1)}
+          />
+
+          {/* 프로필 */}
+          <div className="w-[36px] flex items-center justify-center mr-[8px]">
+            <img src={profile} alt="profile" className="w-[36px] h-[36px] rounded-full object-cover" />
+          </div>
+
+          {/* 닉네임 + 팔로우 */}
+          <div className="flex items-center w-[214px]">
+            <p className="font-medium text-[12px] mr-[10px]">홍길동홍길동홍길동홍길동</p>
+            <FollowButton follow={follow} onClick={() => setFollow(!follow)} />
+          </div>
+        </div>
+      </div>
+
+      <div className="flex max-lg:flex-col max-lg:gap-[31px] max-w-7xl max-lg:px-[20px] max-lg:pt-0 max-lg:max-w-[320px] gap-10 p-10 mx-auto">
         {/* 왼쪽: 정보 */}
         <div className="w-[711px] max-lg:max-w-[280px] max-lg:max-h-[544px] bg-[#FFFEFB] rounded-[16px] overflow-hidden">
           <PromptHeader
@@ -84,6 +113,10 @@ const PromptDetailPage = () => {
             description={prompt.description}
             usageGuide={prompt.usage_guide}
           />
+        </div>
+
+        <div className="lg:hidden flex justify-end">
+          <IconButton buttonType="squareMd" style="red" imgType="alert" text="신고하기" onClick={() => {}} />
         </div>
 
         {/* 오른쪽: 액션 */}
