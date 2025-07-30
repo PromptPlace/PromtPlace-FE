@@ -21,6 +21,7 @@ interface Props {
   rating: number;
   updatedAt: string;
   userId: number;
+  onClickReview: () => void;
 }
 
 const dummyReviews = [

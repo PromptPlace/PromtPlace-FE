@@ -2,6 +2,8 @@ import PromptHeader from './components/PromptHeader';
 import PromptInfo from './components/PromptInfo';
 import PromptActions from './components/PromptActions';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import ReviewList from './components/ReviewList';
 
 const mockPrompt = {
   prompt_id: 123,
@@ -24,21 +26,58 @@ const mockPrompt = {
   updated_at: '2025-07-06T10:00:00',
 };
 
+const dummyReviews = [
+  {
+    review_id: 101,
+    writer_id: 1,
+    writer_profile_image_url: '',
+    writer_nickname: '홍길동',
+    rating: 4.0,
+    content: '좋은 프롬프트 감사합니다.',
+    created_at: '2025-07-28',
+  },
+  {
+    review_id: 102,
+    writer_id: 2,
+    writer_profile_image_url: '',
+    writer_nickname: '이몽룡',
+    rating: 5.0,
+    content: '바로 써봤는데 너무 좋네요!',
+    created_at: '2025-07-28',
+  },
+];
+
 const PromptDetailPage = () => {
   const navigate = useNavigate();
   const prompt = mockPrompt;
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  const [showReviews, setShowReviews] = useState(false);
+
+  if (showReviews) {
+    return (
+      <ReviewList
+        reviews={dummyReviews}
+        title={prompt.title}
+        reviewCount={prompt.review_counts}
+        setReviews={() => {}}
+        onClose={() => setShowReviews(false)}
+        currentUserId={1}
+        setReviewCount={() => {}}
+      />
+    );
+  }
 
   return (
     <div className="bg-[#F5F5F5]">
-      <div className="flex max-lg:flex-col max-lg:gap-[31px] max-lg:p-5 gap-10 p-10 max-w-7xl mx-auto">
+      <div className="flex max-lg:flex-col max-lg:gap-[31px] max-w-7xl max-lg:px-[20px] max-lg:pt-[60px] max-lg:max-w-[320px] gap-10 p-10 mx-auto">
         {/* 왼쪽: 정보 */}
-        <div className="w-[711px] bg-[#FFFEFB] rounded-[16px] overflow-hidden">
+        <div className="w-[711px] max-lg:max-w-[280px] max-lg:max-h-[544px] bg-[#FFFEFB] rounded-[16px] overflow-hidden">
           <PromptHeader
             title={prompt.title}
             views={prompt.views}
             downloads={prompt.downloads}
             onClose={() => navigate(-1)}
+            onClickReview={() => setShowReviews(true)}
           />
           <PromptInfo
             promptResult={prompt.prompt_result}
@@ -49,7 +88,7 @@ const PromptDetailPage = () => {
 
         {/* 오른쪽: 액션 */}
         <div
-          className={`w-[459px] ${isAdmin ? 'h-[548px]' : 'h-[654px]'} bg-[#FFFEFB] shrink-0 rounded-[16px] overflow-hidden`}>
+          className={`max-lg:hidden w-[459px] max-lg:max-w-[280px] ${isAdmin ? 'h-[548px]' : 'h-[654px]'} bg-[#FFFEFB] shrink-0 rounded-[16px] overflow-hidden`}>
           <PromptActions
             title={prompt.title}
             price={prompt.price}
@@ -60,6 +99,7 @@ const PromptDetailPage = () => {
             rating={prompt.rating_avg}
             updatedAt={prompt.updated_at}
             userId={prompt.user_id}
+            onClickReview={() => setShowReviews(true)}
           />
         </div>
       </div>

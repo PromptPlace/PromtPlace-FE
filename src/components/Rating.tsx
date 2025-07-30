@@ -25,21 +25,39 @@ const Rating = ({ star }: RatingProps) => {
   const emptyStar = 5 - fullStars - (halfStar ? 1 : 0); // 빈 별 표시
 
   for (let i = 0; i < fullStars; i++) {
-    stars.push(<img src={StarFill} key={'full' + i} alt="star full" className="w-[24px] h-[24px]" />);
+    stars.push(
+      <img
+        src={StarFill}
+        key={'full' + i}
+        alt="star full"
+        className="w-[24px] h-[24px] max-lg:w-[12px] max-lg:h-[12px]"
+      />,
+    );
   }
 
   if (halfStar) {
-    stars.push(<img src={StarHalf} key={'half'} alt="star half" className="w-[24px] h-[24px]" />);
+    stars.push(
+      <img src={StarHalf} key={'half'} alt="star half" className="w-[24px] h-[24px] max-lg:w-[12px] max-lg:h-[12px]" />,
+    );
   }
 
   for (let i = 0; i < emptyStar; i++) {
-    stars.push(<img src={StarEmpty} key={'empty' + i} alt="star empty" className="w-[24px] h-[24px]" />);
+    stars.push(
+      <img
+        src={StarEmpty}
+        key={'empty' + i}
+        alt="star empty"
+        className="w-[24px] h-[24px] max-lg:w-[12px] max-lg:h-[12px]"
+      />,
+    );
   }
 
   return (
     <div className="flex justify-center items-end gap-[5px]">
       <div className="flex gap-[2px] justify-center items-center">{stars}</div>
-      <div className="text-text-on-background text-sm font-normal leading-[18px]">({star.toFixed(1)})</div>
+      <div className="text-text-on-background text-sm font-normal leading-[18px] max-lg:text-[10px] max-lg:leading-[12px]">
+        ({star.toFixed(1)})
+      </div>
     </div>
   );
 };
