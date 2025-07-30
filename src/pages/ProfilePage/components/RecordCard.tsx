@@ -47,7 +47,7 @@ const RecordCard = ({
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="이력을 입력하세요"
-              className="flex-1 placeholder:text-text-on-background text-text-on-background placeholder:font-SpoqaHanSansNeo placeholder:text-[20px] placeholder:font-medium placeholder:leading-[25px] outline-none"
+              className="flex-1 placeholder:text-text-on-background text-text-on-background placeholder:font-SpoqaHanSansNeo placeholder:text-[20px] placeholder:font-medium placeholder:leading-[25px] max-lg:placeholder:text-[12px] max-lg:placeholder:leading-[15px] outline-none"
             />
           )}
           <div className="flex gap-[62px] items-center">
