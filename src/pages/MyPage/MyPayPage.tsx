@@ -65,7 +65,7 @@ const MyPayPage = () => {
         <div className="max-lg:hidden bg-white flex-1 min-h-0">
           <div className="mr-[8px] overflow-y-auto max-h-[564px] max-lg:max-h-[273px] max-lg:mr-[0px]">
             {salesHistory.map((sale) => (
-              <SalesHistoryCard key={sale.id} sale={sale} />
+              <SalesHistoryCard key={sale.id} sale={sale} showDateOnMobile={false} />
             ))}
           </div>
         </div>
@@ -88,7 +88,7 @@ const MyPayPage = () => {
         <TextModal text="10,000원부터 출금하실 수 있습니다." onClick={() => setShowModal(false)} size="lg" />
       )}
 
-      {showModal && userInfo.balance > 10000 && (
+{showModal && userInfo.balance > 10000 && (
         <TextModal text="계좌 정보를 등록해주세요." onClick={() => setShowModal(false)} size="lg" />
       )}
 
