@@ -97,16 +97,22 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
             </span>
           )}
         </button>
+
         {isDropdownOpen && (
-          <div className="absolute z-10 mt-[104px] right-[40px] w-[264px] mt-2 bg-white max-h-[579px] overflow-y-auto">
-            <div className="grid grid-cols-2 gap-x-[24px] gap-y-[24px] p-[24px]">
+          <div
+            className="absolute max-lg:fixed z-20 mt-[104px] right-[40px] max-lg:right-[0px] w-[264px] max-lg:w-full  mt-2 bg-white max-h-[579px] overflow-y-auto">
+            <div className="grid grid-cols-2 max-lg:grid-cols-3 gap-x-[24px] max-lg:gap-x-[16px] gap-y-[24px] max-lg:gap-y-[12px] p-[24px] ">
               {BANKS.map((bank) => (
                 <button
                   key={bank.name}
                   onClick={() => handleBankSelect(bank.name)}
-                  className="flex flex-col items-center justify-center w-[96px] h-[74px] bg-white hover:bg-[#D9D9D9] ">
-                  <img src={getBankLogoUrl(bank.fileName)} alt={bank.name} className="w-[40px] h-[40px] rounded-full" />
-                  <span className="text-[14px] text-text-on-white font-normal">{bank.name}</span>
+                  className="flex flex-col items-center justify-center w-[96px] max-lg:w-[72px] h-[74px] max-lg:w-[48px] bg-white hover:border-[1px] max-lg:hover:border-[0.5px] hover:border-primary">
+                  <img
+                    src={getBankLogoUrl(bank.fileName)}
+                    alt={bank.name}
+                    className="w-[40px] max-lg:w-[30px] h-[40px] max-lg:h-[30px]"
+                  />
+                  <span className="text-[14px] max-lg:text-[12px] text-text-on-white font-normal">{bank.name}</span>
                 </button>
               ))}
             </div>
@@ -130,7 +136,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
 
       {/* 3. 예금주명 */}
       <div className="flex lg:justify-between max-lg:flex-col h-[87px]">
-      <label className="flex items-center text-[22px] max-lg:text-[14px] font-bold max-lg:font-medium text-[#2A2A2A] max-lg:mb-[12px]">
+        <label className="flex items-center text-[22px] max-lg:text-[14px] font-bold max-lg:font-medium text-[#2A2A2A] max-lg:mb-[12px]">
           예금주명 입력
         </label>
         <input
@@ -145,7 +151,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
       <div className="mt-[150px] max-lg:mt-[17px] lg:self-end  ">
         <button
           className="py-[15px] max-lg:py-[10px] px-[29px] max-lg:px-[40px] bg-primary text-white text-[24px] max-lg:text-[16px] font-bold max-lg:font-medium rounded-[10px] max-lg:rounded-[4px] max-lg:w-full"
-          onClick={handleFormSubmit} 
+          onClick={handleFormSubmit}
           disabled={isSubmitDisabled}>
           등록 완료
         </button>

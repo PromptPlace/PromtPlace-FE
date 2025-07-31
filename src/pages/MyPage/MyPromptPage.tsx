@@ -215,7 +215,7 @@ const DUMMY_LIKED_PROMPTS2: Prompt[] = [
 ];
 
 const promptOptions = [
-  { value: 'authored', label: '작성한 프롬프트' },
+  { value: 'authored', label: '작성 프롬프트' },
   { value: 'downloaded', label: '다운받은 프롬프트' },
   { value: 'liked', label: '찜한 프롬프트' },
 ];
@@ -262,7 +262,7 @@ const MyPromptPage = () => {
         <div className="max-lg:hidden">
           <MyPromptsTabs activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
-        <div className="lg:hidden mb-[20px]">
+        <div className="lg:hidden mb-[20px] w-[135px]">
           <Dropdown
             options={promptOptions}
             selectedValue={activeTab}

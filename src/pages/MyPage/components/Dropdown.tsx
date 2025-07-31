@@ -1,6 +1,7 @@
 // src/components/Dropdown.tsx
 
 import { useState } from 'react';
+import { LuChevronDown } from 'react-icons/lu';
 
 // Dropdown 컴포넌트가 받을 props 타입 정의
 interface DropdownProps {
@@ -24,11 +25,9 @@ const Dropdown = ({ options, selectedValue, onSelect }: DropdownProps) => {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center rounded-[8px] px-[8px] py-[12px] gap-[8px] text-[12px] font-medium text-text-on-white bg-white shadow-[0_1px_3px_0_rgba(0,0,0,0.08)]">
+        className="flex items-center justify-center rounded-[8px] px-[8px] py-[12px] gap-[8px] text-[12px] font-medium text-text-on-white bg-white shadow-[0_1px_3px_0_rgba(0,0,0,0.08)] w-full">
         <span>{selectedLabel}</span>
-        <svg className={`w-4 h-4 transition-transform`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <LuChevronDown size={10} />
       </button>
 
       {isOpen && (

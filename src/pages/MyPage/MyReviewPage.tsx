@@ -206,7 +206,7 @@ const MyReviewPage = () => {
           <div className="max-lg:hidden">
             <ReviewTabs activeTab={activeTab} setActiveTab={setActiveTab} />
           </div>
-          <div className="lg:hidden mb-[27px]">
+          <div className="lg:hidden mb-[27px] w-[101px]">
             <Dropdown
               options={reviewOptions}
               selectedValue={activeTab}

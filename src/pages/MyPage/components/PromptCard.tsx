@@ -47,7 +47,7 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
 
       <div className="flex max-lg:justify-between max-lg:items-center">
         <Link to={`/prompt/${promptData.id}`} className="lg:hidden flex-1 min-w-0">
-          <div className="truncate  text-text-on-white text-[12px] font-medium  w-full">{promptData.title}</div>
+          <div className="truncate  text-text-on-white text-[12px] font-medium  w-full ">{promptData.title}</div>
         </Link>
         {type === 'authored' && (
           <div className="flex items-center justify-center h-[72px] max-lg:h-auto  w-[115px] max-lg:w-auto py-[10px] max-lg:py-[0px]  ">
@@ -86,8 +86,8 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
             <div className="max-lg:hidden flex items-center justify-center h-[72px]  w-[198px]">
               <PrimaryButton buttonType="review" text="리뷰 작성하기" onClick={() => {}} />
             </div>
-            <div className="lg:hidden flex items-center justify-center">
-              <PrimaryButton buttonType="review" text="리뷰작성" onClick={() => {}} />
+            <div className="lg:hidden flex items-center  ">
+              <PrimaryButton buttonType="review" text="리뷰 작성" onClick={() => {}} />
             </div>
           </>
         )}
