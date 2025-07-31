@@ -4,7 +4,7 @@ import TagFilter from './TagFilter';
 import arrowDown from '@/assets/icon-arrow-down.svg';
 
 type FilterBarProps = {
-  onModelChange: (model: string | null) => void;
+  onModelChange: (model: string[]) => void;
   onSortChange: (sort: string | null) => void;
   onlyFree?: boolean;
   setOnlyFree: (free: boolean) => void;

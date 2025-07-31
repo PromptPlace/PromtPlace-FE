@@ -37,7 +37,7 @@ const MobileFilterModal = ({ visible, onClose, activeTab, onTabChange, onApplyFi
   if (!visible) return null;
 
   const handleApply = () => {
-    onApplyFilter({ model: selectedModel, sort: selectedSort, tags });
+    onApplyFilter({ models: selectedModels, sort: selectedSort, tags });
     onClose();
   };
 

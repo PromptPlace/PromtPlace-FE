@@ -4,8 +4,14 @@ import MobileFilterModal from './MobileFilterModal';
 
 type FilterTab = '모델' | '필터' | '태그' | null;
 
-const MobileFilter = () => {
-  const [onlyFree, setOnlyFree] = useState(false);
+type Props = {
+  onModelChange: (models: string[]) => void;
+  onSortChange: (sort: string | null) => void;
+  onlyFree: boolean;
+  setOnlyFree: (free: boolean) => void;
+};
+
+const MobileFilter = ({ onlyFree, setOnlyFree, onModelChange, onSortChange }: Props) => {
   const [activeTab, setActiveTab] = useState<FilterTab>(null);
 
   const handleOnlyFreeToggle = () => setOnlyFree((prev) => !prev);
@@ -13,10 +19,10 @@ const MobileFilter = () => {
   const handleOpenTab = (tab: FilterTab) => setActiveTab(tab);
   const handleClose = () => setActiveTab(null);
 
-  const handleApplyFilter = (data: { model: string | null; sort: string | null; tags: string[] }) => {
-    console.log('필터 적용:', data);
-    // 실제 정렬, 필터 로직은 여기에
-    setActiveTab(null); // 모달 닫기
+  const handleApplyFilter = (data: { models: string[]; sort: string | null; tags: string[] }) => {
+    onModelChange(data.models);
+    onSortChange(data.sort);
+    setActiveTab(null);
   };
 
   return (

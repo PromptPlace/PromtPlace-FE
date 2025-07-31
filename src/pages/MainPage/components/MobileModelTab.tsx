@@ -1,7 +1,7 @@
 import React from 'react';
 
 type Props = {
-  selectedModels: string[]; // ✅ 배열로 변경
+  selectedModels: string[];
   setSelectedModels: (models: string[]) => void;
 };
 
