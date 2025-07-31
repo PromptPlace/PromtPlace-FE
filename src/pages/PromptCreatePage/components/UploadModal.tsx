@@ -1,9 +1,9 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { LuChevronLeft } from 'react-icons/lu';
 import ModelDropdown from './ModelDropdown';
 import PriceDropdown from './PriceDropdown';
 import TagInput from './TagInput';
-import ImageList from './ImageList';
+import { ImageList } from './ImageList';
 import IconButton from '@/components/Button/IconButton';
 
 const UploadModal = ({
@@ -47,31 +47,20 @@ const UploadModal = ({
   howToUseText: string;
   setHowToUseText: (howToUseText: string) => void;
 }) => {
-  // const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [showModelDropdown, setShowModelDropdown] = useState(false);
-
-  // const [priceType, setPriceType] = useState<'무료' | '유료' | null>(null);
-  // const [cost, setCost] = useState<number | null>(null);
   const [showPriceDropdown, setShowPriceDropdown] = useState(false);
-
-  // const [tags, setTags] = useState<string[]>([]);
-
-  // const [withImage, setWithImage] = useState(false);
-  // const [files, setFiles] = useState<File[]>([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  // const [previewText, setPreviewText] = useState<string>('');
 
-  // const [discriptionText, setDescriptionText] = useState<string>('');
-  // const [howToUseText, setHowToUseText] = useState<string>('');
-
-  // const formatNumber = (num: number) => num.toLocaleString('ko-KR');
-
-  // 선택 완료 여부
+  //금액 선택 완료 여부
   const isSummary = !!(
     selectedModels.length > 0 &&
     priceType &&
     (priceType === '무료' || (priceType === '유료' && cost !== null))
   );
+
+  // useEffect(() => {
+  //   console.log(tags);
+  // }, [tags]);
 
   // 이미지 업로드
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

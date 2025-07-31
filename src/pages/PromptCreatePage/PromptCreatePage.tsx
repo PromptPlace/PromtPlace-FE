@@ -9,6 +9,7 @@ import IconButton from '@/components/Button/IconButton';
 import { useNavigate } from 'react-router-dom';
 import DualModal from '@/components/Modal/DualModal';
 import UploadModal from './components/UploadModal';
+import MobileUploadModal from './components/MobileUploadModal';
 
 const PromptCreatePage = () => {
   const [title, setTitle] = useState<string>('');
@@ -244,7 +245,29 @@ const PromptCreatePage = () => {
           </div>
         </div>
         {/* 업로드 세부 설정 모달 */}
-
+        {uploadModal && (
+          <MobileUploadModal
+            setuploadModal={setuploadModal}
+            selectedModels={selectedModels}
+            setSelectedModels={setSelectedModels}
+            priceType={priceType}
+            setPriceType={setPriceType}
+            cost={cost}
+            setCost={setCost}
+            tags={tags}
+            setTags={setTags}
+            withImage={withImage}
+            setWithImage={setWithImage}
+            files={files}
+            setFiles={setFiles}
+            previewText={previewText}
+            setPreviewText={setPreviewText}
+            discriptionText={discriptionText}
+            setDescriptionText={setDescriptionText}
+            howToUseText={howToUseText}
+            setHowToUseText={setHowToUseText}
+          />
+        )}
         {/* DualModal */}
         {showDualModal && <DualModal text="업로드 하시겠습니까?" onClickYes={handleDualYes} onClickNo={handleDualNo} />}
         {/* TextModal */}
