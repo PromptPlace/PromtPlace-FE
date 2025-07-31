@@ -58,12 +58,20 @@ const PromptCreatePage = () => {
 
   //업로드 조건 확인
   const handleUploadCheck = (canUpload: boolean) => {
+    // 가격 범위 확인
+    const isValidCost =
+      (priceType === '무료' && cost === 0) || (priceType === '유료' && cost !== null && cost >= 100 && cost <= 100000);
+
+    // 태그 개수 확인
+    const isValidTags = 0 <= tags.length && tags.length <= 10;
+
     const valid = !!(
       title.trim() !== '' &&
       content.trim() !== '' &&
       selectedModels.length > 0 &&
       priceType &&
-      (priceType === '무료' || (priceType === '유료' && cost !== null)) &&
+      isValidCost &&
+      isValidTags &&
       previewText.trim() !== '' &&
       discriptionText.trim() !== ''
     );
@@ -204,12 +212,12 @@ const PromptCreatePage = () => {
           <div className="w-full max-w-[280px] h-full min-h-[340px] flex flex-col justify-center bg-white">
             {/*제목 입력 */}
             <div className="w-full max-w-[280px] h-[63px] flex items-center justify-start border-b-[1px] border-white-stroke">
-              <div className="w-full max-w-[240px] h-[17px]">
+              <div className="w-full max-w-[240px] h-[17px] ml-[10px]">
                 <MobileEditor placeholder={'프롬프트 제목을 입력하세요'} onChange={setTitle} />
               </div>
             </div>
             {/**프롬프트 내용 */}
-            <div className="max-w-[280px] min-h-[278px] flex justify-center items-center">
+            <div className="max-w-[280px] min-h-[278px] flex justify-center items-center p-[10px]">
               <div className="w-[260px] h-full min-h-[238px] ">
                 <MobileEditor placeholder={'프롬프트를 입력하세요'} onChange={setContent} />
               </div>
@@ -218,7 +226,7 @@ const PromptCreatePage = () => {
         </div>
         {/**하단 */}
         <div className="flex justify-center">
-          <div className="w-full max-w-[254px] h-[36px]mt-[20px]">
+          <div className="w-full max-w-[254px] h-[36px] mt-[20px]">
             <div className="flex justify-between">
               <div className="w-[117px] text-[10px]">
                 <IconButton

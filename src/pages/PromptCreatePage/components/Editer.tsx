@@ -82,7 +82,7 @@ export const MobileEditor = ({ placeholder, onChange }: { placeholder: string; o
                 aria-placeholder={placeholder}
                 placeholder={
                   <div
-                    className={`absolute top-[3px] left-[20px] h-[15px] w-full flex items-center text-[12px] text-[#999] select-none pointer-events-none`}>
+                    className={`absolute top-[3px] left-[10px] h-[15px] w-full flex items-center text-[12px] text-[#999] select-none pointer-events-none`}>
                     {placeholder}
                   </div>
                 }
