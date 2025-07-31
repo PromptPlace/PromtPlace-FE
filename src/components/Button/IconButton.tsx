@@ -51,7 +51,7 @@ const iconButtonTheme = {
   },
   style: {
     outline:
-      'border border-primary hover:border-primary-hover active:border-primary-pressed text-primary hover:text-primary-hover active:text-primary-pressed active:bg-secondary ',
+      'border border-primary hover:border-primary-hover active:border-primary-pressed text-primary hover:text-primary-hover active:text-primary-pressed active:bg-secondary bg-white',
     fill: 'bg-primary hover:bg-primary-hover active:bg-primary-pressed text-white border border-1px-primary',
     red: 'bg-alert text-white px-[29px] max-lg:px-[] leading-[24px] shadow-none hover:shadow-none',
   },
