@@ -176,7 +176,7 @@ const SnsCard = ({
                           setEdit(false);
                         }
                       }}
-                      className="lg:hidden mb-[20px]">
+                      className="lg:hidden fixed left-0 right-0 bottom-0 z-200 max-w-[425px] w-full mx-auto max-lg:pr-[15px] bg-white rounded-t-[24px]">
                       <div className="pt-[14px] pb-[10px] rounded-t-[24px] bg-white cursor-grab flex justify-center">
                         <div className="w-[40px] h-[4px] rounded-[50px] bg-white-stroke"></div>
                       </div>

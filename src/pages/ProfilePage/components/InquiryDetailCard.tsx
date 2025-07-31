@@ -79,7 +79,10 @@ const InquiryDetailCard = ({ inquiry, onClick, setShowMsgMoldal }: InquiryDetail
       </div>
 
       <div className="lg:hidden">
-        <motion.div className="lg:hidden fixed inset-0 bg-overlay max-w-[425px] w-full m-auto" onClick={onClick} />
+        <motion.div
+          className="lg:hidden fixed z-200 inset-0 bg-overlay max-w-[425px] w-full m-auto"
+          onClick={onClick}
+        />
 
         <div className="lg:hidden fixed left-0 right-0 bottom-0 z-200 max-w-[425px] w-full mx-auto">
           <motion.div
@@ -98,8 +101,7 @@ const InquiryDetailCard = ({ inquiry, onClick, setShowMsgMoldal }: InquiryDetail
               if (info.point.y > window.innerHeight - 210 && setShowMsgMoldal) {
                 setShowMsgMoldal(false);
               }
-            }}
-            className="mb-[20px]">
+            }}>
             <div className="pt-[14px] pb-[10px] rounded-t-[24px] bg-white cursor-grab flex justify-center">
               <div className="w-[40px] h-[4px] rounded-[50px] bg-white-stroke"></div>
             </div>
@@ -126,7 +128,7 @@ const InquiryDetailCard = ({ inquiry, onClick, setShowMsgMoldal }: InquiryDetail
               </form>
             </div>
 
-            <div className="mb-[20px] bg-white">
+            <div className="pb-[20px] bg-white">
               <MobileButton text="전송하기" onClick={() => {}} type="submit" />
             </div>
           </motion.div>
