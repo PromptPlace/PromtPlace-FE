@@ -29,17 +29,23 @@ const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
 
   return (
     <div className=" bg-overlay fixed inset-0 z-50 flex items-center justify-center bg-opacity-40">
-      <div className="relative flex flex-col bg-white rounded-[16px] shadow-lg px-[42px] py-[45px] w-[758px] h-[635px] max-lg:w-[280px] max-lg:h-[350px] max-lg:pt-[20px] max-lg:pb-0 max-lg:px-0 text-[#121212]">
+      <div className="relative flex flex-col bg-white rounded-[16px] shadow-lg px-[42px] py-[45px] w-[758px] h-[635px] max-lg:w-[280px] max-lg:h-[350px] max-lg:pt-0 max-lg:pb-0 max-lg:px-0 text-[#121212]">
         {/* 제목 영역*/}
-        <div className="flex items-center mb-[40px] max-lg:m-0 max-lg:pl-[8px] max-lg:h-[20px] max-lg:pr-[20px]">
-          <button onClick={onClose} className="text-2xl font-bold leading-none hover:opacity-70" aria-label="뒤로가기">
+        <div className="flex items-center mb-[40px] max-lg:m-0 max-lg:pl-[8px] max-lg:h-[40px] max-lg:pt-[20px] max-lg:pr-[20px]">
+          <button
+            onClick={onClose}
+            className="text-2xl font-bold leading-none hover:opacity-70
+               max-lg:w-[16px] max-lg:h-[16px] max-lg:text-[16px] max-lg:leading-[16px] max-lg:flex max-lg:items-center max-lg:justify-center"
+            aria-label="뒤로가기">
             &lt;
           </button>
-          <h2 className="text-[24px] font-bold ml-[10px] max-lg:text-[16px] max-lg:ml-[10px]">프롬프트 신고하기</h2>
+          <h2 className="text-[24px] font-bold ml-[10px] max-lg:text-[16px] max-lg:ml-[10px] max-lg:leading-[16px]">
+            프롬프트 신고하기
+          </h2>
         </div>
 
         {!isSubmitted ? (
-          <div className="flex flex-col gap-[24px] px-[25px] max-lg:px-0 max-lg:pt-[20px] max-lg:px-[20px]">
+          <div className="flex flex-col gap-[24px] px-[25px] max-lg:pt-[20px] max-lg:px-[20px] max-lg:h-[310px]">
             {/* 라디오 항목 */}
             <div className="flex flex-col gap-[24px] max-lg:gap-[12px]">
               {[
@@ -92,7 +98,7 @@ const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
 
                   {/* 선택된 항목에만 textarea와 전송 버튼 표시 */}
                   {selectedOption === item.value && (
-                    <div className="relative mt-[12px] max-lg:pl-[28px] max-lg:m-0">
+                    <div className="relative mt-[12px] max-lg:pl-[28px] max-lg:m-0 max-lg:h-[68px]">
                       <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
@@ -113,7 +119,7 @@ const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
             </div>
           </div>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-[24px] font-bold text-center">
+          <div className="flex-1 flex items-center justify-center text-[24px] max-lg:text-[12px] font-bold text-center">
             신고가 완료되었습니다.
           </div>
         )}

@@ -81,11 +81,11 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview }: Props
 
         {/* 리뷰/하트/해시태그 */}
         <div className="lg:hidden mt-[8px]">
-          <div className="flex items-center justify-between pt-2">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-[6px]">
-              <Rating star={rating} />
-              <button aria-label="리뷰 보기" onClick={onClickReview}>
-                <img src={rightArrow} alt="arrow" className="flex w-[12px] h-[12px] items-center" />
+              <button aria-label="리뷰 보기" onClick={onClickReview} className="flex items-center gap-[4px]">
+                <Rating star={rating} />
+                <img src={rightArrow} alt="arrow" className="w-[12px] h-[12px]" />
               </button>
             </div>
 

@@ -9,6 +9,7 @@ import profile from './assets/profile.jpg';
 import FollowButton from '@components/Button/FollowButton';
 import ArrowLeft from './assets/keyboard_arrow_down _left.svg';
 import ReportModal from './components/ReportModal';
+import DownloadModal from './components/DownloadModal';
 
 const mockPrompt = {
   prompt_id: 123,
@@ -64,16 +65,45 @@ const PromptDetailPage = () => {
   const handleOpenReportModal = () => setIsReportModalOpen(true);
   const handleCloseReportModal = () => setIsReportModalOpen(false);
 
+  const [reviews, setReviews] = useState(dummyReviews);
+  const [reviewCount, setReviewCount] = useState(prompt.review_counts);
+
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+  const [downloadData, setDownloadData] = useState<{
+    title: string;
+    downloadUrl: string;
+    content: string;
+  } | null>(null);
+
+  const handleDownloadClick = () => {
+    const title = '동양풍 일러스트 이미지 생성';
+    const download_url = 'https://cdn.promptplace.com/prompts/1024.txt';
+    const content = `
+1. 전통 동양풍 인물 일러스트
+a graceful Korean noblewoman wearing hanbok, sitting under a cherry blossom tree, Joseon dynasty style, soft lighting, detailed fabric texture, traditional hair style, serene atmosphere, oriental illustration --v 5 --ar 2:3
+a Korean dragon soaring through the clouds, traditional ink painting style, dynamic cloud motion, golden scales shimmering in sunlight, East Asian mythology, majestic and ancient aura --v 5 --ar 3:2 --style scenic
+
+2. 동양풍 마을/배경 일러스트
+a peaceful traditional Japanese village in spring, sakura trees in full bloom, tiled rooftops, soft morning light, misty mountain background, Ghibli-style aesthetic, detailed background art --v 5 --ar 16:9
+
+3. 퓨전 동양풍 일러스트
+a futuristic city blending Korean traditional architecture and cyberpunk neon lights, hanok buildings with glowing signs, digital screens, night setting, rain-soaked street, Blade Runner meets Joseon, concept art --v 5 --ar 21:9
+  `.trim();
+
+    setDownloadData({ title, downloadUrl: download_url, content });
+    setIsDownloadModalOpen(true);
+  };
+
   if (showReviews) {
     return (
       <ReviewList
-        reviews={dummyReviews}
+        reviews={reviews}
+        setReviews={setReviews}
+        reviewCount={reviewCount}
+        setReviewCount={setReviewCount}
         title={prompt.title}
-        reviewCount={prompt.review_counts}
-        setReviews={() => {}}
         onClose={() => setShowReviews(false)}
         currentUserId={1}
-        setReviewCount={() => {}}
       />
     );
   }
@@ -154,12 +184,27 @@ const PromptDetailPage = () => {
         <div className="flex justify-between items-center w-full">
           <div className="flex items-center gap-[20px] h-[34px]  ml-[85px]">
             <span className="text-[16px] font-medium text-black">{prompt.price.toLocaleString()}원</span>
-            <IconButton buttonType="squareBig" style="fill" imgType="download" text="다운로드" onClick={() => {}} />
+            <IconButton
+              buttonType="squareBig"
+              style="fill"
+              imgType="download"
+              text="다운로드"
+              onClick={handleDownloadClick}
+            />
           </div>
         </div>
       </div>
 
       <ReportModal isOpen={isReportModalOpen} onClose={handleCloseReportModal} />
+      {downloadData && (
+        <DownloadModal
+          isOpen={isDownloadModalOpen}
+          onClose={() => setIsDownloadModalOpen(false)}
+          title={downloadData.title}
+          downloadUrl={downloadData.downloadUrl}
+          content={downloadData.content}
+        />
+      )}
     </div>
   );
 };
