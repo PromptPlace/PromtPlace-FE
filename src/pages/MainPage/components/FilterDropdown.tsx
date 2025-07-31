@@ -4,7 +4,7 @@ type FilterDropdownProps = {
   label: string;
   items: string[];
   selected: boolean;
-  selectedItems?: string[]; // ✅ 다중 선택용
+  selectedItems?: string[];
   onToggle: () => void;
   onSelect: (item: string) => void;
 };
