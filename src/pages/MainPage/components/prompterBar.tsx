@@ -36,7 +36,9 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
         <ul className="mt-4 space-y-4 ">
           {creators.slice(0, 4).map((c) => (
             <li key={c.id} className="flex items-center justify-between">
-              <div className="flex items-center gap-[10px] mt-[12px] cursor-pointer" onClick={() => navigate(`/profile/${c.id}`)}>
+              <div
+                className="flex items-center gap-[10px] mt-[12px] cursor-pointer"
+                onClick={() => navigate(`/profile/${c.id}`)}>
                 <img
                   src={c.avatar ? c.avatar : profileImage}
                   alt={c.name}
@@ -66,7 +68,9 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
         <ul className="mt-4 space-y-4">
           {creators.slice(4, 6).map((c) => (
             <li key={c.id} className="flex items-center justify-between">
-              <div className="flex items-center gap-[10px] mt-[12px] cursor-pointer" onClick={() => navigate(`/profile/${c.id}`)}>
+              <div
+                className="flex items-center gap-[10px] mt-[12px] cursor-pointer"
+                onClick={() => navigate(`/profile/${c.id}`)}>
                 <img
                   src={c.avatar ? c.avatar : profileImage}
                   alt={c.name}

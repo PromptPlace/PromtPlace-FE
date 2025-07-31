@@ -13,9 +13,11 @@ import GradientButton from '@/components/Button/GradientButton';
 import CoachMark from '@/components/CoachMark';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import MobileFilter from './components/MobileFilter';
+import MobilePrompt from './components/MobilePrompt';
 
 const MainPage = () => {
-  const [selectedModel, setSelectedModel] = useState<string | null>(null);
+  const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const [onlyFree, setOnlyFree] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -35,7 +37,7 @@ const MainPage = () => {
   }, [showCoachMark]);
 
   const filterPromptsByModel = dummyPrompts.filter((prompt) => {
-    const matchModel = selectedModel ? prompt.model === selectedModel : true;
+    const matchModel = selectedModels.length > 0 ? selectedModels.includes(prompt.model) : true;
     const matchFree = onlyFree ? prompt.price === 0 : true;
     return matchModel && matchFree;
   });
@@ -60,17 +62,34 @@ const MainPage = () => {
   return (
     <div className="flex gap-[59px] justify-center bg-[#F5F5F5] relative overflow-hidden">
       {showCoachMark && !accessToken && <CoachMark setShowCoachMark={setShowCoachMark} />}
-      <div className="w-[858px] h-[820px] mt-[53px] mb-[42px] overflow-y-auto pb-32">
-        <FilterBar
-          onModelChange={setSelectedModel}
-          onSortChange={setSelectedSort}
-          onlyFree={onlyFree}
-          setOnlyFree={setOnlyFree}
-        />
+      <div className="w-[858px] h-[820px] mb-[42px] overflow-y-auto pb-32">
+        <div className="hidden lg:flex mt-[53px] ">
+          <FilterBar
+            onModelChange={(models: string[] | null) => setSelectedModels(models ?? [])}
+            onSortChange={(sort: string | null) => setSelectedSort(sort)}
+            onlyFree={onlyFree}
+            setOnlyFree={setOnlyFree}
+          />
+        </div>
 
-        <div className="scroll-auto">
+        <div className="flex lg:hidden">
+          <MobileFilter
+            onModelChange={(models: string[] | null) => setSelectedModels(models ?? [])}
+            onSortChange={(sort: string | null) => setSelectedSort(sort)}
+            onlyFree={onlyFree}
+            setOnlyFree={setOnlyFree}
+          />
+        </div>
+
+        <div className="hidden lg:flex flex-col scroll-auto">
           {sortPromptByFilter.map((prompt) => (
             <PromptCard key={prompt.prompt_id} prompt={prompt} />
+          ))}
+        </div>
+
+        <div className="flex flex-col lg:hidden scroll-auto">
+          {sortPromptByFilter.map((prompt) => (
+            <MobilePrompt key={prompt.prompt_id} prompt={prompt} />
           ))}
         </div>
       </div>

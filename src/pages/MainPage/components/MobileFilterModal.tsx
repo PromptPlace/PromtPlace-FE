@@ -1,67 +1,72 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import MobileModelTab from './MobileModelTab';
+import MobileFilterTab from './MobileFilterTab';
+import MobileTagTab from './MobileTagTab';
 
 type Props = {
   visible: boolean;
   onClose: () => void;
+  activeTab: '모델' | '필터' | '태그';
+  onTabChange: (tab: '모델' | '필터' | '태그') => void;
+  onApplyFilter: (data: { models: string[] | null; sort: string | null; tags: string[] }) => void;
 };
 
-const MobileFilterModal = ({ visible, onClose }: Props) => {
+const MobileFilterModal = ({ visible, onClose, activeTab, onTabChange, onApplyFilter }: Props) => {
+  const [selectedModels, setSelectedModels] = useState<string[]>([]);
+  const [selectedSort, setSelectedSort] = useState<string | null>(null);
+  const [tags, setTags] = useState<string[]>([]);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [onClose]);
+
   if (!visible) return null;
 
+  const handleApply = () => {
+    onApplyFilter({ models: selectedModels, sort: selectedSort, tags });
+    onClose();
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black bg-opacity-50">
-      <div className="w-80 h-80 pb-5 bg-white rounded-tl-3xl rounded-tr-3xl shadow-[2px_2px_30px_0px_rgba(0,0,0,0.25)] flex flex-col items-center gap-5 px-4 pt-4">
-        {/* 상단 바 */}
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40">
+      <div
+        ref={modalRef}
+        className="w-[320px] max-h-[80vh] pb-5 bg-white rounded-t-3xl shadow-xl flex flex-col items-center gap-5 px-4 pt-4 overflow-y-auto">
         <div className="w-full flex justify-center items-center relative h-7">
-          <div className="w-10 h-1 bg-white-stroke rounded-full" />
+          <div className="w-10 h-1 bg-gray-300 rounded-full" />
         </div>
 
-        {/* 탭 버튼들 */}
         <div className="w-72 flex justify-start items-center gap-2">
-          <div className="px-5 py-1.5 bg-secondary rounded-full">
-            <span className="text-primary text-xs font-medium">모델</span>
-          </div>
-          <div className="px-5 py-1.5 bg-white rounded-full">
-            <span className="text-text-on-background text-xs font-medium">필터</span>
-          </div>
-          <div className="px-5 py-1.5 bg-white rounded-full">
-            <span className="text-text-on-background text-xs font-medium">태그</span>
-          </div>
-        </div>
-
-        {/* 선택 버튼 그룹 */}
-        <div className="flex flex-col items-start gap-4">
-          {[
-            ['ChatGPT', 'Perplexity'],
-            ['Claude', 'Gemini'],
-            ['Midjourney', '기타'],
-          ].map((row, rowIdx) => (
-            <div key={rowIdx} className="flex gap-5">
-              {row.map((label, i) => {
-                const isSelected = label === 'Midjourney'; // 예시
-                return (
-                  <div key={i} className="w-32 flex justify-center">
-                    <div
-                      className={`w-32 px-9 py-2 rounded outline-1 outline-offset-[-1px] flex justify-center items-center gap-2.5 ${
-                        isSelected ? 'bg-secondary outline-primary' : 'bg-white outline-white-stroke'
-                      }`}>
-                      <span className={`text-sm font-normal ${isSelected ? 'text-primary' : 'text-white-stroke'}`}>
-                        {label}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+          {(['모델', '필터', '태그'] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => onTabChange(tab)}
+              className={`px-5 py-1.5 rounded-full ${activeTab === tab ? 'bg-secondary' : 'bg-white'}`}>
+              <span className={`text-xs font-medium ${activeTab === tab ? 'text-primary' : 'text-text-on-background'}`}>
+                {tab}
+              </span>
+            </button>
           ))}
         </div>
 
-        {/* 선택 완료 버튼 */}
-        <div
-          onClick={onClose}
-          className="w-72 h-10 px-10 py-[5px] bg-primary rounded flex justify-center items-center gap-2.5 cursor-pointer">
-          <span className="text-white text-base font-medium">선택 완료하기</span>
+        <div className="flex flex-col items-start gap-4 w-full">
+          {activeTab === '모델' && (
+            <MobileModelTab selectedModels={selectedModels} setSelectedModels={setSelectedModels} />
+          )}
+          {activeTab === '필터' && <MobileFilterTab selectedSort={selectedSort} setSelectedSort={setSelectedSort} />}
+          {activeTab === '태그' && <MobileTagTab tags={tags} setTags={setTags} />}
         </div>
+
+        <button onClick={handleApply} className="w-72 h-10 bg-primary rounded text-white font-medium mt-4">
+          {activeTab === '태그' ? '작성 완료하기' : '선택 완료하기'}
+        </button>
       </div>
     </div>
   );

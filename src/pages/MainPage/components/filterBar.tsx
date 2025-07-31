@@ -4,7 +4,7 @@ import TagFilter from './TagFilter';
 import arrowDown from '@/assets/icon-arrow-down.svg';
 
 type FilterBarProps = {
-  onModelChange: (model: string | null) => void;
+  onModelChange: (models: string[] | null) => void;
   onSortChange: (sort: string | null) => void;
   onlyFree?: boolean;
   setOnlyFree: (free: boolean) => void;
@@ -42,7 +42,7 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
   const handleModelSelect = (model: string) => {
     const isModel = selectedModel === model ? null : model;
     setSelectedModel(isModel);
-    onModelChange(isModel);
+    onModelChange(isModel ? ([isModel] as string[]) : null);
     setSelectedFilter(null); // 드롭다운 닫기
   };
 
