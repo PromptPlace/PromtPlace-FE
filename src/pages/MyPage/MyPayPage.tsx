@@ -7,7 +7,7 @@ import TextModal from '@/components/Modal/TextModal';
 // 더미 데이터 예시
 const DUMMY_USER_INFO = {
   nickname: '주토피아노',
-  balance: 2100,
+  balance: 1100,
 };
 
 const DUMMY_SALES_HISTORY = [
@@ -32,7 +32,7 @@ const DUMMY_SALES_HISTORY = [
 const MyPayPage = () => {
   const [userInfo, setUserInfo] = useState(DUMMY_USER_INFO);
   const [salesHistory, setSalesHistory] = useState(DUMMY_SALES_HISTORY);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState<'noMoney' | 'noAccount' | 'yesAccount' | 'complete' | boolean>(false);
 
   const handleWithdraw = () => {
     console.log('출금하기 모달을 엽니다.');
@@ -86,6 +86,18 @@ const MyPayPage = () => {
 
       {showModal && userInfo.balance < 10000 && (
         <TextModal text="10,000원부터 출금하실 수 있습니다." onClick={() => setShowModal(false)} size="lg" />
+      )}
+
+      {showModal && userInfo.balance > 10000 && (
+        <TextModal text="계좌 정보를 등록해주세요." onClick={() => setShowModal(false)} size="lg" />
+      )}
+
+      {showModal === 'yesAccount' && userInfo.balance > 10000 && (
+        <TextModal text="해당 계좌로 출금할까요?" onClick={() => setShowModal('complete')} size="lg" />
+      )}
+
+      {showModal === 'yesAccount' && userInfo.balance > 10000 && (
+        <TextModal text="출금이 완료되었습니다" onClick={() => setShowModal(false)} size="lg" />
       )}
     </div>
   );
