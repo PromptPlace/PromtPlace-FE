@@ -8,7 +8,7 @@ type Props = {
   onClose: () => void;
   activeTab: '모델' | '필터' | '태그';
   onTabChange: (tab: '모델' | '필터' | '태그') => void;
-  onApplyFilter: (data: { model: string | null; sort: string | null; tags: string[] }) => void;
+  onApplyFilter: (data: { models: string[] | null; sort: string | null; tags: string[] }) => void;
 };
 
 const MobileFilterModal = ({ visible, onClose, activeTab, onTabChange, onApplyFilter }: Props) => {
@@ -16,7 +16,6 @@ const MobileFilterModal = ({ visible, onClose, activeTab, onTabChange, onApplyFi
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const [tags, setTags] = useState<string[]>([]);
   const modalRef = useRef<HTMLDivElement>(null);
-  const [selectedTab, setSelectedTab] = useState(activeTab);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -27,12 +26,6 @@ const MobileFilterModal = ({ visible, onClose, activeTab, onTabChange, onApplyFi
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [onClose]);
-
-  useEffect(() => {
-    if (activeTab !== selectedTab) {
-      setSelectedTab(activeTab);
-    }
-  }, [activeTab]);
 
   if (!visible) return null;
 
@@ -54,10 +47,9 @@ const MobileFilterModal = ({ visible, onClose, activeTab, onTabChange, onApplyFi
           {(['모델', '필터', '태그'] as const).map((tab) => (
             <button
               key={tab}
-              onClick={() => setSelectedTab(tab)}
-              className={`px-5 py-1.5 rounded-full ${selectedTab === tab ? 'bg-secondary' : 'bg-white'}`}>
-              <span
-                className={`text-xs font-medium ${selectedTab === tab ? 'text-primary' : 'text-text-on-background'}`}>
+              onClick={() => onTabChange(tab)}
+              className={`px-5 py-1.5 rounded-full ${activeTab === tab ? 'bg-secondary' : 'bg-white'}`}>
+              <span className={`text-xs font-medium ${activeTab === tab ? 'text-primary' : 'text-text-on-background'}`}>
                 {tab}
               </span>
             </button>
@@ -65,15 +57,15 @@ const MobileFilterModal = ({ visible, onClose, activeTab, onTabChange, onApplyFi
         </div>
 
         <div className="flex flex-col items-start gap-4 w-full">
-          {selectedTab === '모델' && (
+          {activeTab === '모델' && (
             <MobileModelTab selectedModels={selectedModels} setSelectedModels={setSelectedModels} />
           )}
-          {selectedTab === '필터' && <MobileFilterTab selectedSort={selectedSort} setSelectedSort={setSelectedSort} />}
-          {selectedTab === '태그' && <MobileTagTab tags={tags} setTags={setTags} />}
+          {activeTab === '필터' && <MobileFilterTab selectedSort={selectedSort} setSelectedSort={setSelectedSort} />}
+          {activeTab === '태그' && <MobileTagTab tags={tags} setTags={setTags} />}
         </div>
 
         <button onClick={handleApply} className="w-72 h-10 bg-primary rounded text-white font-medium mt-4">
-          {selectedTab === '태그' ? '작성 완료하기' : '선택 완료하기'}
+          {activeTab === '태그' ? '작성 완료하기' : '선택 완료하기'}
         </button>
       </div>
     </div>

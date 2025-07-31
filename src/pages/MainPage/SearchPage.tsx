@@ -16,7 +16,7 @@ import { data, useParams } from 'react-router-dom';
 import SearchPrompter from './components/SearchPrompter';
 
 const SearchPage = () => {
-  const [selectedModel, setSelectedModel] = useState<string | null>(null);
+  const [selectedModels, setSelectedModels] = useState<string[] | null>([]);
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const [onlyFree, setOnlyFree] = useState<boolean>(false);
   const [, setSearch] = useState('');
@@ -63,7 +63,11 @@ const SearchPage = () => {
   });
 
   const filterPromptsByModel = filteredByKeyword.filter((prompt) => {
-    const matchModel = selectedModel ? prompt.model === selectedModel : true;
+    const matchModel = selectedModels
+      ? selectedModels.length > 0
+        ? selectedModels.includes(prompt.model)
+        : true
+      : true;
     const matchFree = onlyFree ? prompt.price === 0 : true;
     return matchModel && matchFree;
   });
@@ -91,8 +95,8 @@ const SearchPage = () => {
         <div className="justify-start text-black text-2xl font-bold">'{keyword}' 검색 결과</div>
 
         <FilterBar
-          onModelChange={setSelectedModel}
-          onSortChange={setSelectedSort}
+          onModelChange={(models: string[] | null) => setSelectedModels(models ?? [])}
+          onSortChange={(sort: string | null) => setSelectedSort(sort)}
           onlyFree={onlyFree}
           setOnlyFree={setOnlyFree}
         />

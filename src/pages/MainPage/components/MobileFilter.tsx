@@ -5,7 +5,7 @@ import MobileFilterModal from './MobileFilterModal';
 type FilterTab = '모델' | '필터' | '태그' | null;
 
 type Props = {
-  onModelChange: (models: string[]) => void;
+  onModelChange: (models: string[] | null) => void;
   onSortChange: (sort: string | null) => void;
   onlyFree: boolean;
   setOnlyFree: (free: boolean) => void;
@@ -14,12 +14,12 @@ type Props = {
 const MobileFilter = ({ onlyFree, setOnlyFree, onModelChange, onSortChange }: Props) => {
   const [activeTab, setActiveTab] = useState<FilterTab>(null);
 
-  const handleOnlyFreeToggle = () => setOnlyFree((prev) => !prev);
+  const handleOnlyFreeToggle = () => setOnlyFree(!onlyFree);
 
   const handleOpenTab = (tab: FilterTab) => setActiveTab(tab);
   const handleClose = () => setActiveTab(null);
 
-  const handleApplyFilter = (data: { models: string[]; sort: string | null; tags: string[] }) => {
+  const handleApplyFilter = (data: { models: string[] | null; sort: string | null; tags: string[] }) => {
     onModelChange(data.models);
     onSortChange(data.sort);
     setActiveTab(null);
@@ -33,14 +33,17 @@ const MobileFilter = ({ onlyFree, setOnlyFree, onModelChange, onSortChange }: Pr
         onOpenModel={() => handleOpenTab('모델')}
         onOpenSort={() => handleOpenTab('필터')}
         onOpenTag={() => handleOpenTab('태그')}
-      />
-      <MobileFilterModal
-        visible={activeTab !== null}
-        onClose={handleClose}
         activeTab={activeTab as '모델' | '필터' | '태그'}
-        onTabChange={setActiveTab}
-        onApplyFilter={handleApplyFilter}
       />
+      {activeTab && (
+        <MobileFilterModal
+          visible={activeTab !== null}
+          onClose={handleClose}
+          activeTab={activeTab as '모델' | '필터' | '태그'}
+          onTabChange={setActiveTab}
+          onApplyFilter={handleApplyFilter}
+        />
+      )}
     </>
   );
 };

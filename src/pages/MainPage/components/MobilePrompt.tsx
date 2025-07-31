@@ -69,8 +69,7 @@ const MobilePrompt = ({ prompt }: Props) => {
         {/* 별점, 조회수, 다운로드 수 */}
         <div className="flex items-center gap-2">
           <div className="flex items-center h-3">
-            <Rating star={rating_avg} size="xs" />
-            <span className="text-[8px] text-text-on-background ml-1">({rating_avg.toFixed(1)})</span>
+            <Rating star={rating_avg}/>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="flex items-center gap-1 text-[8px] text-text-on-background">
