@@ -7,7 +7,7 @@ interface ImageListProps {
   onRemove: (index: number) => void;
 }
 
-const ImageList: React.FC<ImageListProps> = ({ files, onRemove }) => (
+export const ImageList: React.FC<ImageListProps> = ({ files, onRemove }) => (
   <div className="flex flex-col">
     {files.map((file, idx) => (
       <div key={idx} className="flex items-center gap-[24px]">
@@ -20,4 +20,15 @@ const ImageList: React.FC<ImageListProps> = ({ files, onRemove }) => (
   </div>
 );
 
-export default ImageList;
+export const MobileImageList: React.FC<ImageListProps> = ({ files, onRemove }) => (
+  <div className="flex flex-col">
+    {files.map((file, idx) => (
+      <div key={idx} className="flex items-center justify-between gap-[24px]">
+        <span className="text-[10px] text-text-on-white truncate">{file.name}</span>
+        <button type="button" onClick={() => onRemove(idx)} aria-label="Remove image">
+          <LuX size={8} />
+        </button>
+      </div>
+    ))}
+  </div>
+);
