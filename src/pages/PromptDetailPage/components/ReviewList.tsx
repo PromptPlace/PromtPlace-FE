@@ -91,25 +91,28 @@ const ReviewList = ({
     setReviews(updatedReviews);
     setSelectedReview(updatedReviews[selectedReviewIdx]);
     setShowUpdateModal(false);
+    setSelectedReviewIdx(null);
+    setOpenMenuIdx(null);
   };
 
   return (
-    <div className="w-[459px] bg-[#FFFEFB] h-[654px] px-8 py-6 flex flex-col">
-      {/* 상단 */}
-      <div className="flex items-center mb-4">
-        <button onClick={onClose} className="text-2xl font-bold leading-none hover:opacity-70" aria-label="뒤로가기">
-          &lt;
-        </button>
-        <h2 className="font-bold text-[20px] ml-3 inline-flex items-center gap-2">구매자 리뷰 ({reviewCount})</h2>
-      </div>
+    <>
+      <div className="hidden lg:flex w-[459px] bg-[#FFFEFB] h-[654px] px-8 py-6 flex-col">
+        {/* 상단 */}
+        <div className="flex items-center mb-4">
+          <button onClick={onClose} className="text-2xl font-bold leading-none hover:opacity-70" aria-label="뒤로가기">
+            &lt;
+          </button>
+          <h2 className="font-bold text-[20px] ml-3 inline-flex items-center gap-2">구매자 리뷰 ({reviewCount})</h2>
+        </div>
 
-      <div className="h-[1px] bg-[#CCCCCC] w-full mb-4" />
+        <div className="h-[1px] bg-[#CCCCCC] w-full mb-4" />
 
-      {/* 리뷰 리스트 */}
-      <div
-        className="flex-1 overflow-y-auto pr-2 custom-scrollbar relative"
-        style={{ scrollbarWidth: 'thin', scrollbarColor: '#fff transparent' }}>
-        <style>{`
+        {/* 리뷰 리스트 */}
+        <div
+          className="flex-1 overflow-y-auto pr-2 custom-scrollbar relative"
+          style={{ scrollbarWidth: 'thin', scrollbarColor: '#fff transparent' }}>
+          <style>{`
           .custom-scrollbar::-webkit-scrollbar {
             width: 8px;
           }
@@ -124,58 +127,128 @@ const ReviewList = ({
           }
         `}</style>
 
-        {reviews.map((review, idx) => (
-          <div
-            key={`${review.review_id}-${idx}`}
-            className="relative group"
-            onMouseEnter={() => setHoverIdx(idx)}
-            onMouseLeave={() => setHoverIdx(null)}>
-            <div className="flex gap-3 mb-4 last:mb-0">
-              <img
-                src={review.writer_profile_image_url || defaultProfile}
-                alt={`${review.writer_nickname} 프로필`}
-                className="w-12 h-12 rounded-full"
-              />
-              <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <p className="font-semibold">{review.writer_nickname}</p>
+          {reviews.map((review, idx) => (
+            <div
+              key={review.review_id}
+              className="relative group"
+              onMouseEnter={() => setHoverIdx(idx)}
+              onMouseLeave={() => setHoverIdx(null)}>
+              <div className="flex gap-3 mb-4 last:mb-0">
+                <img
+                  src={review.writer_profile_image_url || defaultProfile}
+                  alt={`${review.writer_nickname} 프로필`}
+                  className="w-12 h-12 rounded-full"
+                />
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold">{review.writer_nickname}</p>
+                      <Rating star={review.rating} />
+                    </div>
+
+                    {hoverIdx === idx && (review.writer_id === currentUserId || isAdmin) && (
+                      <button
+                        onClick={() => toggleMenu(idx)}
+                        className="hover:bg-secondary-pressed rounded-full p-1 transition-colors duration-150">
+                        <BsThreeDotsVertical className="text-lg text-gray-500" />
+                      </button>
+                    )}
+                  </div>
+                  <p className="mt-1 text-gray-700">{review.content}</p>
+                </div>
+              </div>
+
+              {/* 점 버튼 메뉴 */}
+              {openMenuIdx === idx && (
+                <div className="absolute top-8 right-0 bg-secondary text-text-on-background rounded-md shadow-md z-20 w-[91px] h-[72px]">
+                  <ul className="text-[16px]">
+                    <li
+                      className="px-4 py-[6px] active:bg-secondary-pressed hover:text-black cursor-pointer rounded-t-md"
+                      onClick={() => onClickDelete(idx)}>
+                      삭제하기
+                    </li>
+                    <li
+                      className="px-4 py-[6px] active:bg-secondary-pressed hover:text-black cursor-pointer rounded-b-md"
+                      onClick={() => onClickEdit(idx)}>
+                      수정하기
+                    </li>
+                  </ul>
+                </div>
+              )}
+
+              {idx !== reviews.length - 1 && <div className="h-[1px] bg-[#CCCCCC] w-full my-4" />}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ✅ 모바일 전용 리뷰 UI */}
+      <div className="lg:hidden w-full min-h-screen px-[20px] pt-[12px] pb-[20px] bg-[#F5F5F5]">
+        {/* 상단 헤더 */}
+        <div className="flex items-center mb-[20px]">
+          <button
+            onClick={onClose}
+            className="text-[20px] font-bold leading-none hover:opacity-70"
+            aria-label="뒤로가기">
+            &lt;
+          </button>
+          <h2 className="text-[16px] font-medium text-center w-full ml-[20px]">구매자 리뷰</h2>
+        </div>
+
+        {/* 리뷰 리스트 */}
+        <div className="flex flex-col items-center">
+          {reviews.map((review, idx) => (
+            <div
+              key={review.review_id}
+              className="w-full max-w-[280px] h-[92px] bg-[#FFFEFB] p-[12px] shadow-sm relative">
+              {/* 점 버튼 (오른쪽 상단) */}
+              <div className="absolute top-[12px] right-[12px]">
+                {(review.writer_id === currentUserId || isAdmin) && (
+                  <button
+                    onClick={() => toggleMenu(idx)}
+                    className="hover:bg-gray-200 rounded-full p-1 h-[16px] w-[16px]">
+                    <BsThreeDotsVertical className="text-[16px] text-gray-500" />
+                  </button>
+                )}
+              </div>
+
+              <div className="flex gap-[8px]">
+                {/* 프로필 */}
+                <img
+                  src={review.writer_profile_image_url || defaultProfile}
+                  alt={`${review.writer_nickname} 프로필`}
+                  className="w-[36px] h-[36px] rounded-full object-cover"
+                />
+
+                {/* 텍스트 정보 */}
+                <div className="flex-1 flex flex-col gap-[4px]">
+                  <div className="flex items-center gap-[6px] h-[36px]">
+                    <p className="text-[12px] font-medium">{review.writer_nickname}</p>
                     <Rating star={review.rating} />
                   </div>
-
-                  {hoverIdx === idx && (review.writer_id === currentUserId || isAdmin) && (
-                    <button
-                      onClick={() => toggleMenu(idx)}
-                      className="hover:bg-secondary-pressed rounded-full p-1 transition-colors duration-150">
-                      <BsThreeDotsVertical className="text-lg text-gray-500" />
-                    </button>
-                  )}
+                  <p className="text-[10px] pt-[2px] text-gray-700 line-clamp-2">{review.content}</p>
                 </div>
-                <p className="mt-1 text-gray-700">{review.content}</p>
               </div>
+
+              {openMenuIdx === idx && (
+                <div className="absolute top-[40px] right-[12px]  bg-secondary text-text-on-background borderrounded-md shadow-md z-50 w-[61px]">
+                  <ul className="text-[10px] divide-y divide-gray-200">
+                    <li
+                      className="h-[21px] flex items-center justify-center cursor-pointer hover:text-black  active:bg-secondary-pressed rounded-t-md"
+                      onClick={() => onClickDelete(idx)}>
+                      삭제하기
+                    </li>
+                    <li
+                      className="h-[21px] flex items-center justify-center cursor-pointer  active:bg-secondary-pressed rounded-b-md"
+                      onClick={() => onClickEdit(idx)}>
+                      수정하기
+                    </li>
+                  </ul>
+                </div>
+              )}
             </div>
-
-            {/* 점 버튼 메뉴 */}
-            {openMenuIdx === idx && (
-              <div className="absolute top-8 right-0 bg-secondary text-text-on-background rounded-md shadow-md z-20 w-[91px] h-[72px]">
-                <ul className="text-[16px]">
-                  <li
-                    className="px-4 py-[6px] active:bg-secondary-pressed hover:text-black cursor-pointer rounded-t-md"
-                    onClick={() => onClickDelete(idx)}>
-                    삭제하기
-                  </li>
-                  <li
-                    className="px-4 py-[6px] active:bg-secondary-pressed hover:text-black cursor-pointer rounded-b-md"
-                    onClick={() => onClickEdit(idx)}>
-                    수정하기
-                  </li>
-                </ul>
-              </div>
-            )}
-
-            {idx !== reviews.length - 1 && <div className="h-[1px] bg-[#CCCCCC] w-full my-4" />}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* 삭제 확인 모달 */}
@@ -191,6 +264,7 @@ const ReviewList = ({
               setSelectedReviewIdx(null);
             }
 
+            setOpenMenuIdx(null);
             setShowDeleteModal(false);
             setShowDeleteSuccessModal(true);
           }}
@@ -212,6 +286,7 @@ const ReviewList = ({
       {showUpdateModal && selectedReview && (
         <UpdateModal
           isOpen={showUpdateModal}
+          key={selectedReview.review_id}
           onClose={() => setShowUpdateModal(false)}
           title={title}
           views={2109}
@@ -221,7 +296,7 @@ const ReviewList = ({
           onSave={handleSave}
         />
       )}
-    </div>
+    </>
   );
 };
 

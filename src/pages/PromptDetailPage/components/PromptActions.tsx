@@ -21,6 +21,7 @@ interface Props {
   rating: number;
   updatedAt: string;
   userId: number;
+  onClickReview: () => void;
 }
 
 const dummyReviews = [
@@ -158,6 +159,8 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
     setIsReportModalOpen(false);
   };
 
+  const [isPaid, setIsPaid] = useState(false);
+
   if (showReviews) {
     return (
       <ReviewList
@@ -185,7 +188,7 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
       <div className="h-[1px] bg-[#CCCCCC] w-full" />
 
       {/* 제목 */}
-      <div className="font-bold text-[24px] pt-[25px]">{`[${title}]`}</div>
+      <div className="font-bold text-[24px] pt-[25px]">{title}</div>
 
       {/* 가격 */}
       <div className="text-[24px] pt-[30px] font-bold">{isFree ? '무료' : `${price.toLocaleString()}원`}</div>
@@ -215,6 +218,8 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
                 title={downloadData.title}
                 downloadUrl={downloadData.downloadUrl}
                 content={downloadData.content}
+                price={price}
+                onPaid={() => setIsPaid(true)}
               />
             )}
           </>

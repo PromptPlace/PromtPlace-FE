@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import ModelButton from '@components/Button/ModelButton';
 import Rating from '@components/Rating';
 import PrimaryButton from '@components/Button/PrimaryButton';
+import Bar from '../assets/bar.svg';
 
 interface UpdateModalProps {
   isOpen: boolean;
@@ -30,8 +31,9 @@ const UpdateModal = ({ isOpen, onClose, title, rating, initialReviewText, onSave
 
   return (
     <div className=" bg-overlay fixed inset-0 z-50 flex items-center justify-center bg-opacity-40 p-4">
+      {/* ✅ PC 버전 */}
       <div
-        className="relative bg-white rounded-2xl shadow-xl flex flex-col"
+        className="hidden lg:flex relative bg-white rounded-2xl shadow-xl flex-col"
         style={{ width: '760px', maxHeight: '90vh', overflowY: 'auto' }}>
         {/* 헤더 */}
         <div className="flex items-center px-8 py-5 ">
@@ -60,7 +62,7 @@ const UpdateModal = ({ isOpen, onClose, title, rating, initialReviewText, onSave
           <div className="w-[624px] h-[321px] bg-[#F5F5F5] border border-gray-300 rounded-[8px] p-4 flex flex-col justify-between">
             <textarea
               id="review-text"
-              className="w-full h-full bg-transparent resize-none focus:outline-blue-500 focus:ring-2 focus:ring-blue-300 transition"
+              className="w-full h-full bg-transparent resize-none focus:none focus:ring-2 focus:ring-blue-300 transition"
               value={reviewText}
               onChange={(e) => setReviewText(e.target.value)}
               placeholder="리뷰 내용을 입력하세요."
@@ -72,6 +74,30 @@ const UpdateModal = ({ isOpen, onClose, title, rating, initialReviewText, onSave
             </div>
           </div>
         </div>
+      </div>
+
+      {/* ✅ 모바일 버전 */}
+      <div className="lg:hidden fixed bottom-0 left-0 w-full h-[276px] bg-white rounded-t-[24px] shadow-[0_-4px_12px_rgba(0,0,0,0.1)] p-[20px] pt-0 z-50">
+        <div className="flex justify-center pt-[8px] pb-[12px]">
+          <img src={Bar} alt="bar" className="w-[40px] h-[4px] rounded-full" />
+        </div>
+
+        <div className="flex items-center gap-[4px] mb-[8px] pt-[20px]">
+          <Rating star={rating} />
+        </div>
+
+        <textarea
+          className="w-full h-[120px] bg-[#F5F5F5] rounded-[8px] p-[10px] text-[12px] text-[#333] resize-none border border-gray-300 focus:outline-none"
+          value={reviewText}
+          onChange={(e) => setReviewText(e.target.value)}
+          placeholder="리뷰 내용을 입력하세요."
+        />
+
+        <button
+          onClick={handleSaveClick}
+          className="mt-[16px] w-full h-[40px] bg-[#337EFF] text-white text-[14px] font-medium rounded-[6px]">
+          수정하기
+        </button>
       </div>
     </div>
   );

@@ -29,18 +29,25 @@ const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
 
   return (
     <div className=" bg-overlay fixed inset-0 z-50 flex items-center justify-center bg-opacity-40">
-      <div className="relative flex flex-col bg-white rounded-[16px] shadow-lg px-[42px] py-[45px] w-[758px] h-[635px] text-[#121212]">
-        <div className="flex items-center mb-[40px]">
-          <button onClick={onClose} className="text-2xl font-bold leading-none hover:opacity-70" aria-label="뒤로가기">
+      <div className="relative flex flex-col bg-white rounded-[16px] shadow-lg px-[42px] py-[45px] w-[758px] h-[635px] max-lg:w-[280px] max-lg:h-[350px] max-lg:pt-0 max-lg:pb-0 max-lg:px-0 text-[#121212]">
+        {/* 제목 영역*/}
+        <div className="flex items-center mb-[40px] max-lg:m-0 max-lg:pl-[8px] max-lg:h-[40px] max-lg:pt-[20px] max-lg:pr-[20px]">
+          <button
+            onClick={onClose}
+            className="text-2xl font-bold leading-none hover:opacity-70
+               max-lg:w-[16px] max-lg:h-[16px] max-lg:text-[16px] max-lg:leading-[16px] max-lg:flex max-lg:items-center max-lg:justify-center"
+            aria-label="뒤로가기">
             &lt;
           </button>
-          <h2 className="text-[24px] font-bold ml-[10px]">프롬프트 신고하기</h2>
+          <h2 className="text-[24px] font-bold ml-[10px] max-lg:text-[16px] max-lg:ml-[10px] max-lg:leading-[16px]">
+            프롬프트 신고하기
+          </h2>
         </div>
 
         {!isSubmitted ? (
-          <div className="flex flex-col gap-[24px] px-[25px]">
+          <div className="flex flex-col gap-[24px] px-[25px] max-lg:pt-[20px] max-lg:px-[20px] max-lg:h-[310px]">
             {/* 라디오 항목 */}
-            <div className="flex flex-col gap-[24px]">
+            <div className="flex flex-col gap-[24px] max-lg:gap-[12px]">
               {[
                 {
                   value: '허위 또는 과장된 콘텐츠',
@@ -63,8 +70,8 @@ const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
                   desc: '',
                 },
               ].map((item) => (
-                <label key={item.value} className="flex flex-col gap-[6px] cursor-pointer">
-                  <div className="flex items-start gap-[12px]  text-[#000000]">
+                <label key={item.value} className="flex flex-col gap-[6px] max-lg:gap-[2px] cursor-pointer">
+                  <div className="flex items-start max-lg:gap-[12px] max-lg:text-[#000000]">
                     <input
                       type="radio"
                       name="reportOption"
@@ -78,30 +85,32 @@ const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
                       src={selectedOption === item.value ? BiRadioCircleMarked : BiRadioCircle}
                       alt="radio"
                       onClick={() => setSelectedOption(item.value)}
-                      className="w-[20px] h-[20px] mt-[6px] cursor-pointer"
+                      className="w-[20px] h-[20px]  max-lg:w-[16px]  max-lg:h-[16px] mt-[6px] max-lg:mt-[2px] cursor-pointer"
                     />
 
                     <div>
-                      <p className="text-[24px] font-bold">{item.label}</p>
-                      {item.desc && <p className="font-medium text-[20px] mt-[4px]">{item.desc}</p>}
+                      <p className="text-[24px] font-bold max-lg:text-[14px]">{item.label}</p>
+                      {item.desc && (
+                        <p className="font-medium text-[20px] mt-[4px] max-lg:mt-0 max-lg:text-[10px]">{item.desc}</p>
+                      )}
                     </div>
                   </div>
 
                   {/* 선택된 항목에만 textarea와 전송 버튼 표시 */}
                   {selectedOption === item.value && (
-                    <div className="relative mt-[12px]">
+                    <div className="relative mt-[12px] max-lg:pl-[28px] max-lg:m-0 max-lg:h-[68px]">
                       <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         placeholder="신고 내용을 입력하세요(구체적으로 작성)"
-                        className="w-full h-[96px] bg-[#F5F5F5] border border-gray-300 rounded-[8px] p-4 resize-none focus:outline-none focus:ring-0 transition text-[14px]"
+                        className="w-full h-[96px] bg-[#F5F5F5] border border-gray-300 rounded-[8px] p-4 resize-none focus:outline-none focus:ring-0 transition text-[14px] max-lg:p-[8px] max-lg:text-[10px] max-lg:w-[212px] max-lg:h-[68px]"
                       />
 
                       <button
                         onClick={handleSubmit}
                         disabled={!description.trim()}
                         className="absolute bottom-[12px] right-[12px] text-black opacity-100 transition-opacity">
-                        <img src={sendIcon} alt="send" className="w-[20px] h-[20px]" />
+                        <img src={sendIcon} alt="send" className="w-[20px] h-[20px] max-lg:w-[16px] max-lg:h-[16px]" />
                       </button>
                     </div>
                   )}
@@ -110,7 +119,7 @@ const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
             </div>
           </div>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-[24px] font-bold text-center">
+          <div className="flex-1 flex items-center justify-center text-[24px] max-lg:text-[12px] font-bold text-center">
             신고가 완료되었습니다.
           </div>
         )}
