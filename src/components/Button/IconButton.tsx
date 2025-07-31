@@ -80,7 +80,10 @@ const IconButton = ({ buttonType, style, imgType, textButton, text, onClick, typ
     <button
       type={type}
       onClick={onClick}
-      className={`group flex justify-center items-center shadow-button hover:shadow-button-hover transition-all duration-300 ease-in-out ${iconButtonTheme.buttonType[buttonType]} ${iconButtonTheme.style[style]} ${textButton && iconButtonTheme.textButton[textButton]}`}>
+      className={clsx(
+        `group flex justify-center items-center shadow-button hover:shadow-button-hover transition-all duration-300 ease-in-out ${iconButtonTheme.buttonType[buttonType]} ${iconButtonTheme.style[style]} ${textButton && iconButtonTheme.textButton[textButton]}`,
+        buttonType === 'round' && style === 'fill' && imgType === 'upload' && 'max-lg:w-[117px]',
+      )}>
       {imgType === 'settings' && (
         <SettingsIcon className="w-[24px] h-[24px] max-lg:w-[12px] max-lg:h-[12px] text-primary group-hover:text-primary-hover group-active:text-primary-pressed" />
       )}
@@ -88,7 +91,7 @@ const IconButton = ({ buttonType, style, imgType, textButton, text, onClick, typ
         <UploadIcon
           className={clsx(
             'max-lg:w-[10px] max-lg:h-[10px]',
-            buttonType === 'squareMini' ? 'w-[16px] h-[16px]' : ' w-[20px] h-[20px]',
+            buttonType === 'squareMini' ? 'w-[16px] h-[16px]' : 'w-[20px] h-[20px]',
           )}
         />
       )}
