@@ -6,6 +6,7 @@ export const lazyRoutes = {
   MyInfoPage: React.lazy(() => import('../pages/MyPage/MyInfoPage')),
   MyMessagePage: React.lazy(() => import('../pages/MyPage/MyMessagePage')),
   MyMessageDetailPage: React.lazy(() => import('../pages/MyPage/MyMessageDetailPage')),
+  MyPage: React.lazy(() => import('../pages/MyPage/MyPage')),
   MyPayPage: React.lazy(() => import('../pages/MyPage/MyPayPage')),
   MyPaymentHistory: React.lazy(() => import('../pages/MyPage/MyPaymentHistoryPage')),
   MyPromptPage: React.lazy(() => import('../pages/MyPage/MyPromptPage')),

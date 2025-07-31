@@ -29,7 +29,7 @@ const DualModal = ({ text, onClickYes, onClickNo, colorYesText = 'blue', colorNo
     <div className="fixed inset-0 flex items-center justify-center z-50 max-lg:px-[57px]">
       <div className="absolute inset-0 bg-overlay"></div>
 
-      <div className="relative px-[150px] max-lg:px-[20px] py-[64px] max-lg:py-[20px] bg-white rounded-[16px] shadow-gradient z-10 flex flex-col items-center justify-center gap-[24px] max-lg:gap-[12px] text-center max-lg:w-full">
+      <div className="relative px-[150px] max-lg:px-[20px] py-[64px] max-lg:py-[20px] bg-white rounded-[16px] max-lg:rounded-[8px] shadow-gradient z-10 flex flex-col items-center justify-center gap-[24px] max-lg:gap-[12px] text-center max-lg:w-full">
         <p className="text-[32px] max-lg:text-[12px] font-bold leading-[40px] max-lg:leading-[15px] text-text-on-white">
           {text}
         </p>

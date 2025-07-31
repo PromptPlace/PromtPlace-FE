@@ -33,13 +33,13 @@ const RecordCard = ({
   return (
     <>
       {!isMyProfile && (
-        <div className="bg-white border-b border-b-white-stroke py-[30px] pl-[80px] text-text-on-white text-[20px] font-medium leading-[25px]">
+        <div className="bg-white border-b border-b-white-stroke py-[30px] max-lg:p-[12px] pl-[80px] text-text-on-white text-[20px] font-medium leading-[25px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px]">
           {description}
         </div>
       )}
 
       {isMyProfile && (
-        <div className="flex items-center bg-white border-b border-b-white-stroke py-[30px] pl-[80px] pr-[33px] text-text-on-white text-[20px] font-medium leading-[25px]">
+        <div className="flex items-center bg-white border-b border-b-white-stroke py-[30px] pl-[80px] max-lg:p-[12px] pr-[33px] text-text-on-white text-[20px] font-medium leading-[25px] max-lg:text-[12px] max-lg:leading-[15px]">
           {!edit && <div className="flex-1">{description}</div>}
           {edit && (
             <input
@@ -47,10 +47,10 @@ const RecordCard = ({
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="이력을 입력하세요"
-              className="flex-1 placeholder:text-text-on-background text-text-on-background placeholder:font-SpoqaHanSansNeo placeholder:text-[20px] placeholder:font-medium placeholder:leading-[25px] outline-none"
+              className="flex-1 placeholder:text-text-on-background text-text-on-background placeholder:font-SpoqaHanSansNeo placeholder:text-[20px] placeholder:font-medium placeholder:leading-[25px] max-lg:placeholder:text-[12px] max-lg:placeholder:leading-[15px] outline-none"
             />
           )}
-          <div className="flex gap-[62px] items-center">
+          <div className="flex gap-[62px] items-center max-lg:gap-[12px]">
             <CircleButton
               buttonType="edit"
               size="sm"
@@ -59,7 +59,7 @@ const RecordCard = ({
               }}
               isActive={edit}
             />
-            <div onClick={() => handleDelete(history_id)} className="w-[17px] h-[17px] cursor-pointer">
+            <div onClick={() => handleDelete(history_id)} className="w-[17px] h-[17px] max-lg:p-[4px] cursor-pointer">
               <img src={CloseIcon} alt="삭제" className="w-full h-full object-contain" />
             </div>
           </div>
