@@ -40,7 +40,7 @@ const MobilePrompt = ({ prompt }: Props) => {
   };
 
   return (
-    <div className="w-full max-w-[320px] flex flex-col gap-1.5 mb-[6px] px-4">
+    <div className="w-full  flex flex-col gap-1.5 mb-[6px] px-4">
       {/* 프로필 */}
       <MobilePrompter name={authorname} authorimage={authorimage} id={author_id} />
 
@@ -56,36 +56,35 @@ const MobilePrompt = ({ prompt }: Props) => {
           </div>
         </div>
 
-        {/* 제목 + 가격 */}
-        <div className="flex justify-between items-start">
-          <p
-            className="text-xs font-medium text-text-on-white max-w-[210px] cursor-pointer"
-            onClick={() => navigate(`/prompt/${prompt_id}`)}>
-            {title}
-          </p>
-          <p className="text-[10px] text-text-on-white">{is_free ? '무료' : `${price.toLocaleString()}원`}</p>
-        </div>
-
-        {/* 별점, 조회수, 다운로드 수 */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center h-3">
-            <Rating star={rating_avg}/>
+        <div className="cursor-pointer" onClick={() => navigate(`/prompt/${prompt_id}`)}>
+          {/* 제목 + 가격 */}
+          <div className="flex justify-between items-start">
+            <p className="text-xs font-medium text-text-on-white w-100% cursor-pointer">{title}</p>
+            <p className="text-[10px] text-text-on-white">{is_free ? '무료' : `${price.toLocaleString()}원`}</p>
           </div>
-          <div className="flex items-center gap-1.5">
-            <div className="flex items-center gap-1 text-[8px] text-text-on-background">
-              <img src={iconEye} className="w-3 h-3" />
-              {views}
+
+          {/* 별점, 조회수, 다운로드 수 */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center h-3">
+              <Rating star={rating_avg} />
             </div>
-            <div className="flex items-center gap-1 text-[8px] text-text-on-background">
-              <img src={iconDownload} className="w-3 h-3" />
-              {downloadCount}
+            <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1 text-[8px] text-text-on-background">
+                <img src={iconEye} className="w-3 h-3" />
+                {views}
+              </div>
+              <div className="flex items-center gap-1 text-[8px] text-text-on-background">
+                <img src={iconDownload} className="w-3 h-3" />
+                {downloadCount}
+              </div>
             </div>
           </div>
+
+          {/* 설명 */}
+          <div className="max-h-24 overflow-hidden text-[8px] text-text-on-white whitespace-pre-line">
+            {description}
+          </div>
         </div>
-
-        {/* 설명 */}
-        <div className="max-h-24 overflow-hidden text-[8px] text-text-on-white whitespace-pre-line">{description}</div>
-
         {/* 찜 버튼 */}
         <button onClick={handleLike} className="absolute right-3 bottom-3">
           <img src={isLiked ? likeIcon : unLikeIcon} className="w-4 h-4" />

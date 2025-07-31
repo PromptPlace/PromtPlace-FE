@@ -12,7 +12,7 @@ type FilterBarProps = {
 
 const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: FilterBarProps) => {
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
-  const [selectedModel, setSelectedModel] = useState<string | null>(null);
+  const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [tags, setTags] = useState<string[]>([]);
@@ -40,10 +40,12 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
   };
 
   const handleModelSelect = (model: string) => {
-    const isModel = selectedModel === model ? null : model;
-    setSelectedModel(isModel);
-    onModelChange(isModel ? ([isModel] as string[]) : null);
-    setSelectedFilter(null); // 드롭다운 닫기
+    setSelectedModels((prev) => {
+      const isAlreadySelected = prev.includes(model);
+      const updated = isAlreadySelected ? prev.filter((m) => m !== model) : [...prev, model];
+      onModelChange(updated.length > 0 ? updated : null);
+      return updated;
+    });
   };
 
   const handleSortSelect = (sort: string) => {
@@ -70,14 +72,13 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
           onClick={() => toggleDropdown(label)}>
           <span>{label}</span>
 
-          {/* 화살표 버튼 */}
           <div
             className={`w-6 h-6 p-1.5 rounded-full flex justify-center items-center
               ${selectedFilter === label ? 'bg-primary-pressed shadow-[2px_2px_30px_rgba(0,0,0,0.25)]' : ''}`}>
             <img src={arrowDown} alt="arrow" className="w-3 h-3" />
           </div>
 
-          {/* 일반 드롭다운 */}
+          {/* 모델 드롭다운 여러개의 item 선택 가능*/}
           {selectedFilter === label && label === '모델' && (
             <FilterDropdown
               label={label}
@@ -85,16 +86,19 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
               selected={selectedFilter === label}
               onToggle={() => toggleDropdown(label)}
               onSelect={label === '모델' ? handleModelSelect : () => {}}
+              selectedItems={selectedModels}
             />
           )}
 
+          {/* 필터 드롭다운 정렬 기능. 하나의 item만 선택 가능*/}
           {selectedFilter === label && label === '필터' && (
             <FilterDropdown
               label={label}
               items={dropdownItems[label]}
               selected={selectedFilter === label}
               onToggle={() => toggleDropdown(label)}
-              onSelect={label === '필터' ? handleSortSelect : () => {}}
+              onSelect={handleSortSelect}
+              selectedItems={selectedSort ? [selectedSort] : []}
             />
           )}
 
