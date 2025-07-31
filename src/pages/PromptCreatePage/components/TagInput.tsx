@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { LuChevronLeft, LuChevronRight, LuX } from 'react-icons/lu';
+import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
+import xbtn from '@assets/icon-delete-Xbutton.svg';
 
 interface TagInputProps {
   tags: string[];
@@ -106,7 +107,7 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
             if (e.key === 'Enter') e.preventDefault();
           }}
           className="flex-1 border-none outline-none text-[18px] px-[8px] bg-transparent"
-          placeholder="태그를 입력해 주세요"
+          placeholder="태그를 입력해 주세요(최대 10개)"
         />
         <button
           type="button"
@@ -153,12 +154,12 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
             #{tag}
             <button
               type="button"
-              className="ml-2 text-gray-400 hover:text-gray-800 focus:outline-none font-normal"
+              className="ml-2 text-text-on-background focus:outline-none font-normal"
               onClick={(e) => {
                 e.stopPropagation();
                 handleDeleteTag(pageTagGlobalIdxs[i]);
               }}>
-              <LuX />
+              <img className="w-[12px] h-[12px] object-cover" src={xbtn} alt="delete btn" />
             </button>
           </span>
         ))}
