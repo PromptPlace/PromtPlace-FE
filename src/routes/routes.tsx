@@ -4,6 +4,7 @@ export const lazyRoutes = {
   MainPage: React.lazy(() => import('../pages/MainPage/MainPage')),
   SearchPage: React.lazy(() => import('../pages/MainPage/SearchPage')),
   MyInfoPage: React.lazy(() => import('../pages/MyPage/MyInfoPage')),
+  MyAccountPage: React.lazy(() => import('../pages/MyPage/MyAccountPage')),
   MyMessagePage: React.lazy(() => import('../pages/MyPage/MyMessagePage')),
   MyMessageDetailPage: React.lazy(() => import('../pages/MyPage/MyMessageDetailPage')),
   MyPage: React.lazy(() => import('../pages/MyPage/MyPage')),

@@ -1,9 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import PaymentHistoryRow from './components/PaymentHistoryRow.tsx';
 import iconPerson from '@assets/icon-person-blue.svg';
 import { useNavigate } from 'react-router-dom';
-import bluearrowIcon from '@assets/icon-arrow-left-blue.svg'
+import bluearrowIcon from '@assets/icon-arrow-left-blue.svg';  //추후 디자인 규격에 맞게 수정 필요
 
 const DUMMY_PAYMENT_HISTORY = [
   {
@@ -55,7 +54,6 @@ const DUMMY_PAYMENT_HISTORY = [
     amount: 70000,
     paymentMethod: '신용카드',
   },
-  
 ];
 
 const PaymentHistoryPage = () => {
@@ -68,31 +66,32 @@ const PaymentHistoryPage = () => {
 
   return (
     <div className="flex justify-center h-screen bg-background ">
-
-      <div className="flex flex-col w-full max-w-[1236px] pt-[92px] h-full">
+      <div className="flex flex-col w-full max-w-[1236px] max-lg:px-[20px] pt-[92px] max-lg:pt-[12px] h-full">
         <div className="shrink-0">
-        <div className="flex items-center gap-[10px] mb-[27px]">
-          <img src={iconPerson} alt="person icon" className="w-[32px] h-[32px]" />
-          <div className="text-[32px] text-primary-hover font-bold">회원정보</div>
+          <div className="flex items-center gap-[10px] mb-[27px] max-lg:mb-[20px]">
+            <img src={iconPerson} alt="person icon" className="w-[32px] max-lg:w-[20px] h-[32px] max-lg:h-[20px]" />
+            <div className="text-[32px] max-lg:text-[20px] text-primary-hover font-bold">회원정보</div>
+          </div>
+
+          <div className="max-lg:hidden flex items-center h-[90px] border-b-[1px] border-primary-hover">
+            <div className="flex items-center gap-[10px] h-[50px] ">
+              <button
+                onClick={() => navigate('/mypage/info')}
+                className="flex items-center justify-center  w-[24px] h-[24px]">
+                <img src={bluearrowIcon} alt="뒤로가기" />
+              </button>
+              <span className="text-[24px] text-primary-hover font-bold">결제 내역</span>
+            </div>
+          </div>
         </div>
 
-        <div className="flex items-center h-[90px] border-b-[1px] border-primary-hover">
-        <div className="flex items-center gap-[10px] h-[50px] ">
-      <button onClick={() => navigate('/mypage/info')} className="flex items-center justify-center  w-[24px] h-[24px]">
-        <img src={bluearrowIcon} alt="뒤로가기" />
-      </button>
-            <span className="text-[24px] text-primary-hover font-bold">결제 내역</span>
+        <div className="flex-grow min-h-0 p-[8px] max-lg:p-[0px] bg-white">
+          <div className="overflow-y-auto h-full">
+            {paymentHistory.map((item) => (
+              <PaymentHistoryRow key={item.prompt_id} transaction={item} />
+            ))}
+          </div>
         </div>
-        </div>
-        </div>
-
-       <div className="flex-grow min-h-0 p-[8px] bg-white">
-      <div className="overflow-y-auto h-full">
-        {paymentHistory.map(item => (
-          <PaymentHistoryRow key={item.prompt_id} transaction={item} />
-        ))}
-      </div>
-      </div>
       </div>
     </div>
   );

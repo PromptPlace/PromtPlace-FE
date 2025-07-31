@@ -42,6 +42,7 @@ export const protectedRoutes: RouteObject[] = [
       { path: 'message/notification', element: <lazyRoutes.MyMessagePage type="notification" /> },
       { path: 'message/notification/:id', element: <lazyRoutes.MyMessageDetailPage type="notification" /> },
       { path: 'info', element: <lazyRoutes.MyInfoPage /> },
+      { path: 'info/account', element: <lazyRoutes.MyAccountPage /> },
     ],
   },
 ];

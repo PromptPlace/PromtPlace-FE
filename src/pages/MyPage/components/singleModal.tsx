@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
  *
  * @param {string|ReactNode} text -- 모달에 들어갈 내용
  * @param {function} onClick -- 버튼 클릭 시 실행될 함수
- * 
+ *
  *
  * @example
  * <DualModal text="업로드 하시겠습니까?" onClickYes={() => alert('예')} onClickNo={() => setShowModal3(false)} />
@@ -17,7 +17,6 @@ import type { ReactNode } from 'react';
 interface SingleModalProps {
   text: string | ReactNode;
   onClick: () => void;
- 
 }
 
 const SingleModal = ({ text, onClick }: SingleModalProps) => {
@@ -27,10 +26,15 @@ const SingleModal = ({ text, onClick }: SingleModalProps) => {
 
       <div className="relative px-[150px] py-[32px] bg-white rounded-[16px] shadow-gradient z-10 flex flex-col items-center justify-center gap-[40px] text-center">
         <p className="text-[32px] font-bold leading-[40px] text-text-on-white">{text}</p>
-       
-          <IconButton buttonType="round" style="fill" imgType="none" textButton="blue" text="메인으로" onClick={onClick} />
-         
-        
+
+        <IconButton
+          buttonType="round"
+          style="fill"
+          imgType="none"
+          textButton="blue"
+          text="메인으로"
+          onClick={onClick}
+        />
       </div>
     </div>
   );
