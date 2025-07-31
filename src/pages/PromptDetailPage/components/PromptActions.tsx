@@ -159,6 +159,8 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
     setIsReportModalOpen(false);
   };
 
+  const [isPaid, setIsPaid] = useState(false);
+
   if (showReviews) {
     return (
       <ReviewList
@@ -216,6 +218,8 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
                 title={downloadData.title}
                 downloadUrl={downloadData.downloadUrl}
                 content={downloadData.content}
+                price={price}
+                onPaid={() => setIsPaid(true)}
               />
             )}
           </>

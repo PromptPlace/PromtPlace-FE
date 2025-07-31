@@ -75,6 +75,8 @@ const PromptDetailPage = () => {
     content: string;
   } | null>(null);
 
+  const [isPaid, setIsPaid] = useState(false);
+
   const handleDownloadClick = () => {
     const title = '동양풍 일러스트 이미지 생성';
     const download_url = 'https://cdn.promptplace.com/prompts/1024.txt';
@@ -182,8 +184,11 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
       {/* 모바일 하단 고정 영역 */}
       <div className="lg:hidden fixed bottom-0 left-0 bg-white rounded-t-[24px] shadow-[0_-4px_12px_rgba(0,0,0,0.1)] p-[20px] z-50 w-[320px] h-[139px] mx-auto">
         <div className="flex justify-between items-center w-full">
-          <div className="flex items-center gap-[20px] h-[34px]  ml-[85px]">
+          <div
+            className={`flex items-center ${isPaid ? 'gap-[10px]' : 'gap-[20px]'} h-[34px] ${isPaid ? 'ml-[15px]' : 'ml-[85px]'}`}>
+            {isPaid && <span className="text-[16px] font-medium text-black whitespace-nowrap">구매 완료</span>}
             <span className="text-[16px] font-medium text-black">{prompt.price.toLocaleString()}원</span>
+
             <IconButton
               buttonType="squareBig"
               style="fill"
@@ -203,6 +208,8 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
           title={downloadData.title}
           downloadUrl={downloadData.downloadUrl}
           content={downloadData.content}
+          price={prompt.price}
+          onPaid={() => setIsPaid(true)}
         />
       )}
     </div>
