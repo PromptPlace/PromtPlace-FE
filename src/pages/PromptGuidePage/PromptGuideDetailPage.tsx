@@ -130,7 +130,7 @@ AI가 해당 프롬프트를 정상적으로 처리할 수 있도록 구성되�
 
       {/*모바일 화면 */}
       <div className="lg:hidden block">
-        <div className="relative w-full h-12  flex items-center">
+        <div className="relative w-full h-[58px]  flex items-center">
           <button className="ml-[12px] flex items-center cursor-pointer" onClick={handleNavigate}>
             <LuChevronLeft size={24} />
           </button>

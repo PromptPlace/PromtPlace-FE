@@ -21,9 +21,9 @@ interface CountProps {
 const Count = ({ count, imgType }: CountProps) => {
   const imgSrc = imgType === 'eye' ? EyeIcon : DownIcon;
   return (
-    <div className="flex justify-center items-center gap-[10px] max-lg:gap-[8px] text-base font-normal leading-[20px] text-text-on-background">
-      <img src={imgSrc} alt={`${imgType} 이미지`} className="h-[16px] max-lg:h-[10px]" />
-      <span className="max-lg:text-[8px] max-lg:font-normal">{count}</span>
+    <div className="flex justify-center items-center gap-[10px] max-lg:gap-[4px] text-base font-normal leading-[20px] text-text-on-background max-lg:text-[8px] max-lg:leading-[10px]">
+      <img src={imgSrc} alt={`${imgType} 이미지`} className="h-[16px] max-lg:h-[12px] max-lg:py-[1px]" />
+      <span>{count}</span>
     </div>
   );
 };

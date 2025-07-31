@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import HeartEmpty from '@assets/icon-heart-none-small.svg';
 import HeartBlue from '@assets/icon-heart-blue-small.svg';
 import Dots from '@assets/icon-dot.svg';
+import ModelButton from '@/components/Button/ModelButton';
+import TagButton from '@/components/Button/TagButton';
 
 interface PrompCardProps {
   id: number;
@@ -24,54 +26,69 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
   };
 
   return (
-    <div className="bg-white border-b border-b-white-stroke py-[10px] flex justify-between items-center cursor-pointer">
-      <div
-        onClick={() => handleNavigate(id)}
-        className="text-text-on-white text-[22px] font-bold leading-[28px] py-[20px] px-[51px] truncate max-w-[606px] w-full truncate">
-        {title}
-      </div>
-      <div className="text-text-on-background text-[20px] font-medium leading-[25px] py-[20px] px-[10px] max-w-[223px] w-full text-center">
-        {model}
-      </div>
-      <div className="flex gap-[1px] py-[20px] px-[10px] max-w-[263px] w-full text-center truncate">
-        {tags.map((tag) => (
-          <div key={String(tag.tag_id)} className="text-text-on-background text-[20px] font-medium leading-[25px]">
-            #{tag.name}
-          </div>
-        ))}
-      </div>
-
-      {!isMyProfile && (
-        <div
-          onClick={() => setIsLike((prev) => !prev)}
-          className="py-[25px] px-[45px] cursor-pointer w-[115px] h-[72px] flex items-center justify-center shrink-0">
-          <img src={isLike ? HeartBlue : HeartEmpty} alt="좋아요" />
+    <div className="bg-white border-b border-b-white-stroke py-[10px] max-lg:p-[12px] flex justify-between items-center max-lg:items-start cursor-pointer max-lg:flex-col max-lg:gap-[6px] max-lg:mr-[4px]">
+      <div className="lg:hidden gap-[10px] flex">
+        <div className="lg:hidden">
+          <ModelButton text={model} />
         </div>
-      )}
-
-      {isMyProfile && (
-        <div
-          onClick={() => setIsDotsClickes((prev) => !prev)}
-          className="relative py-[22px] px-[44px] cursor-pointer max-w-[115px] w-full h-[72px] flex items-center justify-center">
-          <div className="w-[28px] h-[28px] hover:bg-secondary-pressed flex items-center justify-center rounded-full">
-            <img src={Dots} alt="좋아요" />
-          </div>
-          {isDotsClicked && (
-            <div className="absolute z-10 top-[60px] right-[44px] flex flex-col whitespace-nowrap">
-              <button
-                onClick={() => handleDeletePrompts(id)}
-                className="py-[8px] px-[16px] bg-secondary rounded-t-[4px] border-b border-b-white-stroke text-text-on-background text-[16px] font-normal leading-[20px] active:bg-secondary-pressed active:text-text-on-white">
-                삭제하기
-              </button>
-              <button
-                onClick={() => navigate('/create')}
-                className="py-[8px] px-[16px] bg-secondary rounded-b-[4px] text-text-on-background text-[16px] font-normal leading-[20px] active:bg-secondary-pressed active:text-text-on-white">
-                수정하기
-              </button>
+        <div className="lg:hidden flex gap-[5px]">
+          {tags.map((tag) => (
+            <div key={tag.tag_id} className="text-text-on-background text-[20px] font-medium leading-[25px]">
+              <TagButton key={String(tag.tag_id)} hasDelete={false} text={`# ${tag.name}`}></TagButton>
             </div>
-          )}
+          ))}
         </div>
-      )}
+      </div>
+
+      <div className="flex w-full lg:justify-between">
+        <div
+          onClick={() => handleNavigate(id)}
+          className="text-text-on-white text-[22px] font-bold leading-[28px] py-[20px] px-[51px] max-lg:p-0 truncate max-w-[606px] w-full truncate max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px]">
+          {title}
+        </div>
+        <div className="max-lg:hidden text-text-on-background text-[20px] font-medium leading-[25px] py-[20px] px-[10px] max-w-[223px] w-full text-center">
+          {model}
+        </div>
+        <div className="max-lg:hidden flex gap-[1px] py-[20px] px-[10px] max-w-[263px] w-full text-center truncate">
+          {tags.map((tag) => (
+            <div key={String(tag.tag_id)} className="text-text-on-background text-[20px] font-medium leading-[25px]">
+              #{tag.name}
+            </div>
+          ))}
+        </div>
+
+        {!isMyProfile && (
+          <div
+            onClick={() => setIsLike((prev) => !prev)}
+            className="py-[25px] px-[45px] max-lg:p-0 cursor-pointer lg:w-[115px] lg:h-[72px] max-lg:w-[16px] max-lg:h-[16px] flex items-center justify-center shrink-0">
+            <img src={isLike ? HeartBlue : HeartEmpty} alt="좋아요" className="w-full h-full object-contain" />
+          </div>
+        )}
+
+        {isMyProfile && (
+          <div
+            onClick={() => setIsDotsClickes((prev) => !prev)}
+            className="relative py-[22px] px-[44px] max-lg:p-0 cursor-pointer max-w-[115px] max-lg:max-w-[16px] w-full h-[72px] max-lg:h-auto flex items-center justify-center">
+            <div className="w-[28px] h-[28px] max-lg:w-[16px] max-lg:h-[16px] max-lg:py-[2px] max-lg:px-[6px] hover:bg-secondary-pressed flex items-center justify-center rounded-full">
+              <img src={Dots} alt="좋아요" />
+            </div>
+            {isDotsClicked && (
+              <div className="absolute z-10 top-[60px] right-[44px] max-lg:top-[22px] max-lg:right-[0px] flex flex-col whitespace-nowrap">
+                <button
+                  onClick={() => handleDeletePrompts(id)}
+                  className="py-[8px] px-[16px] bg-secondary rounded-t-[4px] border-b border-b-white-stroke text-text-on-background text-[16px] font-normal leading-[20px] active:bg-secondary-pressed active:text-text-on-white">
+                  삭제하기
+                </button>
+                <button
+                  onClick={() => navigate('/create')}
+                  className="py-[8px] px-[16px] bg-secondary rounded-b-[4px] text-text-on-background text-[16px] font-normal leading-[20px] active:bg-secondary-pressed active:text-text-on-white">
+                  수정하기
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

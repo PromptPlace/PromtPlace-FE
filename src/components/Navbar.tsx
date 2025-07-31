@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import LogoIcon from '@assets/icon-header-logo.svg';
 import ProfileIcon from '@assets/icon-profile-blue-small.svg';
 import UserProfileIcon from '@assets/img-example-profile2.jpg';
-import TipIcon from '@assets/mobile/icon-mobile-tip.svg';
+import TipIcon from '@assets/mobile/icon-mobile-tip.png';
 
 import PrimaryButton from '@components/Button/PrimaryButton';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
@@ -88,13 +88,15 @@ const Navbar = () => {
         </div>
 
         {!accessToken && (
-          <PrimaryButton
-            buttonType="login"
-            text="로그인 / 회원가입"
-            onClick={() => {
-              setLoginModalShow(true);
-            }}
-          />
+          <div className="w-[169px] shrink-0 max-lg:hidden">
+            <PrimaryButton
+              buttonType="login"
+              text="로그인 / 회원가입"
+              onClick={() => {
+                setLoginModalShow(true);
+              }}
+            />
+          </div>
         )}
 
         {loginModalShow && (

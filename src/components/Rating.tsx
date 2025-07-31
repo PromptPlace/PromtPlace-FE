@@ -55,7 +55,7 @@ const Rating = ({ star }: RatingProps) => {
   return (
     <div className="flex justify-center items-end gap-[5px]">
       <div className="flex gap-[2px] justify-center items-center">{stars}</div>
-      <div className="text-text-on-background text-sm font-normal leading-[18px] max-lg:text-[10px] max-lg:leading-[12px]">
+      <div className="text-text-on-background text-sm font-normal leading-[18px] max-lg:text-[8px] max-lg:leading-[10px]">
         ({star.toFixed(1)})
       </div>
     </div>
