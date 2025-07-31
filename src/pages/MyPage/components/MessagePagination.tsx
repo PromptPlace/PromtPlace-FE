@@ -5,6 +5,8 @@ import notread from '../../../assets/icon-mail-notread.svg';
 import { GoKebabHorizontal } from 'react-icons/go';
 import { useEffect, useRef, useState } from 'react';
 
+import kebabMenu from '@/assets/icon-kebabMenu.svg';
+
 interface MessageList {
   id: number;
   title: string;
@@ -36,6 +38,7 @@ export const MessageTableList = ({
     if (openId !== null) document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [openId]);
+
   return (
     <table className="w-full max-w-[1236px] max-h-[592px] mt-[22px] mb-[73px] mx-[102px]">
       <thead>
@@ -44,7 +47,7 @@ export const MessageTableList = ({
       <tbody>
         {data.length === 0 ? (
           <tr>
-            <td colSpan={3} className="text-center py-4 text-gray-400">
+            <td colSpan={3} className="text-center py-4 text-text-on-background">
               아무 연락이 없네요...(귀뚜라미 소리)
             </td>
           </tr>
@@ -166,3 +169,107 @@ export function MessagePagination({
     </nav>
   );
 }
+
+// 모바일 화면
+export const MobileMessage = ({
+  data,
+  onRowClick,
+  onDelete,
+  onRead,
+}: {
+  data: MessageList[];
+  onRowClick: (id: number) => void;
+  onDelete: (id: number) => void;
+  onRead: (id: number) => void;
+}) => {
+  const [openId, setOpenId] = useState<number | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setOpenId(null);
+      }
+    }
+    if (openId !== null) document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [openId]);
+
+  return (
+    <div className="w-full max-w-[280px] my-[12px] cursor-pointer flex flex-col justify-center">
+      {data.length === 0 ? (
+        <div>
+          <div className="text-center py-4 text-text-on-background">아무 메시지가 없습니다.</div>
+        </div>
+      ) : (
+        data.map((message) => (
+          <div
+            key={message.id}
+            className="w-full max-w-[280px] h-[81px] flex flex-col justify-center border-b-[1px] border-white-stroke bg-white ">
+            <div className="flex justify-center">
+              <div className="flex justify-between w-full max-w-[256px]">
+                <p className="text-[8px] text-text-on-background font-normal">{message.create_at}</p>
+                <div className="relative">
+                  <button
+                    onClick={() => setOpenId(openId === message.id ? null : message.id)}
+                    className={`flex items-center justify-center h-[16px] w-[16px] rounded-[50px] ${
+                      openId === message.id ? 'bg-secondary-pressed' : 'bg-transparent'
+                    }`}>
+                    <img className="w-[10px] h-[10px]" src={kebabMenu} alt="...버튼" />
+                  </button>
+                  {/*드롭다운 */}
+                  {openId === message.id && (
+                    <div
+                      className="absolute right-0 top-full mt-[11px] w-[91px] bg-white rounded-md shadow-lg z-10"
+                      ref={menuRef}>
+                      <button
+                        onClick={() => {
+                          onDelete(message.id);
+                          setOpenId(null);
+                        }}
+                        className="block w-full h-[36px] text-[16px] border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary active:bg-secondary-pressed rounded-t-[4px]">
+                        삭제하기
+                      </button>
+                      <button
+                        onClick={() => {
+                          onRead(message.id);
+                          setOpenId(null);
+                        }}
+                        className="block w-full h-[36px] text-[16px] text-text-on-background bg-secondary active:bg-secondary-pressed rounded-b-[4px]">
+                        읽음표시
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <div
+                className="w-full max-w-[256px] h-[16px] flex justify-start items-center mt-[6px]"
+                onClick={() => onRowClick(message.id)}>
+                {message.is_read ? (
+                  <img className="w-[16px] h-[16px]" src={read} alt="읽음" />
+                ) : (
+                  <img className="w-[16px] h-[16px]" src={notread} alt="안 읽음" />
+                )}
+                <p
+                  className={`text-[12px] ${message.is_read ? 'text-text-on-background' : 'text-text-on-white'} font-medium ml-[6px]`}>
+                  {/*20자까지만 표시 */}
+                  {message.title.length > 20 ? message.title.slice(0, 20) + '...' : message.title}
+                </p>
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <div className="w-full max-w-[256px] h-[16px] flex justify-start items-center mt-[6px]">
+                <p
+                  className={`text-[10px] ${message.is_read ? 'text-text-on-background' : 'text-text-on-white'} font-medium`}>
+                  {message.sender_id}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))
+      )}
+    </div>
+  );
+};
