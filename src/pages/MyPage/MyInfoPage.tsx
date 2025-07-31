@@ -16,70 +16,80 @@ const userInfo: {
   provider: 'google',
 };
 
-
-
 const MyPageInfo = () => {
-
-  const [deleteStep, setDeleteStep] = useState<'confirm' | 'warning' | 'complete' | null>(null); 
+  const [deleteStep, setDeleteStep] = useState<'confirm' | 'warning' | 'complete' | null>(null);
   const confirmDelete = () => setDeleteStep('confirm');
   const showWarning = () => setDeleteStep('warning');
   const deleteAccount = () => {
     // 실제 API 호출 로직
     setDeleteStep('complete');
-   
   };
   const navigate = useNavigate();
   const closeModal = () => {
     setDeleteStep(null);
-    
   };
 
   return (
-    <div className="flex justify-center pt-[92px] min-h-screen bg-background ">
-      <div className="w-full max-w-[1236px] ">
-
-        <div className="flex items-center gap-[10px] mb-[70px]">
-          <img src={iconPerson} alt="person icon" className="w-[32px] h-[32px]" />
-          <div className="text-[32px] text-primary-hover font-bold">회원정보</div>
+    <div className="flex justify-center pt-[92px] max-lg:pt-[12px] min-h-screen bg-background ">
+      <div className="w-full max-w-[1236px] max-lg:px-[20px] ">
+        <div className="flex items-center gap-[10px] mb-[70px] max-lg:mb-[20px]">
+          <img src={iconPerson} alt="person icon" className="w-[32px] max-lg:w-[20px] h-[32px] max-lg:h-[20px]" />
+          <div className="text-[32px] max-lg:text-[20px] text-primary-hover font-bold">회원정보</div>
         </div>
 
-        <div className="bg-white border-t-[1px] border-t-primary-hover">
-           
-        <InfoRow label="닉네임" nickname={userInfo.nickname} />
-        <InfoRow label="가입한 계정" email={userInfo.email} provider={userInfo.provider} />
-        <InfoRow label="계정 바꾸기" email={userInfo.email} provider={userInfo.provider} hasArrow />
-        <InfoRow label="결제내역" actionText="내역보기" onAction={() => { navigate('/mypage/paymentHistory') }} />
-        <InfoRow label="로그아웃" actionText="로그아웃" onAction={() => { /* 로그아웃 로직 */ }} />
-        <InfoRow label="계정 탈퇴" actionText="탈퇴하기" onAction={confirmDelete} isDestructive />
-        {deleteStep === 'confirm' && (
-        <DualModal 
-          text="회원을 탈퇴하시겠습니까?"
-          onClickYes={showWarning}  
-          onClickNo={closeModal}   
-        />
-      )}
-      {deleteStep === 'warning' && (
-        <DualModal
-        text={
-          <>
-            탈퇴하시면 회원님의 모든 데이터가 삭제되어 다시 복구할 수 없습니다.
-            <br />
-            정말 탈퇴하시겠습니까?
-          </>
-        }
-          onClickYes={deleteAccount}
-          onClickNo={closeModal}
-        />
-      )}
-      {deleteStep === 'complete' && (
-        <SingleModal text="탈퇴가 완료되었습니다." onClick={() => {
-          closeModal();
-          navigate('/');
-        }} />
-      )}
-           </div>
-        
-    </div>
+        <div className="bg-white border-t-[1px] max-lg:border-t-[0px] border-t-primary-hover">
+          <InfoRow label="닉네임" nickname={userInfo.nickname} />
+          <InfoRow label="가입한 계정" email={userInfo.email} provider={userInfo.provider} />
+          <InfoRow label="계정 바꾸기" email={userInfo.email} provider={userInfo.provider} hasArrow />
+          <InfoRow
+            label="계좌 정보 등록"
+            actionText="등록하기"
+            onAction={() => {
+              navigate('/mypage/info/account');
+            }}
+          />
+          <InfoRow
+            label="결제내역"
+            actionText="내역보기"
+            onAction={() => {
+              navigate('/mypage/paymentHistory');
+            }}
+          />
+          <InfoRow
+            label="로그아웃"
+            actionText="로그아웃"
+            onAction={() => {
+              /* 로그아웃 로직 */
+            }}
+          />
+          <InfoRow label="계정 탈퇴" actionText="탈퇴하기" onAction={confirmDelete} isDestructive />
+          {deleteStep === 'confirm' && (
+            <DualModal text="회원을 탈퇴하시겠습니까?" onClickYes={showWarning} onClickNo={closeModal} />
+          )}
+          {deleteStep === 'warning' && (
+            <DualModal
+              text={
+                <>
+                  탈퇴하시면 회원님의 모든 데이터가 삭제되어 다시 복구할 수 없습니다.
+                  <br />
+                  정말 탈퇴하시겠습니까?
+                </>
+              }
+              onClickYes={deleteAccount}
+              onClickNo={closeModal}
+            />
+          )}
+          {deleteStep === 'complete' && (
+            <SingleModal
+              text="탈퇴가 완료되었습니다."
+              onClick={() => {
+                closeModal();
+                navigate('/');
+              }}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };

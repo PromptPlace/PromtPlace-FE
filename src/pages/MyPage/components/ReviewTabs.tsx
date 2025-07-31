@@ -14,9 +14,7 @@ const TABS = [
 
 const ReviewTabs: React.FC<ReviewTabsProps> = ({ activeTab, setActiveTab }) => {
   return (
-
     <div className="flex w-full h-[90px]">
-
       {TABS.map((tab) => (
         <button
           key={tab.id}
@@ -27,9 +25,7 @@ const ReviewTabs: React.FC<ReviewTabsProps> = ({ activeTab, setActiveTab }) => {
             activeTab === tab.id
               ? 'border-b-[3px] border-primary-hover text-primary-hover'
               : 'border-b-[1px] border-text-on-background text-text-on-background'
-
-          }`}
-        >
+          }`}>
           {tab.title}
         </button>
       ))}
@@ -38,4 +34,3 @@ const ReviewTabs: React.FC<ReviewTabsProps> = ({ activeTab, setActiveTab }) => {
 };
 
 export default ReviewTabs;
-
