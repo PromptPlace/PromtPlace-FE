@@ -38,25 +38,30 @@ const MobileFilterModal = ({ visible, onClose, activeTab, onTabChange, onApplyFi
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40">
       <div
         ref={modalRef}
-        className="w-[320px] max-h-[80vh] pb-5 bg-white rounded-t-3xl shadow-xl flex flex-col items-center gap-5 px-4 pt-4 overflow-y-auto">
-        <div className="w-full flex justify-center items-center relative h-7">
-          <div className="w-10 h-1 bg-gray-300 rounded-full" />
+        className="w-full max-w-[425px] max-h-[80vh] pb-5 bg-white rounded-t-3xl shadow-xl flex flex-col items-center gap-5 px-4 pt-4 overflow-y-auto">
+        <div className="self-stretch h-7 relative overflow-hidden">
+          <div className="w-10 h-1 left-1/2 -translate-x-1/2 top-[14px] absolute bg-white-stroke rounded-full" />
         </div>
 
-        <div className="w-72 flex justify-start items-center gap-2">
+        <div className="w-72 inline-flex justify-start items-center gap-2">
           {(['모델', '필터', '태그'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => onTabChange(tab)}
-              className={`px-5 py-1.5 rounded-full ${activeTab === tab ? 'bg-secondary' : 'bg-white'}`}>
-              <span className={`text-xs font-medium ${activeTab === tab ? 'text-primary' : 'text-text-on-background'}`}>
+              className={`px-5 py-1.5 rounded-full flex justify-start items-center gap-2.5 ${
+                activeTab === tab ? 'bg-secondary' : 'bg-white'
+              }`}>
+              <span
+                className={`text-xs font-medium font-[\'Spoqa_Han_Sans_Neo\'] ${
+                  activeTab === tab ? 'text-primary' : 'text-text-on-background'
+                }`}>
                 {tab}
               </span>
             </button>
           ))}
         </div>
 
-        <div className="flex flex-col items-start gap-4 w-full">
+        <div className="flex flex-col justify-start items-start gap-4">
           {activeTab === '모델' && (
             <MobileModelTab selectedModels={selectedModels} setSelectedModels={setSelectedModels} />
           )}
@@ -64,9 +69,11 @@ const MobileFilterModal = ({ visible, onClose, activeTab, onTabChange, onApplyFi
           {activeTab === '태그' && <MobileTagTab tags={tags} setTags={setTags} />}
         </div>
 
-        <button onClick={handleApply} className="w-72 h-10 bg-primary rounded text-white font-medium mt-4">
-          {activeTab === '태그' ? '작성 완료하기' : '선택 완료하기'}
-        </button>
+        <div className="w-72 h-10 px-10 py-[5px] bg-primary rounded inline-flex justify-center items-center gap-2.5">
+          <button onClick={handleApply} className="text-white text-base font-medium font-['Spoqa_Han_Sans_Neo']">
+            {activeTab === '태그' ? '작성 완료하기' : '선택 완료하기'}
+          </button>
+        </div>
       </div>
     </div>
   );
