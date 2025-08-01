@@ -1,0 +1,15 @@
+
+{
+  "rewrites": 
+  [
+    { "source": "/manifest.webmanifest", "destination": "/manifest.webmanifest" },
+    { "source": "/favicon.ico", "destination": "/favicon.ico" },
+    { "source": "/favicon.svg", "destination": "/favicon.svg" },
+    { "source": "/favicon-96x96.png", "destination": "/favicon-96x96.png" },
+    { "source": "/apple-touch-icon.png", "destination": "/apple-touch-icon.png" },
+    { "source": "/web-app-manifest-192x192.png", "destination": "/web-app-manifest-192x192.png" },
+    { "source": "/web-app-manifest-512x512.png", "destination": "/web-app-manifest-512x512.png" },
+    { "source": "/fonts/:path*", "destination": "/fonts/:path*" },
+    { "source": "/:path*","destination": "/index.html"}
+  ]
+}

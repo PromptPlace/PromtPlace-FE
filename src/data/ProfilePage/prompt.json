@@ -1,0 +1,69 @@
+[
+  {
+    "prompt_id": 1,
+    "title": "파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트",
+    "model": "Claude",
+    "purchased_at": "2025-07-04T09:30:00.000Z",
+    "tags": [
+      { "tag_id": 1, "name": "개발" },
+      { "tag_id": 2, "name": "파이썬" },
+      { "tag_id": 3, "name": "코딩" },
+      { "tag_id": 4, "name": "코딩" }
+    ]
+  },
+  {
+    "prompt_id": 2,
+    "title": "29자 넘어가면 말 줄임표 파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트",
+    "model": "Claude",
+    "purchased_at": "2025-07-04T09:30:00.000Z",
+    "tags": [
+      { "tag_id": 1, "name": "개발" },
+      { "tag_id": 2, "name": "사업계획서" },
+      { "tag_id": 3, "name": "스타트업" }
+    ]
+  },
+  {
+    "prompt_id": 3,
+    "title": "파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트",
+    "model": "Claude",
+    "purchased_at": "2025-07-04T09:30:00.000Z",
+    "tags": [
+      { "tag_id": 1, "name": "개발" },
+      { "tag_id": 2, "name": "파이썬" },
+      { "tag_id": 3, "name": "코딩" }
+    ]
+  },
+  {
+    "prompt_id": 4,
+    "title": "파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트",
+    "model": "Claude",
+    "purchased_at": "2025-07-04T09:30:00.000Z",
+    "tags": [
+      { "tag_id": 1, "name": "개발" },
+      { "tag_id": 2, "name": "파이썬" },
+      { "tag_id": 3, "name": "코딩" }
+    ]
+  },
+  {
+    "prompt_id": 5,
+    "title": "파이썬으로 5분안에 구슬깨기 게임 만들어주는 프롬프트",
+    "model": "Claude",
+    "purchased_at": "2025-07-04T09:30:00.000Z",
+    "tags": [
+      { "tag_id": 1, "name": "개발" },
+      { "tag_id": 2, "name": "파이썬" },
+      { "tag_id": 3, "name": "코딩" }
+    ]
+  },
+  {
+    "prompt_id": 6,
+    "title": "동양풍 이미지 생성 프롬프트",
+    "model": "Claude",
+    "purchased_at": "2025-07-04T09:30:00.000Z",
+    "tags": [
+      { "tag_id": 1, "name": "개발" },
+      { "tag_id": 2, "name": "파이썬" },
+      { "tag_id": 3, "name": "코딩" }
+    ]
+  }
+]

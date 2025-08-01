@@ -1,0 +1,134 @@
+[
+  {
+    "inquiry_id": 1,
+    "sender_id": 1024,
+    "sender_nickname": "플로",
+    "type": "buyer",
+    "status": "waiting",
+    "title": "파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트",
+    "content": "안녕하세요 이거 모델 지피티인데 혹시 지피티 버전 몇 쓰면 되나요? 3.5나 4.1 쓰면 괜찮나요?",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z"
+  },
+  {
+    "inquiry_id": 2,
+    "sender_id": 2048,
+    "sender_nickname": "플로",
+    "type": "non-buyer",
+    "status": "waiting",
+    "title": "결제 오류 문의",
+    "content": "결제 과정에서 오류가 발생했습니다.",
+    "created_at": "2024-01-20T14:20:00Z",
+    "updated_at": "2024-01-21T09:15:00Z"
+  },
+  {
+    "inquiry_id": 3,
+    "sender_id": 2048,
+    "sender_nickname": "홍길동",
+    "type": "non-buyer",
+    "status": "read",
+    "title": "결제 오류 문의",
+    "content": "결제 과정에서 오류가 발생했습니다.",
+    "created_at": "2024-01-20T14:20:00Z",
+    "updated_at": "2024-01-21T09:15:00Z"
+  },
+  {
+    "inquiry_id": 4,
+    "sender_id": 2048,
+    "sender_nickname": "홍길동",
+    "type": "non-buyer",
+    "status": "read",
+    "title": "결제 오류 문의",
+    "content": "결제 과정에서 오류가 발생했습니다.",
+    "created_at": "2024-01-20T14:20:00Z",
+    "updated_at": "2024-01-21T09:15:00Z"
+  },
+  {
+    "inquiry_id": 5,
+    "sender_id": 2048,
+    "sender_nickname": "프롬프트프롬프트",
+    "type": "non-buyer",
+    "status": "read",
+    "title": "결제 오류 문의",
+    "content": "결제 과정에서 오류가 발생했습니다.",
+    "created_at": "2024-01-20T14:20:00Z",
+    "updated_at": "2024-01-21T09:15:00Z"
+  },
+  {
+    "inquiry_id": 6,
+    "sender_id": 2048,
+    "sender_nickname": "프롬프트러버",
+    "type": "non-buyer",
+    "status": "read",
+    "title": "결제 오류 문의",
+    "content": "결제 과정에서 오류가 발생했습니다.",
+    "created_at": "2024-01-20T14:20:00Z",
+    "updated_at": "2024-01-21T09:15:00Z"
+  },
+  {
+    "inquiry_id": 7,
+    "sender_id": 2048,
+    "sender_nickname": "홍길동",
+    "type": "non-buyer",
+    "status": "read",
+    "title": "결제 오류 문의",
+    "content": "결제 과정에서 오류가 발생했습니다.",
+    "created_at": "2024-01-20T14:20:00Z",
+    "updated_at": "2024-01-21T09:15:00Z"
+  },
+  {
+    "inquiry_id": 8,
+    "sender_id": 2048,
+    "sender_nickname": "홍길동",
+    "type": "non-buyer",
+    "status": "read",
+    "title": "결제 오류 문의",
+    "content": "결제 과정에서 오류가 발생했습니다.",
+    "created_at": "2024-01-20T14:20:00Z",
+    "updated_at": "2024-01-21T09:15:00Z"
+  },
+  {
+    "inquiry_id": 9,
+    "sender_id": 1024,
+    "sender_nickname": "홍길동",
+    "type": "buyer",
+    "status": "waiting",
+    "title": "프롬프트 사용 관련 문의",
+    "content": "구매한 프롬프트의 사용법에 대해 자세히 알고 싶습니다.",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z"
+  },
+  {
+    "inquiry_id": 10,
+    "sender_id": 1024,
+    "sender_nickname": "플로",
+    "type": "buyer",
+    "status": "read",
+    "title": "프롬프트 사용 관련 문의",
+    "content": "구매한 프롬프트의 사용법에 대해 자세히 알고 싶습니다.",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z"
+  },
+  {
+    "inquiry_id": 11,
+    "sender_id": 1024,
+    "sender_nickname": "울랄라세션",
+    "type": "buyer",
+    "status": "read",
+    "title": "프롬프트 사용 관련 문의",
+    "content": "구매한 프롬프트의 사용법에 대해 자세히 알고 싶습니다.",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z"
+  },
+  {
+    "inquiry_id": 12,
+    "sender_id": 1024,
+    "sender_nickname": "프롬프트러버",
+    "type": "buyer",
+    "status": "read",
+    "title": "프롬프트 사용 관련 문의",
+    "content": "구매한 프롬프트의 사용법에 대해 자세히 알고 싶습니다.",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z"
+  }
+]

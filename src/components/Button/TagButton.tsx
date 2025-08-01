@@ -1,0 +1,43 @@
+import CancelIcon from '@assets/icon-cancel.svg?react';
+import clsx from 'clsx';
+
+/**
+ * 태그가 달린 버튼에서 사용하는 버튼 컴포넌트입니다.
+ *
+ * @param {boolean} hasDelete -- 삭제 버튼 여부
+ * 지우는 버튼이 있는 경우에는 true로 넘기면 됩니다.
+ * @param {string} text -- 버튼 내용
+ * @param {function} onClick -- 버튼 클릭 시 실행될 함수
+ *
+ * @example
+ * <TagButton hasDelete={false} text="#글쓰기" onClick={() => {}} />
+ *
+ *
+ * @author 김진효
+ * **/
+
+interface TagButtonProps {
+  hasDelete: boolean;
+  text: string;
+  onClick?: () => void;
+}
+
+const TagButton = ({ hasDelete, text, onClick }: TagButtonProps) => {
+  return (
+    <div
+      className={clsx(
+        'py-[5px] px-[15px] flex justify-center items-center gap-[5px] rounded-[50px] whitespace-nowrap border border-text-on-background bg-white text-[14px] font-normal leading-[18px] text-text-on-background shrink-0 max-lg:shadow-button max-lg:px-[6px] max-lg:text-[8px] max-lg:leading-[10px] max-lg:font-medium',
+        !hasDelete && 'max-lg:border-none',
+        hasDelete && 'shadow-button-hover max-lg:border max-lg:border-text-on-background',
+      )}>
+      {text}
+      {hasDelete && (
+        <div className="cursor-pointer w-[12px] h-[12px]">
+          <CancelIcon onClick={onClick} className="w-full h-full text-text-on-background" />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default TagButton;

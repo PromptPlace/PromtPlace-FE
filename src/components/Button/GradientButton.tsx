@@ -1,0 +1,49 @@
+import PencilIcon from '@assets/icon-edit.svg';
+
+/**
+ * gradient 배경과 사용되는 버튼 컴포넌트입니다.
+ *
+ * @param {ButtonType} buttonType -- 버튼 모양
+ * 프롬프트 작성하기와 같이 연필이 있는 버튼은 imgButton, 글씨만 있는 버튼은 textButton 입니다.
+ * @param {string} text -- 버튼 내용
+ * @param {function} onClick -- 버튼 클릭 시 실행될 함수
+ * @param {string} type -- 버튼 타입, 기본 타입은 button이며 필요에 따라 타입을 지정할 수 있습니다.
+ *
+ * @example
+ * <GradientButton buttonType="imgButton" text="프롬프트 작성하기" onClick={() => {}} />
+ *
+ *
+ * @author 김진효
+ * **/
+
+const gradientButtonTheme = {
+  buttonType: {
+    imgButton:
+      'rounded-[50px] py-[22px] px-[24.5px] gap-[10px] text-xl font-normal leading-[25px] h-[69px] max-w-[235px] w-full',
+    textButton:
+      'rounded-[10px] max-lg:rounded-[4px] py-[16px] max-lg:py-[8px] px-[40px] max-lg:px-[20px] text-2xl max-lg:text-[14px] font-bold leading-[30px] max-lg:leading-[18px]',
+  },
+};
+
+type ButtonType = keyof typeof gradientButtonTheme.buttonType;
+
+interface GradientButtonProps {
+  buttonType: ButtonType;
+  text: string;
+  onClick: () => void;
+  type?: 'button' | 'submit';
+}
+
+const GradientButton = ({ buttonType, text, onClick, type = 'button' }: GradientButtonProps) => {
+  return (
+    <button
+      type={type}
+      onClick={onClick}
+      className={`flex justify-center items-center shadow-gradient bg-primary-gradient text-white ${gradientButtonTheme.buttonType[buttonType]}`}>
+      {buttonType === 'imgButton' && <img src={PencilIcon} alt="프롬프트 작성하기" className="w-[24px] h-[24px]" />}
+      {text}
+    </button>
+  );
+};
+
+export default GradientButton;
