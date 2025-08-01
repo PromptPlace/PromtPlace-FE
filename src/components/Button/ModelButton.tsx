@@ -15,7 +15,7 @@ interface ModelButtonProps {
 
 const ModelButton = ({ text }: ModelButtonProps) => {
   return (
-    <div className="bg-primary rounded-[50px] py-[5px] px-[15px] max-lg:px-[6px] text-white text-base max-lg:text-[10px] font-normal max-lg:font-medium leading-[20px] max-lg:leading-[10px]">
+    <div className="bg-primary rounded-[50px] py-[5px] px-[15px] max-lg:px-[6px] text-white text-base max-lg:text-[8px] font-normal max-lg:font-medium leading-[20px] max-lg:leading-[10px]">
       {text}
     </div>
   );
