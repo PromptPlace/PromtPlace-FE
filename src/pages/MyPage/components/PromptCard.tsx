@@ -58,13 +58,13 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
                 <img src={kebabMenu} alt="케밥 메뉴" className="max-lg:w-[16px] max-lg:h-[16px]" />
               </button>
               {isDropdownOpen && (
-                <div className="absolute  right-0 top-full mt-[11px] w-[91px] bg-white rounded-md shadow-lg z-10">
+                <div className="absolute  right-0 top-full mt-[11px] w-[91px] max-lg:w-[61px] bg-white rounded-md z-10 shadow-[0_4px_8px_0_rgba(0,0,0,0.12)]">
                   <button
                     onClick={() => {
                       DeletePrompt(promptData.id);
                       setIsDropdownOpen(false);
                     }}
-                    className="block w-full h-[36px] text-[16px] border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary active:bg-secondary-pressed rounded-t-[4px]">
+                    className="block  px-[16px] max-lg:px-[12px] py-[8px] max-lg:py-[4px] text-[16px] max-lg:text-[10px] border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary active:bg-secondary-pressed rounded-t-[4px]">
                     삭제하기
                   </button>
                   <button
@@ -72,7 +72,7 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
                       EditPrompt(promptData.id);
                       setIsDropdownOpen(false);
                     }}
-                    className="block w-full h-[36px] text-[16px] text-text-on-background bg-secondary active:bg-secondary-pressed rounded-b-[4px]">
+                    className="block px-[16px] max-lg:px-[12px] py-[8px] max-lg:py-[4px] text-[16px] max-lg:text-[10px] text-text-on-background bg-secondary active:bg-secondary-pressed rounded-b-[4px]">
                     수정하기
                   </button>
                 </div>
