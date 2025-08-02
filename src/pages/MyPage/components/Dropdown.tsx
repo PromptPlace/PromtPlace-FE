@@ -25,7 +25,7 @@ const Dropdown = ({ options, selectedValue, onSelect }: DropdownProps) => {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center rounded-[8px] px-[8px] py-[12px] gap-[8px] text-[12px] font-medium text-text-on-white bg-white shadow-[0_1px_3px_0_rgba(0,0,0,0.08)] w-full">
+        className="flex items-center justify-center rounded-[8px] px-[12px] py-[8px] gap-[8px] text-[12px] font-medium text-text-on-white bg-white shadow-[0_1px_3px_0_rgba(0,0,0,0.08)] ">
         <span>{selectedLabel}</span>
         <LuChevronDown size={10} />
       </button>
