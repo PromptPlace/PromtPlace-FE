@@ -3,11 +3,15 @@ import PossiblepayAmount from './components/PossiblepayAmount';
 import SalesHistoryCard from './components/SalesHistoryCard';
 import iconReceipt from '@assets/icon-receipt-primary.svg';
 import TextModal from '@/components/Modal/TextModal';
-
+import IconButton from '@components/Button/IconButton';
+import CloseIcon from '@assets/icon-close.svg';
+import clsx from 'clsx';
 // 더미 데이터 예시
 const DUMMY_USER_INFO = {
   nickname: '주토피아노',
-  balance: 1100,
+  balance: 11100,
+  hasAccount: false,
+  accountNumber: 1234355533,
 };
 
 const DUMMY_SALES_HISTORY = [
@@ -32,11 +36,21 @@ const DUMMY_SALES_HISTORY = [
 const MyPayPage = () => {
   const [userInfo, setUserInfo] = useState(DUMMY_USER_INFO);
   const [salesHistory, setSalesHistory] = useState(DUMMY_SALES_HISTORY);
-  const [showModal, setShowModal] = useState<'noMoney' | 'noAccount' | 'yesAccount' | 'complete' | boolean>(false);
+  const [showModal, setShowModal] = useState<'noMoney' | 'noAccount' | 'yesAccount' | 'complete' | null>(null);
 
   const handleWithdraw = () => {
     console.log('출금하기 모달을 엽니다.');
-    setShowModal(true);
+
+    if (!userInfo.hasAccount) {
+      setShowModal('noAccount');
+      return;
+    } else {
+      setShowModal('yesAccount');
+    }
+  };
+
+  const closeModal = () => {
+    setShowModal(null);
   };
 
   return (
@@ -84,20 +98,72 @@ const MyPayPage = () => {
         </div>
       </div>
 
-      {showModal && userInfo.balance < 10000 && (
-        <TextModal text="10,000원부터 출금하실 수 있습니다." onClick={() => setShowModal(false)} size="lg" />
+      {showModal === 'noAccount' && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 max-lg:px-[20px]">
+          <div className="absolute inset-0 bg-overlay"></div>
+
+          <div
+            className={clsx(
+              'relative w-full py-[51.5px] max-lg:py-[20px] bg-white rounded-[16px] max-lg:rounded-[8px] shadow-gradient z-10  flex items-center justify-center max-w-[940px]',
+            )}>
+            <div className="flex flex-col items-center gap-[20px] max-lg:gap-[12px]">
+              <p className="text-[32px] max-lg:text-[12px] font-bold leading-[40px] max-lg:leading-[15px] text-text-on-white">
+                계좌를 등록해주세요
+              </p>
+              <p className="text-[22px] max-lg:text-[10px] font-medium leading-[40px] max-lg:leading-[15px] text-text-on-white">
+                (마이페이지-회원정보-계좌 정보 등록)
+              </p>
+            </div>
+            <div
+              onClick={() => setShowModal(null)}
+              className="absolute top-[20px] max-lg:top-[8px] right-[20px] max-lg:right-[8px] cursor-pointer max-lg:w-[12px] max-lg:h-[12px]">
+              <img src={CloseIcon} alt="닫기" className="w-full h-full object-contain" />
+            </div>
+          </div>
+        </div>
       )}
 
-{showModal && userInfo.balance > 10000 && (
-        <TextModal text="계좌 정보를 등록해주세요." onClick={() => setShowModal(false)} size="lg" />
+      {showModal === 'yesAccount' && userInfo.balance < 10000 && (
+        <TextModal text="10,000원부터 출금하실 수 있습니다." onClick={() => setShowModal(null)} size="lg" />
       )}
 
       {showModal === 'yesAccount' && userInfo.balance > 10000 && (
-        <TextModal text="해당 계좌로 출금할까요?" onClick={() => setShowModal('complete')} size="lg" />
+        <div className="fixed inset-0 flex items-center justify-center z-50 max-lg:px-[57px]">
+          <div className="absolute inset-0 bg-overlay"></div>
+
+          <div className="relative px-[150px] max-lg:px-[20px] py-[64px] max-lg:py-[20px] bg-white rounded-[16px] max-lg:rounded-[8px] shadow-gradient z-10 flex flex-col items-center justify-center gap-[24px] max-lg:gap-[12px] text-center max-lg:w-full">
+            <div className="flex flex-col gap-[24px] max-lg:gap-[12px] ">
+              <p className="text-[28px] max-lg:text-[10px] font-medium leading-[40px] max-lg:leading-[15px] text-text-on-white">
+                우리은행 1002-536-732228
+              </p>
+              <p className="text-[32px] max-lg:text-[12px] font-bold leading-[40px] max-lg:leading-[15px] text-text-on-white">
+                해당계좌로 출금할까요?
+              </p>
+            </div>
+            <div className="flex gap-[41px] max-lg:gap-[20px]">
+              <IconButton
+                buttonType="round"
+                style={'fill'}
+                imgType="none"
+                textButton="blue"
+                text="예"
+                onClick={() => setShowModal('complete')}
+              />
+              <IconButton
+                buttonType="round"
+                style={'outline'}
+                imgType="none"
+                textButton="white"
+                text="아니오"
+                onClick={closeModal}
+              />
+            </div>
+          </div>
+        </div>
       )}
 
-      {showModal === 'yesAccount' && userInfo.balance > 10000 && (
-        <TextModal text="출금이 완료되었습니다" onClick={() => setShowModal(false)} size="lg" />
+      {showModal === 'complete' && (
+        <TextModal text="출금이 완료되었습니다" onClick={() => setShowModal(null)} size="lg" />
       )}
     </div>
   );
