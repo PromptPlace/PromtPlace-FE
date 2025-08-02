@@ -15,7 +15,7 @@ const CardHeader: React.FC<ContentHeaderProps> = ({
   title,
   linkUrl,
   dateFormat = 'dateOnly',
-  showDateOnMobile = true,
+  showDateOnMobile,
 }) => {
   // 날짜 포맷 변경 로직
   const [displayDate, timePart] = date.split('T');

@@ -27,6 +27,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ type, reviewData, onDelete }) =
           linkUrl={`/prompt/${reviewData.id}`} // 상세 페이지 경로 전달
           dateFormat="dateOnly"
           showArrow={type === 'written'} // '작성한 리뷰'일 때만 화살표 아이콘 표시
+          showDateOnMobile={true}
         />
       </div>
 

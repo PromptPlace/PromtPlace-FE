@@ -79,7 +79,7 @@ const MyPayPage = () => {
         <div className="max-lg:hidden bg-white flex-1 min-h-0">
           <div className="mr-[8px] overflow-y-auto max-h-[564px] max-lg:max-h-[273px] max-lg:mr-[0px]">
             {salesHistory.map((sale) => (
-              <SalesHistoryCard key={sale.id} sale={sale} showDateOnMobile={false} />
+              <SalesHistoryCard key={sale.id} sale={sale} />
             ))}
           </div>
         </div>
