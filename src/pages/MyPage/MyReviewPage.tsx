@@ -14,7 +14,7 @@ const DUMMY_WRITTEN_REVIEWS = [
     promptTitle: '프롬프트 1',
     rating: 4.5,
     content: '프롬프트 1에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
+    createdAt: '2025-05-06T12:34:56',
     author: { name: '홍길동', avatar: UserProfileIcon },
   },
   {
@@ -177,9 +177,23 @@ const MyReviewPage = () => {
     }
   }, [activeTab]);
 
-  const [deleteStep, setDeleteStep] = useState<'confirm' | 'complete' | null>(null);
+  const [deleteStep, setDeleteStep] = useState<'reject' | 'confirm' | 'complete' | null>(null);
+
+  const isWithin30Days = (createdAt: string) => {
+    const createdTime = new Date(createdAt).getTime();
+    const now = Date.now();
+    return now - createdTime <= 30 * 24 * 60 * 60 * 1000;
+  };
+
   const confirmDelete = (reviewId: number) => {
     setSelectedReviewId(reviewId);
+    const reviewToDelete = reviews.find((review) => review.id === reviewId);
+
+    if (!reviewToDelete || !isWithin30Days(reviewToDelete.createdAt)) {
+      setDeleteStep('reject');
+      return;
+    }
+
     setDeleteStep('confirm');
   };
 
@@ -234,6 +248,8 @@ const MyReviewPage = () => {
       )}
 
       {deleteStep === 'complete' && <TextModal text="리뷰가 삭제되었습니다." onClick={closeModal} size="lg" />}
+
+      {deleteStep === 'reject' && <TextModal text="지금은 리뷰를 삭제할 수 없습니다." onClick={closeModal} size="lg" />}
     </div>
   );
 };
