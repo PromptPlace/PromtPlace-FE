@@ -262,7 +262,7 @@ const MyPromptPage = () => {
         <div className="max-lg:hidden">
           <MyPromptsTabs activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
-        <div className="lg:hidden mb-[20px] w-[135px]">
+        <div className="lg:hidden mb-[12px] w-[135px]">
           <Dropdown
             options={promptOptions}
             selectedValue={activeTab}

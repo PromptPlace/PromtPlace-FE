@@ -2,7 +2,7 @@ import iconPerson from '@assets/icon-person-blue.svg';
 import InfoRow from './components/InfoRow';
 import { useState } from 'react';
 import DualModal from '@/components/Modal/DualModal';
-import SingleModal from './components/singleModal';
+import { SingleModal } from './components/MyPageModal';
 import { useNavigate } from 'react-router-dom';
 
 // 실제로는 API로 받아올 사용자 정보

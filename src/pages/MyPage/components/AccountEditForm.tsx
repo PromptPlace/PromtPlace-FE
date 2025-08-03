@@ -99,9 +99,12 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
         </button>
 
         {isDropdownOpen && (
-          <div
-            className="absolute max-lg:fixed z-20 mt-[104px] right-[40px] max-lg:right-[0px] w-[264px] max-lg:w-full  mt-2 bg-white max-h-[579px] overflow-y-auto">
-            <div className="grid grid-cols-2 max-lg:grid-cols-3 gap-x-[24px] max-lg:gap-x-[16px] gap-y-[24px] max-lg:gap-y-[12px] p-[24px] ">
+          <div className="absolute max-lg:fixed z-20 mt-[104px] right-[40px] max-lg:right-[0px] w-[264px] max-lg:w-full  mt-2 bg-white max-h-[579px] max-lg:max-h-[62vh] overflow-y-auto shadow-[0_4px_8px_0_rgba(0,0,0,0.12)] max-lg:shadow-[2px_2px_30px_0_rgba(0,0,0,0.25)] max-lg:rounded-t-[25px]">
+            <div className="lg:hidden flex flex-col px-[20px] items-center mb-[8px]">
+              <div className="w-[40px] h-[4px] bg-white-stroke rounded-full  mt-[14px] mb-[30px]" />
+              <p className="text-[10px] font-medium text-primary self-start">은행 선택</p>
+            </div>
+            <div className="grid grid-cols-2 max-lg:grid-cols-3 gap-x-[24px] max-lg:gap-x-[16px] gap-y-[24px] max-lg:gap-y-[12px] p-[24px] max-lg:px-[16px] max-lg:py-[12px]">
               {BANKS.map((bank) => (
                 <button
                   key={bank.name}

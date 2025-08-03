@@ -24,15 +24,16 @@ const PaymentHistoryRow: React.FC<PaymentHistoryRowProps> = ({ transaction }) =>
           dateFormat="dateOnly"
           title={transaction.title}
           linkUrl={`/prompt/${transaction.prompt_id}`}
+          showDateOnMobile={true}
         />
       </div>
-      <div className='lg:hidden flex gap-[20px]'>
-      <div className="flex items-center justify-center w-[145px] max-lg:w-auto text-[20px] max-lg:text-[12px] text-text-on-white font-medium">
-        {transaction.amount.toLocaleString()}원
-      </div>
-      <div className="flex items-center justify-center w-[145px] max-lg:w-auto text-[20px] max-lg:text-[12px] text-text-on-white font-medium">
-        {transaction.paymentMethod}
-      </div>
+      <div className="lg:hidden flex gap-[20px]">
+        <div className="flex items-center justify-center w-[145px] max-lg:w-auto text-[20px] max-lg:text-[12px] text-text-on-white font-medium">
+          {transaction.amount.toLocaleString()}원
+        </div>
+        <div className="flex items-center justify-center w-[145px] max-lg:w-auto text-[20px] max-lg:text-[12px] text-text-on-white font-medium">
+          {transaction.paymentMethod}
+        </div>
       </div>
     </div>
   );
