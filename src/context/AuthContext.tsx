@@ -14,7 +14,7 @@ import { createContext, useContext, useState, type PropsWithChildren } from 'rea
 interface AuthContextType {
   accessToken: string | null;
   refreshToken: string | null;
-  login: () => Promise<void>;
+  login: (provider: 'google' | 'kakao' | 'naver', authCode: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -25,7 +25,6 @@ export const AuthContext = createContext<AuthContextType>({
   logout: async () => {},
 });
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const {
     getItem: getAccessTokenFromStorage,
@@ -42,11 +41,37 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [accessToken, setAccessToken] = useState<string | null>(getAccessTokenFromStorage());
   const [refreshToken, setRefreshToken] = useState<string | null>(getRefreshTokenFromStorage());
 
-  const login = async () => {
-    // 추후 구현
+  const login = async (provider: 'google' | 'kakao' | 'naver', authCode: string) => {
+    try {
+      // 1. 각 소셜 플랫폼에 로그인 요청 후 '인가 코드' 받기
+      console.log(`[${provider}] 받은 인가 코드: ${authCode}`);
+
+      // 2. 받은 '인가 코드'를 우리 백엔드 서버로 전송
+      // const response = await authApi.post('/login/social', { provider, code: authCode });
+
+      // 3. 우리 서버로부터 최종 accessToken과 refreshToken 받기
+      // const { accessToken, refreshToken } = response.data;
+
+      // --- (임시 더미 데이터 사용) ---
+      const accessTokennnn = `${provider}_final_access_token`;
+      const refreshTokennnn = `${provider}_final_refresh_token`;
+      // -----------------------------
+
+      // 4. 받은 토큰을 상태와 스토리지에 저장
+      setAccessToken(accessTokennnn);
+      setRefreshToken(refreshTokennnn);
+      setAccessTokenInStorage(accessTokennnn);
+      setRefreshTokenInStorage(refreshTokennnn);
+    } catch (error) {
+      console.error(`${provider} 로그인 전체 프로세스 실패`, error);
+    }
   };
+
   const logout = async () => {
-    // 추후 구현
+    removeAccessTokenFromStorage();
+    removeRefreshTokenFromStorage();
+    setAccessToken(null);
+    setRefreshToken(null);
   };
   return <AuthContext.Provider value={{ accessToken, refreshToken, login, logout }}>{children}</AuthContext.Provider>;
 };

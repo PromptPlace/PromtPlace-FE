@@ -4,6 +4,9 @@ import GoogleIcon from '@assets/icon-google-logo.svg';
 import NaverIcon from '@assets/icon-naver-logo.svg';
 import PromptPlaceLogo from '@assets/icon-promptplace-logo.svg';
 import HeaderLogo from '@assets/icon-header-logo.svg';
+import { useGoogleLoginHandler } from '@/hooks/auth/useGoogleLoginHandler';
+import { useNaverLoginHandler } from '@/hooks/auth/useNaverLoginHandler';
+import {useKakaoLoginHandler} from '@/hooks/auth/useKakaoLoginHandler';
 
 /**
  * TODO:
@@ -15,7 +18,6 @@ import HeaderLogo from '@assets/icon-header-logo.svg';
 interface SocialLoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onClick: (provider: string) => void;
 }
 
 const SocialButton = ({ icon, text, onClick }: { icon: string; text: string; onClick: () => void }) => (
@@ -31,7 +33,10 @@ const SocialButton = ({ icon, text, onClick }: { icon: string; text: string; onC
   </button>
 );
 
-const SocialLoginModal = ({ isOpen, onClose, onClick }: SocialLoginModalProps) => {
+const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
+  const handleGoogleLogin = useGoogleLoginHandler();
+  const handleNaverLogin = useNaverLoginHandler();
+  const handleKaKaoLogin = useKakaoLoginHandler();
   if (!isOpen) return null;
 
   return (
@@ -58,9 +63,9 @@ const SocialLoginModal = ({ isOpen, onClose, onClick }: SocialLoginModalProps) =
         </div>
 
         <div className="flex flex-col items-center w-[334px]  gap-[32px] mb-[226px] max-lg:mb-[48px] mx-[114px] max-lg:mx-[0px]">
-          <SocialButton icon={KakaoIcon} text="카카오톡으로 로그인" onClick={() => onClick('kakao')} />
-          <SocialButton icon={GoogleIcon} text="구글로 로그인" onClick={() => onClick('google')} />
-          <SocialButton icon={NaverIcon} text="네이버로 로그인" onClick={() => onClick('naver')} />
+          <SocialButton icon={KakaoIcon} text="카카오톡으로 로그인" onClick={handleKaKaoLogin} />
+          <SocialButton icon={GoogleIcon} text="구글로 로그인" onClick={handleGoogleLogin} />
+          <SocialButton icon={NaverIcon} text="네이버로 로그인" onClick={handleNaverLogin} />
         </div>
 
         <button
