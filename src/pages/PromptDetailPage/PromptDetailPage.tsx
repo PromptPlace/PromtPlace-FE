@@ -181,21 +181,23 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
         </div>
       </div>
 
-      {/* 모바일 하단 고정 영역 */}
-      <div className="lg:hidden fixed bottom-0 left-0 bg-white rounded-t-[24px] shadow-[0_-4px_12px_rgba(0,0,0,0.1)] p-[20px] z-50 w-[320px] h-[139px] mx-auto">
-        <div className="flex justify-between items-center w-full">
-          <div
-            className={`flex items-center ${isPaid ? 'gap-[10px]' : 'gap-[20px]'} h-[34px] ${isPaid ? 'ml-[15px]' : 'ml-[85px]'}`}>
-            {isPaid && <span className="text-[16px] font-medium text-black whitespace-nowrap">구매 완료</span>}
-            <span className="text-[16px] font-medium text-black">{prompt.price.toLocaleString()}원</span>
+      {/* 모바일 하단 고정 영역 - 가운데 정렬 + TabBar 고려 */}
+      <div className="lg:hidden fixed  left-1/2 -translate-x-1/2 z-[10]  max-w-[425px] h-[139px] w-full flex justify-center pointer-events-none">
+        <div className="bg-white max-w-[425px] rounded-t-[24px] shadow-[0_-4px_12px_rgba(0,0,0,0.1)] p-[20px] h-[139px] z-[10] w-full h-full pointer-events-auto">
+          <div className="flex justify-between w-full h-full">
+            <div
+              className={`flex items-center ${isPaid ? 'gap-[10px]' : 'gap-[20px]'} h-[34px] ${isPaid ? 'ml-[8%]' : 'ml-[28%]'}`}>
+              {isPaid && <span className="text-[16px] font-medium text-black whitespace-nowrap">구매 완료</span>}
+              <span className="text-[16px] font-medium text-black">{prompt.price.toLocaleString()}원</span>
 
-            <IconButton
-              buttonType="squareBig"
-              style="fill"
-              imgType="download"
-              text="다운로드"
-              onClick={handleDownloadClick}
-            />
+              <IconButton
+                buttonType="squareBig"
+                style="fill"
+                imgType="download"
+                text="다운로드"
+                onClick={handleDownloadClick}
+              />
+            </div>
           </div>
         </div>
       </div>
