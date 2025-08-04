@@ -6,7 +6,7 @@ import PromptPlaceLogo from '@assets/icon-promptplace-logo.svg';
 import HeaderLogo from '@assets/icon-header-logo.svg';
 import { useGoogleLoginHandler } from '@/hooks/auth/useGoogleLoginHandler';
 import { useNaverLoginHandler } from '@/hooks/auth/useNaverLoginHandler';
-import {useKakaoLoginHandler} from '@/hooks/auth/useKakaoLoginHandler';
+import { useKakaoLoginHandler } from '@/hooks/auth/useKakaoLoginHandler';
 
 /**
  * TODO:
