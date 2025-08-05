@@ -66,6 +66,7 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
           <SocialButton icon={KakaoIcon} text="카카오톡으로 로그인" onClick={handleKaKaoLogin} />
           <SocialButton icon={GoogleIcon} text="구글로 로그인" onClick={handleGoogleLogin} />
           <SocialButton icon={NaverIcon} text="네이버로 로그인" onClick={handleNaverLogin} />
+          <div id="naverIdLogin" style={{ display: 'none' }} />
         </div>
 
         <button

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import PaymentHistoryRow from './components/PaymentHistoryRow.tsx';
 import iconPerson from '@assets/icon-person-blue.svg';
 import { useNavigate } from 'react-router-dom';
-import bluearrowIcon from '@assets/icon-arrow-left-blue.svg';  //추후 디자인 규격에 맞게 수정 필요
+import bluearrowIcon from '@assets/icon-arrow-left-blue.svg'; //추후 디자인 규격에 맞게 수정 필요
 
 const DUMMY_PAYMENT_HISTORY = [
   {

@@ -129,9 +129,7 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
         )}
       </div>
 
-      {loginModalShow && (
-        <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
-      )}
+      {loginModalShow && <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} />}
     </>
   );
 };

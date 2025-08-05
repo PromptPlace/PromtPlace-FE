@@ -1,6 +1,8 @@
 import { LOCAL_STORAGE_KEY } from '@constants/key';
 import { useLocalStorage } from '@hooks/useLocalStorage';
 import { createContext, useContext, useState, type PropsWithChildren } from 'react';
+import { loginWithGoogle, loginWithNaver } from '@apis/Login/auth.ts';
+import type { User, loginResponseData } from '@/types/LoginPage/auth.ts';
 
 /**
  * TODO:
@@ -12,18 +14,14 @@ import { createContext, useContext, useState, type PropsWithChildren } from 'rea
  * **/
 
 interface AuthContextType {
+  user: User | null;
   accessToken: string | null;
   refreshToken: string | null;
   login: (provider: 'google' | 'kakao' | 'naver', authCode: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
-export const AuthContext = createContext<AuthContextType>({
-  accessToken: null,
-  refreshToken: null,
-  login: async () => {},
-  logout: async () => {},
-});
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const {
@@ -38,32 +36,44 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     removeItem: removeRefreshTokenFromStorage,
   } = useLocalStorage(LOCAL_STORAGE_KEY.refreshToken);
 
+  const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(getAccessTokenFromStorage());
   const [refreshToken, setRefreshToken] = useState<string | null>(getRefreshTokenFromStorage());
 
   const login = async (provider: 'google' | 'kakao' | 'naver', authCode: string) => {
     try {
-      // 1. 각 소셜 플랫폼에 로그인 요청 후 '인가 코드' 받기
-      console.log(`[${provider}] 받은 인가 코드: ${authCode}`);
+      let response;
 
-      // 2. 받은 '인가 코드'를 우리 백엔드 서버로 전송
-      // const response = await authApi.post('/login/social', { provider, code: authCode });
+      switch (provider) {
+        case 'google':
+          response = await loginWithGoogle(authCode);
+          break;
+        case 'naver':
+          response = await loginWithNaver(authCode);
+          break;
+        case 'kakao':
+          // response = await loginWithKakao(authCode);
+          // break;
+          throw new Error('카카오 로그인은 아직 지원되지 않습니다.');
+        default:
+          throw new Error('지원하지 않는 소셜 로그인입니다.');
+      }
 
-      // 3. 우리 서버로부터 최종 accessToken과 refreshToken 받기
-      // const { accessToken, refreshToken } = response.data;
+      const loginData: loginResponseData = response.data;
 
-      // --- (임시 더미 데이터 사용) ---
-      const accessTokennnn = `${provider}_final_access_token`;
-      const refreshTokennnn = `${provider}_final_refresh_token`;
-      // -----------------------------
+      if (loginData) {
+        const { access_token, refresh_token, user } = loginData;
 
-      // 4. 받은 토큰을 상태와 스토리지에 저장
-      setAccessToken(accessTokennnn);
-      setRefreshToken(refreshTokennnn);
-      setAccessTokenInStorage(accessTokennnn);
-      setRefreshTokenInStorage(refreshTokennnn);
+        setAccessToken(access_token);
+        setRefreshToken(refresh_token);
+        setAccessTokenInStorage(access_token);
+        setRefreshTokenInStorage(refresh_token);
+        setUser(user);
+
+        console.log(`[${provider}] 로그인 성공!`);
+      }
     } catch (error) {
-      console.error(`${provider} 로그인 전체 프로세스 실패`, error);
+      console.error(`[${provider}] 백엔드 인증 과정 실패`, error);
     }
   };
 
@@ -72,14 +82,18 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     removeRefreshTokenFromStorage();
     setAccessToken(null);
     setRefreshToken(null);
+    setUser(null); // 로그아웃 시 유저 정보도 초기화
+    console.log('로그아웃 되었습니다.');
   };
-  return <AuthContext.Provider value={{ accessToken, refreshToken, login, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, accessToken, refreshToken, login, logout }}>{children}</AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
 
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useAuth는 AuthProvider 내부에서 사용되어야 합니다.');
   }
 
