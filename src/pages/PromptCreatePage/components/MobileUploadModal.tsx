@@ -170,52 +170,57 @@ const MobileUploadModal = ({
       <div className="absolute inset-0 bg-overlay" onClick={() => setuploadModal(false)} />
 
       {/* 하단 모달 */}
-      <div className="w-[320px] h-[410px] fixed left-1/2 bottom-0 z-50 -translate-x-1/2 bg-white rounded-t-[25px] shadow-lg">
+      <div className="w-full min-w-[320px] h-[410px] fixed left-1/2 bottom-0 z-50 -translate-x-1/2 bg-white rounded-t-[25px] shadow-lg">
         <div className="w-full flex justify-center items-center mt-[14px]">
           <div className="w-[40px] h-[4px] rounded-full bg-gray-200" />
         </div>
-        {/* 위쪽 탭 */}
-        <div className="w-full max-w-[205px] mt-[20px] ml-[20px] mb-[5.5px] gap-[8px] flex items-center justify-between">
-          {topTabs.map((tab) => (
-            <button
-              key={tab.label}
-              className={`
+        <div className="flex-col justify-center items-center">
+          <div className="">
+            {/* 위쪽 탭 */}
+            <div className="w-full max-w-[205px] mt-[20px] ml-[20px] mb-[5.5px] gap-[8px] flex items-center justify-between">
+              {topTabs.map((tab) => (
+                <button
+                  key={tab.label}
+                  className={`
                 relative flex w-[63px] h-[27px] items-center justify-center rounded-[50px] text-[12px] font-medium
                 ${selectedTab === tab.label ? `text-primary bg-secondary` : 'text-text-on-background'}
               `}
-              onClick={() => setSelectedTab(tab.label)}
-              type="button">
-              <p> {tab.label}</p>
-              {tab.showDot && <span className="absolute -top-1 right-2 text-alert text-base">•</span>}
-            </button>
-          ))}
-        </div>
-        {/* 탭 밑 라인 */}
-        <div className="w-full flex justify-center">
-          <div className="w-full max-w-[275px] border-b border-[#E3E6ED]" />
-        </div>
-
-        {/* 아래쪽 탭 */}
-        <div className="w-full max-w-[265px] mt-[6.5px] ml-[20px] gap-[8px] flex items-center justify-start">
-          {bottomTabs.map((tab) => (
-            <button
-              key={tab.label}
-              className={`relative flex 
-                ${tab.label === '설명' ? 'w-[63px]' : tab.label === '활용법' ? 'w-[74px]' : 'w-[85px]'}
+                  onClick={() => setSelectedTab(tab.label)}
+                  type="button">
+                  <p> {tab.label}</p>
+                  {tab.showDot && <span className="absolute -top-1 right-2 text-alert text-base">•</span>}
+                </button>
+              ))}
+            </div>
+          </div>
+          {/* 탭 밑 라인 */}
+          <div className="w-full flex justify-center">
+            <div className="w-full max-w-[275px] border-b border-[#E3E6ED]" />
+          </div>
+          {/* 아래쪽 탭 */}
+          <div className="">
+            <div className="w-full max-w-[265px] mt-[6.5px] ml-[20px] gap-[8px] flex items-center justify-start">
+              {bottomTabs.map((tab) => (
+                <button
+                  key={tab.label}
+                  className={`relative flex 
+                ${tab.label === '설명' ? 'w-[59px] pr-[4px]' : tab.label === '활용법' ? 'w-[74px]' : 'w-[85px]'}
                  h-[27px] items-center justify-center rounded-[50px] text-[12px] font-medium
                 ${selectedTab === tab.label ? `text-primary bg-secondary` : 'text-text-on-background'}
               `}
-              onClick={() => setSelectedTab(tab.label)}
-              type="button">
-              <p> {tab.label}</p>
-              {tab.showDot && (
-                <span
-                  className={`${tab.label === '설명' ? 'absolute -top-1 right-2.5 text-alert text-base' : 'absolute -top-1 right-2 text-alert text-base'}`}>
-                  •
-                </span>
-              )}
-            </button>
-          ))}
+                  onClick={() => setSelectedTab(tab.label)}
+                  type="button">
+                  <p> {tab.label}</p>
+                  {tab.showDot && (
+                    <span
+                      className={`${tab.label === '설명' ? 'absolute -top-1 right-2.5 text-alert text-base' : 'absolute -top-1 right-2 text-alert text-base'}`}>
+                      •
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="px-[20px] mt-[20px] ">
@@ -437,7 +442,7 @@ const MobileUploadModal = ({
         )}
 
         {/* 하단 버튼 */}
-        <div className="absolute bottom-0 left-0 w-full px-5 pb-5">
+        <div className="fixed inset-x-0 bottom-0 flex justify-center pb-5">
           <button
             className="w-[280px] h-[40px] rounded-[4px] bg-primary text-white text-[16px] font-medium"
             type="button"
