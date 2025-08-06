@@ -79,41 +79,42 @@ export const MessageTableList = ({
                 {message.create_at}
               </td>
               <td className="w-[115px] h-[65px] flex justify-center py-[16px] -translate-y-[3px]">
-                <div className="relative z-2">
+                <div className="relative">
                   <button
                     onClick={() => setOpenId(openId === message.id ? null : message.id)}
-                    className="flex justify-center items-center w-[28px] h-[28px] rounded-full hover:bg-secondary-pressed z-10">
-                    <GoKebabHorizontal className="rotate-90" size={28} />
+                    className="flex justify-center items-center w-[28px] h-[28px] rounded-full hover:bg-secondary-pressed">
+                    <img className="w-[28px] h-[28px]" src={kebabMenu} alt="...버튼" />
                   </button>
-                </div>
-                {openId === message.id && (
-                  <div
-                    ref={menuRef}
-                    className="z-30 absolute top-[55px] left-[90px] bg-secondary rounded-[4px]
-                    -translate-x-1/2 w-[91px] shadow-[0_0_8px_0_rgba(0,0,0,0.12 flex flex-col">
-                    <button
-                      className="w-[91px] h-[36px] flex text-center items-center text-gray-500 rounded-t-[4px] px-[16px] py-[8px]
+                  {/*드롭다운 */}
+                  {openId === message.id && (
+                    <div
+                      ref={menuRef}
+                      className="z-30 absolute top-[40px] -left-[5px] bg-secondary rounded-[4px]
+                    -translate-x-1/2 w-[91px] flex flex-col">
+                      <button
+                        className="w-[91px] h-[36px] flex text-center items-center text-gray-500 rounded-t-[4px] px-[16px] py-[8px]
                       border-b-[1px] border-white-stroke"
-                      onClick={() => {
-                        onDelete(message.id);
-                        setOpenId(null);
-                      }}>
-                      <p className="h-[20px] font-[400] text-[16px] text-text-on-background -translate-y-[2px]">
-                        삭제하기
-                      </p>
-                    </button>
-                    <button
-                      className="w-[91px] h-[36px] flex text-center items-center text-gray-500 rounded-b-[4px] px-[16px] py-[8px]"
-                      onClick={() => {
-                        onRead(message.id);
-                        setOpenId(null);
-                      }}>
-                      <p className="h-[20px] font-[400] text-[16px] text-text-on-background -translate-y-[2px]">
-                        읽음표시
-                      </p>
-                    </button>
-                  </div>
-                )}
+                        onClick={() => {
+                          onDelete(message.id);
+                          setOpenId(null);
+                        }}>
+                        <p className="h-[20px] font-[400] text-[16px] text-text-on-background -translate-y-[2px]">
+                          삭제하기
+                        </p>
+                      </button>
+                      <button
+                        className="w-[91px] h-[36px] flex text-center items-center text-gray-500 rounded-b-[4px] px-[16px] py-[8px]"
+                        onClick={() => {
+                          onRead(message.id);
+                          setOpenId(null);
+                        }}>
+                        <p className="h-[20px] font-[400] text-[16px] text-text-on-background -translate-y-[2px]">
+                          읽음표시
+                        </p>
+                      </button>
+                    </div>
+                  )}
+                </div>
               </td>
             </tr>
           ))
