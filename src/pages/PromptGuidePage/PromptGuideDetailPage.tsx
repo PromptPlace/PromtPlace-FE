@@ -80,17 +80,13 @@ AI가 해당 프롬프트를 정상적으로 처리할 수 있도록 구성되�
   //페이지 URL
   const currentUrl = window.location.href;
 
-  // 클립보드에 복사
-  const copyToClipboard = (text: string) => {
+  // 클립보드에 복사 (useCallback 사용)
+  const handleCopyUrl = useCallback(() => {
     navigator.clipboard
-      .writeText(text)
+      .writeText(currentUrl)
       .then(() => alert('URL이 복사되었습니다!'))
       .catch(() => alert('복사에 실패했습니다.'));
-  };
-
-  const handleCopyUrl = useCallback(() => {
-    copyToClipboard(currentUrl);
-  }, []);
+  }, [currentUrl]);
 
   // 새 창으로 공유 URL 열기
   const openShareWindow = (shareUrl: string) => {
@@ -105,6 +101,19 @@ AI가 해당 프롬프트를 정상적으로 처리할 수 있도록 구성되�
   const handleFacebook = useCallback(() => {
     const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
     openShareWindow(shareUrl);
+  }, []);
+
+  // 클립보드에 복사
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
+  const handleInstagram = useCallback(() => {
+    copyToClipboard(currentUrl);
+    const ok = window.confirm('인스타그램으로 이동합니다.');
+    if (!ok) return; // 취소했으면 아무 동작도 하지 않음
+
+    // 확인했으면 새 탭으로 인스타그램 웹 열기
+    window.open('https://www.instagram.com', '_blank', 'noopener,noreferrer');
   }, []);
 
   return (
@@ -148,11 +157,10 @@ AI가 해당 프롬프트를 정상적으로 처리할 수 있도록 구성되�
                   <div className="w-[116px] h-[45px]">{/* file_url이 null, undefined, ""일 때만 보여줌 */}</div>
                 )}
 
-                <div className="w-[240px] flex justify-between items-center">
+                <div className="w-[220px] flex justify-between items-center">
                   <img className="cursor-pointer" src={url} alt="url" onClick={handleCopyUrl} />
-                  <img className="cursor-pointer" src={instagram} alt="instagram" />
+                  <img className="cursor-pointer" src={instagram} alt="instagram" onClick={handleInstagram} />
                   <img className="cursor-pointer" src={facebook} alt="facebook" onClick={handleFacebook} />
-                  <img className="cursor-pointer" src={kakaotalk} alt="kakaotalk" />
                   <img className="cursor-pointer" src={twitter} alt="twitter" onClick={handleTwitter} />
                 </div>
               </div>
@@ -196,11 +204,10 @@ AI가 해당 프롬프트를 정상적으로 처리할 수 있도록 구성되�
                   <div className="w-[60px] h-[24px]">{/* file_url이 null, undefined, ""일 때만 보여줌 */}</div>
                 )}
 
-                <div className="w-[135px] flex justify-between items-center">
+                <div className="w-[115px] flex justify-between items-center">
                   <img className="w-[16px] h-[16px]" src={url} alt="url" onClick={handleCopyUrl} />
-                  <img className="w-[16px] h-[16px]" src={instagram} alt="instagram" />
+                  <img className="w-[16px] h-[16px]" src={instagram} alt="instagram" onClick={handleInstagram} />
                   <img className="w-[16px] h-[16px]" src={facebook} alt="facebook" onClick={handleFacebook} />
-                  <img className="w-[16px] h-[16px]" src={kakaotalk} alt="kakaotalk" />
                   <img className="w-[16px] h-[16px]" src={twitter} alt="twitter" onClick={handleTwitter} />
                 </div>
               </div>
