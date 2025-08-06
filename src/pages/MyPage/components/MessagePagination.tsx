@@ -78,7 +78,7 @@ export const MessageTableList = ({
                 onClick={() => onRowClick(message.id)}>
                 {message.create_at}
               </td>
-              <td className="w-[115px] h-[65px] flex justify-center py-[16px] -translate-y-[3px]">
+              <td className="w-[115px] h-[65px] flex justify-center py-[16px]">
                 <div className="relative">
                   <button
                     onClick={() => setOpenId(openId === message.id ? null : message.id)}
