@@ -39,9 +39,6 @@ const PromptCreatePage = () => {
   const [discriptionText, setDescriptionText] = useState<string>('');
   const [howToUseText, setHowToUseText] = useState<string>('');
 
-  // useEffect(() => {
-  //   console.log('title 변경됨:', title);
-  // }, [title]);
   useEffect(() => {
     console.log(files);
   }, [files.length]);
@@ -57,7 +54,7 @@ const PromptCreatePage = () => {
   };
 
   //업로드 조건 확인
-  const handleUploadCheck = (canUpload: boolean) => {
+  const handleUploadCheck = () => {
     // 가격 범위 확인
     const isValidCost =
       (priceType === '무료' && cost === 0) || (priceType === '유료' && cost !== null && cost >= 100 && cost <= 100000);
@@ -90,6 +87,19 @@ const PromptCreatePage = () => {
   const handleDualYes = () => {
     setShowDualModal(false);
     setModalText('업로드가 완료되었습니다.');
+    // 추후 삭제 필요 (console)
+    console.log(
+      '설정 내용 : ',
+      title,
+      content,
+      cost,
+      tags,
+      withImage,
+      files,
+      previewText,
+      discriptionText,
+      howToUseText,
+    );
     setAlertModal(true);
   };
 
@@ -159,7 +169,7 @@ const PromptCreatePage = () => {
                         style="fill"
                         imgType="upload"
                         text="업로드하기"
-                        onClick={() => handleUploadCheck(canUpload)}
+                        onClick={() => handleUploadCheck()}
                       />
                     </div>
                   </div>
@@ -246,7 +256,7 @@ const PromptCreatePage = () => {
                   style="fill"
                   imgType="upload"
                   text="  업로드하기  "
-                  onClick={() => handleUploadCheck(canUpload)}
+                  onClick={() => handleUploadCheck()}
                 />
               </div>
             </div>

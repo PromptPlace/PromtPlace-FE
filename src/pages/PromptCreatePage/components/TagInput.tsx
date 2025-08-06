@@ -121,13 +121,34 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
 
   // 읽기모드: 버튼형 토큰, x 버튼, >/< 페이지네비
 
+  // 태그가 1개일때
+  if (!isEdit && tags.length === 1) {
+    const onlyTag = tags[0];
+    const displayTag = onlyTag.length > 45 ? onlyTag.slice(0, 35) + '...' : onlyTag; //35자까지만 보이게
+
+    return (
+      <div
+        className="max-w-[490px] w-full min-h-[60px] flex items-center border border-primary rounded-[8px] px-[8px] py-[4px] gap-[8px] bg-white"
+        style={{ cursor: 'text' }}
+        onClick={handleAreaClick}
+        tabIndex={0}>
+        <span
+          className="flex items-center rounded-[50px] px-4 py-1 border border-text-on-background text-[14px] font-normal text-text-on-background"
+          style={{ boxShadow: '0px 4px 8px 0px rgba(0,0,0,0.12)' }}
+          onClick={(e) => e.stopPropagation()}>
+          #{displayTag}
+        </span>
+      </div>
+    );
+  }
+
+  // 태그가 2개 이상일 때
   return (
     <div
-      className="max-w-[490px] w-full min-h-[60px] flex items-center border border-primary rounded-[8px] px-[8px] py-[4px] gap-[8px]  bg-white "
+      className="max-w-[490px] w-full min-h-[60px] flex items-center border border-primary rounded-[8px] px-[8px] py-[4px] gap-[8px] bg-white"
       style={{ cursor: 'text' }}
       onClick={handleAreaClick}
       tabIndex={0}>
-      {/* < 버튼 */}
       {totalPages > 1 && page > 0 ? (
         <button
           type="button"
@@ -140,15 +161,14 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
           <LuChevronLeft size={22} />
         </button>
       ) : (
-        <div className="w-[28px]" /> // 비어있는 공간(버튼 width만큼)
+        <div className="w-[28px]" />
       )}
 
-      {/* 태그 리스트 */}
       <div className="flex-1 flex items-center overflow-x-auto min-w-0">
         {pageTags.map((tag, i) => (
           <span
             key={i}
-            className="flex items-center rounded-[50px] px-4 py-1  border border-text-on-background mr-2 text-[14px] font-normal text-text-on-background"
+            className="flex items-center rounded-[50px] px-4 py-1 border border-text-on-background mr-2 text-[14px] font-normal text-text-on-background"
             style={{ boxShadow: '0px 4px 8px 0px rgba(0,0,0,0.12)' }}
             onClick={(e) => e.stopPropagation()}>
             #{tag}
@@ -165,7 +185,6 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
         ))}
       </div>
 
-      {/* > 버튼 */}
       {totalPages > 1 && page < totalPages - 1 ? (
         <button
           type="button"
@@ -178,7 +197,7 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
           <LuChevronRight size={22} />
         </button>
       ) : (
-        <div className="w-[28px]" /> // 비어있는 공간(버튼 width만큼)
+        <div className="w-[28px]" />
       )}
     </div>
   );

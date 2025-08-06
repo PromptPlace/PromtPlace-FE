@@ -49,8 +49,7 @@ const UploadModal = ({
 }) => {
   const [showModelDropdown, setShowModelDropdown] = useState(false);
   const [showPriceDropdown, setShowPriceDropdown] = useState(false);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
+  const inputImgRef = useRef<HTMLInputElement | null>(null);
   //금액 선택 완료 여부
   const isSummary = !!(
     selectedModels.length > 0 &&
@@ -71,7 +70,7 @@ const UploadModal = ({
         (file, idx, arr) => arr.findIndex((f) => f.name === file.name && f.size === file.size) === idx,
       ),
     );
-    if (inputRef.current) inputRef.current.value = '';
+    if (inputImgRef.current) inputImgRef.current.value = '';
   };
 
   // 이미지 삭제
@@ -146,11 +145,11 @@ const UploadModal = ({
                       style="fill"
                       imgType="upload"
                       text="이미지 업로드"
-                      onClick={() => inputRef.current?.click()}
+                      onClick={() => inputImgRef.current?.click()}
                     />
                     <input
                       type="file"
-                      ref={inputRef}
+                      ref={inputImgRef}
                       className="hidden"
                       multiple
                       accept="image/*"
@@ -171,7 +170,7 @@ const UploadModal = ({
           {/*프롬프트 설명*/}
           <div className="mt-[28px]">
             <div className="flex items-center gap-2 font-semibold text-[16px]">
-              프롬프트 결과 미리 보기 <span className="text-alert">*</span>
+              프롬프트 설명 <span className="text-alert">*</span>
             </div>
             <div className="mt-[16px] pt-[24px] px-[24px] pb-[11px] bg-background rounded-[8px] h-[150px]">
               <textarea
