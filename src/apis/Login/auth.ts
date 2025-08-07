@@ -9,7 +9,7 @@ export const loginWithGoogle = async (authCode: string, state?: string): Promise
       state: state,
     },
   });
-
+  console.log('구글 로그인 응답:', response.data);
   return response.data;
 };
 

@@ -22,6 +22,7 @@ export const publicRoutes: RouteObject[] = [
       { path: 'search/:keyword', element: <lazyRoutes.SearchPage /> },
       { path: 'mypage', element: <lazyRoutes.MyPage /> },
       { path: '/login/callback', element: <lazyRoutes.SocialLoginCallbackPage /> },
+      { path: '/api/auth/login/callback/google', element: <lazyRoutes.GoogleCallbackPage /> },
     ],
   },
 ];

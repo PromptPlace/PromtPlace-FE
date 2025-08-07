@@ -14,6 +14,7 @@ export const useGoogleLoginHandler = () => {
     flow: 'auth-code',
     onSuccess: (codeResponse) => {
       login('google', codeResponse.code);
+      console.log('✅ 구글 로그인 성공:', codeResponse.code);
     },
     onError: (error) => {
       console.error('❗️ 구글 로그인 실패', error);
