@@ -52,10 +52,7 @@ const AskCard = ({ prompts, isMyProfile, type, setType }: AskCardProps) => {
                 <div
                   onClick={() => setIsListClicked((prev) => !prev)}
                   className="group w-[24px] h-[24px] max-lg:w-[16px] max-lg:h-[16px] max-lg:py-[2px] max-lg:px-[6px] cursor-pointer flex items-center justify-center hover:bg-secondary-pressed rounded-full">
-                  <img
-                    src={DotsIcon}
-                    className="text-white group-hover:text-text-on-white w-full h-full object-contain"
-                  />
+                  <img src={DotsIcon} className="text-white group-hover:text-text-on-white" />
                 </div>
                 {isListClicked && (
                   <div className="absolute top-[34px] left-0 right-0 rounded-[4px] flex flex-col">
