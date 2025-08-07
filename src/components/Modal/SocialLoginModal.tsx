@@ -63,7 +63,7 @@ const SocialLoginModal = ({ isOpen, onClose, onClick }: SocialLoginModalProps) =
           <SocialButton icon={NaverIcon} text="네이버로 로그인" onClick={() => onClick('naver')} />
         </div>
 
-        <button onClick={onClose} className="flex  underline text-[12px] text-primary text-normal w-[130px] h-[15px] ">
+        <button onClick={onClose} className="lg:hidden flex  underline text-[12px] text-primary text-normal w-[130px] h-[15px] ">
           가입 안하고 마저 탐색하기
         </button>
       </div>
