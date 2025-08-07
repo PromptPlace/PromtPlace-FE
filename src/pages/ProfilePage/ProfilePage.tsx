@@ -26,6 +26,7 @@ import PrimaryButton from '@components/Button/PrimaryButton';
 import InquiryCard from './components/InquiryCard';
 import InquiryDetailCard from './components/InquiryDetailCard';
 import FollowCard from './components/FollowCard';
+import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 
 import DESCRIPTION from '@data/ProfilePage/description.json';
 import PROMPT from '@data/ProfilePage/prompt.json';
@@ -36,6 +37,7 @@ import FOLLOWER from '@data/ProfilePage/follower.json';
 
 import useImgUpload from '@hooks/useImgUpload';
 import Select from './components/Select';
+import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 
 const USER = {
   member_id: 12345,
@@ -59,6 +61,8 @@ const ProfilePage = () => {
   const { id } = useParams();
   const myId = localStorage.getItem('user_id'); // 로그인 시 저장 필요
   const isMyProfile = id === myId; // 현재 10인 경우 본인 페이지로 이동됨
+
+  const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
 
   const [descriptions, setDescriptions] = useState(DESCRIPTION.map((d) => ({ ...d, isEditing: false })));
 
@@ -106,6 +110,12 @@ const ProfilePage = () => {
   ];
 
   const [menuId, setMenuId] = useState(0);
+
+  const handleFollow = () => {
+    handleShowLoginModal(() => {
+      setIsFollow((prev) => !prev);
+    });
+  };
 
   const handleDeletePrompts = (id: number) => {
     setPrompts((prev) => prev.filter((p) => p.prompt_id !== id));
@@ -332,25 +342,13 @@ const ProfilePage = () => {
               </div>
 
               <div className="lg:hidden max-lg:ml-[3px]">
-                <FollowButton
-                  follow={isFollow}
-                  onClick={() => {
-                    setIsFollow((prev) => !prev);
-                  }}
-                  size="sm"
-                />
+                <FollowButton follow={isFollow} onClick={handleFollow} size="sm" />
               </div>
             </div>
 
             <div className="flex gap-[24px] items-center max-lg:hidden">
               <div className="max-lg:hidden">
-                <FollowButton
-                  follow={isFollow}
-                  onClick={() => {
-                    setIsFollow((prev) => !prev);
-                  }}
-                  size="lg"
-                />
+                <FollowButton follow={isFollow} onClick={handleFollow} size="lg" />
               </div>
 
               <div
@@ -668,6 +666,9 @@ const ProfilePage = () => {
           )}
         </div>
       </div>
+      {loginModalShow && (
+        <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
+      )}
     </div>
   );
 };
