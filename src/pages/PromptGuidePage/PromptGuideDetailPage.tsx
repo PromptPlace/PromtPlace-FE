@@ -10,7 +10,7 @@
  * @author luii
  * **/
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { BsPaperclip } from 'react-icons/bs';
 import { LuChevronLeft } from 'react-icons/lu';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -75,8 +75,50 @@ AI가 해당 프롬프트를 정상적으로 처리할 수 있도록 구성되�
     navigate(`/guide/${type}`);
   };
 
+  /*페이지 공유 기능 관련 */
+
+  //페이지 URL
+  const currentUrl = window.location.href;
+
+  // 클립보드에 복사 (useCallback 사용)
+  const handleCopyUrl = useCallback(() => {
+    navigator.clipboard
+      .writeText(currentUrl)
+      .then(() => alert('URL이 복사되었습니다!'))
+      .catch(() => alert('복사에 실패했습니다.'));
+  }, [currentUrl]);
+
+  // 새 창으로 공유 URL 열기
+  const openShareWindow = (shareUrl: string) => {
+    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleTwitter = useCallback(() => {
+    const shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}`;
+    openShareWindow(shareUrl);
+  }, []);
+
+  const handleFacebook = useCallback(() => {
+    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+    openShareWindow(shareUrl);
+  }, []);
+
+  // 클립보드에 복사
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
+  const handleInstagram = useCallback(() => {
+    copyToClipboard(currentUrl);
+    const ok = window.confirm('인스타그램으로 이동합니다.');
+    if (!ok) return; // 취소했으면 아무 동작도 하지 않음
+
+    // 확인했으면 새 탭으로 인스타그램 웹 열기
+    window.open('https://www.instagram.com', '_blank', 'noopener,noreferrer');
+  }, []);
+
   return (
     <>
+      {/*PC 화면 */}
       <div className="hidden lg:block">
         <div className="min-h-screen flex justify-center items-center">
           <div className="w-full max-w-[994px] h-[750px] bg-white rounded-t-[16px] rounded-b-[16px]">
@@ -115,12 +157,11 @@ AI가 해당 프롬프트를 정상적으로 처리할 수 있도록 구성되�
                   <div className="w-[116px] h-[45px]">{/* file_url이 null, undefined, ""일 때만 보여줌 */}</div>
                 )}
 
-                <div className="w-[240px] flex justify-between items-center">
-                  <img src={url} alt="url" />
-                  <img src={instagram} alt="instagram" />
-                  <img src={facebook} alt="facebook" />
-                  <img src={kakaotalk} alt="kakaotalk" />
-                  <img src={twitter} alt="twitter" />
+                <div className="w-[220px] flex justify-between items-center">
+                  <img className="cursor-pointer" src={url} alt="url" onClick={handleCopyUrl} />
+                  <img className="cursor-pointer" src={instagram} alt="instagram" onClick={handleInstagram} />
+                  <img className="cursor-pointer" src={facebook} alt="facebook" onClick={handleFacebook} />
+                  <img className="cursor-pointer" src={twitter} alt="twitter" onClick={handleTwitter} />
                 </div>
               </div>
             </div>
@@ -163,12 +204,11 @@ AI가 해당 프롬프트를 정상적으로 처리할 수 있도록 구성되�
                   <div className="w-[60px] h-[24px]">{/* file_url이 null, undefined, ""일 때만 보여줌 */}</div>
                 )}
 
-                <div className="w-[135px] flex justify-between items-center">
-                  <img className="w-[16px] h-[16px]" src={url} alt="url" />
-                  <img className="w-[16px] h-[16px]" src={instagram} alt="instagram" />
-                  <img className="w-[16px] h-[16px]" src={facebook} alt="facebook" />
-                  <img className="w-[16px] h-[16px]" src={kakaotalk} alt="kakaotalk" />
-                  <img className="w-[16px] h-[16px]" src={twitter} alt="twitter" />
+                <div className="w-[115px] flex justify-between items-center">
+                  <img className="w-[16px] h-[16px]" src={url} alt="url" onClick={handleCopyUrl} />
+                  <img className="w-[16px] h-[16px]" src={instagram} alt="instagram" onClick={handleInstagram} />
+                  <img className="w-[16px] h-[16px]" src={facebook} alt="facebook" onClick={handleFacebook} />
+                  <img className="w-[16px] h-[16px]" src={twitter} alt="twitter" onClick={handleTwitter} />
                 </div>
               </div>
             </div>

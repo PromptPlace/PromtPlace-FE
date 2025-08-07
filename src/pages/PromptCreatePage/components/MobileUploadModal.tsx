@@ -54,9 +54,8 @@ const MobileUploadModal = ({
   howToUseText: string;
   setHowToUseText: (howToUseText: string) => void;
 }) => {
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  //탭 선택용
   const [selectedTab, setSelectedTab] = useState<string>('모델');
-
   // 탭 구분
   const topTabs = TAB_GROUP.slice(0, 3);
   const bottomTabs = TAB_GROUP.slice(3, 6);
@@ -82,6 +81,8 @@ const MobileUploadModal = ({
   };
 
   /** 가격 탭 관련 */
+  const [costInput, setCostInput] = useState(cost !== null ? cost.toString() : ''); // 가격 입력
+  const costInputRef = useRef<HTMLInputElement | null>(null);
   // 가격 타입(무료/유료) 단일 선택
   const handlePriceType = (type: '무료' | '유료') => {
     setPriceType(type);
@@ -93,24 +94,22 @@ const MobileUploadModal = ({
   // 유효성 검사 함수
   const isValidPrice = (value: string) => {
     const num = Number(value);
-    return !isNaN(num) && num >= 100 && num <= 100000;
+    return !isNaN(num) && (num === 0 || (num >= 100 && num <= 100000));
   };
+
   // 콤마 포맷 함수
   const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
-  // 가격 입력
-  const [input, setInput] = useState(cost !== null ? cost.toString() : '');
-
   // cost 바뀔 때 input도 동기화
   useEffect(() => {
-    setInput(cost !== null ? cost.toString() : '');
+    setCostInput(cost !== null ? cost.toString() : '');
   }, [cost]);
 
   // 유료일 때만 금액 입력 (숫자만)
   const handleCostChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let raw = e.target.value.replace(/[^0-9]/g, '');
     if (raw.length > 7) raw = raw.slice(0, 7);
-    setInput(raw);
+    setCostInput(raw);
 
     if (isValidPrice(raw)) {
       setCost(Number(raw));
@@ -120,6 +119,7 @@ const MobileUploadModal = ({
   };
 
   /**태그 관련 */
+  const [taginput, setTagInput] = useState<string>(''); // 가격 입력
   const inputTagRef = useRef<HTMLInputElement>(null);
   // 태그 문자열을 배열로 변환
   function splitTags(input: string) {
@@ -130,13 +130,13 @@ const MobileUploadModal = ({
   }
   // 태그 추가
   const handleComplete = () => {
-    const value = input.trim();
+    const value = taginput.trim();
     if (value) {
       const newTags = splitTags(value);
       const mergedTags = Array.from(new Set([...tags, ...newTags])).slice(0, 10);
       setTags(mergedTags);
     }
-    setInput('');
+    setTagInput('');
     inputTagRef.current?.focus();
   };
 
@@ -156,7 +156,7 @@ const MobileUploadModal = ({
         (file, idx, arr) => arr.findIndex((f) => f.name === file.name && f.size === file.size) === idx,
       ),
     );
-    if (inputRef.current) inputRef.current.value = '';
+    if (inputImgRef.current) inputImgRef.current.value = '';
   };
 
   // 이미지 삭제
@@ -170,52 +170,57 @@ const MobileUploadModal = ({
       <div className="absolute inset-0 bg-overlay" onClick={() => setuploadModal(false)} />
 
       {/* 하단 모달 */}
-      <div className="w-[320px] h-[410px] fixed left-1/2 bottom-0 z-50 -translate-x-1/2 bg-white rounded-t-[25px] shadow-lg">
+      <div className="w-full min-w-[320px] h-[410px] fixed left-1/2 bottom-0 z-50 -translate-x-1/2 bg-white rounded-t-[25px] shadow-lg">
         <div className="w-full flex justify-center items-center mt-[14px]">
           <div className="w-[40px] h-[4px] rounded-full bg-gray-200" />
         </div>
-        {/* 위쪽 탭 */}
-        <div className="w-full max-w-[205px] mt-[20px] ml-[20px] mb-[5.5px] gap-[8px] flex items-center justify-between">
-          {topTabs.map((tab) => (
-            <button
-              key={tab.label}
-              className={`
+        <div className="flex-col justify-center items-center">
+          <div className="">
+            {/* 위쪽 탭 */}
+            <div className="w-full max-w-[205px] mt-[20px] ml-[20px] mb-[5.5px] gap-[8px] flex items-center justify-between">
+              {topTabs.map((tab) => (
+                <button
+                  key={tab.label}
+                  className={`
                 relative flex w-[63px] h-[27px] items-center justify-center rounded-[50px] text-[12px] font-medium
                 ${selectedTab === tab.label ? `text-primary bg-secondary` : 'text-text-on-background'}
               `}
-              onClick={() => setSelectedTab(tab.label)}
-              type="button">
-              <p> {tab.label}</p>
-              {tab.showDot && <span className="absolute -top-1 right-2 text-alert text-base">•</span>}
-            </button>
-          ))}
-        </div>
-        {/* 탭 밑 라인 */}
-        <div className="w-full flex justify-center">
-          <div className="w-full max-w-[275px] border-b border-[#E3E6ED]" />
-        </div>
-
-        {/* 아래쪽 탭 */}
-        <div className="w-full max-w-[265px] mt-[6.5px] ml-[20px] gap-[8px] flex items-center justify-start">
-          {bottomTabs.map((tab) => (
-            <button
-              key={tab.label}
-              className={`relative flex 
-                ${tab.label === '설명' ? 'w-[63px]' : tab.label === '활용법' ? 'w-[74px]' : 'w-[85px]'}
+                  onClick={() => setSelectedTab(tab.label)}
+                  type="button">
+                  <p> {tab.label}</p>
+                  {tab.showDot && <span className="absolute -top-1 right-2 text-alert text-base">•</span>}
+                </button>
+              ))}
+            </div>
+          </div>
+          {/* 탭 밑 라인 */}
+          <div className="w-full flex justify-center">
+            <div className="w-full max-w-[275px] border-b border-[#E3E6ED]" />
+          </div>
+          {/* 아래쪽 탭 */}
+          <div className="">
+            <div className="w-full max-w-[265px] mt-[6.5px] ml-[20px] gap-[8px] flex items-center justify-start">
+              {bottomTabs.map((tab) => (
+                <button
+                  key={tab.label}
+                  className={`relative flex 
+                ${tab.label === '설명' ? 'w-[59px] pr-[4px]' : tab.label === '활용법' ? 'w-[74px]' : 'w-[85px]'}
                  h-[27px] items-center justify-center rounded-[50px] text-[12px] font-medium
                 ${selectedTab === tab.label ? `text-primary bg-secondary` : 'text-text-on-background'}
               `}
-              onClick={() => setSelectedTab(tab.label)}
-              type="button">
-              <p> {tab.label}</p>
-              {tab.showDot && (
-                <span
-                  className={`${tab.label === '설명' ? 'absolute -top-1 right-2.5 text-alert text-base' : 'absolute -top-1 right-2 text-alert text-base'}`}>
-                  •
-                </span>
-              )}
-            </button>
-          ))}
+                  onClick={() => setSelectedTab(tab.label)}
+                  type="button">
+                  <p> {tab.label}</p>
+                  {tab.showDot && (
+                    <span
+                      className={`${tab.label === '설명' ? 'absolute -top-1 right-2.5 text-alert text-base' : 'absolute -top-1 right-2 text-alert text-base'}`}>
+                      •
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="px-[20px] mt-[20px] ">
@@ -276,9 +281,9 @@ const MobileUploadModal = ({
                 <div className="flex flex-col gap-1 mt-[20px]">
                   <label className="text-[10px] text-primary font-medium mb-[8px]">가격 입력하기</label>
                   <input
-                    ref={inputRef}
+                    ref={costInputRef}
                     type="text"
-                    value={input ? `${formatNumber(Number(input))}원` : ''}
+                    value={costInput ? `${formatNumber(Number(costInput))}원` : ''}
                     onChange={handleCostChange}
                     className={`w-[280px] h-[34px] px-3 rounded-[4px] text-[10px] border-[0.5px] border-primary`}
                     placeholder="가격을 입력해주세요"
@@ -299,8 +304,8 @@ const MobileUploadModal = ({
                 <div className="flex items-center border-[0.5px] border-primary rounded-[4px] px-[14px] py-[10px] mb-[20px]">
                   <input
                     ref={inputTagRef}
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
+                    value={taginput}
+                    onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') handleComplete();
                     }}
@@ -437,13 +442,13 @@ const MobileUploadModal = ({
         )}
 
         {/* 하단 버튼 */}
-        <div className="absolute bottom-0 left-0 w-full px-5 pb-5">
+        <div className="fixed inset-x-0 bottom-0 flex justify-center pb-5">
           <button
             className="w-[280px] h-[40px] rounded-[4px] bg-primary text-white text-[16px] font-medium"
             type="button"
-            disabled={!isValidPrice(input)}
+            disabled={!isValidPrice(costInput)}
             onClick={() => {
-              if (isValidPrice(input)) {
+              if (isValidPrice(costInput)) {
                 setuploadModal(false);
               }
             }}>
