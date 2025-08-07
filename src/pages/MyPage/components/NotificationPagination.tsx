@@ -70,21 +70,23 @@ export function NotificationPagination({
     );
   }
   return (
-    <nav className="flex items-center justify-center h-[50px] mx-[545px] mb-[60px]">
-      <button
-        className="w-[50px] h-[50px] px-[6px] py-[8px]"
-        onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}>
-        <LuChevronLeft />
-      </button>
-      {pageButtons}
-      <button
-        className="w-[50px] h-[50px] px-[6px] py-[8px] flex justify-end items-center"
-        onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}>
-        <LuChevronRight />
-      </button>
-    </nav>
+    <div className="absolute top-[900px] ">
+      <nav className="flex items-center justify-center h-[50px] mx-[545px] mb-[60px]">
+        <button
+          className="w-[50px] h-[50px] px-[6px] py-[8px]"
+          onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}>
+          <LuChevronLeft />
+        </button>
+        {pageButtons}
+        <button
+          className="w-[50px] h-[50px] px-[6px] py-[8px] flex justify-end items-center"
+          onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}>
+          <LuChevronRight />
+        </button>
+      </nav>
+    </div>
   );
 }
 

@@ -229,8 +229,8 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
 
       {/*모바일 화면 */}
       <div className="lg:hidden block">
-        <div>
-          <p className="ml-[20px] mt-[12px] text-primary-hover text-[20px] font-bold">프롬프트 TIP</p>
+        <div className="ml-[20px] pt-[12px] ">
+          <p className="text-primary-hover text-[20px] font-bold">프롬프트 TIP</p>
         </div>
         <div className="relative inline-block w-full max-w-[108px] h-[31px] mt-[20px] ml-[20px]" ref={ref}>
           <button
