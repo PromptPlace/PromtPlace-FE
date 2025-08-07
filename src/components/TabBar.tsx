@@ -44,7 +44,7 @@ const TabBar = () => {
 
   return (
     <>
-      <div className="fixed bottom-0 max-w-[425px] w-full">
+      <div className="fixed bottom-0 max-w-[425px] w-full z-100">
         <div className="max-w-[425px] w-full max-h-[95px] flex items-end">{activeLink?.tab}</div>
 
         <div className="flex justify-evenly items-center absolute inset-0 z-100  w-full">
