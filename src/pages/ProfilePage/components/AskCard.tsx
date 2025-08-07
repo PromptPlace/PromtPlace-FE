@@ -41,7 +41,7 @@ const AskCard = ({ prompts, isMyProfile, type, setType }: AskCardProps) => {
           <div className="relative bg-white border-b border-b-white-stroke px-[65px] pt-[55px] max-lg:p-[12px] text-text-on-white text-[20px] font-medium leading-[25px] max-lg:min-h-[214px] max-lg:mt-[-30px]">
             <textarea
               placeholder="문의할 내용을 입력하세요"
-              className="text-text-on-background text-[20px] font-medium leading-[25px] w-full min-h-[409px] max-lg:min-h-[190px] outline-none resize-none max-lg:pt-[38px] max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px]"
+              className="placeholder:font-SpoqaHanSansNeo placeholder:text-text-on-background text-[20px] font-medium leading-[25px] w-full min-h-[409px] max-lg:min-h-[190px] outline-none resize-none max-lg:pt-[38px] max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px]"
             />
 
             <div className="flex gap-[32px] items-center justify-end w-full absolute right-[32px] bottom-[34px] max-lg:static">
@@ -52,10 +52,7 @@ const AskCard = ({ prompts, isMyProfile, type, setType }: AskCardProps) => {
                 <div
                   onClick={() => setIsListClicked((prev) => !prev)}
                   className="group w-[24px] h-[24px] max-lg:w-[16px] max-lg:h-[16px] max-lg:py-[2px] max-lg:px-[6px] cursor-pointer flex items-center justify-center hover:bg-secondary-pressed rounded-full">
-                  <img
-                    src={DotsIcon}
-                    className="text-white group-hover:text-text-on-white w-full h-full object-contain"
-                  />
+                  <img src={DotsIcon} className="text-white group-hover:text-text-on-white" />
                 </div>
                 {isListClicked && (
                   <div className="absolute top-[34px] left-0 right-0 rounded-[4px] flex flex-col">

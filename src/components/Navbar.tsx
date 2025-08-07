@@ -63,7 +63,7 @@ const Navbar = () => {
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => handleKeyDown(e)}
             placeholder="내가 원하는 프롬프트 찾기"
-            className="flex-1 placeholder:font-SpoqaHanSansNeo placeholder:color-text-on-background placeholder:text-base placeholder:font-normal placeholder:leading-[26px] placeholder:tracking-[0.46px] bg-background rounded-[40px] border border-[#ccc] py-[10px] px-[20px] outline-none focus:border focus:border-primary focus:inset-shadow-inner max-lg:min-w-[220px] max-lg:w-full"
+            className="flex-1 placeholder:font-SpoqaHanSansNeo placeholder:color-text-on-background placeholder:text-base placeholder:font-normal placeholder:leading-[26px] placeholder:tracking-[0.46px] bg-background rounded-[40px] border border-[#ccc] py-[10px] max-lg:py-[6.5px] px-[20px] outline-none focus:border focus:border-primary focus:inset-shadow-inner max-lg:min-w-[220px] max-lg:w-full max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px] max-lg:tracking-[0.46px] max-lg:placeholder:text-[10px] max-lg:placeholder:font-normal max-lg:placeholder:leading-[13px] max-lg:placeholder:tracking-[0.46px]"
           />
           <HiMagnifyingGlass
             onClick={handleSearch}
