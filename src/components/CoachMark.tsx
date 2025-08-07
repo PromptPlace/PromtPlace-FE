@@ -25,7 +25,7 @@ const CoachMark = ({ setShowCoachMark }: CoachMarkProps) => {
   const { accessToken } = useAuth();
 
   return (
-    <div className="fixed inset-0 bg-overlay-coach-mark z-20">
+    <div className="fixed inset-0 bg-overlay-coach-mark z-20 max-lg:hidden">
       <div className="absolute inset-0 z-30" onClick={() => setShowCoachMark(false)}></div>
       <nav className="relative flex justify-between items-center gap-[2.6vw] py-[7.5px] pl-[61.25px] pr-[36px] z-[10]">
         <div className="cursor-pointer w-[227px] shrink-0"></div>
