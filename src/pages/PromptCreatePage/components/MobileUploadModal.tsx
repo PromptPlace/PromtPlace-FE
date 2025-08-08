@@ -170,7 +170,7 @@ const MobileUploadModal = ({
       <div className="absolute inset-0 bg-overlay" onClick={() => setuploadModal(false)} />
 
       {/* 하단 모달 */}
-      <div className="w-full min-w-[320px] h-[410px] fixed left-1/2 bottom-0 z-50 -translate-x-1/2 bg-white rounded-t-[25px] shadow-lg">
+      <div className="w-full min-w-[320px] h-[410px] fixed left-1/2 bottom-0 z-101 -translate-x-1/2 bg-white rounded-t-[25px] shadow-lg">
         <div className="w-full flex justify-center items-center mt-[14px]">
           <div className="w-[40px] h-[4px] rounded-full bg-gray-200" />
         </div>
@@ -442,7 +442,7 @@ const MobileUploadModal = ({
         )}
 
         {/* 하단 버튼 */}
-        <div className="fixed inset-x-0 bottom-0 flex justify-center pb-5">
+        <div className="fixed inset-x-0 bottom-0 flex justify-center pb-5 z-102">
           <button
             className="w-[280px] h-[40px] rounded-[4px] bg-primary text-white text-[16px] font-medium"
             type="button"
