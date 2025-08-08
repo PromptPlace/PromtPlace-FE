@@ -133,7 +133,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
           value={accountNumber}
           onChange={(e) => setAccountNumber(e.target.value)}
           placeholder="계좌번호를 입력해주세요"
-          className="w-[1082px] max-lg:w-auto pr-[40px] max-lg:px-[12px] max-lg:py-[16px] border-[1px] max-lg:border-[0.5px] border-white-stroke rounded-[8px] text-[18px] max-lg:text-[12px] text-right max-lg:text-left font-normal  bg-white"
+          className="w-[1082px] max-lg:w-auto pr-[40px] max-lg:px-[12px] max-lg:py-[16px] border-[1px] max-lg:border-[0.5px] border-white-stroke rounded-[8px] text-[18px] max-lg:text-[12px] text-right max-lg:text-left font-normal  bg-white focus:outline-none focus:border-primary"
         />
       </div>
 
@@ -147,7 +147,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
           value={accountHolder}
           onChange={(e) => setAccountHolder(e.target.value)}
           placeholder="예금주명을 입력해주세요"
-          className="w-[1082px] max-lg:w-auto pr-[40px] max-lg:px-[12px] max-lg:py-[16px] border-[1px] max-lg:border-[0.5px] border-white-stroke rounded-[8px] text-[18px] max-lg:text-[12px] text-right max-lg:text-left font-normal  bg-white"
+          className="w-[1082px] max-lg:w-auto pr-[40px] max-lg:px-[12px] max-lg:py-[16px] border-[1px] max-lg:border-[0.5px] border-white-stroke rounded-[8px] text-[18px] max-lg:text-[12px] text-right max-lg:text-left font-normal  bg-white focus:outline-none focus:border-primary"
         />
       </div>
 
