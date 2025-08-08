@@ -91,7 +91,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
             <span className="flex lg:justify-end max-lg:justify-between gap-[8px]">
               <span className="text-text-on-background ">은행을 선택해주세요</span>
               <span
-                className={`flex items-center justify-center rounded-[50px] w-[24px] max-lg:w-[16px] h-[24px] max-lg:h-[16px] ${isDropdownOpen ? 'bg-primary-pressed text-white' : 'bg-transparent'}`}>
+                className={`flex items-center justify-center rounded-[50px] w-[24px] max-lg:w-[16px] h-[24px] max-lg:h-[16px] ${isDropdownOpen ? 'bg-primary-pressed' : 'bg-transparent'}`}>
                 <img src={arrowIcon} className="w-[11px] h-[6.5px]" />
               </span>
             </span>
@@ -99,7 +99,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
         </button>
 
         {isDropdownOpen && (
-          <div className="absolute max-lg:fixed z-20 mt-[104px] right-[40px] max-lg:right-[0px] w-[264px] max-lg:w-full  mt-2 bg-white max-h-[579px] max-lg:max-h-[62vh] overflow-y-auto shadow-[0_4px_8px_0_rgba(0,0,0,0.12)] max-lg:shadow-[2px_2px_30px_0_rgba(0,0,0,0.25)] max-lg:rounded-t-[25px]">
+          <div className="absolute max-lg:fixed z-20 mt-[104px] right-[40px] max-lg:right-[0px] w-[264px] max-lg:w-full  mt-2 bg-white max-h-[579px] max-lg:max-h-[62vh] overflow-y-auto shadow-[0_4px_8px_0_rgba(0,0,0,0.12)] max-lg:shadow-[2px_2px_30px_0_rgba(0,0,0,0.25)] rounded-[8px] max-lg:rounded-t-[25px] border-[1px] max-lg:border-[0px] border-white-stroke">
             <div className="lg:hidden flex flex-col px-[20px] items-center mb-[8px]">
               <div className="w-[40px] h-[4px] bg-white-stroke rounded-full  mt-[14px] mb-[30px]" />
               <p className="text-[10px] font-medium text-primary self-start">은행 선택</p>
