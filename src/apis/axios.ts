@@ -7,7 +7,8 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem(LOCAL_STORAGE_KEY.accessToken);
+    const item = localStorage.getItem(LOCAL_STORAGE_KEY.accessToken);
+    const accessToken = item ? JSON.parse(item) : null;
 
     if (accessToken) {
       config.headers = config.headers || {};
