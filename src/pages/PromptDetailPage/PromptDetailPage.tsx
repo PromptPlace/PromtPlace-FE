@@ -10,6 +10,8 @@ import FollowButton from '@components/Button/FollowButton';
 import ArrowLeft from './assets/keyboard_arrow_down _left.svg';
 import ReportModal from './components/ReportModal';
 import DownloadModal from './components/DownloadModal';
+import { useShowLoginModal } from '@/hooks/useShowLoginModal';
+import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 
 const mockPrompt = {
   prompt_id: 123,
@@ -76,6 +78,7 @@ const PromptDetailPage = () => {
   } | null>(null);
 
   const [isPaid, setIsPaid] = useState(false);
+  const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
 
   const handleDownloadClick = () => {
     const title = '동양풍 일러스트 이미지 생성';
@@ -182,7 +185,7 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
       </div>
 
       {/* 모바일 하단 고정 영역 - 가운데 정렬 + TabBar 고려 */}
-      <div className="lg:hidden fixed  left-1/2 -translate-x-1/2 z-[10]  max-w-[425px] h-[139px] w-full flex justify-center pointer-events-none">
+      <div className="lg:hidden bottom-0 fixed left-1/2 -translate-x-1/2 z-[10]  max-w-[425px] h-[139px] w-full flex justify-center pointer-events-none">
         <div className="bg-white max-w-[425px] rounded-t-[24px] shadow-[0_-4px_12px_rgba(0,0,0,0.1)] p-[20px] h-[139px] z-[10] w-full h-full pointer-events-auto">
           <div className="flex justify-between w-full h-full">
             <div
@@ -195,7 +198,7 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
                 style="fill"
                 imgType="download"
                 text="다운로드"
-                onClick={handleDownloadClick}
+                onClick={() => handleShowLoginModal(handleDownloadClick)}
               />
             </div>
           </div>
@@ -212,6 +215,14 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
           content={downloadData.content}
           price={prompt.price}
           onPaid={() => setIsPaid(true)}
+        />
+      )}
+
+      {loginModalShow && (
+        <SocialLoginModal
+          isOpen={loginModalShow}
+          onClose={() => setLoginModalShow(false)}
+          onClick={handleDownloadClick}
         />
       )}
     </div>

@@ -5,6 +5,7 @@ import DualModal from '@components/Modal/DualModal';
 import TextModal from '@components/Modal/TextModal';
 import UpdateModal from './UpdateModal';
 import defaultProfile from '../assets/profile.jpg';
+import ArrowLeft from '../assets/keyboard_arrow_down _left.svg';
 
 interface Review {
   review_id: number;
@@ -111,7 +112,7 @@ const ReviewList = ({
         {/* 리뷰 리스트 */}
         <div
           className="flex-1 overflow-y-auto pr-2 custom-scrollbar relative"
-          style={{ scrollbarWidth: 'thin', scrollbarColor: '#fff transparent' }}>
+          style={{ scrollbarWidth: 'thin', scrollbarColor: '#999898 transparent' }}>
           <style>{`
           .custom-scrollbar::-webkit-scrollbar {
             width: 8px;
@@ -146,7 +147,7 @@ const ReviewList = ({
                       <Rating star={review.rating} />
                     </div>
 
-                    {hoverIdx === idx && (review.writer_id === currentUserId || isAdmin) && (
+                    {(review.writer_id === currentUserId || isAdmin) && (
                       <button
                         onClick={() => toggleMenu(idx)}
                         className="hover:bg-secondary-pressed rounded-full p-1 transition-colors duration-150">
@@ -186,13 +187,13 @@ const ReviewList = ({
       <div className="lg:hidden w-full min-h-screen px-[20px] pt-[12px] pb-[20px] bg-[#F5F5F5]">
         {/* 상단 헤더 */}
         <div className="flex items-center mb-[20px]">
-          <button
-            onClick={onClose}
+          <img
+            src={ArrowLeft}
+            alt="뒤로가기"
             className="text-[20px] font-bold leading-none hover:opacity-70"
-            aria-label="뒤로가기">
-            &lt;
-          </button>
-          <h2 className="text-[16px] font-medium text-center w-full ml-[20px]">구매자 리뷰</h2>
+            onClick={onClose}
+          />
+          <h2 className="text-[16px] font-medium text-center flex justify-center w-full">구매자 리뷰</h2>
         </div>
 
         {/* 리뷰 리스트 */}

@@ -87,7 +87,7 @@ const UpdateModal = ({ isOpen, onClose, title, rating, initialReviewText, onSave
         </div>
 
         <textarea
-          className="w-full h-[120px] bg-[#F5F5F5] rounded-[8px] p-[10px] text-[12px] text-[#333] resize-none border border-gray-300 focus:outline-none"
+          className="w-full h-[120px] bg-[#F5F5F5] rounded-[8px] p-[10px] text-[12px] text-[#333] resize-none focus:outline-none"
           value={reviewText}
           onChange={(e) => setReviewText(e.target.value)}
           placeholder="리뷰 내용을 입력하세요."
