@@ -153,7 +153,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
 
       <div className="mt-[150px] max-lg:mt-[17px] lg:self-end  ">
         <button
-          className="py-[15px] max-lg:py-[10px] px-[29px] max-lg:px-[40px] bg-primary text-white text-[24px] max-lg:text-[16px] font-bold max-lg:font-medium rounded-[10px] max-lg:rounded-[4px] max-lg:w-full"
+          className="h-[60px] max-lg:h-[40px] py-[15px] max-lg:py-[10px] px-[29px] max-lg:px-[40px] bg-primary text-white text-[24px] max-lg:text-[16px] font-bold max-lg:font-medium rounded-[10px] max-lg:rounded-[4px] max-lg:w-full"
           onClick={handleFormSubmit}
           disabled={isSubmitDisabled}>
           등록 완료
