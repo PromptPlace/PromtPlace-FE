@@ -10,6 +10,9 @@ import contentCheckIcon from '../assets/contentcheck.png';
 import ReviewList from './ReviewList';
 import ReportModal from '../components/ReportModal';
 import DownloadModal from '../components/DownloadModal';
+import { useNavigate } from 'react-router-dom';
+import { useShowLoginModal } from '@/hooks/useShowLoginModal';
+import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 
 interface Props {
   title: string;
@@ -88,6 +91,15 @@ const dummyReviews = [
     content: '좋았어요',
     created_at: '2025-07-10T16:45:30',
   },
+  {
+    review_id: 53,
+    writer_id: 8,
+    writer_profile_image_url: profile,
+    writer_nickname: '오땡땡',
+    rating: 3,
+    content: '좋았어요!',
+    created_at: '2025-07-10T16:45:32',
+  },
 ];
 
 const PromptActions = ({ title, price, isFree, reviewCounts, rating }: Props) => {
@@ -104,6 +116,7 @@ const PromptActions = ({ title, price, isFree, reviewCounts, rating }: Props) =>
   } | null>(null);
 
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  const navigate = useNavigate();
 
   const [reviews, setReviews] = useState(dummyReviews);
   const [reviewCount, setReviewCount] = useState(reviewCounts);
@@ -161,6 +174,8 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
 
   const [isPaid, setIsPaid] = useState(false);
 
+  const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
+
   if (showReviews) {
     return (
       <ReviewList
@@ -179,9 +194,16 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
     <div className={isAdmin ? 'w-[459px] bg-[#FFFEFB] px-8 h-[548px]' : 'w-[459px] bg-[#FFFEFB] px-8 h-[654px]'}>
       {/* 유저 정보 */}
       <div className="h-[96px] box-border flex items-center gap-3">
-        <img src={profile} alt="profile" className="w-10 h-10 rounded-full" />
+        <img
+          src={profile}
+          alt="profile"
+          className="w-10 h-10 rounded-full cursor-pointer"
+          onClick={() => navigate(`/profile/1`)}
+        />
         <div className="flex items-center w-full">
-          <p className="font-semibold text-[20px] mr-8">디자인킹</p>
+          <p className="font-semibold text-[20px] mr-8 cursor-pointer" onClick={() => navigate(`/profile/1`)}>
+            디자인킹
+          </p>
           <FollowButton follow={follow} onClick={() => setFollow(!follow)} />
         </div>
       </div>
@@ -209,7 +231,7 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
               style="fill"
               imgType="download"
               text="다운로드"
-              onClick={handleDownloadClick}
+              onClick={() => handleShowLoginModal(handleDownloadClick)}
             />
             {downloadData && (
               <DownloadModal
@@ -270,8 +292,12 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
           <ReportModal isOpen={isReportModalOpen} onClose={handleCloseReportModal} />
         </>
       )}
+
+      {/* 로그인 모달 */}
+      {loginModalShow && (
+        <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
+      )}
     </div>
   );
 };
-
 export default PromptActions;
