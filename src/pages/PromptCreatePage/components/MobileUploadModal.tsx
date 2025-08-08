@@ -170,7 +170,7 @@ const MobileUploadModal = ({
       <div className="absolute inset-0 bg-overlay" onClick={() => setuploadModal(false)} />
 
       {/* 하단 모달 */}
-      <div className="w-full min-w-[320px] h-[410px] fixed left-1/2 bottom-0 z-50 -translate-x-1/2 bg-white rounded-t-[25px] shadow-lg">
+      <div className="w-full min-w-[320px] h-[410px] fixed left-1/2 bottom-0 z-101 -translate-x-1/2 bg-white rounded-t-[25px] shadow-lg">
         <div className="w-full flex justify-center items-center mt-[14px]">
           <div className="w-[40px] h-[4px] rounded-full bg-gray-200" />
         </div>
@@ -248,7 +248,7 @@ const MobileUploadModal = ({
           {/* 가격 탭 */}
           {selectedTab === '가격' && (
             <>
-              <div className="flex items-center gap-[20px]">
+              <div className="flex justify-center items-center gap-[20px]">
                 <button
                   className={`
                     flex w-[130px] h-[34px] rounded-[4px] border-[0.5px] text-[14px] font-normal items-center justify-center
@@ -351,8 +351,8 @@ const MobileUploadModal = ({
         {/* 미리보기 탭 */}
         {selectedTab === '미리보기' && (
           <>
-            <div>
-              <div className="h-[24px] flex justify-between items-center my-[20px] mx-[20px] ">
+            <div className="flex flex-col items-center">
+              <div className="w-full max-w-[80%] h-[24px] flex justify-between items-center my-[20px] mx-[20px] ">
                 <label className="flex items-center">
                   <p className="text-[10px] text-primary font-medium"> 이미지 업로드</p>
                   <input
@@ -385,12 +385,12 @@ const MobileUploadModal = ({
                   disabled={!withImage}
                 />
               </div>
-              <div className="flex flex-col mx-[20px]">
+              <div className="w-full max-w-[80%] flex flex-col mx-[20px]">
                 <p className="text-primary text-[10px] font-medium">프롬프트 결과 미리 보기</p>
-                <div className="w-full max-w-[280px] h-[125px]  mt-[8px] py-[6px] px-[6px] bg-background rounded-[2px] flex flex-col gap-2">
+                <div className="w-full min-w-[280px] h-[125px]  mt-[8px] py-[6px] px-[6px] bg-background rounded-[2px] flex flex-col gap-2">
                   {/* 이미지 체크+리스트 있을 때만 이미지 리스트 표시 */}
                   {withImage && files.length > 0 ? (
-                    <div className="overflow-y-auto max-h-[50px] min-h-[24px]">
+                    <div className="w-full overflow-y-auto max-h-[50px] min-h-[24px]">
                       <MobileImageList files={files} onRemove={handleRemove} />
                     </div>
                   ) : null}
@@ -442,7 +442,7 @@ const MobileUploadModal = ({
         )}
 
         {/* 하단 버튼 */}
-        <div className="fixed inset-x-0 bottom-0 flex justify-center pb-5">
+        <div className="fixed inset-x-0 bottom-0 flex justify-center pb-5 z-102">
           <button
             className="w-[280px] h-[40px] rounded-[4px] bg-primary text-white text-[16px] font-medium"
             type="button"

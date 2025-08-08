@@ -151,23 +151,25 @@ export function MessagePagination({
     );
   }
   return (
-    <nav className="flex items-center justify-center h-[50px] mx-[545px] mb-[60px]">
-      <button
-        className="w-[50px] h-[50px] px-[6px] py-[8px] rounded-[50px] flex items-center 
+    <div className="absolute top-[900px] ">
+      <nav className="flex items-center justify-center h-[50px] mx-[545px] mb-[60px]">
+        <button
+          className="w-[50px] h-[50px] px-[6px] py-[8px] rounded-[50px] flex items-center 
         justify-center hover:bg-secondary active:bg-primary-hover active:text-white"
-        onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}>
-        <LuChevronLeft />
-      </button>
-      {pageButtons}
-      <button
-        className="w-[50px] h-[50px] px-[6px] py-[8px] rounded-[50px] flex items-center 
+          onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}>
+          <LuChevronLeft />
+        </button>
+        {pageButtons}
+        <button
+          className="w-[50px] h-[50px] px-[6px] py-[8px] rounded-[50px] flex items-center 
         justify-center hover:bg-secondary active:bg-primary-hover active:text-white"
-        onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}>
-        <LuChevronRight />
-      </button>
-    </nav>
+          onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}>
+          <LuChevronRight />
+        </button>
+      </nav>
+    </div>
   );
 }
 

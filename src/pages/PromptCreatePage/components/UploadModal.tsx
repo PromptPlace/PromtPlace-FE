@@ -194,12 +194,12 @@ const UploadModal = ({
             </div>
           </div>
         </div>
-        <div className="absolute bottom-15 left-170 bg-white rounded-[50px]">
+        <div className="absolute bottom-15 left-197 bg-white rounded-[50px]">
           <IconButton
             buttonType="round"
             style="outline"
             imgType="settings"
-            text="업로드 세부 설정"
+            text="설정 완료"
             onClick={() => setuploadModal(false)}
           />
         </div>
