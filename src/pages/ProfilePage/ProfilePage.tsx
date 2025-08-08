@@ -32,12 +32,13 @@ import DESCRIPTION from '@data/ProfilePage/description.json';
 import PROMPT from '@data/ProfilePage/prompt.json';
 import SNS from '@data/ProfilePage/sns.json';
 import INQUIRY from '@data/ProfilePage/inquiry.json';
-import FOLLOWING from '@data/ProfilePage/following.json';
-import FOLLOWER from '@data/ProfilePage/follower.json';
 
 import useImgUpload from '@hooks/useImgUpload';
 import Select from './components/Select';
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
+import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
+import useGetFollower from '@/hooks/queries/ProfilePage/useGetFollower';
+import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
 
 const USER = {
   member_id: 12345,
@@ -60,7 +61,10 @@ type Inquiry = {
 const ProfilePage = () => {
   const { id } = useParams();
   const myId = localStorage.getItem('user_id'); // 로그인 시 저장 필요
+
   const isMyProfile = id === myId; // 현재 10인 경우 본인 페이지로 이동됨
+
+  const member_id = isMyProfile ? Number(myId) : Number(id);
 
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
 
@@ -85,7 +89,9 @@ const ProfilePage = () => {
 
   const { selectedImg, setSelectedImg, handleUpload } = useImgUpload();
   const [profileEdit, setProfileEdit] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [userName, setUserName] = useState(USER.name);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [userDescription, setUserDescription] = useState(USER.description);
   const imageRef = useRef<HTMLInputElement>(null);
 
@@ -97,6 +103,10 @@ const ProfilePage = () => {
   const [showMsgModal, setShowMsgModal] = useState(false);
 
   const [type, setType] = useState<'buyer' | 'nonBuyer'>('nonBuyer');
+
+  const { data } = useGetMember({ member_id });
+  const { data: followerData } = useGetFollower({ member_id });
+  const { data: followingData } = useGetFollowing({ member_id });
 
   const menuList = [
     {
@@ -243,7 +253,7 @@ const ProfilePage = () => {
             {!profileEdit && (
               <div className="flex gap-[4px] max-lg:justify-center">
                 <p className="text-[32px] font-bold leading-[40px] max-lg:text-[16px] max-lg:font-medium max-lg:leading-[20px] ">
-                  {userName}
+                  {data?.data.name}
                 </p>
                 {!isMyProfile && (
                   <div
@@ -275,18 +285,16 @@ const ProfilePage = () => {
             {profileEdit && (
               <div className="max-lg:flex max-lg:gap-[4px]">
                 <input
-                  value={userName}
+                  value={data?.data.name}
                   onChange={(e) => setUserName(e.target.value)}
                   className="text-[32px] font-bold leading-[40px] outline-none text-primary placeholder:text-primary w-[175px] max-lg:text-[16px] max-lg:leading-[20px] max-lg:font-medium max-lg:border-b max-lg:w-max max-lg:max-w-[45px]"
-                  placeholder={USER.name}
+                  placeholder={data?.data.name}
                 />
                 <div className={clsx('lg:hidden max-lg:relative', showImgModal && 'z-10', !showImgModal && 'z-30')}>
                   <CircleButton
                     buttonType="edit"
                     size="md"
                     onClick={() => {
-                      console.log(1);
-
                       setProfileEdit(false);
                     }}
                     isActive={profileEdit}
@@ -296,14 +304,14 @@ const ProfilePage = () => {
             )}
             {!profileEdit && (
               <p className="text-[20px] font-medium leading-[25px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px]">
-                {userDescription}
+                {data?.data.intros}
               </p>
             )}
             {profileEdit && (
               <input
-                value={userDescription}
+                value={data?.data.intros}
                 onChange={(e) => setUserDescription(e.target.value)}
-                placeholder={userDescription}
+                placeholder={data?.data.intros}
                 className="text-[20px] font-medium leading-[25px] placeholder:text-primary outline-none text-primary w-[219px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px] max-lg:max-w-[79px] max-lg:border-b"
               />
             )}
@@ -376,7 +384,7 @@ const ProfilePage = () => {
                 <div
                   onClick={() => setShowFollower(true)}
                   className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center max-lg:py-[2px] max-lg:px-[6px] max-lg:text-[12px] max-lg:leading-[15px]">
-                  1091
+                  {followerData?.data.length}
                 </div>
               </div>
               <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
@@ -386,22 +394,22 @@ const ProfilePage = () => {
                 <div
                   onClick={() => setShowFollowing(true)}
                   className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center  max-lg:py-[2px] max-lg:px-[6px] max-lg:text-[12px] max-lg:leading-[15px]">
-                  215
+                  {followingData?.data.length}
                 </div>
               </div>
             </div>
             {showFollower && (
               <FollowCard
-                title={`${userName}님의 팔로워 목록`}
-                list={FOLLOWER}
+                title={`${data?.data.name}님의 팔로워 목록`}
+                list={followerData?.data}
                 setShow={setShowFollower}
                 status={false}
               />
             )}
             {showFollowing && (
               <FollowCard
-                title={`${userName}님의 팔로잉 목록`}
-                list={FOLLOWING}
+                title={`${data?.data.name}님의 팔로잉 목록`}
+                list={followingData?.data}
                 setShow={setShowFollowing}
                 status={true}
               />
