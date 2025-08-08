@@ -39,12 +39,9 @@ import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
 import useGetFollower from '@/hooks/queries/ProfilePage/useGetFollower';
 import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
-
-const USER = {
-  member_id: 12345,
-  name: '울랄라',
-  description: '5년차 백엔드 개발자!',
-};
+import usePatchEditMember from '@/hooks/mutations/ProfilePage/usePatchEditMember';
+import type { RequestEditMemberDto, RequestIntroDto } from '@/types/ProfilePage/profile';
+import usePostEditIntro from '@/hooks/mutations/ProfilePage/usePostEditIntro';
 
 type Inquiry = {
   inquiry_id: number;
@@ -61,9 +58,7 @@ type Inquiry = {
 const ProfilePage = () => {
   const { id } = useParams();
   const myId = localStorage.getItem('user_id'); // 로그인 시 저장 필요
-
-  const isMyProfile = id === myId; // 현재 10인 경우 본인 페이지로 이동됨
-
+  const isMyProfile = id === myId;
   const member_id = isMyProfile ? Number(myId) : Number(id);
 
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
@@ -89,10 +84,6 @@ const ProfilePage = () => {
 
   const { selectedImg, setSelectedImg, handleUpload } = useImgUpload();
   const [profileEdit, setProfileEdit] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [userName, setUserName] = useState(USER.name);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [userDescription, setUserDescription] = useState(USER.description);
   const imageRef = useRef<HTMLInputElement>(null);
 
   const [showFollowing, setShowFollowing] = useState(false);
@@ -104,9 +95,20 @@ const ProfilePage = () => {
 
   const [type, setType] = useState<'buyer' | 'nonBuyer'>('nonBuyer');
 
+  // 회원 정보 불러오기
   const { data } = useGetMember({ member_id });
+  const [userName, setUserName] = useState('');
+
+  // 팔로워, 팔로잉 목록
   const { data: followerData } = useGetFollower({ member_id });
   const { data: followingData } = useGetFollowing({ member_id });
+
+  // 회원 정보 수정
+  const { mutate } = usePatchEditMember({ member_id });
+
+  // 회원 한줄 소개 작성 및 수정
+  const { mutate: mutateIntro } = usePostEditIntro({ member_id });
+  const [userDescription, setUserDescription] = useState('');
 
   const menuList = [
     {
@@ -120,6 +122,20 @@ const ProfilePage = () => {
   ];
 
   const [menuId, setMenuId] = useState(0);
+
+  // 이름 및 소개 수정
+  const handleEditMember = () => {
+    setUserName(data?.data.name || '');
+    setUserDescription(data?.data.intros || '');
+    setProfileEdit(true);
+  };
+
+  // 아룸 및 소개 수정 완료
+  const handleEditSubmit = ({ name }: RequestEditMemberDto, { intro }: RequestIntroDto) => {
+    mutate({ name });
+    mutateIntro({ intro });
+    setProfileEdit(false);
+  };
 
   const handleFollow = () => {
     handleShowLoginModal(() => {
@@ -274,7 +290,7 @@ const ProfilePage = () => {
                       buttonType="edit"
                       size="md"
                       onClick={() => {
-                        setProfileEdit(true);
+                        handleEditMember();
                       }}
                       isActive={profileEdit}
                     />
@@ -285,17 +301,17 @@ const ProfilePage = () => {
             {profileEdit && (
               <div className="max-lg:flex max-lg:gap-[4px]">
                 <input
-                  value={data?.data.name}
+                  value={userName}
                   onChange={(e) => setUserName(e.target.value)}
                   className="text-[32px] font-bold leading-[40px] outline-none text-primary placeholder:text-primary w-[175px] max-lg:text-[16px] max-lg:leading-[20px] max-lg:font-medium max-lg:border-b max-lg:w-max max-lg:max-w-[45px]"
-                  placeholder={data?.data.name}
+                  placeholder={userName}
                 />
                 <div className={clsx('lg:hidden max-lg:relative', showImgModal && 'z-10', !showImgModal && 'z-30')}>
                   <CircleButton
                     buttonType="edit"
                     size="md"
                     onClick={() => {
-                      setProfileEdit(false);
+                      handleEditSubmit({ name: userName }, { intro: userDescription });
                     }}
                     isActive={profileEdit}
                   />
@@ -309,10 +325,10 @@ const ProfilePage = () => {
             )}
             {profileEdit && (
               <input
-                value={data?.data.intros}
+                value={userDescription}
                 onChange={(e) => setUserDescription(e.target.value)}
-                placeholder={data?.data.intros}
-                className="text-[20px] font-medium leading-[25px] placeholder:text-primary outline-none text-primary w-[219px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px] max-lg:max-w-[79px] max-lg:border-b"
+                placeholder={userDescription}
+                className="text-[20px] font-medium leading-[25px] placeholder:text-primary outline-none text-primary lg:w-[219px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px] max-lg:border-b max-lg:relative max-lg:z-300"
               />
             )}
           </div>
@@ -322,7 +338,7 @@ const ProfilePage = () => {
                 buttonType="edit"
                 size="md"
                 onClick={() => {
-                  setProfileEdit(true);
+                  handleEditMember();
                 }}
                 isActive={profileEdit}
               />
@@ -331,7 +347,7 @@ const ProfilePage = () => {
                   buttonType="squareMini"
                   text="완료"
                   onClick={() => {
-                    setProfileEdit(false);
+                    handleEditSubmit({ name: userName }, { intro: userDescription });
                   }}
                 />
               )}

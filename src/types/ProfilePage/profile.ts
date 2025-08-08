@@ -27,3 +27,37 @@ export type Follow = {
 };
 
 export type ResponseFollowDto = CommonResponse<Follow[]>;
+
+// 회원 정보 수정
+export type RequestEditMemberDto = {
+  name?: string;
+  nickname?: string;
+  email?: string;
+};
+
+export type ResponseEditMemberDto = {
+  message: string;
+  user: {
+    user_id: number;
+    name: string;
+    nickname: string;
+    email: string;
+    social_type: string;
+    status: string;
+    role: string;
+    updated_at: string;
+  };
+  statusCode: number;
+};
+
+// 회원 한줄 소개 작성
+export type RequestIntroDto = {
+  intro: string;
+};
+
+export type ResponseIntroDto = {
+  message: string;
+  intro: string;
+  updated_at: string;
+  statusCode: number;
+};

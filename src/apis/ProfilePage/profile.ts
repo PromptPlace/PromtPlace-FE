@@ -1,4 +1,12 @@
-import type { RequestMemberDto, ResponseFollowDto, ResponseMemberDto } from '@/types/ProfilePage/profile';
+import type {
+  RequestEditMemberDto,
+  RequestIntroDto,
+  RequestMemberDto,
+  ResponseEditMemberDto,
+  ResponseFollowDto,
+  ResponseMemberDto,
+  ResponseIntroDto,
+} from '@/types/ProfilePage/profile';
 import { axiosInstance } from '../axios';
 
 // 특정 회원 정보 불러오기
@@ -18,6 +26,30 @@ export const getFollower = async ({ member_id }: RequestMemberDto): Promise<Resp
 // 회원 팔로잉 목록
 export const getFollowing = async ({ member_id }: RequestMemberDto): Promise<ResponseFollowDto> => {
   const { data } = await axiosInstance.get(`/api/members/following/${member_id}`);
+
+  return data;
+};
+
+// 회원 정보 수정
+export const patchEditMember = async ({
+  name,
+  nickname,
+  email,
+}: RequestEditMemberDto): Promise<ResponseEditMemberDto> => {
+  const { data } = await axiosInstance.patch('/api/members', {
+    name,
+    nickname,
+    email,
+  });
+
+  return data;
+};
+
+// 회원 한줄 소개 작성
+export const postIntro = async ({ intro }: RequestIntroDto): Promise<ResponseIntroDto> => {
+  const { data } = await axiosInstance.post('/api/members/intros', {
+    intro,
+  });
 
   return data;
 };
