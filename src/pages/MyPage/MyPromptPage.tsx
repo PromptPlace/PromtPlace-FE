@@ -270,7 +270,7 @@ const MyPromptPage = () => {
           />
         </div>
         <div className=" bg-white">
-          <div className="mr-[8px] overflow-y-auto max-h-[368px]">
+          <div className="mr-[8px] overflow-y-auto overflow-x-hidden max-h-[368px]">
             {prompts.map((prompt) => (
               <PromptCard
                 key={prompt.id}
