@@ -9,7 +9,7 @@ function usePatchHistories({ member_id }: RequestMemberDto) {
     mutationFn: ({ history_id, history }: RequestEditHistoryDto) => patchEditHistory({ history_id, history }),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['history_history', member_id],
+        queryKey: ['member-history', member_id],
       });
     },
   });

@@ -9,7 +9,7 @@ function useDeleteHistories({ member_id }: RequestMemberDto) {
     mutationFn: ({ history_id }: RequestDeleteHistoryDto) => deleteHistory({ history_id }),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['history_history', member_id],
+        queryKey: ['member-history', member_id],
       });
     },
   });

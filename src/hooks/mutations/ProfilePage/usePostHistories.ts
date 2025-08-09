@@ -9,7 +9,7 @@ function usePostHistories({ member_id }: RequestMemberDto) {
     mutationFn: ({ history }: RequestHistoryDto) => postHistory({ history }),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['history_history', member_id],
+        queryKey: ['member-history', member_id],
       });
     },
   });
