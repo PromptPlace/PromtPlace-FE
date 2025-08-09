@@ -43,7 +43,7 @@ const MobileFilterModal = ({ visible, onClose, activeTab, onTabChange, onApplyFi
           <div className="w-10 h-1 left-1/2 -translate-x-1/2 top-[14px] absolute bg-white-stroke rounded-full" />
         </div>
 
-        <div className="w-72 inline-flex justify-start items-center gap-2">
+        <div className="w-full inline-flex justify-start items-center gap-2">
           {(['모델', '필터', '태그'] as const).map((tab) => (
             <button
               key={tab}
@@ -61,7 +61,7 @@ const MobileFilterModal = ({ visible, onClose, activeTab, onTabChange, onApplyFi
           ))}
         </div>
 
-        <div className="flex flex-col justify-start items-start gap-4">
+        <div className="w-full flex flex-col justify-start items-start gap-4">
           {activeTab === '모델' && (
             <MobileModelTab selectedModels={selectedModels} setSelectedModels={setSelectedModels} />
           )}
@@ -69,11 +69,13 @@ const MobileFilterModal = ({ visible, onClose, activeTab, onTabChange, onApplyFi
           {activeTab === '태그' && <MobileTagTab tags={tags} setTags={setTags} />}
         </div>
 
-        <div className="w-72 h-10 px-10 py-[5px] bg-primary rounded inline-flex justify-center items-center gap-2.5">
+        <div className="w-full h-10 px-10 py-[5px] bg-primary rounded inline-flex justify-center items-center gap-2.5">
           <button onClick={handleApply} className="text-white text-base font-medium font-['Spoqa_Han_Sans_Neo']">
             {activeTab === '태그' ? '작성 완료하기' : '선택 완료하기'}
           </button>
         </div>
+
+        <div className="mb-[77px]"></div>
       </div>
     </div>
   );
