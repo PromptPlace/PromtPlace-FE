@@ -11,7 +11,7 @@ export const dummyPrompts: Prompt[] = [
       '사업 개요 \n사업명: (쇼핑몰 이름) \n형태: 온라인 쇼핑몰 \n주요 상품: 20대 여성을 타겟으로 한 다양한 스타일의 원피스 \n목표 시장: 국내 온라인 패션 시장, 20대 여성 고객 \n판매 채널: 자체 웹사이트, 인스타그램, 네이버 스마트스토어, 무신사, 지그재그 등 \n운영 방식: 자체 제작 및 도매 구매 혼합 운영...\nddd\nddd\nd\nd\nd\nd\nd\nd',
     has_image: false,
     is_free: false,
-    model: 'GPT-4',
+    model: 'ChatGPT',
     price: 5000,
     downloadCount: 150,
     views: 2109,

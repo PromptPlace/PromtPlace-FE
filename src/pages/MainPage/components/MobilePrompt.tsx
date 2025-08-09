@@ -58,13 +58,13 @@ const MobilePrompt = ({ prompt }: Props) => {
 
         <div className="cursor-pointer" onClick={() => navigate(`/prompt/${prompt_id}`)}>
           {/* 제목 + 가격 */}
-          <div className="flex justify-between items-start">
+          <div className="flex justify-between items-start mt-[6px]">
             <p className="text-xs font-medium text-text-on-white w-100% cursor-pointer">{title}</p>
             <p className="text-[10px] text-text-on-white">{is_free ? '무료' : `${price.toLocaleString()}원`}</p>
           </div>
 
           {/* 별점, 조회수, 다운로드 수 */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mt-[6px]">
             <div className="flex items-center h-3">
               <Rating star={rating_avg} />
             </div>
@@ -81,7 +81,7 @@ const MobilePrompt = ({ prompt }: Props) => {
           </div>
 
           {/* 설명 */}
-          <div className="max-h-24 overflow-hidden text-[8px] text-text-on-white whitespace-pre-line">
+          <div className="max-h-24 overflow-hidden text-[8px] text-text-on-white whitespace-pre-line mt-[6px]">
             {description}
           </div>
         </div>

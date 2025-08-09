@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import cancel from '@/assets/icon-cancel-gray.svg';
 
 type Props = {
   tags: string[];
@@ -9,8 +10,9 @@ const MobileTagTab = ({ tags, setTags }: Props) => {
   const [inputTag, setInputTag] = useState('');
 
   const handleAddTag = () => {
-    if (inputTag.trim() && !tags.includes(inputTag) && tags.length < 10) {
-      setTags([...tags, inputTag.trim()]);
+    const trimmed = inputTag.trim();
+    if (trimmed && !tags.includes(trimmed) && tags.length < 10) {
+      setTags([...tags, trimmed]);
       setInputTag('');
     }
   };
@@ -20,30 +22,44 @@ const MobileTagTab = ({ tags, setTags }: Props) => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-2">
-      <span className="text-sm text-gray-600">태그 입력하기 (최대 10개)</span>
-      <div className="flex gap-2">
+    <div className="w-full flex flex-col gap-4">
+      {/* 입력 라벨 */}
+      <span className="text-primary text-[10px] font-medium">태그 입력하기</span>
+
+      {/* 입력창 + 완료 버튼 포함 */}
+      <div className="relative w-full h-9 rounded border border-primary shadow-[0_4px_8px_0_rgba(0,0,0,0.12)]">
         <input
           type="text"
           value={inputTag}
           onChange={(e) => setInputTag(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleAddTag()}
-          className="flex-1 border px-2 py-1 rounded text-sm"
-          placeholder="태그를 입력하세요"
+          placeholder="태그를 입력해 주세요(최대 10개)"
+          className="w-full h-full rounded pl-3 pr-[52px] text-[10px] text-text-on-background placeholder:text-text-disable focus:outline-none"
         />
-        <button onClick={handleAddTag} className="px-3 py-1 bg-primary text-white rounded text-sm">
-          추가
+        <button
+          onClick={handleAddTag}
+          className="absolute top-[3px] right-[3px] w-[44px] h-[26px] bg-primary text-white text-[10px] font-medium rounded">
+          완료
         </button>
       </div>
-      <div className="flex flex-wrap gap-2 mt-2">
-        {tags.map((tag) => (
-          <div key={tag} className="px-2 py-1 rounded-full bg-gray-200 text-sm">
-            {tag}
-            <button onClick={() => handleRemoveTag(tag)} className="ml-1 text-red-500">
-              ×
-            </button>
-          </div>
-        ))}
+
+      {/* 입력한 태그들 */}
+      <div className="flex flex-col gap-1">
+        <span className="text-primary text-[10px] font-medium">입력한 태그</span>
+        <div className="flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <div
+              key={tag}
+              className="h-5 px-2.5 py-0.5 bg-white text-text-on-background rounded-full shadow-md border border-gray-300 flex items-center gap-1">
+              <span className="text-[10px] font-medium">#{tag}</span>
+              <button
+                onClick={() => handleRemoveTag(tag)}
+                className="text-[10px] text-gray-800 w-3 h-3 flex items-center justify-center">
+                {<img src={cancel} alt="cancel" className="w-3 h-3" />}
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
