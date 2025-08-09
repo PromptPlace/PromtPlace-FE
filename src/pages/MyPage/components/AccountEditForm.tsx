@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import arrowIcon from '@/assets/icon-arrow-down.svg';
+import ArrowIcon from './ArrowIcon';
 
 /**
  * 조회수 및 다운로드 수를 나타내는 컴포넌트입니다.
@@ -92,7 +93,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
               <span className="text-text-on-background ">은행을 선택해주세요</span>
               <span
                 className={`flex items-center justify-center rounded-[50px] w-[24px] max-lg:w-[16px] h-[24px] max-lg:h-[16px] ${isDropdownOpen ? 'bg-primary-pressed' : 'bg-transparent'}`}>
-                <img src={arrowIcon} className="w-[11px] h-[6.5px]" />
+                <ArrowIcon fillColor={isDropdownOpen ? 'white' : '#999898'} />
               </span>
             </span>
           )}
