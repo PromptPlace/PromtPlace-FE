@@ -5,7 +5,7 @@ import alarm from '@assets/icon-alarm-black.svg';
 interface NotificationList {
   id: number; //notification_id
   content: string;
-  create_at: string;
+  created_at: string;
 }
 // 페이지네이션 테이블
 export function NotificationTableList({ data }: { data: NotificationList[] }) {
@@ -33,7 +33,7 @@ export function NotificationTableList({ data }: { data: NotificationList[] }) {
                 <p className="h-[25px]">{Notification.content}</p>
               </td>
               <td className="w-[263px] h-[65px] text-center font-medium text-[20px] text-[var(--color-text-on-white)] py-[20px]">
-                {Notification.create_at}
+                {Notification.created_at}
               </td>
             </tr>
           ))
@@ -104,7 +104,7 @@ export function MobileNotification({ data }: { data: NotificationList[] }) {
             key={Notification.id}
             className="h-[56px] border-b-[1px] border-[var(--color-white-stroke)] bg-[var(--color-white)] cursor-pointer">
             <div className="ml-[12px] mt-[12px]">
-              <p className="text-[8px] text-text-on-background font-normal">{Notification.create_at}</p>
+              <p className="text-[8px] text-text-on-background font-normal">{Notification.created_at}</p>
             </div>
             <div className="flex justify-center">
               <div className="w-full max-w-[256px] h-[16px] flex justify-start items-center mt-[6px]">
