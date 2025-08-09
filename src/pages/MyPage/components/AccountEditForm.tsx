@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import arrowIcon from '@/assets/icon-arrow-down.svg';
 import ArrowIcon from './ArrowIcon';
 
 /**

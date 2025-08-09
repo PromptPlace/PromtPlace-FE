@@ -266,7 +266,7 @@ const MyPromptPage = () => {
           <Dropdown
             options={promptOptions}
             selectedValue={activeTab}
-            onSelect={(value) => setActiveTab(value as 'authored' | 'downloaded'|'liked')}
+            onSelect={(value) => setActiveTab(value as 'authored' | 'downloaded' | 'liked')}
           />
         </div>
         <div className=" bg-white">
