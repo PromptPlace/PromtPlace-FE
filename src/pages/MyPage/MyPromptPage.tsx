@@ -266,11 +266,11 @@ const MyPromptPage = () => {
           <Dropdown
             options={promptOptions}
             selectedValue={activeTab}
-            onSelect={(value) => setActiveTab(value as 'authored' | 'downloaded'|'liked')}
+            onSelect={(value) => setActiveTab(value as 'authored' | 'downloaded' | 'liked')}
           />
         </div>
         <div className=" bg-white">
-          <div className="mr-[8px] overflow-y-auto max-h-[368px]">
+          <div className="mr-[8px] overflow-y-auto overflow-x-hidden max-h-[368px]">
             {prompts.map((prompt) => (
               <PromptCard
                 key={prompt.id}
