@@ -1,14 +1,19 @@
 import CardHeader from './CardHeader';
 import Rating from '@/components/Rating';
 import PrimaryButton from '@/components/Button/PrimaryButton';
+import { Link } from 'react-router-dom';
 
 interface Review {
-  id: number;
-  promptTitle: string;
+  review_id?: number;
+  prompt_id: number;
+  prompt_title: string;
   rating: number;
   content: string;
-  author?: { name: string; avatar: string }; // '받은 리뷰'에만 존재
-  createdAt: string;
+  writer_id?: string; // '받은 리뷰'에만 존재
+  writer_nickname?: string; // '받은 리뷰'에만 존재
+  writer_profile_image_url?: string; // '받은 리뷰'에만 존재
+  created_at: string;
+  updated_at?: string;
 }
 
 interface ReviewCardProps {
@@ -22,9 +27,9 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ type, reviewData, onDelete }) =
     <div className="flex flex-col border-b-[1px] border-white-stroke py-[10px] pl-[40px] max-lg:p-[12px] gap-[10px] max-lg:gap-[6px] bg-white">
       <div className="mt-[20px] max-lg:mt-[0px]">
         <CardHeader
-          date={reviewData.createdAt}
-          title={reviewData.promptTitle}
-          linkUrl={`/prompt/${reviewData.id}`} // 상세 페이지 경로 전달
+          date={reviewData.created_at}
+          title={reviewData.prompt_title}
+          linkUrl={`/prompt/${reviewData.prompt_id}`} // 상세 페이지 경로 전달
           dateFormat="dateOnly"
           showArrow={type === 'written'} // '작성한 리뷰'일 때만 화살표 아이콘 표시
           showDateOnMobile={true}
@@ -33,16 +38,18 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ type, reviewData, onDelete }) =
 
       <div className="flex items-center gap-[10px]">
         {/* '받은 리뷰'일 때만 작성자 프로필 표시 */}
-        {type === 'received' && reviewData.author && (
+        {type === 'received' && reviewData.writer_id && (
           <div className="flex items-center gap-[10px]">
-            <img
-              src={reviewData.author.avatar}
-              alt={reviewData.author.name}
-              className="w-[46px] h-[46px] rounded-full max-lg:hidden"
-            />
-            <span className="text-[20px] max-lg:text-[12px] font-medium text-text-on-white">
-              {reviewData.author.name}
-            </span>
+            <Link to={`/profile/${reviewData.writer_id}`} className="flex items-center gap-[10px]">
+              <img
+                src={reviewData.writer_profile_image_url}
+                alt={reviewData.writer_nickname}
+                className="w-[46px] h-[46px] rounded-full max-lg:hidden"
+              />
+              <span className="text-[20px] max-lg:text-[12px] font-medium text-text-on-white">
+                {reviewData.writer_nickname}
+              </span>
+            </Link>
           </div>
         )}
 

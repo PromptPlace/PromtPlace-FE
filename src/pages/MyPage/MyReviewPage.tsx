@@ -1,5 +1,5 @@
 // /pages/ReviewPage.tsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import ReviewTabs from './components/ReviewTabs';
 import ReviewCard from './components/ReviewCard';
 import ChatIcon from '@assets/icon-chat-bubble-blue-big.svg';
@@ -7,154 +7,183 @@ import UserProfileIcon from '@assets/img-example-profile2.jpg';
 import DualModal from '@/components/Modal/DualModal';
 import TextModal from '@/components/Modal/TextModal';
 import Dropdown from './components/Dropdown';
+import { useGetWrittenReviews, useGetReceivedReviews } from '@/hooks/queries/MyPage/useGetReview';
+import { useInView } from 'react-intersection-observer';
 
 const DUMMY_WRITTEN_REVIEWS = [
   {
-    id: 1,
-    promptTitle: '프롬프트 1',
+    review_id: 1,
+    prompt_id: 1,
+    prompt_title: '프롬프트 1',
     rating: 4.5,
     content: '프롬프트 1에 대한 리뷰',
-    createdAt: '2025-05-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-08-06T12:34:56',
   },
   {
-    id: 2,
-    promptTitle: '프롬프트 2',
+    review_id: 2,
+    prompt_id: 2,
+    prompt_title: '프롬프트 2',
     rating: 5,
     content: '프롬프트 2에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-07-06T12:34:56',
   },
   {
-    id: 3,
-    promptTitle: '프롬프트 3',
+    review_id: 3,
+    prompt_id: 3,
+    prompt_title: '프롬프트 3',
     rating: 3,
     content: '프롬프트 3에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-07-06T12:34:56',
   },
   {
-    id: 4,
-    promptTitle: '프롬프트 4',
+    review_id: 4,
+    prompt_id: 4,
+    prompt_title: '프롬프트 4',
     rating: 2,
     content: '프롬프트 4에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-07-06T12:34:56',
   },
   {
-    id: 5,
-    promptTitle: '프롬프트 5',
+    review_id: 5,
+    prompt_id: 5,
+    prompt_title: '프롬프트 5',
     rating: 1,
     content: '프롬프트 5에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-07-06T12:34:56',
   },
   {
-    id: 6,
-    promptTitle: '프롬프트 6',
+    review_id: 6,
+    prompt_id: 6,
+    prompt_title: '프롬프트 6',
     rating: 4,
     content: '프롬프트 6에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-07-06T12:34:56',
   },
   {
-    id: 7,
-    promptTitle: '프롬프트 7',
+    review_id: 7,
+    prompt_id: 7,
+    prompt_title: '프롬프트 7',
     rating: 3,
     content: '프롬프트 7에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-07-06T12:34:56',
   },
   {
-    id: 8,
-    promptTitle: '프롬프트 8',
+    review_id: 8,
+    prompt_id: 8,
+    prompt_title: '프롬프트 8',
     rating: 2,
     content: '프롬프트 8에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-07-06T12:34:56',
   },
   {
-    id: 9,
-    promptTitle: '프롬프트 9',
+    review_id: 9,
+    prompt_id: 9,
+    prompt_title: '프롬프트 9',
     rating: 1,
     content: '프롬프트 9에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-07-06T12:34:56',
   },
 ];
 
 const DUMMY_RECEIVED_REVIEWS = [
   {
-    id: 1,
-    promptTitle: '프롬프트 1',
+    review_id: 10,
+    prompt_id: 10,
+    prompt_title: '프롬프트 1',
     rating: 4.5,
     content: '프롬프트 1에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-07-06T12:34:56',
+    writer_id: 12,
+    writer_nickname: '홍길동',
+    writer_profile_image_url: UserProfileIcon,
   },
   {
-    id: 2,
-    promptTitle: '프롬프트 2',
+    review_id: 11,
+    prompt_id: 11,
+    prompt_title: '프롬프트 2',
     rating: 5,
     content: '프롬프트 2에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-07-06T12:34:56',
+    writer_id: 12,
+    writer_nickname: '홍길동',
+    writer_profile_image_url: UserProfileIcon,
   },
   {
-    id: 3,
-    promptTitle: '프롬프트 3',
+    review_id: 12,
+    prompt_id: 12,
+    prompt_title: '프롬프트 3',
     rating: 3,
     content: '프롬프트 3에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-07-06T12:34:56',
+    writer_id: 12,
+    writer_nickname: '홍길동',
+    writer_profile_image_url: UserProfileIcon,
   },
   {
-    id: 4,
-    promptTitle: '프롬프트 4',
+    review_id: 13,
+    prompt_id: 13,
+    prompt_title: '프롬프트 4',
     rating: 2,
     content: '프롬프트 4에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-07-06T12:34:56',
+    writer_id: 12,
+    writer_nickname: '홍길동',
+    writer_profile_image_url: UserProfileIcon,
   },
   {
-    id: 5,
-    promptTitle: '프롬프트 5',
+    review_id: 15,
+    prompt_id: 15,
+    prompt_title: '프롬프트 5',
     rating: 1,
     content: '프롬프트 5에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-07-06T12:34:56',
+    writer_id: 12,
+    writer_nickname: '홍길동',
+    writer_profile_image_url: UserProfileIcon,
   },
   {
-    id: 6,
-    promptTitle: '프롬프트 6',
+    review_id: 16,
+    prompt_id: 16,
+    prompt_title: '프롬프트 6',
     rating: 4,
     content: '프롬프트 6에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-07-06T12:34:56',
+    writer_id: 12,
+    writer_nickname: '홍길동',
+    writer_profile_image_url: UserProfileIcon,
   },
   {
-    id: 7,
-    promptTitle: '프롬프트 7',
+    review_id: 17,
+    prompt_id: 17,
+    prompt_title: '프롬프트 7',
     rating: 3,
     content: '프롬프트 7에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-07-06T12:34:56',
+    writer_id: 12,
+    writer_nickname: '홍길동',
+    writer_profile_image_url: UserProfileIcon,
   },
   {
-    id: 8,
-    promptTitle: '프롬프트 8',
+    review_id: 18,
+    prompt_id: 18,
+    prompt_title: '프롬프트 8',
     rating: 2,
     content: '프롬프트 8에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-07-06T12:34:56',
+    writer_id: 12,
+    writer_nickname: '홍길동',
+    writer_profile_image_url: UserProfileIcon,
   },
   {
-    id: 9,
-    promptTitle: '프롬프트 9',
+    review_id: 19,
+    prompt_id: 19,
+    prompt_title: '프롬프트 9',
     rating: 1,
     content: '프롬프트 9에 대한 리뷰',
-    createdAt: '2025-07-06T12:34:56',
-    author: { name: '홍길동', avatar: UserProfileIcon },
+    created_at: '2025-07-06T12:34:56',
+    writer_id: 12,
+    writer_nickname: '홍길동',
+    writer_profile_image_url: UserProfileIcon,
   },
 ];
 
@@ -187,9 +216,9 @@ const MyReviewPage = () => {
 
   const confirmDelete = (reviewId: number) => {
     setSelectedReviewId(reviewId);
-    const reviewToDelete = reviews.find((review) => review.id === reviewId);
+    const reviewToDelete = reviews.find((review) => review.review_id === reviewId);
 
-    if (!reviewToDelete || !isWithin30Days(reviewToDelete.createdAt)) {
+    if (!reviewToDelete || !isWithin30Days(reviewToDelete.created_at)) {
       setDeleteStep('reject');
       return;
     }
@@ -200,7 +229,7 @@ const MyReviewPage = () => {
   const deleteReview = () => {
     if (selectedReviewId !== null) {
       //더미 데이터 삭제
-      setReviews((prevReviews) => prevReviews.filter((review) => review.id !== selectedReviewId));
+      setReviews((prevReviews) => prevReviews.filter((review) => review.review_id !== selectedReviewId));
       setDeleteStep('complete');
     }
   };
@@ -208,6 +237,48 @@ const MyReviewPage = () => {
     setDeleteStep(null);
     setSelectedReviewId(null);
   };
+
+  const {
+    data: writtenData,
+    fetchNextPage: fetchNextWritten,
+    hasNextPage: hasNextWritten,
+    isFetching: isFetchingWritten,
+  } = useGetWrittenReviews({ enabled: activeTab === 'written' });
+
+  const {
+    data: receivedData,
+    fetchNextPage: fetchNextReceived,
+    hasNextPage: hasNextReceived,
+    isFetching: isFetchingReceived,
+  } = useGetReceivedReviews({ enabled: activeTab === 'received' });
+
+  console.log('receivedData', receivedData);
+
+  const reviewsToDisplay = useMemo(() => {
+    const data = activeTab === 'written' ? writtenData : receivedData;
+    return data?.pages.flatMap((page) => page.reviews) || [];
+  }, [activeTab, writtenData, receivedData]);
+
+  const { ref, inView } = useInView({ threshold: 0 });
+
+  useEffect(() => {
+    if (inView) {
+      if (activeTab === 'written' && hasNextWritten && !isFetchingWritten) {
+        fetchNextWritten();
+      } else if (activeTab === 'received' && hasNextReceived && !isFetchingReceived) {
+        fetchNextReceived();
+      }
+    }
+  }, [
+    inView,
+    activeTab,
+    hasNextWritten,
+    fetchNextWritten,
+    isFetchingWritten,
+    hasNextReceived,
+    fetchNextReceived,
+    isFetchingReceived,
+  ]);
 
   return (
     <div className="flex justify-center h-screen bg-background  ">
@@ -231,14 +302,15 @@ const MyReviewPage = () => {
 
         <div className="flex-grow min-h-0 p-[8px] max-lg:p-[0px]  bg-white">
           <div className="overflow-y-auto h-full">
-            {reviews.map((review) => (
+            {reviewsToDisplay.map((review) => (
               <ReviewCard
-                key={review.id}
+                key={review.review_id}
                 type={activeTab}
                 reviewData={review}
-                onDelete={() => confirmDelete(review.id)}
+                onDelete={() => confirmDelete(review.review_id)}
               />
             ))}
+            <div ref={ref} />
           </div>
         </div>
       </div>

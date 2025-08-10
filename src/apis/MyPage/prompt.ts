@@ -28,7 +28,7 @@ export const getAuthoredPrompts = async ({
   options: PaginationDto;
 }) => {
   const url = `/api/members/${user_id}/prompts`;
-
+  //option을 백엔드에서 명시한 것만 사용해야 에러가 안날것 같다는 생각
   const params = {
     ...options,
     cursor: pageParam, // pageParam을 cursor로 사용합니다.
