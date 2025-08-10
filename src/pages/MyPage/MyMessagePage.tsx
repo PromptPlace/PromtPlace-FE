@@ -118,8 +118,6 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
     fetchAllPosts();
   }, [type]);
 
-  console.log(notice);
-
   // 페이지 값 계산
   const PAGE_SIZE = 8;
   const TOTAL_MESSAGE_PAGES = Math.ceil(messages.length / PAGE_SIZE);
@@ -138,13 +136,43 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
   };
 
   // 메시지 삭제
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
+    console.log('삭제 시도하는 ID:', id);
+    console.log('현재 messages:', messages);
+
+    // 낙관적 업데이트
     setMessages((prev) => prev.filter((msg) => msg.message_id !== id));
+
+    try {
+      console.log('API 호출 URL:', `/api/messages/${id}/delete`);
+      const res = await axiosInstance.patch(`/api/messages/${id}/delete`);
+      console.log('삭제 성공:', res);
+    } catch (err) {
+      // 실패 시 롤백 - 삭제된 항목 복구
+      setMessages((prev) => {
+        // 현재 messages에서 삭제하려던 항목 찾기
+        const originalItem = messages.find((m) => m.message_id === id);
+        if (originalItem && !prev.some((m) => m.message_id === id)) {
+          return [...prev, originalItem].sort((a, b) => b.message_id - a.message_id);
+        }
+        return prev;
+      });
+    }
   };
 
   // 메시지 읽음
-  const handleRead = (id: number) => {
-    setMessages((prev) => prev.map((msg) => (msg.message_id === id ? { ...msg, is_read: true } : msg)));
+  const handleRead = async (id: number) => {
+    // 낙관적 업데이트
+    setMessages((prev) => prev.map((m) => (m.message_id === id ? { ...m, is_read: true } : m)));
+
+    try {
+      const res = await axiosInstance.patch(`/api/messages/${id}/read`);
+      console.log(res);
+    } catch (err) {
+      // 실패 시 롤백
+      setMessages((prev) => prev.map((m) => (m.message_id === id ? { ...m, is_read: false } : m)));
+      console.error('읽음 처리 실패:', err);
+    }
   };
 
   //모바일 화면 전용
