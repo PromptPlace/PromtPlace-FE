@@ -1,17 +1,43 @@
-import axios from 'axios';
 import { axiosInstance } from '@/apis/axios.ts';
-import type { ApiResponse, DownloadedPromptDTO} from '@/types/MyPage/prompt';
+import type {
+  ApiResponse,
+  DownloadedPromptDTO,
+  LikedPromptDTO,
+  AuthoredPromptsApiResponse,
+} from '@/types/MyPage/prompt';
+import type { PaginationDto } from '@/types/MyPage/common.ts';
 
+export const getDownloadedPrompts = async (): Promise<ApiResponse<DownloadedPromptDTO>> => {
+  const { data } = await axiosInstance.get<ApiResponse<DownloadedPromptDTO>>('/api/prompts/downloadeds');
 
+  return data;
+};
 
-export const getDownloadedPrompts = async (accessToken: string): Promise<DownloadedPromptDTO[]> => {
-  // 서버 응답은 DTO 형태의 데이터를 포함합니다.
-  const response = await axiosInstance.get<ApiResponse<DownloadedPromptDTO[]>>('/me/prompts/downloaded', {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+export const getLikedPrompts = async (): Promise<ApiResponse<LikedPromptDTO>> => {
+  const { data } = await axiosInstance.get<ApiResponse<LikedPromptDTO>>('/api/prompts/likes');
+  return data;
+};
+
+export const getAuthoredPrompts = async ({
+  user_id,
+  pageParam,
+  options,
+}: {
+  user_id: number;
+  pageParam: number | undefined; // pageParam은 다음 페이지의 커서 역할을 합니다.
+  options: PaginationDto;
+}) => {
+  const url = `/api/members/${user_id}/prompts`;
+
+  const params = {
+    ...options,
+    cursor: pageParam, // pageParam을 cursor로 사용합니다.
+  };
+
+  // 2. axios의 params 옵션을 사용하여 요청합니다.
+  const { data } = await axiosInstance.get<AuthoredPromptsApiResponse>(url, {
+    params,
   });
-  
-  // 서버에서 받은 DTO 배열을 map 함수를 사용해 우리 모델 배열로 변환하여 반환합니다.
-  return response.data;
+
+  return data;
 };

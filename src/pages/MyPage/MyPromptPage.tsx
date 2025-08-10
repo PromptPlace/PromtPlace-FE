@@ -1,216 +1,239 @@
 import MyPromptsTabs from './components/MyPromptsTabs';
 import { PromptCard } from './components/PromptCard';
 import type { Prompt } from './components/PromptCard';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import BlueArchiveIcon from '@/assets/icon-archive-blue.svg';
 import Dropdown from './components/Dropdown';
+import {
+  useGetDownloadedPrompts,
+  useGetLikedPrompts,
+  useGetAuthoredPrompts,
+} from '@/hooks/queries/MyPage/useGetPrompts';
 
 /**
  * TODO:
  *
  * - 리뷰 작성하기 버튼 클릭시 함수 추후 작성 예정
  * - api 연동과 관련된 함수 추후 작성 예정
- * @author 류동현
+ * @author_nickname 류동현
  * **/
 
 //더미데이터
 
 const DUMMY_AUTHORED_PROMPTS2: Prompt[] = [
   {
-    id: 1,
+    prompt_id: 1,
     title: '강아지 그림 그려주는 프롬프트',
-    model: 'ChatGPT',
+    models: ['ChatGPT'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '홍길동',
+    author_nickname: '홍길동',
   },
-  { id: 2, title: '여행 계획 짜주는 프롬프트', model: 'ChatGPT', tags: ['개발', '파이썬', '코딩'], author: '매튜' },
   {
-    id: 3,
+    prompt_id: 2,
+    title: '여행 계획 짜주는 프롬프트',
+    models: ['ChatGPT'],
+    tags: ['개발', '파이썬', '코딩'],
+    author_nickname: '매튜',
+  },
+  {
+    prompt_id: 3,
     title: '파이썬으로 3분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 4,
+    prompt_id: 4,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 5,
+    prompt_id: 5,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 6,
+    prompt_id: 6,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 7,
+    prompt_id: 7,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 8,
+    prompt_id: 8,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 9,
+    prompt_id: 9,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 10,
+    prompt_id: 10,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
 ];
 const DUMMY_DOWNLOADED_PROMPTS2: Prompt[] = [
   {
-    id: 1,
+    prompt_id: 1,
     title: '강아지 그림 그려주는 프롬프트',
-    model: 'ChatGPT',
+    models: ['ChatGPT'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '홍길동',
+    author_nickname: '홍길동',
   },
-  { id: 2, title: '여행 계획 짜주는 프롬프트', model: 'ChatGPT', tags: ['개발', '파이썬', '코딩'], author: '매튜' },
   {
-    id: 3,
+    prompt_id: 2,
+    title: '여행 계획 짜주는 프롬프트',
+    models: ['ChatGPT'],
+    tags: ['개발', '파이썬', '코딩'],
+    author_nickname: '매튜',
+  },
+  {
+    prompt_id: 3,
     title: '파이썬으로 4분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 4,
+    prompt_id: 4,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 5,
+    prompt_id: 5,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 6,
+    prompt_id: 6,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 7,
+    prompt_id: 7,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 8,
+    prompt_id: 8,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 9,
+    prompt_id: 9,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 10,
+    prompt_id: 10,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
 ];
 const DUMMY_LIKED_PROMPTS2: Prompt[] = [
   {
-    id: 1,
+    prompt_id: 1,
     title: '강아지 그림 그려주는 프롬프트',
-    model: 'ChatGPT',
+    models: ['ChatGPT'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '홍길동',
-  },
-  { id: 2, title: '여행 계획 짜주는 프롬프트', model: 'ChatGPT', tags: ['개발', '파이썬', '코딩'], author: '매튜' },
-  {
-    id: 3,
-    title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
-    tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '홍길동',
   },
   {
-    id: 4,
-    title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    prompt_id: 2,
+    title: '여행 계획 짜주는 프롬프트',
+    models: ['ChatGPT'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '매튜',
   },
   {
-    id: 5,
+    prompt_id: 3,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 6,
+    prompt_id: 4,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 7,
+    prompt_id: 5,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 8,
+    prompt_id: 6,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 9,
+    prompt_id: 7,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
   },
   {
-    id: 10,
+    prompt_id: 8,
     title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
-    model: 'Claude',
+    models: ['Claude'],
     tags: ['개발', '파이썬', '코딩'],
-    author: '오타니',
+    author_nickname: '오타니',
+  },
+  {
+    prompt_id: 9,
+    title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
+    models: ['Claude'],
+    tags: ['개발', '파이썬', '코딩'],
+    author_nickname: '오타니',
+  },
+  {
+    prompt_id: 10,
+    title: '파이썬으로 5분만에 구슬깨기 게임 만들어주는 프롬프트',
+    models: ['Claude'],
+    tags: ['개발', '파이썬', '코딩'],
+    author_nickname: '오타니',
   },
 ];
 
@@ -221,12 +244,62 @@ const promptOptions = [
 ];
 
 const MyPromptPage = () => {
-  const [activeTab, setActiveTab] = useState<'authored' | 'downloaded' | 'liked'>('authored'); // 'authored', 'downloaded', 'liked'
+  const [activeTab, setActiveTab] = useState<'authored' | 'downloaded' | 'liked'>('authored'); // 'author', 'downloaded', 'liked'
   const [prompts, setPrompts] = useState(DUMMY_LIKED_PROMPTS2);
 
-  const DeleteLikedPrompt = (id: number) => {
-    setPrompts((prevPrompts) => prevPrompts.filter((prompt) => prompt.id !== id));
+  const DeleteLikedPrompt = (prompt_id: number) => {
+    setPrompts((prevPrompts) => prevPrompts.filter((prompt) => prompt.prompt_id !== prompt_id));
   };
+
+  //iserror, isLoading 처리는 추후 작성 예정
+
+  //로그인 기능 구현 전이므로 memberId는 임의로 설정
+  const user_id = 16;
+  const paginationOptions = { limit: 10 };
+  const {
+    data: authoredResponse,
+    // ...
+  } = useGetAuthoredPrompts(user_id, paginationOptions, {
+    enabled: activeTab === 'authored',
+  });
+
+  const { data: downloadedPromptsData } = useGetDownloadedPrompts({
+    enabled: activeTab === 'downloaded',
+  });
+
+  const { data: likedPromptsData } = useGetLikedPrompts({
+    enabled: activeTab === 'liked',
+  });
+
+  const authoredPromptsData = useMemo(() => {
+    if (!authoredResponse) return []; // 데이터가 없으면 빈 배열 반환
+
+    return authoredResponse.pages.flatMap((page) =>
+      // 각 페이지의 prompts 배열을 순회하며
+      page.data.prompts.map((prompt) => ({
+        // 바로 이 자리에서 객체 형태로 변환
+        prompt_id: prompt.prompt_id,
+        title: prompt.title,
+        models: prompt.models.map((item) => item.model.name),
+        tags: prompt.tags.map((item) => item.tag.name),
+      })),
+    );
+  }, [authoredResponse]); // authoredResponse가 변경될 때마다 재계산
+
+  const getPromptsForCurrentTab = () => {
+    switch (activeTab) {
+      case 'downloaded':
+        return downloadedPromptsData?.data || []; // 다운로드한 프롬프트 데이터
+      case 'authored':
+        return authoredPromptsData; // TODO: 작성 프롬프트 데이터로 교체
+      case 'liked':
+        return likedPromptsData?.data || []; // 찜한 프롬프트 데이터
+      default:
+        return [];
+    }
+  };
+
+  const promptsToDisplay = getPromptsForCurrentTab();
 
   useEffect(() => {
     // 탭이 바뀔 때마다 해당 데이터를 API로 호출하는 로직
@@ -273,12 +346,12 @@ const MyPromptPage = () => {
           <div className="mr-[8px] overflow-y-auto overflow-x-hidden max-h-[368px]">
             {prompts.map((prompt) => (
               <PromptCard
-                key={prompt.id}
+                key={prompt.prompt_id}
                 type={activeTab}
                 promptData={prompt}
                 DeletePrompt={() => {}}
                 EditPrompt={() => {}}
-                DeleteLike={() => DeleteLikedPrompt(prompt.id)}
+                DeleteLike={() => DeleteLikedPrompt(prompt.prompt_id)}
               />
             ))}
           </div>
