@@ -4,8 +4,10 @@ interface Transaction {
   prompt_id: number;
   purchase_at: string;
   title: string;
-  amount: number;
-  paymentMethod: string; // 예시
+  price: number;
+  pay_method: string; // 예시
+  seller_nickname?: string;
+  is_refunded?: boolean;
 }
 
 interface PaymentHistoryRowProps {
@@ -27,12 +29,12 @@ const PaymentHistoryRow: React.FC<PaymentHistoryRowProps> = ({ transaction }) =>
           showDateOnMobile={true}
         />
       </div>
-      <div className="lg:hidden flex gap-[20px]">
+      <div className="flex gap-[20px]">
         <div className="flex items-center justify-center w-[145px] max-lg:w-auto text-[20px] max-lg:text-[12px] text-text-on-white font-medium">
-          {transaction.amount.toLocaleString()}원
+          {transaction.price.toLocaleString()}원
         </div>
         <div className="flex items-center justify-center w-[145px] max-lg:w-auto text-[20px] max-lg:text-[12px] text-text-on-white font-medium">
-          {transaction.paymentMethod}
+          {transaction.pay_method}
         </div>
       </div>
     </div>
