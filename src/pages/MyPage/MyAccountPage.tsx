@@ -5,15 +5,20 @@ import bluearrowIcon from '@assets/icon-arrow-left-blue.svg'; //추후 디자인
 import blackarrowIcon from '@/assets/icon-arrow-left-black.svg';
 import AccountDisplay from './components/AccountDisplay';
 import AccountEditForm from './components/AccountEditForm';
+import { useGetAccountInfo } from '@/hooks/queries/MyPage/useGetAccount';
 
 interface accountInfo {
-  bank: string;
-  accountNumber: string;
-  accountHolder: string;
+  account_id?: number;
+  bank_name: string;
+  bank_code?: string;
+  account_number: string;
+  account_holder: string;
 }
 
 const MyAccountPage = () => {
   const navigate = useNavigate();
+
+  const { data: accountInfoResponse } = useGetAccountInfo();
 
   // 'view' 또는 'edit' 모드를 관리하는 상태
   const [mode, setMode] = useState<'view' | 'edit'>('edit');
@@ -23,7 +28,13 @@ const MyAccountPage = () => {
   useEffect(() => {
     // 예시: API 호출로 계좌 정보를 가져오는 로직
     // const fetchedAccount = fetchUserAccount();
-    const fetchedAccount = { bank: '토스뱅크', accountNumber: '1234-5678-9101', accountHolder: '안송연' }; // 임시 데이터
+    const fetchedAccount = {
+      account_id: 1,
+      bank_name: '카카오뱅크',
+      bank_code: '090',
+      account_number: '1234-5678-9101',
+      account_holder: '안송연',
+    }; // 임시 데이터
 
     if (accountInfo) {
       setAccountInfo(fetchedAccount);
@@ -41,7 +52,13 @@ const MyAccountPage = () => {
   const handleSubmit = () => {
     // 1. API로 데이터 전송
     // 2. 성공적으로 응답 받으면, 상태 업데이트 및 모드 변경
-    const newAccountInfo = { bank: '카카오뱅크', accountNumber: '1111-2222-3333', accountHolder: '안송연' }; // 새로 등록된 정보라고 가정
+    const newAccountInfo = {
+      account_id: 1,
+      bank_name: '카카오뱅크',
+      bank_code: '090',
+      account_number: '1111-2222-3333',
+      account_holder: '안송연',
+    }; // 새로 등록된 정보라고 가정
     setAccountInfo(newAccountInfo);
     setMode('view');
   };
@@ -69,6 +86,7 @@ const MyAccountPage = () => {
         </div>
 
         <div className="flex  ">
+          {/* api 연결시 accountInfoResponse 로 변경*/}
           {mode === 'view' ? (
             <AccountDisplay accountInfo={accountInfo} onEditClick={handleEditClick} />
           ) : (
