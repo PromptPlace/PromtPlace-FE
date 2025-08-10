@@ -1,6 +1,6 @@
 import MyPromptsTabs from './components/MyPromptsTabs';
 import { PromptCard } from './components/PromptCard';
-import type { Prompt } from './components/PromptCard';
+// import type { Prompt } from './components/PromptCard';
 import { useState, useEffect, useMemo } from 'react';
 import BlueArchiveIcon from '@/assets/icon-archive-blue.svg';
 import Dropdown from './components/Dropdown';
@@ -9,6 +9,7 @@ import {
   useGetLikedPrompts,
   useGetAuthoredPrompts,
 } from '@/hooks/queries/MyPage/useGetPrompts';
+import { useInView } from 'react-intersection-observer';
 
 /**
  * TODO:
@@ -20,6 +21,8 @@ import {
 
 //더미데이터
 
+{
+  /*
 const DUMMY_AUTHORED_PROMPTS2: Prompt[] = [
   {
     prompt_id: 1,
@@ -237,19 +240,50 @@ const DUMMY_LIKED_PROMPTS2: Prompt[] = [
   },
 ];
 
+
+
+ const [prompts, setPrompts] = useState(DUMMY_LIKED_PROMPTS2);
+
+  const DeleteLikedPrompt = (prompt_id: number) => {
+    setPrompts((prevPrompts) => prevPrompts.filter((prompt) => prompt.prompt_id !== prompt_id));
+  };
+//DeleteLikedPrompt 함수 나중에 api 연결할때 post요청해서 새로운 로직 usestate로 안됨 추가 필요
+
+useEffect(() => {
+    // 탭이 바뀔 때마다 해당 데이터를 API로 호출하는 로직
+    // const fetchedData = await api.getPrompts(activeTab);
+    // setPrompts(fetchedData);
+    // 예시로 더미 데이터를 사용
+    switch (activeTab) {
+      case 'authored':
+        setPrompts(DUMMY_AUTHORED_PROMPTS2);
+        break;
+      case 'downloaded':
+        setPrompts(DUMMY_DOWNLOADED_PROMPTS2);
+        break;
+      case 'liked':
+        setPrompts(DUMMY_LIKED_PROMPTS2);
+        break;
+      default:
+        setPrompts(DUMMY_AUTHORED_PROMPTS2);
+    }
+  }, [activeTab]);
+*/
+}
+
 const promptOptions = [
   { value: 'authored', label: '작성 프롬프트' },
   { value: 'downloaded', label: '다운받은 프롬프트' },
   { value: 'liked', label: '찜한 프롬프트' },
 ];
 
+const DeleteLikedPrompt = (prompt_id: number) => {
+  // API 요청을 통해 프롬프트 삭제
+  // 예시: await api.deletePrompt(prompt_id);
+};
+
 const MyPromptPage = () => {
   const [activeTab, setActiveTab] = useState<'authored' | 'downloaded' | 'liked'>('authored'); // 'author', 'downloaded', 'liked'
-  const [prompts, setPrompts] = useState(DUMMY_LIKED_PROMPTS2);
-
-  const DeleteLikedPrompt = (prompt_id: number) => {
-    setPrompts((prevPrompts) => prevPrompts.filter((prompt) => prompt.prompt_id !== prompt_id));
-  };
 
   //iserror, isLoading 처리는 추후 작성 예정
 
@@ -258,10 +292,21 @@ const MyPromptPage = () => {
   const paginationOptions = { limit: 10 };
   const {
     data: authoredResponse,
+    isFetching: isFetchingAuthored,
+    hasNextPage: hasNextPageAuthored,
+    fetchNextPage: fetchNextPageAuthored,
     // ...
   } = useGetAuthoredPrompts(user_id, paginationOptions, {
     enabled: activeTab === 'authored',
   });
+
+  const { ref, inView } = useInView({ threshold: 0 });
+
+  useEffect(() => {
+    if (inView && !isFetchingAuthored && hasNextPageAuthored) {
+      fetchNextPageAuthored();
+    }
+  }, [inView, isFetchingAuthored, hasNextPageAuthored, fetchNextPageAuthored]);
 
   const { data: downloadedPromptsData } = useGetDownloadedPrompts({
     enabled: activeTab === 'downloaded',
@@ -301,26 +346,6 @@ const MyPromptPage = () => {
 
   const promptsToDisplay = getPromptsForCurrentTab();
 
-  useEffect(() => {
-    // 탭이 바뀔 때마다 해당 데이터를 API로 호출하는 로직
-    // const fetchedData = await api.getPrompts(activeTab);
-    // setPrompts(fetchedData);
-    // 예시로 더미 데이터를 사용
-    switch (activeTab) {
-      case 'authored':
-        setPrompts(DUMMY_AUTHORED_PROMPTS2);
-        break;
-      case 'downloaded':
-        setPrompts(DUMMY_DOWNLOADED_PROMPTS2);
-        break;
-      case 'liked':
-        setPrompts(DUMMY_LIKED_PROMPTS2);
-        break;
-      default:
-        setPrompts(DUMMY_AUTHORED_PROMPTS2);
-    }
-  }, [activeTab]);
-
   return (
     <div className="flex  justify-center pt-[92px] max-lg:pt-[12px] min-h-screen bg-background">
       <div className=" w-full max-w-[1236px] mx-[102px] max-lg:mx-[0px] max-lg:px-[20px]">
@@ -344,7 +369,7 @@ const MyPromptPage = () => {
         </div>
         <div className=" bg-white">
           <div className="mr-[8px] overflow-y-auto overflow-x-hidden max-h-[368px]">
-            {prompts.map((prompt) => (
+            {promptsToDisplay.map((prompt) => (
               <PromptCard
                 key={prompt.prompt_id}
                 type={activeTab}
@@ -354,6 +379,7 @@ const MyPromptPage = () => {
                 DeleteLike={() => DeleteLikedPrompt(prompt.prompt_id)}
               />
             ))}
+            <div ref={ref} />
           </div>
         </div>
       </div>
