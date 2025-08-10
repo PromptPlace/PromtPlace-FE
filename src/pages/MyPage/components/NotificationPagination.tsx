@@ -99,7 +99,13 @@ export function NotificationPagination({
 }
 
 // 모바일 화면
-export function MobileNotification({ data }: { data: NotificationList[] }) {
+export function MobileNotification({
+  data,
+  handleNoticeRowClick,
+}: {
+  data: NotificationList[];
+  handleNoticeRowClick: (noticelink: string | null) => void;
+}) {
   return (
     <div className="w-full max-w-[280px] my-[12px] cursor-pointer flex flex-col justify-center">
       {data.length === 0 ? (
@@ -110,6 +116,7 @@ export function MobileNotification({ data }: { data: NotificationList[] }) {
         data.map((Notification) => (
           <div
             key={Notification.notification_id}
+            onClick={() => handleNoticeRowClick(Notification.link_url)}
             className="h-[56px] border-b-[1px] border-[var(--color-white-stroke)] bg-[var(--color-white)] cursor-pointer">
             <div className="ml-[12px] mt-[12px]">
               <p className="text-[8px] text-text-on-background font-normal">{Notification.created_at}</p>

@@ -307,7 +307,7 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
             </>
           ) : (
             <>
-              <MobileNotification data={pageNotificationData} />
+              <MobileNotification data={pageNotificationData} handleNoticeRowClick={handleNoticeRowClick} />
             </>
           )}
         </div>
