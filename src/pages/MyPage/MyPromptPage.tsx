@@ -288,7 +288,7 @@ const MyPromptPage = () => {
   //iserror, isLoading 처리는 추후 작성 예정
 
   //로그인 기능 구현 전이므로 memberId는 임의로 설정
-  const user_id = 16;
+  const user_id = 10;
   const paginationOptions = { limit: 10 };
   const {
     data: authoredResponse,
