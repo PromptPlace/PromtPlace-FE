@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Prompt } from '@/types/prompt.ts';
+import type { Prompt } from '@/types/MainPage/prompt';
 import Rating from '@/components/Rating';
 import ModelButton from '@/components/Button/ModelButton';
 import TagButton from '@/components/Button/TagButton';

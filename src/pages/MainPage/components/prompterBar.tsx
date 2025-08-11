@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { Creator } from '@/types/prompt.ts';
+import type { Creator } from '@/types/MainPage/prompt';
 import FollowButton from '@/components/Button/FollowButton';
 import profileImage from '@/assets/icon-profile-gray.svg';
 import allowRight from '@/assets/icon-arrow-right-blue.svg';

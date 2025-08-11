@@ -70,7 +70,7 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
           key={label}
           className="relative p-2.5 flex justify-start items-center gap-2.5 cursor-pointer"
           onClick={() => toggleDropdown(label)}>
-          <span>
+          <span className="truncate max-w-[124px] block text-xl">
             {label === '모델'
               ? selectedModels.length > 0
                 ? selectedModels.join(', ')

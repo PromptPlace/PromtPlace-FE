@@ -8,19 +8,25 @@ import { useEffect, useState } from 'react';
 import PromptCard from './components/promptCard';
 import FilterBar from './components/filterBar';
 import PrompterBar from './components/prompterBar';
-import { dummyPrompts, dummyCreators } from './components/../dummyData';
+import { dummyCreators } from './components/../dummyData';
 import GradientButton from '@/components/Button/GradientButton';
 import CoachMark from '@/components/CoachMark';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import MobileFilter from './components/MobileFilter';
 import MobilePrompt from './components/MobilePrompt';
+import useGetPromptList from '@/hooks/queries/MainPage/useGetPromptList';
 
 const MainPage = () => {
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const [onlyFree, setOnlyFree] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  const { data, isPending, isError } = useGetPromptList();
+  console.log(data?.data);
+
+  const promptList = data?.data ?? [];
 
   // 코치마크 관련
   const { accessToken } = useAuth();
@@ -36,7 +42,7 @@ const MainPage = () => {
     }
   }, [showCoachMark]);
 
-  const filterPromptsByModel = dummyPrompts.filter((prompt) => {
+  const filterPromptsByModel = promptList?.filter((prompt) => {
     const matchModel = selectedModels.length > 0 ? selectedModels.includes(prompt.model) : true;
     const matchFree = onlyFree ? prompt.price === 0 : true;
     return matchModel && matchFree;
@@ -49,7 +55,7 @@ const MainPage = () => {
       case '별점순':
         return b.rating_avg - a.rating_avg;
       case '다운로드순':
-        return b.downloadCount - a.downloadCount;
+        return b.downloads - a.downloads;
       case '가격 낮은 순':
         return a.price - b.price;
       case '가격 높은 순':
@@ -62,7 +68,7 @@ const MainPage = () => {
   return (
     <div className="flex gap-[59px] justify-center bg-[#F5F5F5] relative overflow-hidden">
       {showCoachMark && !accessToken && <CoachMark setShowCoachMark={setShowCoachMark} />}
-      <div className="w-[858px] h-full max-h-[950px] mb-[42px] overflow-y-auto pb-32">
+      <div className="w-[858px] h-full max-h-[950px] min-h-[700px] mb-[42px] overflow-y-auto pb-32">
         <div className="hidden lg:flex mt-11 px-5 justify-start items-center">
           <FilterBar
             onModelChange={(models: string[] | null) => setSelectedModels(models ?? [])}
