@@ -7,7 +7,12 @@ export const getAccountInfo = async (): Promise<AccountInfo> => {
 };
 
 export const registerAccountInfo = async (accountData: RegisterInfo) => {
-  // POST 요청으로 /api/account 엔드포인트에 계좌 정보를 보냅니다.
-  const { data } = await axiosInstance.post('/api/account', accountData);
+  const { data } = await axiosInstance.post('/api/members/me/accounts', accountData);
+  return data;
+};
+
+//추후 api 명세서 반영하여 수정 필요
+export const updateAccountInfo = async (accountData: RegisterInfo) => {
+  const { data } = await axiosInstance.patch('/api/members/me/accounts', accountData);
   return data;
 };
