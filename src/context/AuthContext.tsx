@@ -3,6 +3,7 @@ import { useLocalStorage } from '@hooks/useLocalStorage';
 import { createContext, useContext, useState, type PropsWithChildren } from 'react';
 import { postGoogleAuthCode, postNaverAuthCode } from '@apis/Login/auth.ts';
 import type { User, loginResponseData } from '@/types/LoginPage/auth.ts';
+import { axiosInstance } from '@/apis/axios.ts';
 
 /**
  * TODO:
@@ -78,13 +79,22 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   };
 
   const logout = async () => {
-    removeAccessTokenFromStorage();
-    removeRefreshTokenFromStorage();
-    setAccessToken(null);
-    setRefreshToken(null);
-    setUser(null); // 로그아웃 시 유저 정보도 초기화
-    console.log('로그아웃 되었습니다.');
+    try {
+      await axiosInstance.get('/api/auth/logout');
+      console.log('서버 로그아웃 성공');
+    } catch (error) {
+      console.error('서버 로그아웃 요청 실패:', error);
+    } finally {
+      removeAccessTokenFromStorage();
+      removeRefreshTokenFromStorage();
+      setAccessToken(null);
+      setRefreshToken(null);
+      setUser(null);
+    }
+
+    window.location.href = '/'; // 로그아웃 후 메인 페이지로 이동
   };
+
   return (
     <AuthContext.Provider value={{ user, accessToken, refreshToken, login, logout }}>{children}</AuthContext.Provider>
   );
