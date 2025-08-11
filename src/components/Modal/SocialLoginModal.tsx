@@ -30,10 +30,11 @@ const SocialButton = ({ icon, text, onClick }: { icon: string; text: string; onC
   </button>
 );
 
+const CALLBACK_URL = new URL('auth/callback', window.location.origin).toString();
+
 const handleGoogleLogin = () => {
   // 1. 필요한 정보들을 정의합니다.
   const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-  const CALLBACK_URL = import.meta.env.VITE_SOCIAL_CALLBACK_URL;
   // 2. 모든 파라미터를 조합하여 Google 인증 URL을 생성합니다.
   const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${CALLBACK_URL}&response_type=code&scope=openid%20profile%20email`;
   sessionStorage.setItem('login_provider', 'google');
@@ -43,7 +44,6 @@ const handleGoogleLogin = () => {
 
 const handleNaverLogin = () => {
   const NAVER_CLIENT_ID = import.meta.env.VITE_NAVER_CLIENT_ID;
-  const CALLBACK_URL = import.meta.env.VITE_SOCIAL_CALLBACK_URL;
   sessionStorage.setItem('login_provider', 'naver');
   const STATE = crypto.randomUUID(); // CSRF 방지를 위한 임의 문자열
   sessionStorage.setItem('naver_state', STATE);
@@ -57,8 +57,6 @@ const handleNaverLogin = () => {
 export const handleKakaoLogin = () => {
   const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
   console.log('CLIENT_ID', KAKAO_CLIENT_ID);
-  const CALLBACK_URL = import.meta.env.VITE_SOCIAL_CALLBACK_URL;
-
   const state = crypto.getRandomValues(new Uint32Array(1))[0].toString(36);
   sessionStorage.setItem('oauth_state', state);
   sessionStorage.setItem('login_provider', 'kakao');
