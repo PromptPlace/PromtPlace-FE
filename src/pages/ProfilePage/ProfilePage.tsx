@@ -40,7 +40,7 @@ import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
 import useGetFollower from '@/hooks/queries/ProfilePage/useGetFollower';
 import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
 import usePatchEditMember from '@/hooks/mutations/ProfilePage/usePatchEditMember';
-import type { RequestEditMemberDto, RequestIntroDto } from '@/types/ProfilePage/profile';
+import type { RequestDeletePromptDto, RequestEditMemberDto, RequestIntroDto } from '@/types/ProfilePage/profile';
 import usePostEditIntro from '@/hooks/mutations/ProfilePage/usePostEditIntro';
 import useGetHistories from '@/hooks/queries/ProfilePage/useGetHistories';
 import usePatchHistories from '@/hooks/mutations/ProfilePage/usePatchHistories';
@@ -48,6 +48,7 @@ import type { RequestDeleteHistoryDto, RequestEditHistoryDto, RequestHistoryDto 
 import useDeleteHistories from '@/hooks/mutations/ProfilePage/useDeleteHistories';
 import usePostHistories from '@/hooks/mutations/ProfilePage/usePostHistories';
 import useGetPrompts from '@/hooks/queries/ProfilePage/useGetPrompts';
+import usePatchDeletePrompts from '@/hooks/mutations/ProfilePage/usePatchDeletePrompts';
 
 type Inquiry = {
   inquiry_id: number;
@@ -117,13 +118,9 @@ const ProfilePage = () => {
   console.log(promptsData);
 
   const { ref, inView } = useInView({ threshold: 1 });
-  console.log(inView);
 
-  useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
+  // 프롬프트 삭제
+  const { mutate: mutateDeletePrompts } = usePatchDeletePrompts({ member_id });
 
   // 회원 이력 조회
   const { data: historyData } = useGetHistories({ member_id });
@@ -170,9 +167,10 @@ const ProfilePage = () => {
     });
   };
 
-  // const handleDeletePrompts = (id: number) => {
-  //   setPrompts((prev) => prev.filter((p) => p.prompt_id !== id));
-  // };
+  // 프롬프트 삭제
+  const handleDeletePrompts = ({ prompt_id }: RequestDeletePromptDto) => {
+    mutateDeletePrompts({ prompt_id });
+  };
 
   // 회원 이력 작성
   const handleAddNewDescription = ({ history }: RequestHistoryDto) => {
@@ -212,6 +210,12 @@ const ProfilePage = () => {
   const handleUpdateSns = (id: number, value: string, url: string) => {
     setSns((prev) => prev.map((s) => (s.sns_id === id ? { ...s, description: value, isEditing: false, url: url } : s)));
   };
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   return (
     <div className="flex flex-col pt-[120px] max-lg:pt-[12px]">
@@ -540,7 +544,9 @@ const ProfilePage = () => {
                           model={prompt.models}
                           tags={prompt.tags}
                           isMyProfile={isMyProfile}
-                          handleDeletePrompts={() => {}}
+                          handleDeletePrompts={() => {
+                            handleDeletePrompts({ prompt_id: prompt.prompt_id });
+                          }}
                         />
                       </div>
                     );

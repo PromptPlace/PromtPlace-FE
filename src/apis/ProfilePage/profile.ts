@@ -8,6 +8,8 @@ import type {
   ResponseIntroDto,
   ResponsePromptsDto,
   RequestPromptsDto,
+  ResponseDeletePromptDto,
+  RequestDeletePromptDto,
 } from '@/types/ProfilePage/profile';
 import { axiosInstance } from '../axios';
 
@@ -64,6 +66,13 @@ export const getPrompts = async (
   const { data } = await axiosInstance.get(`/api/members/${member_id}/prompts`, {
     params: { cursor, limit },
   });
+
+  return data;
+};
+
+// 프롬프트 삭제
+export const deletePrompt = async ({ prompt_id }: RequestDeletePromptDto): Promise<ResponseDeletePromptDto> => {
+  const { data } = await axiosInstance.delete(`/api/prompts/${prompt_id}`);
 
   return data;
 };

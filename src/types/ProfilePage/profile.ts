@@ -94,3 +94,14 @@ export type Pagination = {
 };
 
 export type ResponsePromptsDto = CommonResponse<{ prompts: Prompt[]; pagination: Pagination }>;
+
+// 프롬프트 삭제
+export type RequestDeletePromptDto = {
+  prompt_id: number;
+};
+
+export type ResponseDeletePromptDto = {
+  message: string;
+  prompt_id: number;
+  statusCode: number;
+};
