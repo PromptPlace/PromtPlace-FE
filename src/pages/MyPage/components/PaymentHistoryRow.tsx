@@ -5,7 +5,7 @@ interface Transaction {
   purchase_at: string;
   title: string;
   price: number;
-  pay_method: string; // 예시
+  pg: 'kakaopay' | 'tosspay';
   seller_nickname?: string;
   is_refunded?: boolean;
 }
@@ -34,7 +34,7 @@ const PaymentHistoryRow: React.FC<PaymentHistoryRowProps> = ({ transaction }) =>
           {transaction.price.toLocaleString()}원
         </div>
         <div className="flex items-center justify-center w-[145px] max-lg:w-auto text-[20px] max-lg:text-[12px] text-text-on-white font-medium">
-          {transaction.pay_method}
+          {transaction.pg}
         </div>
       </div>
     </div>
