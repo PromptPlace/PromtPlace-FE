@@ -3,12 +3,19 @@ import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 import alarm from '@assets/icon-alarm-black.svg';
 
 interface NotificationList {
-  id: number; //notification_id
+  notification_id: number; //notification_id
   content: string;
-  create_at: string;
+  created_at: string;
+  link_url: string | null;
 }
 // 페이지네이션 테이블
-export function NotificationTableList({ data }: { data: NotificationList[] }) {
+export function NotificationTableList({
+  data,
+  handleNoticeRowClick,
+}: {
+  data: NotificationList[];
+  handleNoticeRowClick: (noticelink: string | null) => void;
+}) {
   return (
     <table className="w-full max-w-[1236px] max-h-[592px] mt-[22px] mb-[73px] mx-[102px]">
       <thead>
@@ -24,7 +31,8 @@ export function NotificationTableList({ data }: { data: NotificationList[] }) {
         ) : (
           data.map((Notification) => (
             <tr
-              key={Notification.id}
+              key={Notification.notification_id}
+              onClick={() => handleNoticeRowClick(Notification.link_url)}
               className="h-[65px] py-[10px] border-b-[1px]  border-[var(--color-white-stroke)] bg-[var(--color-white)] cursor-pointer">
               <td className="w-[72px] h-[65px] flex justify-center items-center pt-[10px]">
                 <img src={alarm} alt="알림" className="w-[22px] h-[26px]" />
@@ -33,7 +41,7 @@ export function NotificationTableList({ data }: { data: NotificationList[] }) {
                 <p className="h-[25px]">{Notification.content}</p>
               </td>
               <td className="w-[263px] h-[65px] text-center font-medium text-[20px] text-[var(--color-text-on-white)] py-[20px]">
-                {Notification.create_at}
+                {Notification.created_at}
               </td>
             </tr>
           ))
@@ -91,7 +99,13 @@ export function NotificationPagination({
 }
 
 // 모바일 화면
-export function MobileNotification({ data }: { data: NotificationList[] }) {
+export function MobileNotification({
+  data,
+  handleNoticeRowClick,
+}: {
+  data: NotificationList[];
+  handleNoticeRowClick: (noticelink: string | null) => void;
+}) {
   return (
     <div className="w-full max-w-[280px] my-[12px] cursor-pointer flex flex-col justify-center">
       {data.length === 0 ? (
@@ -101,10 +115,11 @@ export function MobileNotification({ data }: { data: NotificationList[] }) {
       ) : (
         data.map((Notification) => (
           <div
-            key={Notification.id}
+            key={Notification.notification_id}
+            onClick={() => handleNoticeRowClick(Notification.link_url)}
             className="h-[56px] border-b-[1px] border-[var(--color-white-stroke)] bg-[var(--color-white)] cursor-pointer">
             <div className="ml-[12px] mt-[12px]">
-              <p className="text-[8px] text-text-on-background font-normal">{Notification.create_at}</p>
+              <p className="text-[8px] text-text-on-background font-normal">{Notification.created_at}</p>
             </div>
             <div className="flex justify-center">
               <div className="w-full max-w-[256px] h-[16px] flex justify-start items-center mt-[6px]">
