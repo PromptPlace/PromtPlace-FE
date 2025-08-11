@@ -48,12 +48,6 @@ interface Bank {
   fileName: string;
 }
 
-interface RegisterInfo {
-  bank_code: string;
-  account_number: string;
-  account_holder: string;
-}
-
 interface AccountEditFormProps {
   onSubmit: (info: RegisterInfo) => void;
 }

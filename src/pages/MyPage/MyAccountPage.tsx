@@ -9,7 +9,6 @@ import { useGetAccountInfo } from '@/hooks/queries/MyPage/useGetAccount';
 import { useRegisterAccount } from '@/hooks/mutations/MyPage/account';
 import type { RegisterInfo } from '@/types/MyPage/account';
 
-
 interface accountInfo {
   account_id?: number;
   bank_name: string;
@@ -21,33 +20,21 @@ interface accountInfo {
 const MyAccountPage = () => {
   const navigate = useNavigate();
 
-  const { data: accountInfoResponse } = useGetAccountInfo();
-
-  const { mutate: registerAccount, isPending: isRegistering } = useRegisterAccount();
-
+  const { mutate: registerAccount } = useRegisterAccount();
+  const { data: fetchedAccount } = useGetAccountInfo();
   // 'view' 또는 'edit' 모드를 관리하는 상태
   const [mode, setMode] = useState<'view' | 'edit'>('edit');
-  // 등록된 계좌 정보를 관리하는 상태 (API로 받아온다고 가정)
+  // api 연결시 usestate가 불필요한 상태이므로 연동후 제거
   const [accountInfo, setAccountInfo] = useState<accountInfo | undefined>(undefined);
 
   useEffect(() => {
-    // 예시: API 호출로 계좌 정보를 가져오는 로직
-    // const fetchedAccount = fetchUserAccount();
-    const fetchedAccount = {
-      account_id: 1,
-      bank_name: '카카오뱅크',
-      bank_code: '090',
-      account_number: '1234-5678-9101',
-      account_holder: '안송연',
-    }; // 임시 데이터
-
-    if (accountInfo) {
+    if (fetchedAccount) {
       setAccountInfo(fetchedAccount);
       setMode('view'); // 정보가 있으면 '보기' 모드로 시작
     } else {
       setMode('edit'); // 정보가 없으면 '수정' 모드로 시작
     }
-  }, [accountInfo]);
+  }, [fetchedAccount]);
 
   const handleEditClick = () => {
     setMode('edit');
@@ -60,9 +47,8 @@ const MyAccountPage = () => {
         // 성공 시, useGetAccountInfo 쿼리가 무효화되어
         // 최신 정보를 다시 불러오고, useEffect에 의해 자동으로 'view' 모드로 변경됩니다.
         setMode('view');
-      }
-    }
-    );
+      },
+    });
   };
 
   return (
