@@ -28,7 +28,6 @@ import InquiryDetailCard from './components/InquiryDetailCard';
 import FollowCard from './components/FollowCard';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 
-import DESCRIPTION from '@data/ProfilePage/description.json';
 import PROMPT from '@data/ProfilePage/prompt.json';
 import SNS from '@data/ProfilePage/sns.json';
 import INQUIRY from '@data/ProfilePage/inquiry.json';
@@ -42,6 +41,11 @@ import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
 import usePatchEditMember from '@/hooks/mutations/ProfilePage/usePatchEditMember';
 import type { RequestEditMemberDto, RequestIntroDto } from '@/types/ProfilePage/profile';
 import usePostEditIntro from '@/hooks/mutations/ProfilePage/usePostEditIntro';
+import useGetHistories from '@/hooks/queries/ProfilePage/useGetHistories';
+import usePatchHistories from '@/hooks/mutations/ProfilePage/usePatchHistories';
+import type { RequestDeleteHistoryDto, RequestEditHistoryDto, RequestHistoryDto } from '@/types/ProfilePage/history';
+import useDeleteHistories from '@/hooks/mutations/ProfilePage/useDeleteHistories';
+import usePostHistories from '@/hooks/mutations/ProfilePage/usePostHistories';
 
 type Inquiry = {
   inquiry_id: number;
@@ -62,8 +66,6 @@ const ProfilePage = () => {
   const member_id = isMyProfile ? Number(myId) : Number(id);
 
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
-
-  const [descriptions, setDescriptions] = useState(DESCRIPTION.map((d) => ({ ...d, isEditing: false })));
 
   const [isFollow, setIsFollow] = useState(false);
 
@@ -110,6 +112,18 @@ const ProfilePage = () => {
   const { mutate: mutateIntro } = usePostEditIntro({ member_id });
   const [userDescription, setUserDescription] = useState('');
 
+  // 회원 이력 조회
+  const { data: historyData } = useGetHistories({ member_id });
+
+  // 회원 이력 수정
+  const { mutate: mutateHistory } = usePatchHistories({ member_id });
+
+  // 회원 이력 삭제
+  const { mutate: mutateDeleteHistory } = useDeleteHistories({ member_id });
+
+  // 회원 이력 작성
+  const { mutate: mutatePostHistory } = usePostHistories({ member_id });
+
   const menuList = [
     {
       id: 0,
@@ -147,26 +161,19 @@ const ProfilePage = () => {
     setPrompts((prev) => prev.filter((p) => p.prompt_id !== id));
   };
 
-  const handleAddNewDescription = () => {
-    const newId = descriptions.length ? descriptions[descriptions.length - 1].history_id + 1 : 1;
-
-    const newDescription = {
-      history_id: newId,
-      description: '',
-      isEditing: true,
-    };
-
-    setDescriptions([...descriptions, newDescription]);
+  // 회원 이력 작성
+  const handleAddNewDescription = ({ history }: RequestHistoryDto) => {
+    mutatePostHistory({ history });
   };
 
-  const handleDeleteDescription = (id: number) => {
-    setDescriptions((prev) => prev.filter((d) => d.history_id !== id));
+  // 회원 이력 삭제
+  const handleDeleteDescription = ({ history_id }: RequestDeleteHistoryDto) => {
+    mutateDeleteHistory({ history_id });
   };
 
-  const handleUpdateDescription = (id: number, value: string) => {
-    setDescriptions((prev) =>
-      prev.map((item) => (item.history_id === id ? { ...item, description: value, isEditing: false } : item)),
-    );
+  // 회원 이력 수정
+  const handleUpdateDescription = ({ history_id, history }: RequestEditHistoryDto) => {
+    mutateHistory({ history_id, history });
   };
 
   const handleDeleteSns = (id: number) => {
@@ -532,13 +539,12 @@ const ProfilePage = () => {
                     !isMyProfile && 'max-h-[368px]',
                     isMyProfile && 'max-h-[279px]',
                   )}>
-                  {descriptions.map((description) => (
+                  {historyData?.histories.map((history) => (
                     <RecordCard
-                      key={description.history_id}
-                      history_id={description.history_id}
-                      description={description.description}
+                      key={history.history_id}
+                      history_id={history.history_id}
+                      description={history.history}
                       isMyProfile={isMyProfile}
-                      isEditing={description.isEditing}
                       handleDelete={handleDeleteDescription}
                       setDescriptions={handleUpdateDescription}
                     />
@@ -547,7 +553,7 @@ const ProfilePage = () => {
               </div>
               {isMyProfile && (
                 <div className="mt-[50px] max-lg:mt-[12px] w-full flex justify-center">
-                  <PrimaryButton buttonType="plus" text="+" onClick={handleAddNewDescription} />
+                  <PrimaryButton buttonType="plus" text="+" onClick={() => handleAddNewDescription({ history: ' ' })} />
                 </div>
               )}
             </>

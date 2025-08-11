@@ -21,6 +21,10 @@ const MyPage = () => {
   const navigate = useNavigate();
   const [loginModalShow, setLoginModalShow] = useState(false);
 
+  const item = localStorage.getItem('user_id');
+  const user_id = item ? JSON.parse(item) : null;
+  console.log(user_id);
+
   const LINKS = [
     { to: '/mypage/prompt', label: '내 프롬프트', icon: <ArchiveIcon className="w-[16px] h-[16px]" /> },
     { to: '/mypage/review', label: '내 리뷰 관리', icon: <ChatIcon className="w-[16px] h-[16px]" /> },
@@ -67,7 +71,7 @@ const MyPage = () => {
               <p className="text-text-on-white text-[14px] font-medium leading-[18px]">안송연</p>
 
               <div
-                onClick={() => handleNavigate('/profile/10')}
+                onClick={() => handleNavigate(`/profile/${user_id}`)}
                 className="flex items-center justify-center px-[8px] py-[4px] rounded-[4px] border border-primary bg-background text-primary text-[10px] font-normal leading-[13px] cursor-pointer">
                 프로필 홈
               </div>

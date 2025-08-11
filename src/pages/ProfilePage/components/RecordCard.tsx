@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import CircleButton from '@components/Button/CircleButton';
 import CloseIcon from '@assets/icon-close.svg';
@@ -7,9 +7,9 @@ interface RecordCardProps {
   history_id: number;
   description: string;
   isMyProfile: boolean;
-  isEditing: boolean;
-  handleDelete: (id: number) => void;
-  setDescriptions: (id: number, value: string) => void;
+  isEditing?: boolean;
+  handleDelete: ({ history_id }: { history_id: number }) => void;
+  setDescriptions: ({ history_id, history }: { history_id: number; history: string }) => void;
 }
 
 const RecordCard = ({
@@ -26,9 +26,16 @@ const RecordCard = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && input.trim()) {
       setEdit(false);
-      setDescriptions(history_id, input.trim());
+      setDescriptions({ history_id: history_id, history: input.trim() });
     }
   };
+
+  useEffect(() => {
+    if (!description.trim()) {
+      setEdit(true);
+      setInput('');
+    }
+  }, [description]);
 
   return (
     <>
@@ -47,7 +54,7 @@ const RecordCard = ({
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="이력을 입력하세요"
-              className="flex-1 placeholder:text-text-on-background text-text-on-background placeholder:font-SpoqaHanSansNeo placeholder:text-[20px] placeholder:font-medium placeholder:leading-[25px] max-lg:placeholder:text-[12px] max-lg:placeholder:leading-[15px] outline-none"
+              className="flex-1 placeholder:text-text-on-background text-text-on-white placeholder:font-SpoqaHanSansNeo placeholder:text-[20px] placeholder:font-medium placeholder:leading-[25px] max-lg:placeholder:text-[12px] max-lg:placeholder:leading-[15px] outline-none"
             />
           )}
           <div className="flex gap-[62px] items-center max-lg:gap-[12px]">
@@ -56,10 +63,13 @@ const RecordCard = ({
               size="sm"
               onClick={() => {
                 setEdit((prev) => !prev);
+                setDescriptions({ history_id: history_id, history: input.trim() });
               }}
               isActive={edit}
             />
-            <div onClick={() => handleDelete(history_id)} className="w-[17px] h-[17px] max-lg:p-[4px] cursor-pointer">
+            <div
+              onClick={() => handleDelete({ history_id })}
+              className="w-[17px] h-[17px] max-lg:p-[4px] cursor-pointer">
               <img src={CloseIcon} alt="삭제" className="w-full h-full object-contain" />
             </div>
           </div>

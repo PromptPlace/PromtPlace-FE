@@ -1,4 +1,4 @@
-import type { RequestMemberDto, ResponseMemberDto } from '@/types/ProfilePage/profile';
+import type { RequestMemberDto } from '@/types/ProfilePage/profile';
 import { axiosInstance } from '../axios';
 import type {
   RequestDeleteHistoryDto,
@@ -7,10 +7,11 @@ import type {
   ResponseDeleteHistoryDto,
   ResponseEditHistoryDto,
   ResponseHistoryDto,
+  ResponseMemberHistoryDto,
 } from '@/types/ProfilePage/history';
 
 // 회원 이력 조회
-export const getHistory = async ({ member_id }: RequestMemberDto): Promise<ResponseMemberDto> => {
+export const getHistory = async ({ member_id }: RequestMemberDto): Promise<ResponseMemberHistoryDto> => {
   const { data } = await axiosInstance.get(`/api/members/${member_id}/histories`);
 
   return data;
@@ -18,7 +19,7 @@ export const getHistory = async ({ member_id }: RequestMemberDto): Promise<Respo
 
 // 회원 이력 작성
 export const postHistory = async ({ history }: RequestHistoryDto): Promise<ResponseHistoryDto> => {
-  const { data } = await axiosInstance.post('/api/membershistories', { history });
+  const { data } = await axiosInstance.post('/api/members/histories', { history });
 
   return data;
 };
@@ -29,6 +30,7 @@ export const patchEditHistory = async ({
   history,
 }: RequestEditHistoryDto): Promise<ResponseEditHistoryDto> => {
   const { data } = await axiosInstance.patch(`/api/members/histories/${history_id}`, { history_id, history });
+  console.log(data);
 
   return data;
 };

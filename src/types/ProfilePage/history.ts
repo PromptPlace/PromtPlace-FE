@@ -1,10 +1,9 @@
 // 회원 이력 조회
 export type History = {
-  type: string;
-  title: string;
-  description: string;
-  amount: number;
-  created_at: string;
+  history: string;
+  history_id: number;
+  updated_at: string;
+  user_id: number;
 };
 
 export type ResponseMemberHistoryDto = {
