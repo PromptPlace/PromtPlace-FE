@@ -55,21 +55,21 @@ const handleNaverLogin = () => {
 };
 
 export const handleKakaoLogin = () => {
-  const CLIENT_ID = import.meta.env.VITE_KAKAO_Client_KEY;
+  const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
+  console.log('CLIENT_ID', KAKAO_CLIENT_ID);
   const CALLBACK_URL = import.meta.env.VITE_SOCIAL_CALLBACK_URL;
 
-  // CSRF 방지용 state (선택이지만 넣는 게 좋아)
   const state = crypto.getRandomValues(new Uint32Array(1))[0].toString(36);
   sessionStorage.setItem('oauth_state', state);
   sessionStorage.setItem('login_provider', 'kakao');
 
   // 카카오는 scope를 공백으로 구분 (요구 권한에 맞춰 수정 가능)
   const params = new URLSearchParams({
-    client_id: CLIENT_ID,
+    client_id: KAKAO_CLIENT_ID,
     redirect_uri: CALLBACK_URL,
     response_type: 'code',
     state,
-    scope: 'profile_nickname account_email', // 필요 스코프만 남겨
+    scope: 'profile_nickname account_email',
   });
 
   window.location.href = `https://kauth.kakao.com/oauth/authorize?${params.toString()}`;
@@ -77,7 +77,6 @@ export const handleKakaoLogin = () => {
 
 const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
   if (!isOpen) return null;
-
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-110 p-4 max-lg:p-[0px]">
       <div className="relative flex justify-center items-center w-[563px] max-lg:w-full h-[757px] max-lg:h-full flex-col  rounded-[16px] max-lg:rounded-none max-lg:px-[20px] bg-white shadow-gradient ">
