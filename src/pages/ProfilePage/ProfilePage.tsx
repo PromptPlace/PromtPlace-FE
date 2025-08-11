@@ -30,7 +30,6 @@ import FollowCard from './components/FollowCard';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 
 import PROMPT from '@data/ProfilePage/prompt.json';
-import SNS from '@data/ProfilePage/sns.json';
 import INQUIRY from '@data/ProfilePage/inquiry.json';
 
 import useImgUpload from '@hooks/useImgUpload';
@@ -49,6 +48,11 @@ import useDeleteHistories from '@/hooks/mutations/ProfilePage/useDeleteHistories
 import usePostHistories from '@/hooks/mutations/ProfilePage/usePostHistories';
 import useGetPrompts from '@/hooks/queries/ProfilePage/useGetPrompts';
 import usePatchDeletePrompts from '@/hooks/mutations/ProfilePage/usePatchDeletePrompts';
+import useGetSNS from '@/hooks/queries/ProfilePage/useGetSNS';
+import usePatchSNS from '@/hooks/mutations/ProfilePage/usePatchSNS';
+import type { RequestPatchSNSDto, RequestPostSNS } from '@/types/ProfilePage/sns';
+import useDeleteSNS from '@/hooks/mutations/ProfilePage/useDeleteSNS';
+import usePostSNS from '@/hooks/mutations/ProfilePage/usePostSNS';
 
 type Inquiry = {
   inquiry_id: number;
@@ -83,8 +87,6 @@ const ProfilePage = () => {
   const [inquiries, setInquiries] = useState(INQUIRY);
   const [showInquiryDetail, setShowInquiryDetail] = useState<Inquiry | null>(null);
 
-  const [sns, setSns] = useState(SNS.map((s) => ({ ...s, isEditing: false })));
-
   const { selectedImg, setSelectedImg, handleUpload } = useImgUpload();
   const [profileEdit, setProfileEdit] = useState(false);
   const imageRef = useRef<HTMLInputElement>(null);
@@ -115,8 +117,6 @@ const ProfilePage = () => {
 
   // 작성한 프롬프트 목록
   const { data: promptsData, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetPrompts({ member_id });
-  console.log(promptsData);
-
   const { ref, inView } = useInView({ threshold: 1 });
 
   // 프롬프트 삭제
@@ -133,6 +133,18 @@ const ProfilePage = () => {
 
   // 회원 이력 작성
   const { mutate: mutatePostHistory } = usePostHistories({ member_id });
+
+  // 회원 SNS 목록
+  const { data: snsData } = useGetSNS({ member_id });
+
+  // 회원 SNS 수정
+  const { mutate: mutatePatchSNS } = usePatchSNS({ member_id });
+
+  // 회원 SNS 삭제
+  const { mutate: mutateDeleteSNS } = useDeleteSNS({ member_id });
+
+  // 회원 SNS 작성
+  const { mutate: mutatePostSNS } = usePostSNS({ member_id });
 
   const menuList = [
     {
@@ -187,28 +199,20 @@ const ProfilePage = () => {
     mutateHistory({ history_id, history });
   };
 
-  const handleDeleteSns = (id: number) => {
-    setSns((prev) => prev.filter((s) => s.sns_id !== id));
+  // 회원 SNS 삭제
+  const handleDeleteSns = ({ sns_id }: { sns_id: number }) => {
+    mutateDeleteSNS({ sns_id });
   };
 
-  const handleAddSns = () => {
-    const sns_newId = sns.length ? sns[sns.length - 1].sns_id + 1 : 1;
-
-    const newSns = {
-      sns_id: sns_newId,
-      user_id: 1024,
-      url: '',
-      created_at: '2024-01-15T10:30:00Z',
-      updated_at: '2024-01-15T10:30:00Z',
-      description: '',
-      isEditing: true,
-    };
-
-    setSns([...sns, newSns]);
+  // 회원 SNS 작성
+  const handleAddSns = ({ url, description }: RequestPostSNS) => {
+    const res = mutatePostSNS({ url, description });
+    console.log(res);
   };
 
-  const handleUpdateSns = (id: number, value: string, url: string) => {
-    setSns((prev) => prev.map((s) => (s.sns_id === id ? { ...s, description: value, isEditing: false, url: url } : s)));
+  // 회원 SNS 수정
+  const handleUpdateSns = ({ sns_id, url, description }: { sns_id: number } & RequestPatchSNSDto) => {
+    mutatePatchSNS({ sns_id, url, description });
   };
 
   useEffect(() => {
@@ -701,22 +705,27 @@ const ProfilePage = () => {
           {menuId === 3 && (
             <div className="flex flex-col items-center">
               <div className="w-full max-h-[368px] overflow-y-auto">
-                {sns.map((sns) => (
+                {snsData?.data.map((sns) => (
                   <SnsCard
                     key={sns.sns_id}
                     sns_id={sns.sns_id}
                     description={sns.description}
                     url={sns.url}
                     isMyProfile={isMyProfile}
-                    handleDeleteSns={() => handleDeleteSns(sns.sns_id)}
-                    handleUpdateSns={() => handleUpdateSns(sns.sns_id, sns.description, sns.url)}
-                    isEditing={sns.isEditing}
+                    handleDeleteSns={handleDeleteSns}
+                    handleUpdateSns={handleUpdateSns}
                   />
                 ))}
               </div>
               {isMyProfile && (
-                <div onClick={handleAddSns} className="mt-[50px] max-lg:mt-[12px]">
-                  <PrimaryButton buttonType="plus" text="+" onClick={() => {}} />
+                <div className="mt-[50px] max-lg:mt-[12px]">
+                  <PrimaryButton
+                    buttonType="plus"
+                    text="+"
+                    onClick={() => {
+                      handleAddSns({ url: 'https://example.com', description: ' ' });
+                    }}
+                  />
                 </div>
               )}
             </div>
