@@ -1,7 +1,7 @@
 import { LOCAL_STORAGE_KEY } from '@constants/key';
 import { useLocalStorage } from '@hooks/useLocalStorage';
 import { createContext, useContext, useState, type PropsWithChildren } from 'react';
-import { postGoogleAuthCode, loginWithNaver } from '@apis/Login/auth.ts';
+import { postGoogleAuthCode, postNaverAuthCode } from '@apis/Login/auth.ts';
 import type { User, loginResponseData } from '@/types/LoginPage/auth.ts';
 
 /**
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
           response = await postGoogleAuthCode(authCode);
           break;
         case 'naver':
-          response = await loginWithNaver(authCode);
+          response = await postNaverAuthCode(authCode);
           break;
         case 'kakao':
           // response = await loginWithKakao(authCode);

@@ -18,8 +18,8 @@ const SocialCallbackPage = () => {
   // 이 컴포넌트가 화면에 렌더링되면 단 한 번만 실행됩니다.
   useEffect(() => {
     const processLogin = async () => {
-      const provider: string | null = sessionStorage.getItem('login_provider');
-
+      const provider = sessionStorage.getItem('login_provider') as 'google' | 'kakao' | 'naver';
+      console.log('로그인 제공자:', provider);
       // 1. URL에서 'code' 라는 이름의 파라미터 값을 추출합니다.
       const authCode = searchParams.get('code');
       console.log('인가 코드:', authCode);

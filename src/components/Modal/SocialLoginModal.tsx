@@ -5,9 +5,6 @@ import NaverIcon from '@assets/icon-naver-logo.svg';
 import PromptPlaceLogo from '@assets/icon-promptplace-logo.svg';
 import HeaderLogo from '@assets/icon-header-logo.svg';
 
-import { useNaverLoginHandler } from '@/hooks/auth/useNaverLoginHandler';
-import { useKakaoLoginHandler } from '@/hooks/auth/useKakaoLoginHandler';
-
 /**
  * TODO:
  * - 소셜 로그인 버튼 hover/click 효과 추후 반영 필요
@@ -39,15 +36,46 @@ const handleGoogleLogin = () => {
   const CALLBACK_URL = import.meta.env.VITE_SOCIAL_CALLBACK_URL;
   // 2. 모든 파라미터를 조합하여 Google 인증 URL을 생성합니다.
   const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${CALLBACK_URL}&response_type=code&scope=openid%20profile%20email`;
-
+  sessionStorage.setItem('login_provider', 'google');
   // 3. 생성된 URL로 페이지 전체를 이동시킵니다. (핵심)
   window.location.href = googleAuthUrl;
 };
 
+const handleNaverLogin = () => {
+  const NAVER_CLIENT_ID = import.meta.env.VITE_NAVER_CLIENT_ID;
+  const CALLBACK_URL = import.meta.env.VITE_SOCIAL_CALLBACK_URL;
+  sessionStorage.setItem('login_provider', 'naver');
+  const STATE = crypto.randomUUID(); // CSRF 방지를 위한 임의 문자열
+  sessionStorage.setItem('naver_state', STATE);
+
+  const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&redirect_uri=${encodeURIComponent(
+    CALLBACK_URL,
+  )}&state=${STATE}`;
+  window.location.href = naverAuthUrl;
+};
+
+export const handleKakaoLogin = () => {
+  const CLIENT_ID = import.meta.env.VITE_KAKAO_Client_KEY;
+  const CALLBACK_URL = import.meta.env.VITE_SOCIAL_CALLBACK_URL;
+
+  // CSRF 방지용 state (선택이지만 넣는 게 좋아)
+  const state = crypto.getRandomValues(new Uint32Array(1))[0].toString(36);
+  sessionStorage.setItem('oauth_state', state);
+  sessionStorage.setItem('login_provider', 'kakao');
+
+  // 카카오는 scope를 공백으로 구분 (요구 권한에 맞춰 수정 가능)
+  const params = new URLSearchParams({
+    client_id: CLIENT_ID,
+    redirect_uri: CALLBACK_URL,
+    response_type: 'code',
+    state,
+    scope: 'profile_nickname account_email', // 필요 스코프만 남겨
+  });
+
+  window.location.href = `https://kauth.kakao.com/oauth/authorize?${params.toString()}`;
+};
+
 const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
-  
-  const handleNaverLogin = useNaverLoginHandler();
-  const handleKaKaoLogin = useKakaoLoginHandler();
   if (!isOpen) return null;
 
   return (
@@ -74,7 +102,7 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
         </div>
 
         <div className="flex flex-col items-center w-[334px]  gap-[32px] mb-[226px] max-lg:mb-[48px] mx-[114px] max-lg:mx-[0px]">
-          <SocialButton icon={KakaoIcon} text="카카오톡으로 로그인" onClick={handleKaKaoLogin} />
+          <SocialButton icon={KakaoIcon} text="카카오톡으로 로그인" onClick={handleKakaoLogin} />
           <SocialButton icon={GoogleIcon} text="구글로 로그인" onClick={handleGoogleLogin} />
           <SocialButton icon={NaverIcon} text="네이버로 로그인" onClick={handleNaverLogin} />
           <div id="naverIdLogin" style={{ display: 'none' }} />
