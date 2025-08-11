@@ -11,3 +11,9 @@ export interface AccountApiResponse {
   data: AccountInfo;
   statusCode: number;
 }
+
+export interface RegisterInfo {
+  bank_code: string;
+  account_number: string;
+  account_holder: string;
+}

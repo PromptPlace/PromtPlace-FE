@@ -6,6 +6,9 @@ import blackarrowIcon from '@/assets/icon-arrow-left-black.svg';
 import AccountDisplay from './components/AccountDisplay';
 import AccountEditForm from './components/AccountEditForm';
 import { useGetAccountInfo } from '@/hooks/queries/MyPage/useGetAccount';
+import { useRegisterAccount } from '@/hooks/mutations/MyPage/account';
+import type { RegisterInfo } from '@/types/MyPage/account';
+
 
 interface accountInfo {
   account_id?: number;
@@ -19,6 +22,8 @@ const MyAccountPage = () => {
   const navigate = useNavigate();
 
   const { data: accountInfoResponse } = useGetAccountInfo();
+
+  const { mutate: registerAccount, isPending: isRegistering } = useRegisterAccount();
 
   // 'view' 또는 'edit' 모드를 관리하는 상태
   const [mode, setMode] = useState<'view' | 'edit'>('edit');
@@ -42,25 +47,22 @@ const MyAccountPage = () => {
     } else {
       setMode('edit'); // 정보가 없으면 '수정' 모드로 시작
     }
-  }, []);
+  }, [accountInfo]);
 
   const handleEditClick = () => {
     setMode('edit');
   };
 
   // '등록 완료' 버튼 클릭 시 (폼 제출)
-  const handleSubmit = () => {
-    // 1. API로 데이터 전송
-    // 2. 성공적으로 응답 받으면, 상태 업데이트 및 모드 변경
-    const newAccountInfo = {
-      account_id: 1,
-      bank_name: '카카오뱅크',
-      bank_code: '090',
-      account_number: '1111-2222-3333',
-      account_holder: '안송연',
-    }; // 새로 등록된 정보라고 가정
-    setAccountInfo(newAccountInfo);
-    setMode('view');
+  const handleSubmit = (formData: RegisterInfo) => {
+    registerAccount(formData, {
+      onSuccess: () => {
+        // 성공 시, useGetAccountInfo 쿼리가 무효화되어
+        // 최신 정보를 다시 불러오고, useEffect에 의해 자동으로 'view' 모드로 변경됩니다.
+        setMode('view');
+      }
+    }
+    );
   };
 
   return (

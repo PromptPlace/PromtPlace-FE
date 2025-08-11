@@ -2,7 +2,7 @@ export interface Sale {
   prompt_id: number;
   title: string;
   price: number;
-  sold_at: string; // ISO 8601 형식의 날짜 문자열
+  sold_at: string;
   buyer_nickname: string;
   is_refunded: boolean;
 }
@@ -17,10 +17,10 @@ export interface Purchase {
   prompt_id: number;
   title: string;
   price: number;
-  purchased_at: string; // ISO 8601 형식의 날짜 문자열
-  seller_nickname: string;
-  is_refunded: boolean;
-  pay_method: string;
+  purchased_at: string;
+  seller_nickname?: string;
+  pg: 'kakaopay' | 'tosspay';
+  is_refunded?: boolean;
 }
 
 // 전체 API 응답의 타입

@@ -4,56 +4,57 @@ import iconPerson from '@assets/icon-person-blue.svg';
 import { useNavigate } from 'react-router-dom';
 import bluearrowIcon from '@assets/icon-arrow-left-blue.svg'; //추후 디자인 규격에 맞게 수정 필요
 import { useGetPurchaseHistory } from '@/hooks/queries/MyPage/useGetPay.ts';
+import type { Purchase } from '@/types/MyPage/pay.ts';
 
-const DUMMY_PAYMENT_HISTORY = [
+const DUMMY_PAYMENT_HISTORY: Purchase[] = [
   {
     prompt_id: 1,
-    purchase_at: '2025-07-04T09:30:00.000Z',
+    purchased_at: '2025-07-04T09:30:00.000Z',
     title: '프롬프트 구매',
     price: 10000,
-    pg: '신용카드',
+    pg: 'tosspay',
   },
   {
     prompt_id: 2,
-    purchase_at: '2025-07-04T12:30:00.000Z',
+    purchased_at: '2025-07-04T12:30:00.000Z',
     title: '효율적인 경쟁사 분석 프롬프트',
     price: 20000,
-    pg: '계좌이체',
+    pg: 'kakaopay',
   },
   {
     prompt_id: 3,
-    purchase_at: '2025-07-03T17:45:00.000Z',
+    purchased_at: '2025-07-03T17:45:00.000Z',
     title: '정부지원사업 무조건 선정되는 사업계획서 프롬프트',
     price: 30000,
-    pg: '신용카드',
+    pg: 'kakaopay',
   },
   {
     prompt_id: 4,
-    purchase_at: '2025-07-02T10:15:00.000Z',
+    purchased_at: '2025-07-02T10:15:00.000Z',
     title: '프롬프트 구매',
     price: 40000,
-    pg: '계좌이체',
+    pg: 'kakaopay',
   },
   {
     prompt_id: 5,
-    purchase_at: '2025-07-01T08:30:00.000Z',
+    purchased_at: '2025-07-01T08:30:00.000Z',
     title: '프롬프트 구매',
     price: 50000,
-    pg: '신용카드',
+    pg: 'tosspay',
   },
   {
     prompt_id: 6,
-    purchase_at: '2025-06-30T14:00:00.000Z',
+    purchased_at: '2025-06-30T14:00:00.000Z',
     title: '프롬프트 구매',
     price: 60000,
-    pg: '계좌이체',
+    pg: 'tosspay',
   },
   {
     prompt_id: 7,
-    purchase_at: '2025-06-29T11:20:00.000Z',
+    purchased_at: '2025-06-29T11:20:00.000Z',
     title: '프롬프트 구매',
     price: 70000,
-    pg: '신용카드',
+    pg: 'tosspay',
   },
 ];
 
