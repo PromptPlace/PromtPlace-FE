@@ -61,3 +61,36 @@ export type ResponseIntroDto = {
   updated_at: string;
   statusCode: number;
 };
+
+// 작성한 프롬프트 목록
+export type RequestPromptsDto = {
+  cursor?: number;
+  limit?: number;
+};
+
+export type Model = {
+  model: {
+    name: string;
+  };
+};
+
+export type Tag = {
+  tag: {
+    name: string;
+  };
+};
+
+export type Prompt = {
+  prompt_id: number;
+  title: string;
+  models: Model[];
+  tags: Tag[];
+};
+
+export type Pagination = {
+  nextCursor: null | number;
+  has_more: boolean;
+  limit: number;
+};
+
+export type ResponsePromptsDto = CommonResponse<{ prompts: Prompt[]; pagination: Pagination }>;

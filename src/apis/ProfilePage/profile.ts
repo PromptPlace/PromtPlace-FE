@@ -6,6 +6,8 @@ import type {
   ResponseFollowDto,
   ResponseMemberDto,
   ResponseIntroDto,
+  ResponsePromptsDto,
+  RequestPromptsDto,
 } from '@/types/ProfilePage/profile';
 import { axiosInstance } from '../axios';
 
@@ -49,6 +51,18 @@ export const patchEditMember = async ({
 export const postIntro = async ({ intro }: RequestIntroDto): Promise<ResponseIntroDto> => {
   const { data } = await axiosInstance.post('/api/members/intros', {
     intro,
+  });
+
+  return data;
+};
+
+// 작성한 프롬프트 목록
+export const getPrompts = async (
+  { member_id }: RequestMemberDto,
+  { cursor, limit }: RequestPromptsDto = {},
+): Promise<ResponsePromptsDto> => {
+  const { data } = await axiosInstance.get(`/api/members/${member_id}/prompts`, {
+    params: { cursor, limit },
   });
 
   return data;

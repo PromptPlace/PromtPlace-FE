@@ -5,9 +5,10 @@
  * @author 김진효
  * **/
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import clsx from 'clsx';
+import { useInView } from 'react-intersection-observer';
 
 import ProfileIcon from '@assets/icon-profile-gray.svg';
 import AlarmOffIcon from '@assets/icon-alarm-off.svg';
@@ -46,6 +47,7 @@ import usePatchHistories from '@/hooks/mutations/ProfilePage/usePatchHistories';
 import type { RequestDeleteHistoryDto, RequestEditHistoryDto, RequestHistoryDto } from '@/types/ProfilePage/history';
 import useDeleteHistories from '@/hooks/mutations/ProfilePage/useDeleteHistories';
 import usePostHistories from '@/hooks/mutations/ProfilePage/usePostHistories';
+import useGetPrompts from '@/hooks/queries/ProfilePage/useGetPrompts';
 
 type Inquiry = {
   inquiry_id: number;
@@ -73,8 +75,6 @@ const ProfilePage = () => {
     state: false,
     icon: AlarmOffIcon,
   });
-
-  const [prompts, setPrompts] = useState(PROMPT);
 
   const [isBuyer, setIsBuyer] = useState(true);
   const [isArrowClicked, setIsArrowClicked] = useState(false);
@@ -111,6 +111,19 @@ const ProfilePage = () => {
   // 회원 한줄 소개 작성 및 수정
   const { mutate: mutateIntro } = usePostEditIntro({ member_id });
   const [userDescription, setUserDescription] = useState('');
+
+  // 작성한 프롬프트 목록
+  const { data: promptsData, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetPrompts({ member_id });
+  console.log(promptsData);
+
+  const { ref, inView } = useInView({ threshold: 1 });
+  console.log(inView);
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   // 회원 이력 조회
   const { data: historyData } = useGetHistories({ member_id });
@@ -157,9 +170,9 @@ const ProfilePage = () => {
     });
   };
 
-  const handleDeletePrompts = (id: number) => {
-    setPrompts((prev) => prev.filter((p) => p.prompt_id !== id));
-  };
+  // const handleDeletePrompts = (id: number) => {
+  //   setPrompts((prev) => prev.filter((p) => p.prompt_id !== id));
+  // };
 
   // 회원 이력 작성
   const handleAddNewDescription = ({ history }: RequestHistoryDto) => {
@@ -515,17 +528,24 @@ const ProfilePage = () => {
           {menuId === 0 && (
             <div className="pr-[8px] bg-white max-lg:bg-transparent max-lg:p-0">
               <div className="w-full max-h-[368px] overflow-y-auto">
-                {prompts.map((prompt) => (
-                  <PromptCard
-                    key={prompt.prompt_id}
-                    id={prompt.prompt_id}
-                    title={prompt.title}
-                    model={prompt.model}
-                    tags={prompt.tags}
-                    isMyProfile={isMyProfile}
-                    handleDeletePrompts={() => handleDeletePrompts(prompt.prompt_id)}
-                  />
-                ))}
+                {promptsData?.pages.map((page, pageIdx) =>
+                  page.data.prompts.map((prompt, idx) => {
+                    const last = pageIdx === promptsData.pages.length - 1 && idx === page.data.prompts.length - 1;
+                    return (
+                      <div ref={last ? ref : undefined} key={prompt.prompt_id}>
+                        <PromptCard
+                          key={prompt.prompt_id}
+                          id={prompt.prompt_id}
+                          title={prompt.title}
+                          model={prompt.models}
+                          tags={prompt.tags}
+                          isMyProfile={isMyProfile}
+                          handleDeletePrompts={() => {}}
+                        />
+                      </div>
+                    );
+                  }),
+                )}
               </div>
             </div>
           )}
@@ -562,6 +582,7 @@ const ProfilePage = () => {
           {menuId === 2 && !isMyProfile && (
             <AskCard prompts={PROMPT} isMyProfile={isMyProfile} type={type} setType={setType} />
           )}
+
           {menuId === 2 && isMyProfile && (
             <>
               <div className="relative text-text-on-white text-[20px] font-bold leading-[30px] flex gap-[10px] p-[10px] items-center py-[30px] px-[80px] bg-white max-lg:hidden">
