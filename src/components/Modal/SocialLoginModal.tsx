@@ -36,11 +36,9 @@ const SocialButton = ({ icon, text, onClick }: { icon: string; text: string; onC
 const handleGoogleLogin = () => {
   // 1. 필요한 정보들을 정의합니다.
   const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-  const GOOGLE_CALLBACK_URL = 'http://localhost:3000/auth/google/callback';
-  const scope = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email';
-
+  const CALLBACK_URL = import.meta.env.VITE_SOCIAL_CALLBACK_URL;
   // 2. 모든 파라미터를 조합하여 Google 인증 URL을 생성합니다.
-  const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_CALLBACK_URL}&response_type=code&scope=${scope}`;
+  const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${CALLBACK_URL}&response_type=code&scope=openid%20profile%20email`;
 
   // 3. 생성된 URL로 페이지 전체를 이동시킵니다. (핵심)
   window.location.href = googleAuthUrl;
