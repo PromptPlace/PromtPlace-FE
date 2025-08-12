@@ -298,7 +298,7 @@ const MyPromptPage = () => {
   //iserror, isLoading 처리는 추후 작성 예정
 
   //로그인 기능 구현 전이므로 memberId는 임의로 설정
-  const user_id = 10;
+  const user_id = 16;
   // 1. useGetPrompts 훅으로 데이터를 가져옵니다.
   const {
     data: promptsResponse,
