@@ -56,6 +56,18 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    proxy: {
+      // '/api'로 시작하는 모든 요청을
+      '/api': {
+        target: 'http://localhost:5000', // 백엔드 서버의 새 주소로 변경
+        changeOrigin: true,
+      },
+    },
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+    },
+  },
   resolve: {
     alias: [
       { find: '@', replacement: '/src' },

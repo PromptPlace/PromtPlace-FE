@@ -8,21 +8,21 @@ import { useEffect, useRef, useState } from 'react';
 import kebabMenu from '@/assets/icon-kebabMenu.svg';
 
 interface MessageList {
-  id: number;
+  message_id: number;
   title: string;
+  sender: string;
+  created_at: string;
   is_read: boolean;
-  sender_id: string;
-  create_at: string;
 }
 // 페이지네이션 테이블
 export const MessageTableList = ({
   data,
-  onRowClick,
+  handleMessageRowClick,
   onDelete,
   onRead,
 }: {
   data: MessageList[];
-  onRowClick: (id: number) => void;
+  handleMessageRowClick: (id: number) => void;
   onDelete: (id: number) => void;
   onRead: (id: number) => void;
 }) => {
@@ -54,7 +54,7 @@ export const MessageTableList = ({
         ) : (
           data.map((message) => (
             <tr
-              key={message.id}
+              key={message.message_id}
               className="h-[65px] py-[10px] border-b-[1px]  border-white-stroke bg-white cursor-pointer">
               <td className="w-[72px] h-[65px] flex justify-center items-center pt-[13px]">
                 {message.is_read ? (
@@ -65,28 +65,30 @@ export const MessageTableList = ({
               </td>
               <td
                 className="w-[563px] h-[65px] text-left font-medium text-[20px] text-text-on-white py-[20px]"
-                onClick={() => onRowClick(message.id)}>
+                onClick={() => handleMessageRowClick(message.message_id)}>
                 <p className="h-[25px]">{message.title}</p>
               </td>
-              <td className=" w-[223px] h-[65px] px-[10px] py-[20px]" onClick={() => onRowClick(message.id)}>
+              <td
+                className=" w-[223px] h-[65px] px-[10px] py-[20px]"
+                onClick={() => handleMessageRowClick(message.message_id)}>
                 <p className="flex justify-center items-center font-medium text-[20px] text-text-on-white">
-                  {message.sender_id}
+                  {message.sender}
                 </p>
               </td>
               <td
                 className="w-[263px] h-[65px] text-center font-medium text-[20px] text-text-on-white py-[20px]"
-                onClick={() => onRowClick(message.id)}>
-                {message.create_at}
+                onClick={() => handleMessageRowClick(message.message_id)}>
+                {message.created_at}
               </td>
               <td className="w-[115px] h-[65px] flex justify-center py-[16px]">
                 <div className="relative">
                   <button
-                    onClick={() => setOpenId(openId === message.id ? null : message.id)}
+                    onClick={() => setOpenId(openId === message.message_id ? null : message.message_id)}
                     className="flex justify-center items-center w-[28px] h-[28px] rounded-full hover:bg-secondary-pressed">
                     <img className="w-[28px] h-[28px]" src={kebabMenu} alt="...버튼" />
                   </button>
                   {/*드롭다운 */}
-                  {openId === message.id && (
+                  {openId === message.message_id && (
                     <div
                       ref={menuRef}
                       className="z-30 absolute top-[40px] -left-[5px] bg-secondary rounded-[4px]
@@ -95,7 +97,7 @@ export const MessageTableList = ({
                         className="w-[91px] h-[36px] flex text-center items-center text-gray-500 rounded-t-[4px] px-[16px] py-[8px]
                       border-b-[1px] border-white-stroke"
                         onClick={() => {
-                          onDelete(message.id);
+                          onDelete(message.message_id);
                           setOpenId(null);
                         }}>
                         <p className="h-[20px] font-[400] text-[16px] text-text-on-background -translate-y-[2px]">
@@ -105,7 +107,7 @@ export const MessageTableList = ({
                       <button
                         className="w-[91px] h-[36px] flex text-center items-center text-gray-500 rounded-b-[4px] px-[16px] py-[8px]"
                         onClick={() => {
-                          onRead(message.id);
+                          onRead(message.message_id);
                           setOpenId(null);
                         }}>
                         <p className="h-[20px] font-[400] text-[16px] text-text-on-background -translate-y-[2px]">
@@ -176,12 +178,12 @@ export function MessagePagination({
 // 모바일 화면
 export const MobileMessage = ({
   data,
-  onRowClick,
+  handleMessageRowClick,
   onDelete,
   onRead,
 }: {
   data: MessageList[];
-  onRowClick: (id: number) => void;
+  handleMessageRowClick: (id: number) => void;
   onDelete: (id: number) => void;
   onRead: (id: number) => void;
 }) => {
@@ -207,27 +209,27 @@ export const MobileMessage = ({
       ) : (
         data.map((message) => (
           <div
-            key={message.id}
+            key={message.message_id}
             className="w-full max-w-[280px] h-[81px] flex flex-col justify-center border-b-[1px] border-white-stroke bg-white ">
             <div className="flex justify-center">
               <div className="flex justify-between w-full max-w-[256px]">
-                <p className="text-[8px] text-text-on-background font-normal">{message.create_at}</p>
+                <p className="text-[8px] text-text-on-background font-normal">{message.created_at}</p>
                 <div className="relative">
                   <button
-                    onClick={() => setOpenId(openId === message.id ? null : message.id)}
+                    onClick={() => setOpenId(openId === message.message_id ? null : message.message_id)}
                     className={`flex items-center justify-center h-[16px] w-[16px] rounded-[50px] ${
-                      openId === message.id ? 'bg-secondary-pressed' : 'bg-transparent'
+                      openId === message.message_id ? 'bg-secondary-pressed' : 'bg-transparent'
                     }`}>
                     <img className="w-[10px] h-[10px]" src={kebabMenu} alt="...버튼" />
                   </button>
                   {/*드롭다운 */}
-                  {openId === message.id && (
+                  {openId === message.message_id && (
                     <div
                       className="absolute right-0 top-full mt-[11px] w-[91px] bg-white rounded-md shadow-lg z-10"
                       ref={menuRef}>
                       <button
                         onClick={() => {
-                          onDelete(message.id);
+                          onDelete(message.message_id);
                           setOpenId(null);
                         }}
                         className="block w-full h-[36px] text-[16px] border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary active:bg-secondary-pressed rounded-t-[4px]">
@@ -235,7 +237,7 @@ export const MobileMessage = ({
                       </button>
                       <button
                         onClick={() => {
-                          onRead(message.id);
+                          onRead(message.message_id);
                           setOpenId(null);
                         }}
                         className="block w-full h-[36px] text-[16px] text-text-on-background bg-secondary active:bg-secondary-pressed rounded-b-[4px]">
@@ -249,7 +251,7 @@ export const MobileMessage = ({
             <div className="flex justify-center">
               <div
                 className="w-full max-w-[256px] h-[16px] flex justify-start items-center mt-[6px]"
-                onClick={() => onRowClick(message.id)}>
+                onClick={() => handleMessageRowClick(message.message_id)}>
                 {message.is_read ? (
                   <img className="w-[16px] h-[16px]" src={read} alt="읽음" />
                 ) : (
@@ -266,7 +268,7 @@ export const MobileMessage = ({
               <div className="w-full max-w-[256px] h-[16px] flex justify-start items-center mt-[6px]">
                 <p
                   className={`text-[10px] ${message.is_read ? 'text-text-on-background' : 'text-text-on-white'} font-medium`}>
-                  {message.sender_id}
+                  {message.sender}
                 </p>
               </div>
             </div>

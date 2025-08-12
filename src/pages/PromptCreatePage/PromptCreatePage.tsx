@@ -10,13 +10,14 @@ import { useNavigate } from 'react-router-dom';
 import DualModal from '@/components/Modal/DualModal';
 import UploadModal from './components/UploadModal';
 import MobileUploadModal from './components/MobileUploadModal';
+import { axiosInstance } from '@/apis/axios';
+import axios from 'axios';
 
 const PromptCreatePage = () => {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
 
   const [uploadModal, setuploadModal] = useState<boolean>(false); //업로드 세부 설정 모달
-  const [canUpload, setCanUpload] = useState<boolean>(false); //업로드 세부 설정 완료 (개발 초기 사용)
 
   const [alertModal, setAlertModal] = useState<boolean>(false); // 알림 모달
   const [modalText, setModalText] = useState<string>(''); // 알림 모달 텍스트
@@ -24,6 +25,7 @@ const PromptCreatePage = () => {
 
   const [tip, setTip] = useState(true);
 
+  const [loading, setLoading] = useState(false);
   // 모달에서 작성되는 state
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
 
@@ -61,6 +63,8 @@ const PromptCreatePage = () => {
 
     // 태그 개수 확인
     const isValidTags = 0 <= tags.length && tags.length <= 10;
+    //이미지 개수 확인
+    const isValidImg = files.length === 0 || files.length <= 3;
 
     const valid = !!(
       title.trim() !== '' &&
@@ -70,10 +74,9 @@ const PromptCreatePage = () => {
       isValidCost &&
       isValidTags &&
       previewText.trim() !== '' &&
+      isValidImg &&
       discriptionText.trim() !== ''
     );
-
-    setCanUpload(valid);
 
     if (valid) {
       setShowDualModal(true);
@@ -83,27 +86,137 @@ const PromptCreatePage = () => {
     }
   };
 
-  // DualModal에서 "예" 클릭시
-  const handleDualYes = () => {
-    setShowDualModal(false);
-    setModalText('업로드가 완료되었습니다.');
-    // 추후 삭제 필요 (console)
-    console.log(
-      '설정 내용 : ',
-      title,
-      content,
-      cost,
-      tags,
-      withImage,
-      files,
-      previewText,
-      discriptionText,
-      howToUseText,
-    );
-    setAlertModal(true);
+  // 이미지 업로드 과정
+  // 이미지 url(1) 생성 및 key(2) 발급 -> 생성된 url(1)로 실제 이미지 전송
+  const handleUploadImg = async () => {
+    const imageKeys: Array<{ key: string; order_index: number }> = []; // 업로드된 이미지 키들을 저장할 배열
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const contentType = file.type; // "image/png", "image/jpeg" 등
+      let imgType: string = '';
+
+      if (contentType === 'image/png') {
+        imgType = 'png';
+      } else if (contentType === 'image/jpeg' || contentType === 'image/jpg') {
+        imgType = 'jpg'; // jpeg/jpg 통합
+      } else {
+        throw new Error(`지원하지 않는 이미지 타입: ${contentType}`);
+      }
+
+      // 파일의 실제 이름을 사용
+      const fileName = file.name;
+
+      try {
+        //Img URL 발급 + KEY 생성
+        const base = import.meta.env.VITE_SERVER_API_URL;
+        const first_step = await axiosInstance.post(`${base}/api/prompts/presign-url`, {
+          key: fileName,
+          contentType: contentType,
+        });
+        // url, key 발급
+        let img_url = first_step.data.url;
+        let img_key = first_step.data.key;
+
+        // 실제 파일 전송 - localhost에서는 CORS 오류 나는게 정상
+        const second_step = await axios.put(img_url, file, {
+          headers: { 'Content-Type': contentType },
+        });
+
+        // 성공적으로 업로드된 이미지 정보 저장
+        imageKeys.push({
+          key: img_key,
+          order_index: i,
+        });
+      } catch (err) {
+        throw err;
+      }
+    }
+
+    return imageKeys; // 업로드된 이미지 키들 반환
   };
 
-  // DualModal에서 "아니오" 클릭시
+  // API 연동 - 프롬프트 업로드
+  const handleUploadPrompt = async () => {
+    const base = import.meta.env.VITE_SERVER_API_URL;
+    const is_free = priceType === '무료' ? true : false;
+
+    //사용자가 이미지 첨부로 선택 했어도 이미지 list가 비어있으면 false로 전송
+    const has_image = files.length === 0 ? false : true;
+
+    try {
+      const res = await axiosInstance.post(`${base}/api/prompts`, {
+        title: title,
+        prompt: content,
+        prompt_result: previewText,
+        has_image: has_image,
+        description: discriptionText,
+        usage_guide: howToUseText,
+        price: cost,
+        is_free: is_free,
+        tags: tags,
+        models: selectedModels,
+        download_url: 'example.com',
+      });
+
+      console.log('전송 성공!', res.data);
+      const prompt_ID = res.data.data.prompt_id;
+
+      return prompt_ID; //이미지-프롬프트 매핑에서 사용
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  // 이미지와 프롬프트 매핑
+  // CORS 차단으로 인해서 localhost에서는 전송 안 되는게 정상
+  const handleMapImgToPrompt = async (prompt_ID: number, imageKeys: Array<{ key: string; order_index: number }>) => {
+    for (const imageInfo of imageKeys) {
+      try {
+        // 전송한 파일(img_key)와 프롬프트를 매핑
+        // index는 프롬프트의 i 번째 사진임을 의미
+        const mapping_step = await axiosInstance.post(`https://promptplace.kro.kr/api/prompts/${prompt_ID}/images`, {
+          image_url: `https://promptplace-s3.s3.ap-northeast-2.amazonaws.com/${imageInfo.key}`,
+          order_index: imageInfo.order_index,
+        });
+      } catch (err) {
+        throw err;
+      }
+    }
+  };
+
+  // '업로드 하시겠습니까?' 모달에서 "예" 클릭시
+  const handleDualYes = async () => {
+    setShowDualModal(false);
+    setLoading(true);
+
+    try {
+      let imageKeys: Array<{ key: string; order_index: number }> = [];
+
+      // 1. 이미지가 있다면 먼저 업로드
+      if (files.length > 0) {
+        imageKeys = await handleUploadImg();
+      }
+
+      // 2. 프롬프트 업로드
+      const prompt_ID = await handleUploadPrompt();
+
+      // 3. 이미지와 프롬프트 매핑
+      if (imageKeys.length > 0) {
+        await handleMapImgToPrompt(prompt_ID, imageKeys);
+      }
+
+      setModalText('업로드가 완료되었습니다.');
+    } catch (err) {
+      console.error(err);
+      setModalText('업로드가 실패했습니다.');
+    } finally {
+      setLoading(false);
+      setAlertModal(true);
+    }
+  };
+
+  // '업로드 하시겠습니까?' 모달에서 "아니오" 클릭시
   const handleDualNo = () => {
     setShowDualModal(false);
   };
@@ -159,7 +272,6 @@ const PromptCreatePage = () => {
                         text="업로드 세부 설정"
                         onClick={() => {
                           handleOption();
-                          setCanUpload(true);
                         }}
                       />
                     </div>
@@ -177,7 +289,6 @@ const PromptCreatePage = () => {
               </div>
             </div>
           </div>
-
           {/* 업로드 세부 설정 모달 */}
           {uploadModal && (
             <UploadModal
@@ -248,7 +359,6 @@ const PromptCreatePage = () => {
                   text="업로드 세부 설정"
                   onClick={() => {
                     handleOption();
-                    setCanUpload(true);
                   }}
                 />
               </div>

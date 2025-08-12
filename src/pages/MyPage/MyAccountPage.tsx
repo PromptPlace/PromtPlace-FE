@@ -5,47 +5,60 @@ import bluearrowIcon from '@assets/icon-arrow-left-blue.svg'; //추후 디자인
 import blackarrowIcon from '@/assets/icon-arrow-left-black.svg';
 import AccountDisplay from './components/AccountDisplay';
 import AccountEditForm from './components/AccountEditForm';
+import { useGetAccountInfo } from '@/hooks/queries/MyPage/useGetAccount';
+import { useRegisterAccount, useUpdateAccount } from '@/hooks/mutations/MyPage/account';
+import type { RegisterInfo } from '@/types/MyPage/account';
 
 interface accountInfo {
-  bank: string;
-  accountNumber: string;
-  accountHolder: string;
+  account_id?: number;
+  bank_name: string;
+  bank_code?: string;
+  account_number: string;
+  account_holder: string;
 }
 
 const MyAccountPage = () => {
   const navigate = useNavigate();
 
+  const { mutate: registerAccount } = useRegisterAccount();
+  const { mutate: updateAccount } = useUpdateAccount();
+  const { data: fetchedAccount } = useGetAccountInfo();
   // 'view' 또는 'edit' 모드를 관리하는 상태
   const [mode, setMode] = useState<'view' | 'edit'>('edit');
-  // 등록된 계좌 정보를 관리하는 상태 (API로 받아온다고 가정)
+  // api 연결시 usestate가 불필요한 상태이므로 연동후 제거
   const [accountInfo, setAccountInfo] = useState<accountInfo | undefined>(undefined);
 
   useEffect(() => {
-    // 예시: API 호출로 계좌 정보를 가져오는 로직
-    // const fetchedAccount = fetchUserAccount();
-    const fetchedAccount = { bank: '토스뱅크', accountNumber: '1234-5678-9101', accountHolder: '안송연' }; // 임시 데이터
-
-    if (accountInfo) {
+    if (fetchedAccount) {
       setAccountInfo(fetchedAccount);
       setMode('view'); // 정보가 있으면 '보기' 모드로 시작
     } else {
       setMode('edit'); // 정보가 없으면 '수정' 모드로 시작
     }
-  }, []);
+  }, [fetchedAccount]);
 
   const handleEditClick = () => {
     setMode('edit');
   };
 
   // '등록 완료' 버튼 클릭 시 (폼 제출)
-  const handleSubmit = () => {
-    // 1. API로 데이터 전송
-    // 2. 성공적으로 응답 받으면, 상태 업데이트 및 모드 변경
-    const newAccountInfo = { bank: '카카오뱅크', accountNumber: '1111-2222-3333', accountHolder: '안송연' }; // 새로 등록된 정보라고 가정
-    setAccountInfo(newAccountInfo);
-    setMode('view');
+  const handleSubmit = (formData: RegisterInfo) => {
+    if (!fetchedAccount) {
+      registerAccount(formData, {
+        onSuccess: () => {
+          // 성공 시, useGetAccountInfo 쿼리가 무효화되어
+          // 최신 정보를 다시 불러오고, useEffect에 의해 자동으로 'view' 모드로 변경됩니다.
+          setMode('view');
+        },
+      });
+    } else {
+      updateAccount(formData, {
+        onSuccess: () => {
+          setMode('view');
+        },
+      });
+    }
   };
-
   return (
     <div className="flex justify-center h-screen bg-background ">
       <div className="flex flex-col w-full max-w-[1236px] pt-[92px] max-lg:pt-[12px] max-lg:px-[12px] h-full">
@@ -69,6 +82,7 @@ const MyAccountPage = () => {
         </div>
 
         <div className="flex  ">
+          {/* api 연결시 accountInfoResponse 로 변경*/}
           {mode === 'view' ? (
             <AccountDisplay accountInfo={accountInfo} onEditClick={handleEditClick} />
           ) : (

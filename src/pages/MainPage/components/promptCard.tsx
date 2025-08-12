@@ -58,8 +58,9 @@ const PromptCard = ({ prompt }: props) => {
       </div>
 
       {/* 카드 본문 */}
-      <div className="relative w-full h-full max-w-[780px] max-h-[320px] bg-white rounded-xl shadow-md p-4 overflow-hidden overflow-ellipsis ml-auto">
-        <div className="flex flex-wrap items-center px-2.5 py-0.5 gap-2.5 mb-[14px]">
+      <div className="relative w-full max-w-[780px] max-h-[320px] bg-white rounded-2xl shadow-md px-5 py-6 overflow-hidden ml-auto">
+        {/* 모델 + 태그 */}
+        <div className="flex flex-wrap items-center gap-2.5 mb-4">
           <ModelButton text={model} />
           {tags.map((tag, index) => (
             <span key={index}>
@@ -68,10 +69,11 @@ const PromptCard = ({ prompt }: props) => {
           ))}
         </div>
 
+        {/* 제목 + 가격 + 통계 */}
         <div
-          className="flex justify-between items-center mb-2 cursor-pointer"
+          className="flex justify-between items-center mb-3 cursor-pointer"
           onClick={() => navigate(`/prompt/${prompt_id}`)}>
-          <span className="text-xl">{title}</span>
+          <span className="text-xl font-medium text-gray-900">{title}</span>
           <div className="flex items-center gap-4 text-sm text-gray-600">
             <div className="flex items-center gap-1 text-lg">{is_free ? '무료' : `${price.toLocaleString()}원`}</div>
             <div>
@@ -86,14 +88,16 @@ const PromptCard = ({ prompt }: props) => {
           </div>
         </div>
 
+        {/* 설명 */}
         <p
-          className="text-sm text-gray-800 whitespace-pre-line cursor-pointer"
+          className="text-base text-gray-800 whitespace-pre-line cursor-pointer"
           onClick={() => navigate(`/prompt/${prompt_id}`)}>
           {description}
         </p>
 
-        <button onClick={handleLike} className="absolute right-4 bottom-4 z-10">
-          <img src={isLiked ? likeIcon : unLikeIcon} className="w-4 h-4" />
+        {/* 찜 아이콘 */}
+        <button onClick={handleLike} className="absolute right-6 bottom-6 z-10">
+          <img src={isLiked ? likeIcon : unLikeIcon} className="w-5 h-5" />
         </button>
       </div>
     </div>

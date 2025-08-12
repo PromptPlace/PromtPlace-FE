@@ -62,8 +62,8 @@ const MainPage = () => {
   return (
     <div className="flex gap-[59px] justify-center bg-[#F5F5F5] relative overflow-hidden">
       {showCoachMark && !accessToken && <CoachMark setShowCoachMark={setShowCoachMark} />}
-      <div className="w-[858px] h-[820px] mb-[42px] overflow-y-auto pb-32">
-        <div className="hidden lg:flex mt-[53px] ">
+      <div className="w-[858px] h-full max-h-[950px] mb-[42px] overflow-y-auto pb-32">
+        <div className="hidden lg:flex mt-11 px-5 justify-start items-center">
           <FilterBar
             onModelChange={(models: string[] | null) => setSelectedModels(models ?? [])}
             onSortChange={(sort: string | null) => setSelectedSort(sort)}

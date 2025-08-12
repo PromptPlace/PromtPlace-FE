@@ -28,12 +28,12 @@ const MobileModelTab = ({ selectedModels, setSelectedModels }: Props) => {
           return rows;
         }, [])
         .map((row, idx) => (
-          <div key={idx} className="flex gap-5">
+          <div key={idx} className="w-full flex gap-5">
             {row.map((label) => (
               <button
                 key={label}
                 onClick={() => toggleModel(label)}
-                className={`w-32 px-4 py-2 rounded ${
+                className={`flex flex-1 px-4 py-2 rounded justify-center ${
                   selectedModels.includes(label)
                     ? 'bg-secondary text-primary'
                     : 'bg-white border border-gray-300 text-gray-400'
