@@ -1,6 +1,9 @@
 import { LOCAL_STORAGE_KEY } from '@constants/key';
 import { useLocalStorage } from '@hooks/useLocalStorage';
 import { createContext, useContext, useState, type PropsWithChildren } from 'react';
+import { postGoogleAuthCode, postNaverAuthCode } from '@apis/Login/auth.ts';
+import type { User, loginResponseData } from '@/types/LoginPage/auth.ts';
+import { axiosInstance } from '@/apis/axios.ts';
 
 /**
  * TODO:
@@ -11,21 +14,28 @@ import { createContext, useContext, useState, type PropsWithChildren } from 'rea
  * @author 김진효
  * **/
 
+export const defaultUser: User = {
+  user_id: -1,
+  name: 'Guest',
+  nickname: '게스트',
+  email: '',
+  social_type: 'NAVER',
+  status: 'INACTIVE',
+  role: 'USER',
+  create_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+};
+
 interface AuthContextType {
+  user: User;
   accessToken: string | null;
   refreshToken: string | null;
-  login: () => Promise<void>;
+  login: (provider: 'google' | 'kakao' | 'naver', authCode: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
-export const AuthContext = createContext<AuthContextType>({
-  accessToken: null,
-  refreshToken: null,
-  login: async () => {},
-  logout: async () => {},
-});
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const {
     getItem: getAccessTokenFromStorage,
@@ -39,22 +49,71 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     removeItem: removeRefreshTokenFromStorage,
   } = useLocalStorage(LOCAL_STORAGE_KEY.refreshToken);
 
+  const [user, setUser] = useState<User>(defaultUser);
   const [accessToken, setAccessToken] = useState<string | null>(getAccessTokenFromStorage());
   const [refreshToken, setRefreshToken] = useState<string | null>(getRefreshTokenFromStorage());
 
-  const login = async () => {
-    // 추후 구현
+  const login = async (provider: 'google' | 'kakao' | 'naver', authCode: string) => {
+    try {
+      const response = await (async () => {
+        switch (provider) {
+          case 'google':
+            return postGoogleAuthCode(authCode);
+          case 'naver':
+            return postNaverAuthCode(authCode);
+          case 'kakao':
+            throw new Error('카카오 로그인은 아직 지원되지 않습니다.');
+          default:
+            throw new Error('지원하지 않는 소셜 로그인입니다.');
+        }
+      })();
+
+      const loginData: loginResponseData = response.data;
+
+      if (loginData) {
+        const { access_token, refresh_token, user } = loginData;
+
+        setAccessToken(access_token);
+        setRefreshToken(refresh_token);
+        setAccessTokenInStorage(access_token);
+        setRefreshTokenInStorage(refresh_token);
+        setUser(user);
+
+        console.log(`[${provider}] 로그인 성공!`);
+        alert(`환영합니다!`);
+        console.log('user 정보:', user);
+      }
+    } catch (error) {
+      console.error(`[${provider}] 백엔드 인증 과정 실패`, error);
+    }
   };
+
   const logout = async () => {
-    // 추후 구현
+    try {
+      await axiosInstance.get('/api/auth/logout');
+      console.log('서버 로그아웃 성공');
+    } catch (error) {
+      console.error('서버 로그아웃 요청 실패:', error);
+    } finally {
+      removeAccessTokenFromStorage();
+      removeRefreshTokenFromStorage();
+      setAccessToken(null);
+      setRefreshToken(null);
+      setUser(defaultUser);
+    }
+
+    window.location.href = '/'; // 로그아웃 후 메인 페이지로 이동
   };
-  return <AuthContext.Provider value={{ accessToken, refreshToken, login, logout }}>{children}</AuthContext.Provider>;
+
+  return (
+    <AuthContext.Provider value={{ user, accessToken, refreshToken, login, logout }}>{children}</AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
 
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useAuth는 AuthProvider 내부에서 사용되어야 합니다.');
   }
 

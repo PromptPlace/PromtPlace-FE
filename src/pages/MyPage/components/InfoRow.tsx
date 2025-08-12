@@ -47,7 +47,9 @@ const InfoRow: React.FC<InfoRowProps> = ({ label, nickname, email, provider, has
           )}
           <span>{email}</span>
           {hasArrow && (
-            <button className="flex max-lg:justify-center  items-center w-[24px] max-lg:w-[16px] h-[24px] max-lg:h-[16px]" onClick={() => setIsModalOpen(true)}>
+            <button
+              className="flex max-lg:justify-center  items-center w-[24px] max-lg:w-[16px] h-[24px] max-lg:h-[16px]"
+              onClick={() => setIsModalOpen(true)}>
               <img src={arrow} alt="arrow right" className="max-lg:w-[4.3px] max-lg:h-[7.4px]" />
             </button>
           )}

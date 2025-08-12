@@ -1,6 +1,7 @@
 import React from 'react';
 
 export const lazyRoutes = {
+  SocialLoginCallbackPage: React.lazy(() => import('../pages/callback/SocialLoginCallback')),
   MainPage: React.lazy(() => import('../pages/MainPage/MainPage')),
   MyInfoPage: React.lazy(() => import('../pages/MyPage/MyInfoPage')),
   MyAccountPage: React.lazy(() => import('../pages/MyPage/MyAccountPage')),
