@@ -55,6 +55,8 @@ import useDeleteSNS from '@/hooks/mutations/ProfilePage/useDeleteSNS';
 import usePostSNS from '@/hooks/mutations/ProfilePage/usePostSNS';
 import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
 import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
+import useGetInquiries from '@/hooks/queries/ProfilePage/useGetInquiries';
+import type { RequestGetInquiriesDto } from '@/types/ProfilePage/inquiry';
 
 type Inquiry = {
   inquiry_id: number;
@@ -63,8 +65,6 @@ type Inquiry = {
   type: string;
   status: string;
   title: string;
-  content: string;
-  created_at: string;
   updated_at: string;
 };
 
@@ -100,7 +100,7 @@ const ProfilePage = () => {
 
   const [showMsgModal, setShowMsgModal] = useState(false);
 
-  const [type, setType] = useState<'buyer' | 'nonBuyer'>('nonBuyer');
+  const [type, setType] = useState<RequestGetInquiriesDto>({ type: 'buyer' });
 
   // 회원 정보 불러오기
   const { data } = useGetMember({ member_id });
@@ -152,6 +152,10 @@ const ProfilePage = () => {
   // 회원 SNS 작성
   const { mutate: mutatePostSNS } = usePostSNS({ member_id });
 
+  // 받은 문의 목록
+  const { data: inquiryData } = useGetInquiries({ member_id }, { type: type.type });
+  console.log(inquiryData);
+
   const menuList = [
     {
       id: 0,
@@ -179,6 +183,7 @@ const ProfilePage = () => {
     setProfileEdit(false);
   };
 
+  // 팔로우 및 팔로잉
   const handleFollow = () => {
     handleShowLoginModal(() => {
       if (isFollow) {
@@ -475,14 +480,17 @@ const ProfilePage = () => {
         )}
       </div>
 
-      <div className="px-[20px] flex lg:hidden  max-lg:mt-[12px]">
+      <div className="px-[20px] flex lg:hidden max-lg:mt-[12px]">
         {menuId !== 2 && <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />}
         {menuId === 2 && isMyProfile && (
           <div className="flex items-start justify-between w-full">
             <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />
             <div className="flex mt-[6px]">
               <div
-                onClick={() => setIsBuyer(true)}
+                onClick={() => {
+                  setIsBuyer(true);
+                  setType({ type: 'buyer' });
+                }}
                 className={clsx(
                   'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
                   isBuyer && 'bg-primary-hover text-white',
@@ -491,7 +499,10 @@ const ProfilePage = () => {
                 구매자 문의
               </div>
               <div
-                onClick={() => setIsBuyer(false)}
+                onClick={() => {
+                  setIsBuyer(false);
+                  setType({ type: 'non_buyer' });
+                }}
                 className={clsx(
                   'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
                   !isBuyer && 'bg-primary-hover text-white',
@@ -619,6 +630,7 @@ const ProfilePage = () => {
                 {isArrowClicked && (
                   <div
                     onClick={() => {
+                      setType((prev) => (prev.type === 'buyer' ? { type: 'non_buyer' } : { type: 'buyer' }));
                       setIsBuyer((prev) => !prev);
                       setIsArrowClicked(false);
                       setShowInquiryDetail(null);
@@ -631,8 +643,8 @@ const ProfilePage = () => {
               <div className="pr-[8px] bg-white max-lg:hidden">
                 <div className="max-h-[316px] overflow-auto">
                   {showInquiryDetail === null &&
-                    inquiries
-                      .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non-buyer'))
+                    inquiryData?.data
+                      .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non_buyer'))
                       .map((i) => (
                         <InquiryCard
                           key={i.inquiry_id}
@@ -672,8 +684,8 @@ const ProfilePage = () => {
 
               <div className="pr-[8px] bg-white lg:hidden max-lg:mt-[-30px]">
                 <div className="max-h-[316px] overflow-auto">
-                  {inquiries
-                    .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non-buyer'))
+                  {inquiryData?.data
+                    .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non_buyer'))
                     .map((i) => (
                       <InquiryCard
                         key={i.inquiry_id}

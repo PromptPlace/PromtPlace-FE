@@ -5,8 +5,9 @@ import { useQuery } from '@tanstack/react-query';
 
 function useGetInquiries({ member_id }: RequestMemberDto, { type }: RequestGetInquiriesDto) {
   return useQuery({
-    queryKey: ['member-inquiry', member_id],
+    queryKey: ['member-inquiry', member_id, type],
     queryFn: () => getInquiries({ type }),
+    staleTime: Infinity,
   });
 }
 
