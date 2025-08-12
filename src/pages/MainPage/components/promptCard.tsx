@@ -23,6 +23,8 @@ const PromptCard = ({ prompt }: promptCardProps) => {
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false);
 
+  console.log(prompt.tags);
+
   const handleLike = () => {
     setIsLiked((prev) => !prev);
     // 찜 기능 서버 연동
@@ -35,21 +37,23 @@ const PromptCard = ({ prompt }: promptCardProps) => {
         className="inline-flex justify-start items-center gap-3.5 cursor-pointer"
         onClick={() => navigate(`/profile/${prompt.user_id}`)}>
         <img
-          src={ prompt.has_image ? prompt.images[0] : profileImage}
+          src={prompt.user.profile_img_url ? prompt.user.profile_img_url : profileImage}
           alt="authorImage"
           className="w-14 h-14 rounded-[100px] inline-flex flex-col justify-center items-center"
         />
-        <span className="text-[18px] font-medium">{prompt.user_id}</span>
+        <span className="text-[18px] font-medium">{prompt.user.nickname}</span>
       </div>
 
       {/* 카드 본문 */}
       <div className="relative w-full max-w-[780px] max-h-[320px] bg-white rounded-2xl shadow-md px-5 py-6 overflow-hidden ml-auto">
         {/* 모델 + 태그 */}
         <div className="flex flex-wrap items-center gap-2.5 mb-4">
-          <ModelButton text={prompt.model} />
+          {prompt.models.map((modelObj, idx) => (
+            <ModelButton key={modelObj.promptmodel_id || idx} text={modelObj.model.name} />
+          ))}
           {prompt.tags.map((tag, index) => (
-            <span key={index}>
-              <TagButton hasDelete={false} text={`#${tag}`} onClick={() => {}} />
+            <span key={tag.tag_id || index}>
+              <TagButton hasDelete={false} text={`#${tag?.tag.name ?? ''}`} onClick={() => {}} />
             </span>
           ))}
         </div>

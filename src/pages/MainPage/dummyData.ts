@@ -1,4 +1,4 @@
-import type { Prompt, Creator } from '@/types/MainPage/prompt';
+import type { Creator } from '@/types/MainPage/prompt';
 
 // export const dummyPrompts: Prompt[] = [
 //   {
@@ -114,7 +114,7 @@ import type { Prompt, Creator } from '@/types/MainPage/prompt';
 export const dummyCreators: Creator[] = [
   { id: 1, name: '주토피아노', avatar: null, followers: 1092, followed: false },
   { id: 2, name: '이해인', avatar: null, followers: 120, followed: false },
-  { id: 3, name: '폴로', avatar: null, followers: 222, followed: true },
+  { id: 3, name: '플로', avatar: null, followers: 222, followed: true },
   { id: 4, name: '올랄라', avatar: null, followers: 90, followed: true },
   { id: 5, name: '안민수', avatar: null, followers: 23, followed: false },
   { id: 6, name: '뽀또', avatar: null, followers: 42, followed: true },

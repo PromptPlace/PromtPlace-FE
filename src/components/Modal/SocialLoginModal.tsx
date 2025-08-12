@@ -31,9 +31,51 @@ const SocialButton = ({ icon, text, onClick }: { icon: string; text: string; onC
   </button>
 );
 
-const SocialLoginModal = ({ isOpen, onClose, onClick }: SocialLoginModalProps) => {
-  if (!isOpen) return null;
+const CALLBACK_URL = new URL('auth/callback', window.location.origin).toString();
 
+const handleGoogleLogin = () => {
+  // 1. 필요한 정보들을 정의합니다.
+  const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  // 2. 모든 파라미터를 조합하여 Google 인증 URL을 생성합니다.
+  const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${CALLBACK_URL}&response_type=code&scope=openid%20profile%20email`;
+  sessionStorage.setItem('login_provider', 'google');
+  // 3. 생성된 URL로 페이지 전체를 이동시킵니다. (핵심)
+  window.location.href = googleAuthUrl;
+};
+
+const handleNaverLogin = () => {
+  const NAVER_CLIENT_ID = import.meta.env.VITE_NAVER_CLIENT_ID;
+  sessionStorage.setItem('login_provider', 'naver');
+  const STATE = crypto.randomUUID(); // CSRF 방지를 위한 임의 문자열
+  sessionStorage.setItem('naver_state', STATE);
+
+  const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&redirect_uri=${encodeURIComponent(
+    CALLBACK_URL,
+  )}&state=${STATE}`;
+  window.location.href = naverAuthUrl;
+};
+
+export const handleKakaoLogin = () => {
+  const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
+  console.log('CLIENT_ID', KAKAO_CLIENT_ID);
+  const state = crypto.getRandomValues(new Uint32Array(1))[0].toString(36);
+  sessionStorage.setItem('oauth_state', state);
+  sessionStorage.setItem('login_provider', 'kakao');
+
+  // 카카오는 scope를 공백으로 구분 (요구 권한에 맞춰 수정 가능)
+  const params = new URLSearchParams({
+    client_id: KAKAO_CLIENT_ID,
+    redirect_uri: CALLBACK_URL,
+    response_type: 'code',
+    state,
+    scope: 'profile_nickname account_email',
+  });
+
+  window.location.href = `https://kauth.kakao.com/oauth/authorize?${params.toString()}`;
+};
+
+const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
+  if (!isOpen) return null;
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-110 p-4 max-lg:p-[0px]">
       <div className="relative flex justify-center items-center w-[563px] max-lg:w-full h-[757px] max-lg:h-full flex-col  rounded-[16px] max-lg:rounded-none max-lg:px-[20px] bg-white shadow-gradient ">
@@ -58,9 +100,10 @@ const SocialLoginModal = ({ isOpen, onClose, onClick }: SocialLoginModalProps) =
         </div>
 
         <div className="flex flex-col items-center w-[334px]  gap-[32px] mb-[226px] max-lg:mb-[48px] mx-[114px] max-lg:mx-[0px]">
-          <SocialButton icon={KakaoIcon} text="카카오톡으로 로그인" onClick={() => onClick('kakao')} />
-          <SocialButton icon={GoogleIcon} text="구글로 로그인" onClick={() => onClick('google')} />
-          <SocialButton icon={NaverIcon} text="네이버로 로그인" onClick={() => onClick('naver')} />
+          <SocialButton icon={KakaoIcon} text="카카오톡으로 로그인" onClick={handleKakaoLogin} />
+          <SocialButton icon={GoogleIcon} text="구글로 로그인" onClick={handleGoogleLogin} />
+          <SocialButton icon={NaverIcon} text="네이버로 로그인" onClick={handleNaverLogin} />
+          <div id="naverIdLogin" style={{ display: 'none' }} />
         </div>
 
         <button

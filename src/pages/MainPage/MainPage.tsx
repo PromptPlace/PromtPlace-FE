@@ -12,21 +12,55 @@ import { dummyCreators } from './components/../dummyData';
 import GradientButton from '@/components/Button/GradientButton';
 import CoachMark from '@/components/CoachMark';
 import { useAuth } from '@/context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import MobileFilter from './components/MobileFilter';
 import MobilePrompt from './components/MobilePrompt';
 import useGetPromptList from '@/hooks/queries/MainPage/useGetPromptList';
+import usePostSearchPromptList from '@/hooks/mutations/MainPage/usePostSearchPromptList';
 
 const MainPage = () => {
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
-  const [selectedSort, setSelectedSort] = useState<string | null>(null);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedSort, setSelectedSort] = useState<string>('recent');
   const [onlyFree, setOnlyFree] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const { data, isPending, isError } = useGetPromptList();
-  console.log(data?.data);
+  // 검색 파라미터 상태
+  const [keyword, setKeyword] = useState<string>('');
+  const [searchParams] = useSearchParams();
+  // Navbar에서 검색어를 받아오기 위한 함수
+  useEffect(() => {
+    const search = searchParams.get('search') || '';
+    setKeyword(search);
+  }, [searchParams]);
 
-  const promptList = data?.data ?? [];
+  console.log(keyword);
+
+  // 검색 API 호출
+  const searchPromptResult = usePostSearchPromptList(
+    {
+      keyword: keyword,
+      model: selectedModels,
+      tag: selectedTags,
+      sort: selectedSort,
+      is_free: onlyFree,
+      page: 1,
+      size: 20,
+    },
+    !!keyword,
+  );
+
+  const promptResult = useGetPromptList();
+  const promptList = promptResult.data?.data ?? [];
+
+  const searchPromptIds =
+    keyword && searchPromptResult.data?.data ? searchPromptResult.data.data.map((item) => item.prompt_id) : [];
+
+  const filteredPromptList = keyword
+    ? searchPromptIds.length > 0
+      ? promptList.filter((prompt) => searchPromptIds.includes(prompt.prompt_id))
+      : []
+    : promptList;
 
   // 코치마크 관련
   const { accessToken } = useAuth();
@@ -35,15 +69,17 @@ const MainPage = () => {
     return !hasVisited;
   });
 
-  // 코치마크 관련
   useEffect(() => {
     if (showCoachMark) {
       sessionStorage.setItem('visited', 'true');
     }
   }, [showCoachMark]);
 
-  const filterPromptsByModel = promptList?.filter((prompt) => {
-    const matchModel = selectedModels.length > 0 ? selectedModels.includes(prompt.model) : true;
+  const filterPromptsByModel = filteredPromptList?.filter((prompt) => {
+    const matchModel =
+      selectedModels.length > 0
+        ? Array.isArray(prompt.models) && prompt.models.some((m) => selectedModels.includes(m.model.name))
+        : true;
     const matchFree = onlyFree ? prompt.price === 0 : true;
     return matchModel && matchFree;
   });
@@ -69,10 +105,10 @@ const MainPage = () => {
     <div className="flex gap-[59px] justify-center bg-[#F5F5F5] relative overflow-hidden">
       {showCoachMark && !accessToken && <CoachMark setShowCoachMark={setShowCoachMark} />}
       <div className="w-[858px] h-full max-h-[950px] min-h-[700px] mb-[42px] overflow-y-auto pb-32">
-        <div className="hidden lg:flex mt-11 px-5 justify-start items-center">
+        <div className="hidden lg:flex mt-[53px]">
           <FilterBar
             onModelChange={(models: string[] | null) => setSelectedModels(models ?? [])}
-            onSortChange={(sort: string | null) => setSelectedSort(sort)}
+            onSortChange={(sort: string | null) => setSelectedSort(sort ?? 'recent')}
             onlyFree={onlyFree}
             setOnlyFree={setOnlyFree}
           />
@@ -81,7 +117,7 @@ const MainPage = () => {
         <div className="flex lg:hidden">
           <MobileFilter
             onModelChange={(models: string[] | null) => setSelectedModels(models ?? [])}
-            onSortChange={(sort: string | null) => setSelectedSort(sort)}
+            onSortChange={(sort: string | null) => setSelectedSort(sort ?? 'recent')}
             onlyFree={onlyFree}
             setOnlyFree={setOnlyFree}
           />
@@ -115,6 +151,13 @@ const MainPage = () => {
               navigate('/create');
             }}
           />
+        </div>
+        <div
+          onClick={() => {
+            navigate('/payment');
+          }}
+          className="fixed bottom-4 right-4 z-[10] cursor-pointer">
+          프롬프트 결제하기
         </div>
       </div>
     </div>
