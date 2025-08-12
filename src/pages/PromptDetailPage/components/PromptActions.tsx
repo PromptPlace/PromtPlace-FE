@@ -111,6 +111,8 @@ const PromptActions = ({ title, price, isFree, reviewCounts, rating }: Props) =>
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [liked, setLiked] = useState(false);
+  const [isPaid, setIsPaid] = useState(false);
+
   const [downloadData, setDownloadData] = useState<{
     title: string;
     downloadUrl: string;
@@ -124,11 +126,12 @@ const PromptActions = ({ title, price, isFree, reviewCounts, rating }: Props) =>
   const [reviewCount, setReviewCount] = useState(reviewCounts);
 
   const handleDownloadClick = async () => {
-    // ✅ 테스트용 더미 데이터
+    // 테스트용 더미 데이터
     const title = '동양풍 일러스트 이미지 생성';
     const download_url = 'https://cdn.promptplace.com/prompts/1024.txt';
 
-    if (isFree || isPaid) { // 무료 프롬프트이거나 결제 완료 프롬프트인 경우 DownloadModalOpen
+    if (isFree || isPaid) {
+      // 무료 프롬프트이거나 결제 완료 프롬프트인 경우 DownloadModalOpen
       setDownloadData({
         title,
         downloadUrl: download_url,
@@ -169,8 +172,10 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
     // const { download_url, title } = response.data;
   };
 
+  // 결제 완료 시 호출
   const handlePaid = () => {
-    setIsPaymentModalOpen(true);
+    setIsPaid(true); // 결제 완료 상태 변경
+    setIsPaymentModalOpen(false); // 결제 완료 후 프롬프트 디테일 페이지로 이동
     setDownloadData({
       title: '동양풍 일러스트 이미지 생성',
       downloadUrl: 'https://cdn.promptplace.com/prompts/1024.txt',
@@ -185,8 +190,6 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
   const handleCloseReportModal = () => {
     setIsReportModalOpen(false);
   };
-
-  const [isPaid, setIsPaid] = useState(false);
 
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
 
@@ -247,9 +250,9 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
               text="다운로드"
               onClick={() => handleShowLoginModal(handleDownloadClick)}
             />
-            {isPaymentModalOpen && (
+            {isPaymentModalOpen && ( //유료프롬프트 & 미결제 시 PaymentModal 열기
               <PaymentModal
-                prompt={{ title, price: Number(price) }}
+                prompt={{ title, price: Number(price) }} //id: promptId 추가 필요
                 onClose={() => setIsPaymentModalOpen(false)}
                 onPaid={handlePaid}
               />
