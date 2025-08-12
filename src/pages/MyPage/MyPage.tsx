@@ -23,7 +23,6 @@ const MyPage = () => {
 
   const item = localStorage.getItem('user_id');
   const user_id = item ? JSON.parse(item) : null;
-  console.log(user_id);
 
   const LINKS = [
     { to: '/mypage/prompt', label: '내 프롬프트', icon: <ArchiveIcon className="w-[16px] h-[16px]" /> },
