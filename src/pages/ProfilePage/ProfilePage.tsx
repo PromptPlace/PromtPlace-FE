@@ -30,7 +30,6 @@ import FollowCard from './components/FollowCard';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 
 import PROMPT from '@data/ProfilePage/prompt.json';
-import INQUIRY from '@data/ProfilePage/inquiry.json';
 
 import useImgUpload from '@hooks/useImgUpload';
 import Select from './components/Select';
@@ -57,6 +56,9 @@ import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
 import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
 import useGetInquiries from '@/hooks/queries/ProfilePage/useGetInquiries';
 import type { RequestGetInquiriesDto } from '@/types/ProfilePage/inquiry';
+import useGetDetailInquiries from '@/hooks/queries/ProfilePage/useGetDetailInquiries';
+import usePostReplyInquiries from '@/hooks/mutations/ProfilePage/usePostReplyInquiries';
+import usePatchReadInquiries from '@/hooks/mutations/ProfilePage/usePatchReadInquiries';
 
 type Inquiry = {
   inquiry_id: number;
@@ -86,7 +88,6 @@ const ProfilePage = () => {
   const [isBuyer, setIsBuyer] = useState(true);
   const [isArrowClicked, setIsArrowClicked] = useState(false);
 
-  const [inquiries, setInquiries] = useState(INQUIRY);
   const [showInquiryDetail, setShowInquiryDetail] = useState<Inquiry | null>(null);
 
   const { selectedImg, setSelectedImg, handleUpload } = useImgUpload();
@@ -154,7 +155,16 @@ const ProfilePage = () => {
 
   // 받은 문의 목록
   const { data: inquiryData } = useGetInquiries({ member_id }, { type: type.type });
-  console.log(inquiryData);
+
+  // 문의 상세 정보
+  const [selectedInquiryId, setSelectedInquiryId] = useState<number | null>(null);
+  const { data: inquiryDetailData } = useGetDetailInquiries({ member_id }, { inquiry_id: selectedInquiryId });
+
+  // 문의 답변하기
+  const { mutate: mutatePostInquiries } = usePostReplyInquiries({ member_id });
+
+  // 문의 읽음 처리
+  const { mutate: mutateReadInquiries } = usePatchReadInquiries({ member_id });
 
   const menuList = [
     {
@@ -222,8 +232,7 @@ const ProfilePage = () => {
 
   // 회원 SNS 작성
   const handleAddSns = ({ url, description }: RequestPostSNS) => {
-    const res = mutatePostSNS({ url, description });
-    console.log(res);
+    mutatePostSNS({ url, description });
   };
 
   // 회원 SNS 수정
@@ -653,31 +662,29 @@ const ProfilePage = () => {
                           status={i.status}
                           sender_nickname={i.sender_nickname}
                           onClick={() => {
+                            console.log(i.inquiry_id);
+
+                            setSelectedInquiryId(i.inquiry_id);
                             setShowInquiryDetail(i);
                           }}
                           onRead={(id) => {
-                            setInquiries((prev) =>
-                              prev.map((item) => (item.inquiry_id === id ? { ...item, status: 'read' } : item)),
-                            );
+                            mutateReadInquiries({ inquiry_id: id });
                           }}
-                          onDelete={(id) => {
-                            setInquiries((prev) => prev.filter((item) => item.inquiry_id !== id));
-                          }}
+                          onDelete={() => {}}
                         />
                       ))}
                 </div>
               </div>
 
               <div className="max-lg:hidden">
-                {showInquiryDetail !== null && (
+                {showInquiryDetail !== null && inquiryDetailData && (
                   <InquiryDetailCard
-                    inquiry={showInquiryDetail}
+                    inquiry={inquiryDetailData!}
                     onClick={() => {
                       setShowInquiryDetail(null);
-                      setInquiries((prev) =>
-                        prev.map((i) => (i.inquiry_id === showInquiryDetail.inquiry_id ? { ...i, status: 'read' } : i)),
-                      );
                     }}
+                    mutatePostInquiries={mutatePostInquiries}
+                    mutateReadInquiries={mutateReadInquiries}
                   />
                 )}
               </div>
@@ -694,33 +701,29 @@ const ProfilePage = () => {
                         status={i.status}
                         sender_nickname={i.sender_nickname}
                         onClick={() => {
+                          setSelectedInquiryId(i.inquiry_id);
                           setShowInquiryDetail(i);
                           setShowMsgModal(true);
                         }}
                         onRead={(id) => {
-                          setInquiries((prev) =>
-                            prev.map((item) => (item.inquiry_id === id ? { ...item, status: 'read' } : item)),
-                          );
+                          mutateReadInquiries({ inquiry_id: id });
                         }}
-                        onDelete={(id) => {
-                          setInquiries((prev) => prev.filter((item) => item.inquiry_id !== id));
-                        }}
+                        onDelete={() => {}}
                       />
                     ))}
                 </div>
               </div>
 
               <div className="lg:hidden">
-                {showInquiryDetail !== null && showMsgModal === true && (
+                {showInquiryDetail !== null && showMsgModal === true && inquiryDetailData && (
                   <InquiryDetailCard
-                    inquiry={showInquiryDetail}
+                    inquiry={inquiryDetailData!}
                     onClick={() => {
-                      setInquiries((prev) =>
-                        prev.map((i) => (i.inquiry_id === showInquiryDetail.inquiry_id ? { ...i, status: 'read' } : i)),
-                      );
                       setShowMsgModal(false);
                     }}
                     setShowMsgMoldal={setShowMsgModal}
+                    mutatePostInquiries={mutatePostInquiries}
+                    mutateReadInquiries={mutateReadInquiries}
                   />
                 )}
               </div>
