@@ -3,6 +3,7 @@ import PrimaryButton from '@components/Button/PrimaryButton';
 import kebabMenu from '@/assets/icon-kebabMenu.svg';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export interface Prompt {
   prompt_id: number;
@@ -26,6 +27,20 @@ interface PromptCardProps {
 
 export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteLike }: PromptCardProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleWriteReviewClick = (prompt_id: number) => {
+    // 1. 이동할 프롬프트의 ID를 가져옵니다.
+    const promptId = prompt_id;
+
+    // 2. 상세 페이지 경로와 쿼리 파라미터를 조합하여 URL을 만듭니다.
+    //    /prompt/123?open_review=true 와 같은 형태가 됩니다.
+    const targetUrl = `/prompt/${promptId}?open_review=true`;
+
+    // 3. 생성된 URL로 페이지를 이동시킵니다.
+    navigate(targetUrl);
+  };
 
   return (
     <div className="flex lg:items-center max-lg:flex-col max-lg:gap-[6px]  border-b-[1px] max-lg:border-b-[0.5px] border-b-white-stroke w-full  py-[10px] max-lg:p-[12px] h-[92px] max-lg:h-auto bg-white">
@@ -83,13 +98,21 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
           </div>
         )}
 
-        {type === 'downloaded' && (
+        {type === 'liked' && (
           <>
             <div className="max-lg:hidden flex items-center justify-center h-[72px]  w-[198px]">
-              <PrimaryButton buttonType="review" text="리뷰 작성하기" onClick={() => {}} />
+              <PrimaryButton
+                buttonType="review"
+                text="리뷰 작성하기"
+                onClick={() => handleWriteReviewClick(promptData.prompt_id)}
+              />
             </div>
             <div className="lg:hidden flex items-center  ">
-              <PrimaryButton buttonType="review" text="리뷰 작성" onClick={() => {}} />
+              <PrimaryButton
+                buttonType="review"
+                text="리뷰 작성"
+                onClick={() => handleWriteReviewClick(promptData.prompt_id)}
+              />
             </div>
           </>
         )}
