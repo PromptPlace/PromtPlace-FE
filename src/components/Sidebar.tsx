@@ -43,6 +43,8 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
     }, 300);
   };
 
+  const { logout } = useAuth();
+
   return (
     <>
       <div
@@ -122,7 +124,7 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
                 style="outline"
                 imgType="LogoutIcon"
                 text="로그아웃"
-                onClick={() => {}}
+                onClick={() => logout()}
               />
             </div>
           </>
