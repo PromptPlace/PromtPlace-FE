@@ -10,6 +10,7 @@ import {
   useGetAuthoredPrompts,
 } from '@/hooks/queries/MyPage/useGetPrompts';
 import { useInView } from 'react-intersection-observer';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * TODO:
@@ -278,12 +279,21 @@ const promptOptions = [
 ];
 
 const DeleteLikedPrompt = (prompt_id: number) => {
-  // API 요청을 통해 프롬프트 삭제
-  // 예시: await api.deletePrompt(prompt_id);
+  //삭제하기 api 연결
 };
 
 const MyPromptPage = () => {
   const [activeTab, setActiveTab] = useState<'authored' | 'downloaded' | 'liked'>('authored'); // 'author', 'downloaded', 'liked'
+
+  const navigate = useNavigate();
+
+  const EditAuthoredPrompt = (prompt_id: number) => {
+    const promptId = prompt_id;
+    const targetUrl = `/mypage/edit/${promptId}`;
+
+    // 3. 생성된 URL로 페이지를 이동시킵니다.
+    navigate(targetUrl);
+  };
 
   //iserror, isLoading 처리는 추후 작성 예정
 
@@ -375,7 +385,7 @@ const MyPromptPage = () => {
                 type={activeTab}
                 promptData={prompt}
                 DeletePrompt={() => {}}
-                EditPrompt={() => {}}
+                EditPrompt={() => EditAuthoredPrompt(prompt.prompt_id)}
                 DeleteLike={() => DeleteLikedPrompt(prompt.prompt_id)}
               />
             ))}
