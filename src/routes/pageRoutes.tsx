@@ -19,7 +19,6 @@ export const publicRoutes: RouteObject[] = [
       { path: 'guide/notice/:id', element: <lazyRoutes.PromptGuideDetailPage type="notice" /> },
       { path: 'profile/:id', element: <lazyRoutes.ProfilePage /> },
       { path: '/test', element: <TestPage /> },
-      { path: 'search/:keyword', element: <lazyRoutes.SearchPage /> },
       { path: 'mypage', element: <lazyRoutes.MyPage /> },
       { path: '/auth/callback', element: <lazyRoutes.SocialLoginCallbackPage /> },
     ],
