@@ -20,8 +20,7 @@ export const publicRoutes: RouteObject[] = [
       { path: 'profile/:id', element: <lazyRoutes.ProfilePage /> },
       { path: '/test', element: <TestPage /> },
       { path: 'search/:keyword', element: <lazyRoutes.SearchPage /> },
-      { path: 'mypage', element: <lazyRoutes.MyPage /> },
-      { path: 'payment', element: <lazyRoutes.PaymentPage /> },
+      { path: 'mypage', element: <lazyRoutes.MyPage /> }
     ],
   },
 ];

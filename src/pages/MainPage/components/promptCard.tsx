@@ -37,11 +37,11 @@ const PromptCard = ({ prompt }: promptCardProps) => {
         className="inline-flex justify-start items-center gap-3.5 cursor-pointer"
         onClick={() => navigate(`/profile/${prompt.user_id}`)}>
         <img
-          src={prompt.has_image ? prompt.images[0] : profileImage}
+          src={prompt.user.profile_img_url ? prompt.user.profile_img_url : profileImage}
           alt="authorImage"
           className="w-14 h-14 rounded-[100px] inline-flex flex-col justify-center items-center"
         />
-        <span className="text-[18px] font-medium">{prompt.user_id}</span>
+        <span className="text-[18px] font-medium">{prompt.user.nickname}</span>
       </div>
 
       {/* 카드 본문 */}

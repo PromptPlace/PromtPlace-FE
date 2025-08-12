@@ -8,7 +8,7 @@ export const getPromptList = async (): Promise<ResponsePromptDTO> => {
   return data;
 };
 
-export const getSearchPromptList = async (params: RequestSearchPrompt): Promise<ResponsePromptDTO> => {
-  const { data } = await axios.post(`${import.meta.env.VITE_SERVER_API_URL}/api/prompts/searches`, { params });
+export const postSearchPromptList = async (params: RequestSearchPrompt): Promise<ResponsePromptDTO> => {
+  const { data } = await axios.post(`${import.meta.env.VITE_SERVER_API_URL}/api/prompts/searches`, params);
   return data;
 };

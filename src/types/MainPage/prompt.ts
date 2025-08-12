@@ -51,14 +51,29 @@ export interface Prompt {
   user: PromptWriter;
 }
 
+export interface searchPrompt {
+  prompt_id: number;
+  title: string;
+  has_image: boolean;
+  description: string;
+  is_free: boolean;
+  views: number;
+  likes: number;
+  rating_avg: number;
+  created_at: string;
+  updated_at: string;
+  images: PromptImage[];
+}
+
 export type RequestSearchPrompt = {
   model?: string[] | null;
   tag?: string[] | null;
-  keyword?: string;
+  keyword: string;
   page?: number;
-  size?: 20;
+  size?: number;
   sort?: string;
   is_free?: boolean;
 };
 
 export type ResponsePromptDTO = CommonResponse<Prompt[]>;
+export type ResponseSearchPromptDTO = CommonResponse<searchPrompt[]>;
