@@ -53,6 +53,8 @@ import usePatchSNS from '@/hooks/mutations/ProfilePage/usePatchSNS';
 import type { RequestPatchSNSDto, RequestPostSNS } from '@/types/ProfilePage/sns';
 import useDeleteSNS from '@/hooks/mutations/ProfilePage/useDeleteSNS';
 import usePostSNS from '@/hooks/mutations/ProfilePage/usePostSNS';
+import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
+import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
 
 type Inquiry = {
   inquiry_id: number;
@@ -107,6 +109,10 @@ const ProfilePage = () => {
   // 팔로워, 팔로잉 목록
   const { data: followerData } = useGetFollower({ member_id });
   const { data: followingData } = useGetFollowing({ member_id });
+
+  // 팔로우, 언팔로우
+  const { mutate: mutateFollow } = usePatchFollow({ member_id });
+  const { mutate: mutateUnFollow } = useDeleteFollow({ member_id });
 
   // 회원 정보 수정
   const { mutate } = usePatchEditMember({ member_id });
@@ -175,6 +181,11 @@ const ProfilePage = () => {
 
   const handleFollow = () => {
     handleShowLoginModal(() => {
+      if (isFollow) {
+        mutateUnFollow({ member_id });
+      } else {
+        mutateFollow({ member_id });
+      }
       setIsFollow((prev) => !prev);
     });
   };
@@ -390,7 +401,7 @@ const ProfilePage = () => {
                 팔로워
               </p>
               <div className="px-[10px] max-lg:px-[6px] py-[5px] max-lg:py-[2px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center max-lg:text-[12px] max-lg:leading-[15px]">
-                90
+                {followerData?.data.length}
               </div>
 
               <div className="lg:hidden max-lg:ml-[3px]">
@@ -448,6 +459,7 @@ const ProfilePage = () => {
                 list={followerData?.data}
                 setShow={setShowFollower}
                 status={false}
+                member_id={member_id}
               />
             )}
             {showFollowing && (
@@ -456,6 +468,7 @@ const ProfilePage = () => {
                 list={followingData?.data}
                 setShow={setShowFollowing}
                 status={true}
+                member_id={member_id}
               />
             )}
           </>

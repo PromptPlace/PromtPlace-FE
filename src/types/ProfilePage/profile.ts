@@ -105,3 +105,18 @@ export type ResponseDeletePromptDto = {
   prompt_id: number;
   statusCode: number;
 };
+
+// 회원 팔로우
+export type ResponsePostFollowDto = CommonResponse<{
+  follow_id: number;
+  follower_id: number;
+  following_id: number;
+  created_at: string;
+  updated_at: string;
+}>;
+
+// 회원 언팔로우
+export type ResponseDeleteFollow = {
+  message: string;
+  statusCode: number;
+};

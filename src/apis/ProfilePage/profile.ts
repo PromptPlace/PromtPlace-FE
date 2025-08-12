@@ -10,6 +10,8 @@ import type {
   RequestPromptsDto,
   ResponseDeletePromptDto,
   RequestDeletePromptDto,
+  ResponsePostFollowDto,
+  ResponseDeleteFollow,
 } from '@/types/ProfilePage/profile';
 import { axiosInstance } from '../axios';
 
@@ -73,6 +75,20 @@ export const getPrompts = async (
 // 프롬프트 삭제
 export const deletePrompt = async ({ prompt_id }: RequestDeletePromptDto): Promise<ResponseDeletePromptDto> => {
   const { data } = await axiosInstance.delete(`/api/prompts/${prompt_id}`);
+
+  return data;
+};
+
+// 회원 팔로우
+export const postFollow = async ({ member_id }: RequestMemberDto): Promise<ResponsePostFollowDto> => {
+  const { data } = await axiosInstance.post(`/api/members/follows/${member_id}`);
+
+  return data;
+};
+
+// 회원 언팔로우
+export const deleteFollow = async ({ member_id }: RequestMemberDto): Promise<ResponseDeleteFollow> => {
+  const { data } = await axiosInstance.delete(`/api/members/follows/${member_id}`);
 
   return data;
 };
