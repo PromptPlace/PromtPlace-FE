@@ -66,7 +66,7 @@ const SocialCallbackPage = () => {
   }, []); // 빈 배열을 전달하여 최초 렌더링 시에만 실행되도록 설정
 
   // 사용자에게는 이 메시지만 보입니다.
-  return <div>구글 로그인 처리 중입니다. 잠시만 기다려주세요...</div>;
+  return <div></div>;
 };
 
 export default SocialCallbackPage;

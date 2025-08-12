@@ -2,7 +2,7 @@ import { axiosInstance } from '../axios.ts';
 import type { loginResponse } from '../../types/LoginPage/auth.ts';
 
 export const postGoogleAuthCode = async (authCode: string) => {
-  const { data } = await axiosInstance.post<loginResponse>('/api/auth/login/google', { code: authCode });
+  const { data } = await axiosInstance.post<loginResponse>('/api/auth/google/token', { code: authCode });
   console.log('Google login response:', data);
   return data;
 };

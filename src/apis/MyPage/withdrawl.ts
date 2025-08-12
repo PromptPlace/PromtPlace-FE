@@ -3,7 +3,7 @@ import { LOCAL_STORAGE_KEY } from '@constants/key';
 
 export const withdrawUser = async () => {
   try {
-    const response = await axiosInstance.delete('/api/members/withdraw');
+    const response = await axiosInstance.delete('/api/members/withdrawl');
 
     localStorage.removeItem(LOCAL_STORAGE_KEY.accessToken);
     console.log('Access token removed from local storage');

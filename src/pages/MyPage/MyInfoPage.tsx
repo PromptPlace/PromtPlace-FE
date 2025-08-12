@@ -13,8 +13,8 @@ const userInfo: {
   provider: 'google' | 'kakao' | 'naver';
 } = {
   nickname: '주토피아노',
-  email: 'kyaassddff0934@gmail.com',
-  provider: 'google',
+  email: 'kyaassddff0934@naver.com',
+  provider: 'naver',
 };
 
 const MyPageInfo = () => {

@@ -2,7 +2,7 @@ import { LOCAL_STORAGE_KEY } from '@constants/key';
 import { useLocalStorage } from '@hooks/useLocalStorage';
 import { createContext, useContext, useState, type PropsWithChildren } from 'react';
 import { postGoogleAuthCode, postNaverAuthCode } from '@apis/Login/auth.ts';
-import type { User, loginResponseData } from '@/types/LoginPage/auth.ts';
+import type { User, loginResponse, loginResponseData } from '@/types/LoginPage/auth.ts';
 import { axiosInstance } from '@/apis/axios.ts';
 
 /**
@@ -43,22 +43,18 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const login = async (provider: 'google' | 'kakao' | 'naver', authCode: string) => {
     try {
-      let response;
-
-      switch (provider) {
-        case 'google':
-          response = await postGoogleAuthCode(authCode);
-          break;
-        case 'naver':
-          response = await postNaverAuthCode(authCode);
-          break;
-        case 'kakao':
-          // response = await loginWithKakao(authCode);
-          // break;
-          throw new Error('카카오 로그인은 아직 지원되지 않습니다.');
-        default:
-          throw new Error('지원하지 않는 소셜 로그인입니다.');
-      }
+      const response = await (async () => {
+        switch (provider) {
+          case 'google':
+            return postGoogleAuthCode(authCode);
+          case 'naver':
+            return postNaverAuthCode(authCode);
+          case 'kakao':
+            throw new Error('카카오 로그인은 아직 지원되지 않습니다.');
+          default:
+            throw new Error('지원하지 않는 소셜 로그인입니다.');
+        }
+      })();
 
       const loginData: loginResponseData = response.data;
 
@@ -72,6 +68,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         setUser(user);
 
         console.log(`[${provider}] 로그인 성공!`);
+        alert(`환영합니다!`);
+        console.log('user 정보:', user);
       }
     } catch (error) {
       console.error(`[${provider}] 백엔드 인증 과정 실패`, error);
