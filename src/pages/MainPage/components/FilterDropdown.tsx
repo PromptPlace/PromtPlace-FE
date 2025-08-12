@@ -1,7 +1,7 @@
 import React from 'react';
 
 type FilterDropdownProps = {
-  label: string;
+  label: string; 
   items: string[];
   selected: boolean;
   selectedItems?: string[];
