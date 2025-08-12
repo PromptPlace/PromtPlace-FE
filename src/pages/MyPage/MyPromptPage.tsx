@@ -4,13 +4,12 @@ import { PromptCard } from './components/PromptCard';
 import { useState, useEffect, useMemo } from 'react';
 import BlueArchiveIcon from '@/assets/icon-archive-blue.svg';
 import Dropdown from './components/Dropdown';
-import {
-  useGetDownloadedPrompts,
-  useGetLikedPrompts,
-  useGetAuthoredPrompts,
-} from '@/hooks/queries/MyPage/useGetPrompts';
+import { useGetDownloadedPrompts, useGetLikedPrompts } from '@/hooks/queries/MyPage/useGetPrompts';
 import { useInView } from 'react-intersection-observer';
 import { useNavigate } from 'react-router-dom';
+import usePatchDeletePrompts from '@/hooks/mutations/ProfilePage/usePatchDeletePrompts';
+import type { RequestDeletePromptDto } from '@/types/ProfilePage/profile';
+import useGetPrompts from '@/hooks/queries/ProfilePage/useGetPrompts';
 
 /**
  * TODO:
@@ -271,16 +270,17 @@ useEffect(() => {
   }, [activeTab]);
 */
 }
+const DeleteLikedPrompt = (prompt_id: number) => {
+  // 프롬프트 삭제 로직을 여기에 작성합니다.
+  // 예를 들어, API 호출을 통해 프롬프트를 삭제할 수 있습니다.
+  console.log(`프롬프트 ${prompt_id}가 삭제되었습니다.`);
+};
 
 const promptOptions = [
   { value: 'authored', label: '작성 프롬프트' },
   { value: 'downloaded', label: '다운받은 프롬프트' },
   { value: 'liked', label: '찜한 프롬프트' },
 ];
-
-const DeleteLikedPrompt = (prompt_id: number) => {
-  //삭제하기 api 연결
-};
 
 const MyPromptPage = () => {
   const [activeTab, setActiveTab] = useState<'authored' | 'downloaded' | 'liked'>('authored'); // 'author', 'downloaded', 'liked'
@@ -299,24 +299,28 @@ const MyPromptPage = () => {
 
   //로그인 기능 구현 전이므로 memberId는 임의로 설정
   const user_id = 10;
-  const paginationOptions = { limit: 10 };
+  // 1. useGetPrompts 훅으로 데이터를 가져옵니다.
   const {
-    data: authoredResponse,
-    isFetching: isFetchingAuthored,
-    hasNextPage: hasNextPageAuthored,
-    fetchNextPage: fetchNextPageAuthored,
-    // ...
-  } = useGetAuthoredPrompts(user_id, paginationOptions, {
-    enabled: activeTab === 'authored',
-  });
+    data: promptsResponse,
+    hasNextPage: hasNextPageAuthoredPrompts,
+    isFetching: isFetchingAuthoredPrompts,
+    isFetchingNextPage: isFetchingNextAuthoredPage,
+    fetchNextPage: fetchNextAuthoredPage,
+  } = useGetPrompts({ member_id: user_id });
 
   const { ref, inView } = useInView({ threshold: 0 });
-
   useEffect(() => {
-    if (inView && !isFetchingAuthored && hasNextPageAuthored) {
-      fetchNextPageAuthored();
+    if (inView) {
+      fetchNextAuthoredPage();
+      console.log('더 많은 프롬프트를 불러옵니다.');
     }
-  }, [inView, isFetchingAuthored, hasNextPageAuthored, fetchNextPageAuthored]);
+  }, [
+    inView,
+    hasNextPageAuthoredPrompts,
+    isFetchingAuthoredPrompts,
+    isFetchingNextAuthoredPage,
+    fetchNextAuthoredPage,
+  ]);
 
   const { data: downloadedPromptsData } = useGetDownloadedPrompts({
     enabled: activeTab === 'downloaded',
@@ -326,20 +330,33 @@ const MyPromptPage = () => {
     enabled: activeTab === 'liked',
   });
 
-  const authoredPromptsData = useMemo(() => {
-    if (!authoredResponse) return []; // 데이터가 없으면 빈 배열 반환
+  // 프롬프트 삭제 함수
+  const { mutate: mutateDeletePrompts } = usePatchDeletePrompts({ member_id: user_id });
+  const handleDeleteAuthoredPrompts = ({ prompt_id }: RequestDeletePromptDto) => {
+    mutateDeletePrompts({ prompt_id });
+  };
 
-    return authoredResponse.pages.flatMap((page) =>
-      // 각 페이지의 prompts 배열을 순회하며
+  // 2. useMemo를 사용해 원하는 형태로 데이터를 가공합니다.
+  const authoredPromptsData = useMemo(() => {
+    // 데이터가 아직 없으면 빈 배열을 반환합니다.
+    if (!promptsResponse) {
+      return [];
+    }
+
+    // `flatMap`을 사용해 각 페이지의 'prompts' 배열을 하나의 배열로 합칩니다.
+    return promptsResponse.pages.flatMap((page) =>
+      // 각 페이지 내부의 prompts 배열을 순회하며 구조를 변경합니다.
       page.data.prompts.map((prompt) => ({
-        // 바로 이 자리에서 객체 형태로 변환
         prompt_id: prompt.prompt_id,
         title: prompt.title,
+        // models 배열에서 이름(name)만 추출해 새 배열을 만듭니다.
         models: prompt.models.map((item) => item.model.name),
+        // tags 배열에서 이름(name)만 추출해 새 배열을 만듭니다.
         tags: prompt.tags.map((item) => item.tag.name),
+        // 'author_nickname'은 아래 "중요" 부분을 참고하세요.
       })),
     );
-  }, [authoredResponse]); // authoredResponse가 변경될 때마다 재계산
+  }, [promptsResponse]); // promptsResponse 데이터가 변경될 때만 이 로직이 다시 실행됩니다.
 
   const getPromptsForCurrentTab = () => {
     switch (activeTab) {
@@ -355,6 +372,7 @@ const MyPromptPage = () => {
   };
 
   const promptsToDisplay = getPromptsForCurrentTab();
+  console.log('promptsToDisplay:', promptsToDisplay);
 
   return (
     <div className="flex  justify-center pt-[92px] max-lg:pt-[12px] min-h-screen bg-background">
@@ -384,7 +402,7 @@ const MyPromptPage = () => {
                 key={prompt.prompt_id}
                 type={activeTab}
                 promptData={prompt}
-                DeletePrompt={() => {}}
+                DeletePrompt={() => handleDeleteAuthoredPrompts({ prompt_id: prompt.prompt_id })}
                 EditPrompt={() => EditAuthoredPrompt(prompt.prompt_id)}
                 DeleteLike={() => DeleteLikedPrompt(prompt.prompt_id)}
               />
@@ -396,5 +414,4 @@ const MyPromptPage = () => {
     </div>
   );
 };
-
 export default MyPromptPage;

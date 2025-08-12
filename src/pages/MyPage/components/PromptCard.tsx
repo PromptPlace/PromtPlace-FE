@@ -20,9 +20,9 @@ type TabType = 'authored' | 'downloaded' | 'liked';
 interface PromptCardProps {
   type: TabType;
   promptData: Prompt;
-  DeletePrompt: (id: number) => void;
-  EditPrompt: (id: number) => void;
-  DeleteLike: (id: number) => void;
+  DeletePrompt: (prompt_id: number) => void;
+  EditPrompt: (prompt_id: number) => void;
+  DeleteLike: (prompt_id: number) => void;
 }
 
 export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteLike }: PromptCardProps) => {
