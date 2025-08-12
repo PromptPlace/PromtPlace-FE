@@ -2,7 +2,7 @@ import { LOCAL_STORAGE_KEY } from '@constants/key';
 import { useLocalStorage } from '@hooks/useLocalStorage';
 import { createContext, useContext, useState, type PropsWithChildren } from 'react';
 import { postGoogleAuthCode, postNaverAuthCode } from '@apis/Login/auth.ts';
-import type { User, loginResponse, loginResponseData } from '@/types/LoginPage/auth.ts';
+import type { User, loginResponseData } from '@/types/LoginPage/auth.ts';
 import { axiosInstance } from '@/apis/axios.ts';
 
 /**

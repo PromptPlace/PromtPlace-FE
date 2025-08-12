@@ -53,7 +53,9 @@ const InfoRow: React.FC<InfoRowProps> = ({ label, nickname, email, provider, has
               <img src={arrow} alt="arrow right" className="max-lg:w-[4.3px] max-lg:h-[7.4px]" />
             </button>
           )}
-          {isModalOpen && <SocialLoginModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
+          {isModalOpen && (
+            <SocialLoginModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onClick={() => {}} />
+          )}
         </div>
       )}
 

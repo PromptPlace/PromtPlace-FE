@@ -99,7 +99,9 @@ const Navbar = () => {
           </div>
         )}
 
-        {loginModalShow && <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} />}
+        {loginModalShow && (
+          <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
+        )}
 
         <div className="cursor-pointer w-[60px] rounded-full overflow-hidden shrink-0 max-lg:hidden">
           {!accessToken && (

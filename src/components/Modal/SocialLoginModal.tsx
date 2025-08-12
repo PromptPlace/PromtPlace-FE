@@ -15,6 +15,7 @@ import HeaderLogo from '@assets/icon-header-logo.svg';
 interface SocialLoginModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onClick: (provider: string) => void;
 }
 
 const SocialButton = ({ icon, text, onClick }: { icon: string; text: string; onClick: () => void }) => (

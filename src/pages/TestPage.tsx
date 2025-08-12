@@ -153,7 +153,7 @@ const TestPage = () => {
 
       <h3>🟣 SocialLoginModal.tsx</h3>
       <button onClick={() => setShowModal5(true)}>모달5 보기 click</button>
-      {showModal5 && <SocialLoginModal isOpen={showModal5} onClose={() => setShowModal5(false)} />}
+      {showModal5 && <SocialLoginModal isOpen={showModal5} onClose={() => setShowModal5(false)} onClick={() => {}} />}
     </div>
   );
 };
