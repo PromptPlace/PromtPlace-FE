@@ -5,7 +5,7 @@ import { RouterProvider } from 'react-router-dom';
 import { router } from '@routes/pageRoutes';
 import { AuthProvider } from './context/AuthContext';
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 function App() {
   return (

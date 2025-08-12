@@ -13,15 +13,16 @@ import CloseIcon from '@assets/icon-close.svg';
 import CircleButton from '@/components/Button/CircleButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import MobileButton from '@/components/Button/MobileButton';
+import type { RequestPatchSNSDto } from '@/types/ProfilePage/sns';
 
 interface SnsCardProps {
   sns_id: number;
   description: string;
   url: string;
   isMyProfile: boolean;
-  handleDeleteSns: (sns_id: number) => void;
-  handleUpdateSns: (sns_id: number, description: string, sns_url: string) => void;
-  isEditing: boolean;
+  handleDeleteSns: ({ sns_id }: { sns_id: number }) => void;
+  handleUpdateSns: ({ sns_id, url, description }: { sns_id: number } & RequestPatchSNSDto) => void;
+  isEditing?: boolean;
 }
 
 const SnsCard = ({
@@ -37,6 +38,7 @@ const SnsCard = ({
     if (url.includes('instagram')) return 'instagram';
     if (url.includes('facebook')) return 'facebook';
     if (url.includes('kakao')) return 'kakao';
+    if (url.includes('example')) return null;
     if (url.includes('x')) return 'x';
     if (url.includes('google')) return 'google';
     if (url.includes('youtube')) return 'youtube';
@@ -111,7 +113,7 @@ const SnsCard = ({
               isActive={edit}
             />
             <div
-              onClick={() => handleDeleteSns(sns_id)}
+              onClick={() => handleDeleteSns({ sns_id })}
               className="w-[17px] h-[17px] max-lg:p-[4px] cursor-pointer max-lg:mx-[12px]">
               <img src={CloseIcon} alt="삭제" className="w-full h-full object-contain" />
             </div>
@@ -146,7 +148,7 @@ const SnsCard = ({
                       onClick={() => {
                         if (!editDescription.trim() || !editUrl.trim()) return;
                         setEdit(false);
-                        handleUpdateSns(sns_id, editDescription, editUrl);
+                        handleUpdateSns({ sns_id, url: editUrl, description: editDescription });
                       }}
                     />
                   </div>
@@ -208,7 +210,7 @@ const SnsCard = ({
                           onClick={() => {
                             if (!editDescription.trim() || !editUrl.trim()) return;
                             setEdit(false);
-                            handleUpdateSns(sns_id, editDescription, editUrl);
+                            handleUpdateSns({ sns_id, url: editUrl, description: editDescription });
                           }}
                         />
                       </div>
