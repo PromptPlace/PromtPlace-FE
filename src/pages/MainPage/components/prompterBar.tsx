@@ -1,3 +1,8 @@
+/**
+ * author @곽도윤
+ * API 연동 후 creator -> writer or prompter로 수정할 예정
+ **/
+
 import React, { useState } from 'react';
 import type { Creator } from '@/types/MainPage/prompt';
 import FollowButton from '@/components/Button/FollowButton';

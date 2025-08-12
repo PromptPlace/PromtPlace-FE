@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 import { type RequestSearchPrompt, type ResponsePromptDTO } from '@/types/MainPage/prompt';
 
 export const getPromptList = async (): Promise<ResponsePromptDTO> => {

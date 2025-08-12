@@ -53,7 +53,7 @@ const PromptCard = ({ prompt }: promptCardProps) => {
           ))}
           {prompt.tags.map((tag, index) => (
             <span key={tag.tag_id || index}>
-              <TagButton hasDelete={false} text={`#${tag.tag?.name ?? ''}`} onClick={() => {}} />
+              <TagButton hasDelete={false} text={`#${tag?.tag.name ?? ''}`} onClick={() => {}} />
             </span>
           ))}
         </div>

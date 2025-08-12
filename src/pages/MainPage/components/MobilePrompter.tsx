@@ -1,7 +1,7 @@
 // components/MobilePrompter.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import profileImage from '@/assets/icon-profile-gray.svg';
+import userImage from '@/assets/icon-profile-gray.svg';
 import FollowButton from '@/components/Button/FollowButton';
 import { useAuth } from '@/context/AuthContext';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
@@ -9,10 +9,10 @@ import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 type Props = {
   id: number;
   name: string;
-  authorimage?: string | null;
+  profileImage: string | null;
 };
 
-const MobilePrompter = ({ id, name, authorimage }: Props) => {
+const MobilePrompter = ({ id, name, profileImage }: Props) => {
   const { accessToken } = useAuth();
   const [loginModalShow, setLoginModalShow] = useState(false);
   const navigate = useNavigate();
@@ -24,12 +24,8 @@ const MobilePrompter = ({ id, name, authorimage }: Props) => {
         <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
       )}
       <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate(`/profile/${id}`)}>
-        <div className="w-9 h-9 rounded-full bg-gray-200 flex justify-center items-center">
-          <img
-            src={authorimage ? authorimage : profileImage}
-            alt="authorImage"
-            className="w-full h-full rounded-full"
-          />
+        <div className="w-[36px] h-[36px] rounded-full bg-gray-200 flex justify-center items-center">
+          <img src={profileImage ? profileImage : userImage} alt="authorImage" className="w-full h-full rounded-full" />
         </div>
         <div className="max-w-44 text-black text-xs font-medium uppercase leading-relaxed tracking-wide truncate">
           {name}

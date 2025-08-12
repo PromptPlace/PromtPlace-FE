@@ -4,9 +4,12 @@ export interface PromptImage {
   image_url: string | null;
 }
 
+export interface Tag {
+  name: string;
+}
 export interface PromptTag {
   tag_id: number;
-  name: string;
+  tag: Tag;
 }
 
 export interface PromptWriter {
@@ -74,6 +77,14 @@ export type RequestSearchPrompt = {
   sort?: string;
   is_free?: boolean;
 };
+
+export type Creator = {
+  id: number;
+  name: string;
+  avatar: string | null;
+  followers: number;
+  followed: boolean;
+}
 
 export type ResponsePromptDTO = CommonResponse<Prompt[]>;
 export type ResponseSearchPromptDTO = CommonResponse<searchPrompt[]>;

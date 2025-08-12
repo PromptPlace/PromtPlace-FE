@@ -123,7 +123,7 @@ const MainPage = () => {
           />
         </div>
 
-        <div className="flex-col scroll-auto">
+        <div className="hidden lg:flex flex-col scroll-auto">
           {sortPromptByFilter.map((prompt) => (
             <PromptCard key={prompt.prompt_id} prompt={prompt} />
           ))}

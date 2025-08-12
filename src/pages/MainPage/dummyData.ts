@@ -1,4 +1,4 @@
-import type { Prompt, Creator } from '@/types/MainPage/prompt';
+import type { Creator } from '@/types/MainPage/prompt';
 
 // export const dummyPrompts: Prompt[] = [
 //   {
