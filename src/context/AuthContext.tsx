@@ -14,8 +14,20 @@ import { axiosInstance } from '@/apis/axios.ts';
  * @author 김진효
  * **/
 
+export const defaultUser: User = {
+  user_id: -1,
+  name: 'Guest',
+  nickname: '게스트',
+  email: '',
+  social_type: 'NAVER',
+  status: 'INACTIVE',
+  role: 'USER',
+  create_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+};
+
 interface AuthContextType {
-  user: User | null;
+  user: User;
   accessToken: string | null;
   refreshToken: string | null;
   login: (provider: 'google' | 'kakao' | 'naver', authCode: string) => Promise<void>;
@@ -37,7 +49,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     removeItem: removeRefreshTokenFromStorage,
   } = useLocalStorage(LOCAL_STORAGE_KEY.refreshToken);
 
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User>(defaultUser);
   const [accessToken, setAccessToken] = useState<string | null>(getAccessTokenFromStorage());
   const [refreshToken, setRefreshToken] = useState<string | null>(getRefreshTokenFromStorage());
 
@@ -87,7 +99,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       removeRefreshTokenFromStorage();
       setAccessToken(null);
       setRefreshToken(null);
-      setUser(null);
+      setUser(defaultUser);
     }
 
     window.location.href = '/'; // 로그아웃 후 메인 페이지로 이동
