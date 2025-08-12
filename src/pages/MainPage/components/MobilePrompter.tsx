@@ -31,7 +31,7 @@ const MobilePrompter = ({ id, name, authorimage }: Props) => {
             className="w-full h-full rounded-full"
           />
         </div>
-        <div className="max-w-44 text-black text-xs font-medium font-['Spoqa_Han_Sans_Neo'] uppercase leading-relaxed tracking-wide truncate">
+        <div className="max-w-44 text-black text-xs font-medium uppercase leading-relaxed tracking-wide truncate">
           {name}
         </div>
       </div>

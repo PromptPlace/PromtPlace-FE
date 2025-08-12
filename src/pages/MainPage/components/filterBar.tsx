@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import FilterDropdown from './FilterDropdown';
 import TagFilter from './TagFilter';
 import arrowDown from '@/assets/icon-arrow-down.svg';
+import arrowDownWhite from '@/assets/icon-arrow-down-white.svg';
 
 type FilterBarProps = {
   onModelChange: (models: string[] | null) => void;
@@ -85,7 +86,7 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
           <div
             className={`w-6 h-6 p-1.5 rounded-full flex justify-center items-center
               ${selectedFilter === label ? 'bg-primary-pressed shadow-[2px_2px_30px_rgba(0,0,0,0.25)]' : ''}`}>
-            <img src={arrowDown} alt="arrow" className="w-3 h-3" />
+            <img src={selectedFilter === label ? arrowDownWhite : arrowDown} alt="arrow" className="w-3 h-3" />
           </div>
 
           {/* 모델 드롭다운 여러개의 item 선택 가능*/}

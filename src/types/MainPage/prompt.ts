@@ -1,9 +1,30 @@
-import type { CommonResponse } from "../common";
+import type { CommonResponse } from '../common';
 
 export interface PromptImage {
-  image_url: string|null;
+  image_url: string | null;
 }
 
+export interface PromptTag {
+  tag_id: number;
+  name: string;
+}
+
+export interface PromptWriter {
+  user_id: number;
+  nickname: string;
+  profile_img_url: string | null;
+}
+
+export interface PromptModel {
+  name: string;
+}
+
+export interface PromptModel {
+  promptmodel_id: number;
+  prompt_id: number;
+  model_id: number;
+  model: PromptModel;
+}
 export interface Prompt {
   prompt_id: number;
   user_id: number;
@@ -25,17 +46,19 @@ export interface Prompt {
   inactive_date: string | null;
   download_url: string;
   images: PromptImage[];
-  writer: UserProfile;
+  tags: PromptTag[];
+  models: PromptModel[];
+  user: PromptWriter;
 }
 
-export interface UserProfile {
-  id: number;
-  name: string;
-  avatar: string | null;
-  followers: number;
-  followed: boolean;
-}
+export type RequestSearchPrompt = {
+  model?: string[] | null;
+  tag?: string[] | null;
+  keyword?: string;
+  page?: number;
+  size?: 20;
+  sort?: string;
+  is_free?: boolean;
+};
 
 export type ResponsePromptDTO = CommonResponse<Prompt[]>;
-
-export type ResponseUserProfileDTO = CommonResponse<UserProfile>;

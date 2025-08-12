@@ -13,6 +13,7 @@ import DownloadModal from '../components/DownloadModal';
 import { useNavigate } from 'react-router-dom';
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
+import PaymentModal from './PaymentModal';
 
 interface Props {
   title: string;
@@ -108,6 +109,7 @@ const PromptActions = ({ title, price, isFree, reviewCounts, rating }: Props) =>
   const [tags] = useState<string[]>(['#수묵화', '#수채화', '#디자인', '#일러스트', '#그림', '#이미지']);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [liked, setLiked] = useState(false);
   const [downloadData, setDownloadData] = useState<{
     title: string;
@@ -122,6 +124,31 @@ const PromptActions = ({ title, price, isFree, reviewCounts, rating }: Props) =>
   const [reviewCount, setReviewCount] = useState(reviewCounts);
 
   const handleDownloadClick = async () => {
+    // ✅ 테스트용 더미 데이터
+    const title = '동양풍 일러스트 이미지 생성';
+    const download_url = 'https://cdn.promptplace.com/prompts/1024.txt';
+
+    if (isFree || isPaid) { // 무료 프롬프트이거나 결제 완료 프롬프트인 경우 DownloadModalOpen
+      setDownloadData({
+        title,
+        downloadUrl: download_url,
+        content: `
+1. 전통 동양풍 인물 일러스트
+a graceful Korean noblewoman wearing hanbok, sitting under a cherry blossom tree, Joseon dynasty style, soft lighting, detailed fabric texture, traditional hair style, serene atmosphere, oriental illustration --v 5 --ar 2:3
+a Korean dragon soaring through the clouds, traditional ink painting style, dynamic cloud motion, golden scales shimmering in sunlight, East Asian mythology, majestic and ancient aura --v 5 --ar 3:2 --style scenic
+
+2. 동양풍 마을/배경 일러스트
+a peaceful traditional Japanese village in spring, sakura trees in full bloom, tiled rooftops, soft morning light, misty mountain background, Ghibli-style aesthetic, detailed background art --v 5 --ar 16:9
+
+3. 퓨전 동양풍 일러스트
+a futuristic city blending Korean traditional architecture and cyberpunk neon lights, hanok buildings with glowing signs, digital screens, night setting, rain-soaked street, Blade Runner meets Joseon, concept art --v 5 --ar 21:9
+        `.trim(),
+      });
+      setIsDownloadModalOpen(true);
+    } else {
+      setIsPaymentModalOpen(true); // 유료 프롬프트인 경우 PaymentModalOpen
+    }
+
     // const promptId = 1024;
     // const token = localStorage.getItem('accessToken');
     // if (!token) {
@@ -140,28 +167,15 @@ const PromptActions = ({ title, price, isFree, reviewCounts, rating }: Props) =>
     // );
 
     // const { download_url, title } = response.data;
+  };
 
-    // ✅ 테스트용 더미 데이터
-    const title = '동양풍 일러스트 이미지 생성';
-    const download_url = 'https://cdn.promptplace.com/prompts/1024.txt';
-
+  const handlePaid = () => {
+    setIsPaymentModalOpen(true);
     setDownloadData({
-      title,
-      downloadUrl: download_url,
-      content: `
-1. 전통 동양풍 인물 일러스트
-a graceful Korean noblewoman wearing hanbok, sitting under a cherry blossom tree, Joseon dynasty style, soft lighting, detailed fabric texture, traditional hair style, serene atmosphere, oriental illustration --v 5 --ar 2:3
-a Korean dragon soaring through the clouds, traditional ink painting style, dynamic cloud motion, golden scales shimmering in sunlight, East Asian mythology, majestic and ancient aura --v 5 --ar 3:2 --style scenic
-
-2. 동양풍 마을/배경 일러스트
-a peaceful traditional Japanese village in spring, sakura trees in full bloom, tiled rooftops, soft morning light, misty mountain background, Ghibli-style aesthetic, detailed background art --v 5 --ar 16:9
-
-3. 퓨전 동양풍 일러스트
-a futuristic city blending Korean traditional architecture and cyberpunk neon lights, hanok buildings with glowing signs, digital screens, night setting, rain-soaked street, Blade Runner meets Joseon, concept art --v 5 --ar 21:9
-      `.trim(),
+      title: '동양풍 일러스트 이미지 생성',
+      downloadUrl: 'https://cdn.promptplace.com/prompts/1024.txt',
+      content: `.....................`,
     });
-
-    setIsDownloadModalOpen(true);
   };
 
   const handleReportButtonClick = () => {
@@ -233,6 +247,13 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
               text="다운로드"
               onClick={() => handleShowLoginModal(handleDownloadClick)}
             />
+            {isPaymentModalOpen && (
+              <PaymentModal
+                prompt={{ title, price: Number(price) }}
+                onClose={() => setIsPaymentModalOpen(false)}
+                onPaid={handlePaid}
+              />
+            )}
             {downloadData && (
               <DownloadModal
                 isOpen={isDownloadModalOpen}
