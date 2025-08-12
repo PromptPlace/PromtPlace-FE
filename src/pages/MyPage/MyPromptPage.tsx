@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import usePatchDeletePrompts from '@/hooks/mutations/ProfilePage/usePatchDeletePrompts';
 import type { RequestDeletePromptDto } from '@/types/ProfilePage/profile';
 import useGetPrompts from '@/hooks/queries/ProfilePage/useGetPrompts';
+import { useAuth } from '@/context/AuthContext';
 
 /**
  * TODO:
@@ -287,6 +288,8 @@ const MyPromptPage = () => {
 
   const navigate = useNavigate();
 
+  const { user } = useAuth();
+
   const EditAuthoredPrompt = (prompt_id: number) => {
     const promptId = prompt_id;
     const targetUrl = `/mypage/edit/${promptId}`;
@@ -296,9 +299,6 @@ const MyPromptPage = () => {
   };
 
   //iserror, isLoading 처리는 추후 작성 예정
-
-  //로그인 기능 구현 전이므로 memberId는 임의로 설정
-  const user_id = 16;
   // 1. useGetPrompts 훅으로 데이터를 가져옵니다.
   const {
     data: promptsResponse,
@@ -306,7 +306,7 @@ const MyPromptPage = () => {
     isFetching: isFetchingAuthoredPrompts,
     isFetchingNextPage: isFetchingNextAuthoredPage,
     fetchNextPage: fetchNextAuthoredPage,
-  } = useGetPrompts({ member_id: user_id });
+  } = useGetPrompts({ member_id: user.user_id });
 
   const { ref, inView } = useInView({ threshold: 0 });
   useEffect(() => {
@@ -331,7 +331,7 @@ const MyPromptPage = () => {
   });
 
   // 프롬프트 삭제 함수
-  const { mutate: mutateDeletePrompts } = usePatchDeletePrompts({ member_id: user_id });
+  const { mutate: mutateDeletePrompts } = usePatchDeletePrompts({ member_id: user.user_id });
   const handleDeleteAuthoredPrompts = ({ prompt_id }: RequestDeletePromptDto) => {
     mutateDeletePrompts({ prompt_id });
   };
