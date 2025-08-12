@@ -3,56 +3,58 @@ import PaymentHistoryRow from './components/PaymentHistoryRow.tsx';
 import iconPerson from '@assets/icon-person-blue.svg';
 import { useNavigate } from 'react-router-dom';
 import bluearrowIcon from '@assets/icon-arrow-left-blue.svg'; //추후 디자인 규격에 맞게 수정 필요
+import { useGetPurchaseHistory } from '@/hooks/queries/MyPage/useGetPay.ts';
+import type { Purchase } from '@/types/MyPage/pay.ts';
 
-const DUMMY_PAYMENT_HISTORY = [
+const DUMMY_PAYMENT_HISTORY: Purchase[] = [
   {
     prompt_id: 1,
-    purchase_at: '2025-07-04T09:30:00.000Z',
+    purchased_at: '2025-07-04T09:30:00.000Z',
     title: '프롬프트 구매',
-    amount: 10000,
-    paymentMethod: '신용카드',
+    price: 10000,
+    pg: 'tosspay',
   },
   {
     prompt_id: 2,
-    purchase_at: '2025-07-04T12:30:00.000Z',
+    purchased_at: '2025-07-04T12:30:00.000Z',
     title: '효율적인 경쟁사 분석 프롬프트',
-    amount: 20000,
-    paymentMethod: '계좌이체',
+    price: 20000,
+    pg: 'kakaopay',
   },
   {
     prompt_id: 3,
-    purchase_at: '2025-07-03T17:45:00.000Z',
+    purchased_at: '2025-07-03T17:45:00.000Z',
     title: '정부지원사업 무조건 선정되는 사업계획서 프롬프트',
-    amount: 30000,
-    paymentMethod: '신용카드',
+    price: 30000,
+    pg: 'kakaopay',
   },
   {
     prompt_id: 4,
-    purchase_at: '2025-07-02T10:15:00.000Z',
+    purchased_at: '2025-07-02T10:15:00.000Z',
     title: '프롬프트 구매',
-    amount: 40000,
-    paymentMethod: '계좌이체',
+    price: 40000,
+    pg: 'kakaopay',
   },
   {
     prompt_id: 5,
-    purchase_at: '2025-07-01T08:30:00.000Z',
+    purchased_at: '2025-07-01T08:30:00.000Z',
     title: '프롬프트 구매',
-    amount: 50000,
-    paymentMethod: '신용카드',
+    price: 50000,
+    pg: 'tosspay',
   },
   {
     prompt_id: 6,
-    purchase_at: '2025-06-30T14:00:00.000Z',
+    purchased_at: '2025-06-30T14:00:00.000Z',
     title: '프롬프트 구매',
-    amount: 60000,
-    paymentMethod: '계좌이체',
+    price: 60000,
+    pg: 'tosspay',
   },
   {
     prompt_id: 7,
-    purchase_at: '2025-06-29T11:20:00.000Z',
+    purchased_at: '2025-06-29T11:20:00.000Z',
     title: '프롬프트 구매',
-    amount: 70000,
-    paymentMethod: '신용카드',
+    price: 70000,
+    pg: 'tosspay',
   },
 ];
 
@@ -63,6 +65,8 @@ const PaymentHistoryPage = () => {
     // 페이지가 로드될 때 API를 통해 결제 내역 데이터를 불러옴
     // api.getPaymentHistory().then(data => setPaymentHistory(data));
   }, []);
+
+  const { data: purchasesResponse } = useGetPurchaseHistory();
 
   return (
     <div className="flex justify-center h-screen bg-background ">
@@ -87,6 +91,7 @@ const PaymentHistoryPage = () => {
 
         <div className="flex-grow min-h-0 p-[8px] max-lg:p-[0px] bg-white">
           <div className="overflow-y-auto h-full">
+            {/* api 적용할때 purchasesResponse.purchases로 변경 */}
             {paymentHistory.map((item) => (
               <PaymentHistoryRow key={item.prompt_id} transaction={item} />
             ))}

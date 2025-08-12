@@ -3,13 +3,16 @@ import PrimaryButton from '@components/Button/PrimaryButton';
 import kebabMenu from '@/assets/icon-kebabMenu.svg';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export interface Prompt {
-  id: number;
+  prompt_id: number;
   title: string;
-  model: string;
+  models: string[];
   tags?: string[];
-  author?: string;
+  author_nickname?: string;
+  has_recent_review?: boolean;
+  is_recent_review?: boolean;
 }
 
 type TabType = 'authored' | 'downloaded' | 'liked';
@@ -17,22 +20,36 @@ type TabType = 'authored' | 'downloaded' | 'liked';
 interface PromptCardProps {
   type: TabType;
   promptData: Prompt;
-  DeletePrompt: (id: number) => void;
-  EditPrompt: (id: number) => void;
-  DeleteLike: (id: number) => void;
+  DeletePrompt: (prompt_id: number) => void;
+  EditPrompt: (prompt_id: number) => void;
+  DeleteLike: (prompt_id: number) => void;
 }
 
 export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteLike }: PromptCardProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  const navigate = useNavigate();
+
+  const handleWriteReviewClick = (prompt_id: number) => {
+    // 1. 이동할 프롬프트의 ID를 가져옵니다.
+    const promptId = prompt_id;
+
+    // 2. 상세 페이지 경로와 쿼리 파라미터를 조합하여 URL을 만듭니다.
+    //    /prompt/123?open_review=true 와 같은 형태가 됩니다.
+    const targetUrl = `/prompt/${promptId}?open_review=true`;
+
+    // 3. 생성된 URL로 페이지를 이동시킵니다.
+    navigate(targetUrl);
+  };
+
   return (
     <div className="flex lg:items-center max-lg:flex-col max-lg:gap-[6px]  border-b-[1px] max-lg:border-b-[0.5px] border-b-white-stroke w-full  py-[10px] max-lg:p-[12px] h-[92px] max-lg:h-auto bg-white">
-      <Link to={`/prompt/${promptData.id}`} className="flex flex-row">
+      <Link to={`/prompt/${promptData.prompt_id}`} className="flex flex-row">
         <div className="max-lg:hidden flex items-center  text-text-on-white text-[22px] max-lg:text-[12px] pl-[80px] max-lg:pl-[0px] font-bold max-lg:font-medium w-[635px] max-lg:w-[231px]">
           {promptData.title}
         </div>
         <div className="flex items-center justify-center max-lg:bg-primary text-text-on-background max-lg:text-white text-[20px] max-lg:text-[8px] font-medium  w-[223px] max-lg:w-auto max-lg:rounded-[50px] max-lg:px-[6px] max-lg:py-[5px]">
-          {promptData.model}
+          {promptData.models[0] ?? ''}
         </div>
 
         <div
@@ -46,7 +63,7 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
       </Link>
 
       <div className="flex max-lg:justify-between max-lg:items-center">
-        <Link to={`/prompt/${promptData.id}`} className="lg:hidden flex-1 min-w-0">
+        <Link to={`/prompt/${promptData.prompt_id}`} className="lg:hidden flex-1 min-w-0">
           <div className="truncate  text-text-on-white text-[12px] font-medium  w-full ">{promptData.title}</div>
         </Link>
         {type === 'authored' && (
@@ -61,7 +78,7 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
                 <div className="absolute  right-0 top-full mt-[11px] w-[91px] max-lg:w-[61px] bg-white rounded-md z-10 shadow-[0_4px_8px_0_rgba(0,0,0,0.12)]">
                   <button
                     onClick={() => {
-                      DeletePrompt(promptData.id);
+                      DeletePrompt(promptData.prompt_id);
                       setIsDropdownOpen(false);
                     }}
                     className="block  px-[16px] max-lg:px-[12px] py-[8px] max-lg:py-[4px] text-[16px] max-lg:text-[10px] border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary active:bg-secondary-pressed rounded-t-[4px]">
@@ -69,7 +86,7 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
                   </button>
                   <button
                     onClick={() => {
-                      EditPrompt(promptData.id);
+                      EditPrompt(promptData.prompt_id);
                       setIsDropdownOpen(false);
                     }}
                     className="block px-[16px] max-lg:px-[12px] py-[8px] max-lg:py-[4px] text-[16px] max-lg:text-[10px] text-text-on-background bg-secondary active:bg-secondary-pressed rounded-b-[4px]">
@@ -81,24 +98,32 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
           </div>
         )}
 
-        {type === 'downloaded' && (
+        {type === 'liked' && (
           <>
             <div className="max-lg:hidden flex items-center justify-center h-[72px]  w-[198px]">
-              <PrimaryButton buttonType="review" text="리뷰 작성하기" onClick={() => {}} />
+              <PrimaryButton
+                buttonType="review"
+                text="리뷰 작성하기"
+                onClick={() => handleWriteReviewClick(promptData.prompt_id)}
+              />
             </div>
             <div className="lg:hidden flex items-center  ">
-              <PrimaryButton buttonType="review" text="리뷰 작성" onClick={() => {}} />
+              <PrimaryButton
+                buttonType="review"
+                text="리뷰 작성"
+                onClick={() => handleWriteReviewClick(promptData.prompt_id)}
+              />
             </div>
           </>
         )}
         {type === 'downloaded' && (
           <div className="max-lg:hidden flex items-center justify-center text-text-on-white text-[20px] font-medium py-[23.5px] w-[180px] px-[44px]">
-            {promptData.author}
+            {promptData.author_nickname}
           </div>
         )}
 
         {type === 'liked' && (
-          <button onClick={() => DeleteLike(promptData.id)}>
+          <button onClick={() => DeleteLike(promptData.prompt_id)}>
             <img
               src={BigBlueHeart}
               alt="좋아요 큰하트"

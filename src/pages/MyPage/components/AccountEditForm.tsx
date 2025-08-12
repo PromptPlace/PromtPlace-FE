@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ArrowIcon from './ArrowIcon';
+import type { RegisterInfo } from '@/types/MyPage/account';
 
 /**
  * 조회수 및 다운로드 수를 나타내는 컴포넌트입니다.
@@ -14,26 +15,26 @@ import ArrowIcon from './ArrowIcon';
  * **/
 
 const BANKS = [
-  { name: '토스뱅크', fileName: 'Toss.svg' },
-  { name: '카카오뱅크', fileName: 'Kakao.svg' },
-  { name: '하나은행', fileName: 'Hana.svg' },
-  { name: '우리은행', fileName: 'Woori.svg' },
-  { name: '신한은행', fileName: 'Shinhan.svg' },
-  { name: 'KB국민은행', fileName: 'KB.svg' },
-  { name: 'IBK기업은행', fileName: 'IBK.svg' },
-  { name: 'KDB산업은행', fileName: 'KDB.svg' },
-  { name: '케이뱅크', fileName: 'K.svg' },
-  { name: 'SC제일은행', fileName: 'SC.svg' },
-  { name: '씨티은행', fileName: 'City.svg' },
-  { name: '새마을금고', fileName: 'Saemaul.svg' },
-  { name: 'NH농협은행', fileName: 'NH.svg' },
-  { name: '우체국', fileName: 'Post.svg' },
-  { name: '부산은행', fileName: 'Busan.svg' },
-  { name: '제주은행', fileName: 'Jeju.svg' },
-  { name: '광주은행', fileName: 'Gwangju.svg' },
-  { name: '전북은행', fileName: 'Jeonbuk.svg' },
-  { name: 'DGB대구은행', fileName: 'Daegu.svg' },
-  { name: 'Sh수협은행', fileName: 'Suhyup.svg' },
+  { name: '토스뱅크', code: '092', fileName: 'Toss.svg' },
+  { name: '카카오뱅크', code: '090', fileName: 'Kakao.svg' },
+  { name: '하나은행', code: '005', fileName: 'Hana.svg' },
+  { name: '우리은행', code: '020', fileName: 'Woori.svg' },
+  { name: '신한은행', code: '088', fileName: 'Shinhan.svg' },
+  { name: 'KB국민은행', code: '004', fileName: 'KB.svg' },
+  { name: 'IBK기업은행', code: '003', fileName: 'IBK.svg' },
+  { name: 'KDB산업은행', code: '002', fileName: 'KDB.svg' },
+  { name: '케이뱅크', code: '089', fileName: 'K.svg' },
+  { name: 'SC제일은행', code: '023', fileName: 'SC.svg' },
+  { name: '씨티은행', code: '027', fileName: 'City.svg' },
+  { name: '새마을금고', code: '045', fileName: 'Saemaul.svg' },
+  { name: 'NH농협은행', code: '011', fileName: 'NH.svg' },
+  { name: '우체국', code: '071', fileName: 'Post.svg' },
+  { name: '부산은행', code: '032', fileName: 'Busan.svg' },
+  { name: '제주은행', code: '035', fileName: 'Jeju.svg' },
+  { name: '광주은행', code: '034', fileName: 'Gwangju.svg' },
+  { name: '전북은행', code: '037', fileName: 'Jeonbuk.svg' },
+  { name: 'DGB대구은행', code: '031', fileName: 'Daegu.svg' },
+  { name: 'Sh수협은행', code: '007', fileName: 'Suhyup.svg' },
 ];
 const getBankLogoUrl = (fileName: string) => {
   // new URL(상대 경로, 기준 URL)
@@ -41,25 +42,25 @@ const getBankLogoUrl = (fileName: string) => {
   return new URL(`/src/assets/banks/${fileName}`, import.meta.url).href;
 };
 
-interface AccountInfo {
-  bank: string;
-  accountNumber: string;
-  accountHolder: string;
+interface Bank {
+  name: string;
+  code: string;
+  fileName: string;
 }
 
 interface AccountEditFormProps {
-  onSubmit: (info: AccountInfo) => void;
+  onSubmit: (info: RegisterInfo) => void;
 }
 
 const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
-  const [selectedBank, setSelectedBank] = useState<string | null>(null);
+  const [selectedBank, setSelectedBank] = useState<Bank | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [accountNumber, setAccountNumber] = useState('');
   const [accountHolder, setAccountHolder] = useState('');
 
   const isSubmitDisabled = !selectedBank || !accountNumber || !accountHolder;
 
-  const handleBankSelect = (bank: string) => {
+  const handleBankSelect = (bank: Bank) => {
     setSelectedBank(bank);
     setIsDropdownOpen(false); // 은행 선택 후 드롭다운 닫기
   };
@@ -68,9 +69,9 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
     // 유효성 검사 통과 시, 부모에게 데이터 전달
     if (!isSubmitDisabled) {
       onSubmit({
-        bank: selectedBank,
-        accountNumber,
-        accountHolder,
+        bank_code: selectedBank.code,
+        account_number: accountNumber,
+        account_holder: accountHolder,
       });
     }
   };
@@ -86,7 +87,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           className="w-[1082px] max-lg:w-auto pr-[40px] max-lg:px-[12px] max-lg:py-[16px] border-[1px] max-lg:border-[0.5px] border-white-stroke rounded-[8px] text-[18px] max-lg:text-[12px] text-right   font-normal  bg-white">
           {selectedBank ? (
-            <span className="text-text-on-white ">{selectedBank}</span>
+            <span className="text-text-on-white ">{selectedBank.name}</span>
           ) : (
             <span className="flex lg:justify-end max-lg:justify-between gap-[8px]">
               <span className="text-text-on-background ">은행을 선택해주세요</span>
@@ -108,7 +109,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
               {BANKS.map((bank) => (
                 <button
                   key={bank.name}
-                  onClick={() => handleBankSelect(bank.name)}
+                  onClick={() => handleBankSelect(bank)}
                   className="flex flex-col items-center justify-center w-[96px] max-lg:w-[72px] h-[74px] max-lg:w-[48px] bg-white hover:border-[1px] max-lg:hover:border-[0.5px] hover:border-primary">
                   <img
                     src={getBankLogoUrl(bank.fileName)}
