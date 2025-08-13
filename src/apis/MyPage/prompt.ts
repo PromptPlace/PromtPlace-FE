@@ -8,7 +8,7 @@ import type {
 import type { PaginationDto } from '@/types/MyPage/common.ts';
 
 export const getDownloadedPrompts = async (): Promise<ApiResponse<DownloadedPromptDTO>> => {
-  const { data } = await axiosInstance.get<ApiResponse<DownloadedPromptDTO>>('/api/prompts/downloadeds');
+  const { data } = await axiosInstance.get<ApiResponse<DownloadedPromptDTO>>('/api/prompts/downloads');
 
   return data;
 };
