@@ -29,7 +29,13 @@ import FollowCard from './components/FollowCard';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 import Select from './components/Select';
 
-import type { RequestDeletePromptDto, RequestEditMemberDto, RequestIntroDto } from '@/types/ProfilePage/profile';
+import type {
+  FollowerWithStatus,
+  FollowingWithStatus,
+  RequestDeletePromptDto,
+  RequestEditMemberDto,
+  RequestIntroDto,
+} from '@/types/ProfilePage/profile';
 import type { RequestDeleteHistoryDto, RequestEditHistoryDto, RequestHistoryDto } from '@/types/ProfilePage/history';
 import type { RequestPatchSNSDto, RequestPostSNS } from '@/types/ProfilePage/sns';
 import type { RequestGetInquiriesDto } from '@/types/ProfilePage/inquiry';
@@ -116,6 +122,18 @@ const ProfilePage = () => {
   // 팔로워, 팔로잉 목록
   const { data: followerData } = useGetFollower({ member_id });
   const { data: followingData } = useGetFollowing({ member_id });
+
+  const normalizedFollowerList: FollowerWithStatus[] =
+    followerData?.data.map((f) => ({
+      ...f,
+      isFollowing: followingData?.data.some((fw) => fw.following_id === f.follower_id) ?? false,
+    })) || [];
+
+  const normalizedFollowingList: FollowingWithStatus[] =
+    followingData?.data.map((f) => ({
+      ...f,
+      isFollowing: true,
+    })) || [];
 
   // 팔로우, 언팔로우
   const { mutate: mutateFollow } = usePatchFollow({ member_id });
@@ -480,18 +498,16 @@ const ProfilePage = () => {
             {showFollower && (
               <FollowCard
                 title={`${data?.data.name}님의 팔로워 목록`}
-                list={followerData?.data}
+                list={normalizedFollowerList}
                 setShow={setShowFollower}
-                status={false}
                 member_id={member_id}
               />
             )}
             {showFollowing && (
               <FollowCard
                 title={`${data?.data.name}님의 팔로잉 목록`}
-                list={followingData?.data}
+                list={normalizedFollowingList}
                 setShow={setShowFollowing}
-                status={true}
                 member_id={member_id}
               />
             )}

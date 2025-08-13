@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import ProfileIcon from '@assets/icon-profile-gray.svg';
-import UserProfileIcon from '@assets/img-example-profile2.jpg';
 
 import MailIcon from '@assets/icon-sidebar-mail.svg?react';
 import PersonIcon from '@assets/icon-sidebar-person.svg?react';
@@ -15,14 +14,19 @@ import LogOutIcon from '@assets/icon-sidebar-FiLogOut.svg?react';
 
 import PrimaryButton from '@components/Button/PrimaryButton';
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
+import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
 
 const MyPage = () => {
-  const { accessToken } = useAuth();
+  const { accessToken, user, logout } = useAuth();
   const navigate = useNavigate();
   const [loginModalShow, setLoginModalShow] = useState(false);
 
   const item = localStorage.getItem('user_id');
   const user_id = item ? JSON.parse(item) : null;
+
+  // 회원 정보 불러오기
+  const { data } = useGetMember({ member_id: user.user_id });
+  console.log(data);
 
   const LINKS = [
     { to: '/mypage/prompt', label: '내 프롬프트', icon: <ArchiveIcon className="w-[16px] h-[16px]" /> },
@@ -64,10 +68,10 @@ const MyPage = () => {
           <>
             <div className="flex flex-col gap-[8px] items-center w-full">
               <div className="w-[48px] h-[48px] rounded-full overflow-hidden">
-                <img src={UserProfileIcon || ProfileIcon} alt="프로필" className="w-full h-full object-contain" />
+                <img src={ProfileIcon} alt="프로필" className="w-full h-full object-contain" />
               </div>
 
-              <p className="text-text-on-white text-[14px] font-medium leading-[18px]">안송연</p>
+              <p className="text-text-on-white text-[14px] font-medium leading-[18px]">{data?.data.name}</p>
 
               <div
                 onClick={() => handleNavigate(`/profile/${user_id}`)}
@@ -102,7 +106,9 @@ const MyPage = () => {
               ))}
             </div>
 
-            <button className="py-[4px] px-[8px] gap-[8px] rounded-[4px] border-[0.5px] border-text-on-background bg-white shadow-button text-text-on-background text-[10px] font-normal leading-[13px] tracking-[0.46px] flex absolute top-[427px] right-[20px]">
+            <button
+              onClick={logout}
+              className="py-[4px] px-[8px] gap-[8px] rounded-[4px] border-[0.5px] border-text-on-background bg-white shadow-button text-text-on-background text-[10px] font-normal leading-[13px] tracking-[0.46px] flex absolute top-[427px] right-[20px]">
               <LogOutIcon className="text-white-stroke w-[12px] h-[12px]" />
               로그아웃
             </button>

@@ -6,6 +6,7 @@ import ArrowIcon from '@assets/icon-arrow-left-black.svg?react';
 import ProfileIcon from '@assets/icon-profile-gray.svg?react';
 import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
 import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
+import type { FollowerWithStatus, FollowingWithStatus } from '@/types/ProfilePage/profile';
 
 type Following = {
   follow_id: number;
@@ -14,6 +15,7 @@ type Following = {
   email: string;
   created_at: string;
   updated_at: string;
+  isFollowing: boolean;
 };
 
 type Follower = {
@@ -23,28 +25,36 @@ type Follower = {
   email: string;
   created_at: string;
   updated_at: string;
+  isFollowing: boolean;
 };
 
 type FollowWithTargetID = (Following | Follower) & { targetId: number };
 
 interface FollowCardProps {
   title: string;
-  list?: Following[] | Follower[];
+  list: FollowingWithStatus[] | FollowerWithStatus[];
   setShow: (show: boolean) => void;
-  status: boolean;
   member_id: number;
 }
 
-const FollowCard = ({ title, list = [], setShow, status, member_id }: FollowCardProps) => {
+const FollowCard = ({ title, list, setShow, member_id }: FollowCardProps) => {
   const normalizedList: FollowWithTargetID[] =
     list?.map((f) => ({
       ...f,
-      targetId: 'follower_id' in f ? f.follower_id : f.following_id,
+      targetId: f.follower_id ?? f.following_id,
     })) ?? [];
 
-  const [following, setFollowing] = useState<Record<number, boolean>>(
-    Object.fromEntries(normalizedList?.map((f) => [f.targetId, status])),
-  );
+  const [following, setFollowing] = useState<Record<number, boolean>>(() => {
+    const initialState: Record<number, boolean> = {};
+
+    normalizedList.forEach((f) => {
+      const isFollower = 'follower_id' in f;
+      const isFollowing = isFollower ? list.some((f) => f.follow_id === f.follower_id) : true;
+      initialState[f.targetId] = isFollowing;
+    });
+
+    return initialState;
+  });
 
   // 팔로우, 언팔로우
   const { mutate: mutateFollow } = usePatchFollow({ member_id });
@@ -86,7 +96,7 @@ const FollowCard = ({ title, list = [], setShow, status, member_id }: FollowCard
                 </div>
 
                 <FollowButton
-                  follow={!!following[f.targetId]}
+                  follow={f.isFollowing ?? false}
                   onClick={() => {
                     toggleFollowing(f.targetId);
                   }}
@@ -145,7 +155,7 @@ const FollowCard = ({ title, list = [], setShow, status, member_id }: FollowCard
                   </div>
 
                   <FollowButton
-                    follow={!!following[f.targetId]}
+                    follow={f.isFollowing ?? false}
                     onClick={() => {
                       toggleFollowing(f.targetId);
                     }}

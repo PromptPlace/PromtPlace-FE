@@ -19,6 +19,7 @@ export type ResponseMemberDto = CommonResponse<{
 // 회원 팔로워, 팔로잉 목록
 export type Follow = {
   follow_id: number;
+  following_id: number;
   follower_id: number;
   nickname: string;
   email: string;
@@ -27,6 +28,9 @@ export type Follow = {
 };
 
 export type ResponseFollowDto = CommonResponse<Follow[]>;
+
+export type FollowingWithStatus = Follow & { isFollowing: boolean };
+export type FollowerWithStatus = Follow & { isFollowing: boolean };
 
 // 회원 정보 수정
 export type RequestEditMemberDto = {
