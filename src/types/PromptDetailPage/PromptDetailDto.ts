@@ -3,6 +3,10 @@ export type TagDto = {
   name: string;
 };
 
+export type ModelDto = {
+  name: string;
+};
+
 export type PromptDetailDto = {
   prompt_id: number;
   user_id: number;
@@ -29,26 +33,11 @@ export type PromptDetailDto = {
     nickname: string;
     profileImage: string | null;
   };
-  models: {
-    model: {
-      name: string;
-    };
-  }[];
-  tags: {
-    tag: {
-      tag_id: number;
-      name: string;
-    };
-  }[];
+
+  tags: TagDto[];
+  models: ModelDto[];
   images: {
     image_url: string;
     order_index: number;
   }[];
-};
-
-export type ApiEnvelopeSnake<T> = {
-  status_code?: number;
-  statusCode?: number;
-  message?: string;
-  data: T;
 };

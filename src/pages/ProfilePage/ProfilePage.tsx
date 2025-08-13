@@ -5,14 +5,14 @@
  * @author 김진효
  * **/
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import clsx from 'clsx';
+import { useInView } from 'react-intersection-observer';
 
 import ProfileIcon from '@assets/icon-profile-gray.svg';
 import AlarmOffIcon from '@assets/icon-alarm-off.svg';
 import AlarmOnIcon from '@assets/icon-alarm-on.svg';
-import UserProfileIcon from '@assets/img-example-profile2.jpg';
 import Arrow from '@assets/icon-vector-bottom.svg?react';
 import EditPhoto from '@assets/mobile/icon-mobile-photo.svg';
 
@@ -27,23 +27,45 @@ import InquiryCard from './components/InquiryCard';
 import InquiryDetailCard from './components/InquiryDetailCard';
 import FollowCard from './components/FollowCard';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
+import Select from './components/Select';
 
-import DESCRIPTION from '@data/ProfilePage/description.json';
-import PROMPT from '@data/ProfilePage/prompt.json';
-import SNS from '@data/ProfilePage/sns.json';
-import INQUIRY from '@data/ProfilePage/inquiry.json';
-import FOLLOWING from '@data/ProfilePage/following.json';
-import FOLLOWER from '@data/ProfilePage/follower.json';
+import type {
+  FollowerWithStatus,
+  FollowingWithStatus,
+  RequestDeletePromptDto,
+  RequestEditMemberDto,
+  RequestIntroDto,
+} from '@/types/ProfilePage/profile';
+import type { RequestDeleteHistoryDto, RequestEditHistoryDto, RequestHistoryDto } from '@/types/ProfilePage/history';
+import type { RequestPatchSNSDto, RequestPostSNS } from '@/types/ProfilePage/sns';
+import type { RequestGetInquiriesDto } from '@/types/ProfilePage/inquiry';
 
 import useImgUpload from '@hooks/useImgUpload';
-import Select from './components/Select';
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
-
-const USER = {
-  member_id: 12345,
-  name: '울랄라',
-  description: '5년차 백엔드 개발자!',
-};
+import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
+import useGetFollower from '@/hooks/queries/ProfilePage/useGetFollower';
+import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
+import usePatchEditMember from '@/hooks/mutations/ProfilePage/usePatchEditMember';
+import usePostEditIntro from '@/hooks/mutations/ProfilePage/usePostEditIntro';
+import useGetHistories from '@/hooks/queries/ProfilePage/useGetHistories';
+import usePatchHistories from '@/hooks/mutations/ProfilePage/usePatchHistories';
+import useDeleteHistories from '@/hooks/mutations/ProfilePage/useDeleteHistories';
+import usePostHistories from '@/hooks/mutations/ProfilePage/usePostHistories';
+import useGetPrompts from '@/hooks/queries/ProfilePage/useGetPrompts';
+import usePatchDeletePrompts from '@/hooks/mutations/ProfilePage/usePatchDeletePrompts';
+import useGetSNS from '@/hooks/queries/ProfilePage/useGetSNS';
+import usePatchSNS from '@/hooks/mutations/ProfilePage/usePatchSNS';
+import useDeleteSNS from '@/hooks/mutations/ProfilePage/useDeleteSNS';
+import usePostSNS from '@/hooks/mutations/ProfilePage/usePostSNS';
+import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
+import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
+import useGetInquiries from '@/hooks/queries/ProfilePage/useGetInquiries';
+import useGetDetailInquiries from '@/hooks/queries/ProfilePage/useGetDetailInquiries';
+import usePostReplyInquiries from '@/hooks/mutations/ProfilePage/usePostReplyInquiries';
+import usePatchReadInquiries from '@/hooks/mutations/ProfilePage/usePatchReadInquiries';
+import usePostInquiries from '@/hooks/mutations/ProfilePage/usePostInquiries';
+import usePostImg from '@/hooks/mutations/ProfilePage/usePostImg';
+import { useAuth } from '@/context/AuthContext';
 
 type Inquiry = {
   inquiry_id: number;
@@ -52,19 +74,18 @@ type Inquiry = {
   type: string;
   status: string;
   title: string;
-  content: string;
-  created_at: string;
   updated_at: string;
 };
 
 const ProfilePage = () => {
   const { id } = useParams();
-  const myId = localStorage.getItem('user_id'); // 로그인 시 저장 필요
-  const isMyProfile = id === myId; // 현재 10인 경우 본인 페이지로 이동됨
+  const { user } = useAuth();
+
+  const myId = user.user_id;
+  const isMyProfile = id ? Number(id) === myId : false;
+  const member_id = isMyProfile ? myId : Number(id);
 
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
-
-  const [descriptions, setDescriptions] = useState(DESCRIPTION.map((d) => ({ ...d, isEditing: false })));
 
   const [isFollow, setIsFollow] = useState(false);
 
@@ -73,20 +94,16 @@ const ProfilePage = () => {
     icon: AlarmOffIcon,
   });
 
-  const [prompts, setPrompts] = useState(PROMPT);
-
   const [isBuyer, setIsBuyer] = useState(true);
   const [isArrowClicked, setIsArrowClicked] = useState(false);
 
-  const [inquiries, setInquiries] = useState(INQUIRY);
   const [showInquiryDetail, setShowInquiryDetail] = useState<Inquiry | null>(null);
 
-  const [sns, setSns] = useState(SNS.map((s) => ({ ...s, isEditing: false })));
+  // 회원 프로필 이미지 등록
+  const { mutate: mutatePostImg } = usePostImg({ member_id });
 
-  const { selectedImg, setSelectedImg, handleUpload } = useImgUpload();
+  const { selectedImg, setSelectedImg, handleUpload } = useImgUpload(mutatePostImg);
   const [profileEdit, setProfileEdit] = useState(false);
-  const [userName, setUserName] = useState(USER.name);
-  const [userDescription, setUserDescription] = useState(USER.description);
   const imageRef = useRef<HTMLInputElement>(null);
 
   const [showFollowing, setShowFollowing] = useState(false);
@@ -96,7 +113,86 @@ const ProfilePage = () => {
 
   const [showMsgModal, setShowMsgModal] = useState(false);
 
-  const [type, setType] = useState<'buyer' | 'nonBuyer'>('nonBuyer');
+  const [type, setType] = useState<RequestGetInquiriesDto>({ type: 'buyer' });
+
+  // 회원 정보 불러오기
+  const { data } = useGetMember({ member_id });
+  const [userName, setUserName] = useState('');
+
+  // 팔로워, 팔로잉 목록
+  const { data: followerData } = useGetFollower({ member_id });
+  const { data: followingData } = useGetFollowing({ member_id });
+
+  const normalizedFollowerList: FollowerWithStatus[] =
+    followerData?.data.map((f) => ({
+      ...f,
+      isFollowing: followingData?.data.some((fw) => fw.following_id === f.follower_id) ?? false,
+    })) || [];
+
+  const normalizedFollowingList: FollowingWithStatus[] =
+    followingData?.data.map((f) => ({
+      ...f,
+      isFollowing: true,
+    })) || [];
+
+  // 팔로우, 언팔로우
+  const { mutate: mutateFollow } = usePatchFollow({ member_id });
+  const { mutate: mutateUnFollow } = useDeleteFollow({ member_id });
+
+  // 회원 정보 수정
+  const { mutate } = usePatchEditMember({ member_id });
+
+  // 회원 한줄 소개 작성 및 수정
+  const { mutate: mutateIntro } = usePostEditIntro({ member_id });
+  const [userDescription, setUserDescription] = useState('');
+
+  // 작성한 프롬프트 목록
+  const { data: promptsData, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetPrompts({ member_id });
+
+  const { ref, inView } = useInView({ threshold: 1 });
+
+  // 프롬프트 삭제
+  const { mutate: mutateDeletePrompts } = usePatchDeletePrompts({ member_id });
+
+  // 회원 이력 조회
+  const { data: historyData } = useGetHistories({ member_id });
+
+  // 회원 이력 수정
+  const { mutate: mutateHistory } = usePatchHistories({ member_id });
+
+  // 회원 이력 삭제
+  const { mutate: mutateDeleteHistory } = useDeleteHistories({ member_id });
+
+  // 회원 이력 작성
+  const { mutate: mutatePostHistory } = usePostHistories({ member_id });
+
+  // 회원 SNS 목록
+  const { data: snsData } = useGetSNS({ member_id });
+
+  // 회원 SNS 수정
+  const { mutate: mutatePatchSNS } = usePatchSNS({ member_id });
+
+  // 회원 SNS 삭제
+  const { mutate: mutateDeleteSNS } = useDeleteSNS({ member_id });
+
+  // 회원 SNS 작성
+  const { mutate: mutatePostSNS } = usePostSNS({ member_id });
+
+  // 받은 문의 목록
+  const { data: inquiryData } = useGetInquiries({ member_id }, { type: type.type });
+
+  // 문의 상세 정보
+  const [selectedInquiryId, setSelectedInquiryId] = useState<number | null>(null);
+  const { data: inquiryDetailData } = useGetDetailInquiries({ member_id }, { inquiry_id: selectedInquiryId });
+
+  // 문의 답변하기
+  const { mutate: mutatePostReplyInquiries } = usePostReplyInquiries({ member_id });
+
+  // 문의 읽음 처리
+  const { mutate: mutateReadInquiries } = usePatchReadInquiries({ member_id });
+
+  // 문의하기
+  const { mutate: mutatePostInquiries } = usePostInquiries({ member_id });
 
   const menuList = [
     {
@@ -111,61 +207,72 @@ const ProfilePage = () => {
 
   const [menuId, setMenuId] = useState(0);
 
+  // 이름 및 소개 수정
+  const handleEditMember = () => {
+    setUserName(data?.data.name || '');
+    setUserDescription(data?.data.intros || '');
+    setProfileEdit(true);
+  };
+
+  // 아룸 및 소개 수정 완료
+  const handleEditSubmit = ({ name }: RequestEditMemberDto, { intro }: RequestIntroDto) => {
+    mutate({ name });
+    mutateIntro({ intro });
+    setProfileEdit(false);
+  };
+
+  // 팔로우 및 팔로잉
   const handleFollow = () => {
     handleShowLoginModal(() => {
+      if (isFollow) {
+        mutateUnFollow({ member_id });
+      } else {
+        mutateFollow({ member_id });
+      }
       setIsFollow((prev) => !prev);
     });
   };
 
-  const handleDeletePrompts = (id: number) => {
-    setPrompts((prev) => prev.filter((p) => p.prompt_id !== id));
+  // 프롬프트 삭제
+  const handleDeletePrompts = ({ prompt_id }: RequestDeletePromptDto) => {
+    mutateDeletePrompts({ prompt_id });
   };
 
-  const handleAddNewDescription = () => {
-    const newId = descriptions.length ? descriptions[descriptions.length - 1].history_id + 1 : 1;
-
-    const newDescription = {
-      history_id: newId,
-      description: '',
-      isEditing: true,
-    };
-
-    setDescriptions([...descriptions, newDescription]);
+  // 회원 이력 작성
+  const handleAddNewDescription = ({ history }: RequestHistoryDto) => {
+    mutatePostHistory({ history });
   };
 
-  const handleDeleteDescription = (id: number) => {
-    setDescriptions((prev) => prev.filter((d) => d.history_id !== id));
+  // 회원 이력 삭제
+  const handleDeleteDescription = ({ history_id }: RequestDeleteHistoryDto) => {
+    mutateDeleteHistory({ history_id });
   };
 
-  const handleUpdateDescription = (id: number, value: string) => {
-    setDescriptions((prev) =>
-      prev.map((item) => (item.history_id === id ? { ...item, description: value, isEditing: false } : item)),
-    );
+  // 회원 이력 수정
+  const handleUpdateDescription = ({ history_id, history }: RequestEditHistoryDto) => {
+    mutateHistory({ history_id, history });
   };
 
-  const handleDeleteSns = (id: number) => {
-    setSns((prev) => prev.filter((s) => s.sns_id !== id));
+  // 회원 SNS 삭제
+  const handleDeleteSns = ({ sns_id }: { sns_id: number }) => {
+    mutateDeleteSNS({ sns_id });
   };
 
-  const handleAddSns = () => {
-    const sns_newId = sns.length ? sns[sns.length - 1].sns_id + 1 : 1;
-
-    const newSns = {
-      sns_id: sns_newId,
-      user_id: 1024,
-      url: '',
-      created_at: '2024-01-15T10:30:00Z',
-      updated_at: '2024-01-15T10:30:00Z',
-      description: '',
-      isEditing: true,
-    };
-
-    setSns([...sns, newSns]);
+  // 회원 SNS 작성
+  const handleAddSns = ({ url, description }: RequestPostSNS) => {
+    mutatePostSNS({ url, description });
   };
 
-  const handleUpdateSns = (id: number, value: string, url: string) => {
-    setSns((prev) => prev.map((s) => (s.sns_id === id ? { ...s, description: value, isEditing: false, url: url } : s)));
+  // 회원 SNS 수정
+  const handleUpdateSns = ({ sns_id, url, description }: { sns_id: number } & RequestPatchSNSDto) => {
+    mutatePatchSNS({ sns_id, url, description });
   };
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   return (
     <div className="flex flex-col pt-[120px] max-lg:pt-[12px]">
@@ -193,7 +300,7 @@ const ProfilePage = () => {
                     setSelectedImg(null);
                     setShowImgModal(false);
                   }}
-                  className="rounded-b-[4px] border-b border-b-white-stroke bg-secondary py-[4px] px-[12px] text-text-on-background text-[10px] font-normal leading-[13px]">
+                  className="cursor-pointer rounded-b-[4px] border-b border-b-white-stroke bg-secondary py-[4px] px-[12px] text-text-on-background text-[10px] font-normal leading-[13px]">
                   삭제하기
                 </div>
               </div>
@@ -210,7 +317,7 @@ const ProfilePage = () => {
               {isMyProfile && (
                 <>
                   <img
-                    src={selectedImg?.thumbnail || UserProfileIcon}
+                    src={selectedImg?.thumbnail || ProfileIcon}
                     alt="프로필 이미지"
                     className="w-full h-full object-cover"
                   />
@@ -243,7 +350,7 @@ const ProfilePage = () => {
             {!profileEdit && (
               <div className="flex gap-[4px] max-lg:justify-center">
                 <p className="text-[32px] font-bold leading-[40px] max-lg:text-[16px] max-lg:font-medium max-lg:leading-[20px] ">
-                  {userName}
+                  {data?.data.name}
                 </p>
                 {!isMyProfile && (
                   <div
@@ -264,7 +371,7 @@ const ProfilePage = () => {
                       buttonType="edit"
                       size="md"
                       onClick={() => {
-                        setProfileEdit(true);
+                        handleEditMember();
                       }}
                       isActive={profileEdit}
                     />
@@ -278,16 +385,14 @@ const ProfilePage = () => {
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
                   className="text-[32px] font-bold leading-[40px] outline-none text-primary placeholder:text-primary w-[175px] max-lg:text-[16px] max-lg:leading-[20px] max-lg:font-medium max-lg:border-b max-lg:w-max max-lg:max-w-[45px]"
-                  placeholder={USER.name}
+                  placeholder={userName}
                 />
                 <div className={clsx('lg:hidden max-lg:relative', showImgModal && 'z-10', !showImgModal && 'z-30')}>
                   <CircleButton
                     buttonType="edit"
                     size="md"
                     onClick={() => {
-                      console.log(1);
-
-                      setProfileEdit(false);
+                      handleEditSubmit({ name: userName }, { intro: userDescription });
                     }}
                     isActive={profileEdit}
                   />
@@ -296,7 +401,7 @@ const ProfilePage = () => {
             )}
             {!profileEdit && (
               <p className="text-[20px] font-medium leading-[25px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px]">
-                {userDescription}
+                {data?.data.intros}
               </p>
             )}
             {profileEdit && (
@@ -304,7 +409,7 @@ const ProfilePage = () => {
                 value={userDescription}
                 onChange={(e) => setUserDescription(e.target.value)}
                 placeholder={userDescription}
-                className="text-[20px] font-medium leading-[25px] placeholder:text-primary outline-none text-primary w-[219px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px] max-lg:max-w-[79px] max-lg:border-b"
+                className="text-[20px] font-medium leading-[25px] placeholder:text-primary outline-none text-primary lg:w-[219px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px] max-lg:border-b max-lg:relative max-lg:z-300"
               />
             )}
           </div>
@@ -314,7 +419,7 @@ const ProfilePage = () => {
                 buttonType="edit"
                 size="md"
                 onClick={() => {
-                  setProfileEdit(true);
+                  handleEditMember();
                 }}
                 isActive={profileEdit}
               />
@@ -323,7 +428,7 @@ const ProfilePage = () => {
                   buttonType="squareMini"
                   text="완료"
                   onClick={() => {
-                    setProfileEdit(false);
+                    handleEditSubmit({ name: userName }, { intro: userDescription });
                   }}
                 />
               )}
@@ -338,7 +443,7 @@ const ProfilePage = () => {
                 팔로워
               </p>
               <div className="px-[10px] max-lg:px-[6px] py-[5px] max-lg:py-[2px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center max-lg:text-[12px] max-lg:leading-[15px]">
-                90
+                {followerData?.data.length}
               </div>
 
               <div className="lg:hidden max-lg:ml-[3px]">
@@ -376,7 +481,7 @@ const ProfilePage = () => {
                 <div
                   onClick={() => setShowFollower(true)}
                   className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center max-lg:py-[2px] max-lg:px-[6px] max-lg:text-[12px] max-lg:leading-[15px]">
-                  1091
+                  {followerData?.data.length}
                 </div>
               </div>
               <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
@@ -386,38 +491,41 @@ const ProfilePage = () => {
                 <div
                   onClick={() => setShowFollowing(true)}
                   className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center  max-lg:py-[2px] max-lg:px-[6px] max-lg:text-[12px] max-lg:leading-[15px]">
-                  215
+                  {followingData?.data.length}
                 </div>
               </div>
             </div>
             {showFollower && (
               <FollowCard
-                title={`${userName}님의 팔로워 목록`}
-                list={FOLLOWER}
+                title={`${data?.data.name}님의 팔로워 목록`}
+                list={normalizedFollowerList}
                 setShow={setShowFollower}
-                status={false}
+                member_id={member_id}
               />
             )}
             {showFollowing && (
               <FollowCard
-                title={`${userName}님의 팔로잉 목록`}
-                list={FOLLOWING}
+                title={`${data?.data.name}님의 팔로잉 목록`}
+                list={normalizedFollowingList}
                 setShow={setShowFollowing}
-                status={true}
+                member_id={member_id}
               />
             )}
           </>
         )}
       </div>
 
-      <div className="px-[20px] flex lg:hidden  max-lg:mt-[12px]">
+      <div className="px-[20px] flex lg:hidden max-lg:mt-[12px]">
         {menuId !== 2 && <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />}
         {menuId === 2 && isMyProfile && (
           <div className="flex items-start justify-between w-full">
             <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />
             <div className="flex mt-[6px]">
               <div
-                onClick={() => setIsBuyer(true)}
+                onClick={() => {
+                  setIsBuyer(true);
+                  setType({ type: 'buyer' });
+                }}
                 className={clsx(
                   'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
                   isBuyer && 'bg-primary-hover text-white',
@@ -426,7 +534,10 @@ const ProfilePage = () => {
                 구매자 문의
               </div>
               <div
-                onClick={() => setIsBuyer(false)}
+                onClick={() => {
+                  setIsBuyer(false);
+                  setType({ type: 'non_buyer' });
+                }}
                 className={clsx(
                   'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
                   !isBuyer && 'bg-primary-hover text-white',
@@ -442,20 +553,20 @@ const ProfilePage = () => {
             <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />
             <div className="flex mt-[6px]">
               <div
-                onClick={() => setType('buyer')}
+                onClick={() => setType({ type: 'buyer' })}
                 className={clsx(
                   'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
-                  type === 'buyer' && 'bg-primary-hover text-white',
-                  type === 'nonBuyer' && 'bg-white text-text-on-white',
+                  type.type === 'buyer' && 'bg-primary-hover text-white',
+                  type.type === 'non_buyer' && 'bg-white text-text-on-white',
                 )}>
                 구매자 문의
               </div>
               <div
-                onClick={() => setType('nonBuyer')}
+                onClick={() => setType({ type: 'non_buyer' })}
                 className={clsx(
                   'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
-                  type === 'nonBuyer' && 'bg-primary-hover text-white',
-                  type === 'buyer' && 'bg-white text-text-on-white',
+                  type.type === 'non_buyer' && 'bg-primary-hover text-white',
+                  type.type === 'buyer' && 'bg-white text-text-on-white',
                 )}>
                 비구매자 문의
               </div>
@@ -484,17 +595,26 @@ const ProfilePage = () => {
           {menuId === 0 && (
             <div className="pr-[8px] bg-white max-lg:bg-transparent max-lg:p-0">
               <div className="w-full max-h-[368px] overflow-y-auto">
-                {prompts.map((prompt) => (
-                  <PromptCard
-                    key={prompt.prompt_id}
-                    id={prompt.prompt_id}
-                    title={prompt.title}
-                    model={prompt.model}
-                    tags={prompt.tags}
-                    isMyProfile={isMyProfile}
-                    handleDeletePrompts={() => handleDeletePrompts(prompt.prompt_id)}
-                  />
-                ))}
+                {promptsData?.pages.map((page, pageIdx) =>
+                  page.data.prompts.map((prompt, idx) => {
+                    const last = pageIdx === promptsData.pages.length - 1 && idx === page.data.prompts.length - 1;
+                    return (
+                      <div ref={last ? ref : undefined} key={prompt.prompt_id}>
+                        <PromptCard
+                          key={prompt.prompt_id}
+                          id={prompt.prompt_id}
+                          title={prompt.title}
+                          model={prompt.models}
+                          tags={prompt.tags}
+                          isMyProfile={isMyProfile}
+                          handleDeletePrompts={() => {
+                            handleDeletePrompts({ prompt_id: prompt.prompt_id });
+                          }}
+                        />
+                      </div>
+                    );
+                  }),
+                )}
               </div>
             </div>
           )}
@@ -508,13 +628,12 @@ const ProfilePage = () => {
                     !isMyProfile && 'max-h-[368px]',
                     isMyProfile && 'max-h-[279px]',
                   )}>
-                  {descriptions.map((description) => (
+                  {historyData?.histories.map((history) => (
                     <RecordCard
-                      key={description.history_id}
-                      history_id={description.history_id}
-                      description={description.description}
+                      key={history.history_id}
+                      history_id={history.history_id}
+                      description={history.history}
                       isMyProfile={isMyProfile}
-                      isEditing={description.isEditing}
                       handleDelete={handleDeleteDescription}
                       setDescriptions={handleUpdateDescription}
                     />
@@ -523,15 +642,23 @@ const ProfilePage = () => {
               </div>
               {isMyProfile && (
                 <div className="mt-[50px] max-lg:mt-[12px] w-full flex justify-center">
-                  <PrimaryButton buttonType="plus" text="+" onClick={handleAddNewDescription} />
+                  <PrimaryButton buttonType="plus" text="+" onClick={() => handleAddNewDescription({ history: ' ' })} />
                 </div>
               )}
             </>
           )}
 
           {menuId === 2 && !isMyProfile && (
-            <AskCard prompts={PROMPT} isMyProfile={isMyProfile} type={type} setType={setType} />
+            <AskCard
+              prompts={promptsData}
+              isMyProfile={isMyProfile}
+              type={type}
+              setType={setType}
+              member_id={member_id}
+              mutatePostInquiries={mutatePostInquiries}
+            />
           )}
+
           {menuId === 2 && isMyProfile && (
             <>
               <div className="relative text-text-on-white text-[20px] font-bold leading-[30px] flex gap-[10px] p-[10px] items-center py-[30px] px-[80px] bg-white max-lg:hidden">
@@ -545,6 +672,7 @@ const ProfilePage = () => {
                 {isArrowClicked && (
                   <div
                     onClick={() => {
+                      setType((prev) => (prev.type === 'buyer' ? { type: 'non_buyer' } : { type: 'buyer' }));
                       setIsBuyer((prev) => !prev);
                       setIsArrowClicked(false);
                       setShowInquiryDetail(null);
@@ -557,8 +685,8 @@ const ProfilePage = () => {
               <div className="pr-[8px] bg-white max-lg:hidden">
                 <div className="max-h-[316px] overflow-auto">
                   {showInquiryDetail === null &&
-                    inquiries
-                      .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non-buyer'))
+                    inquiryData?.data
+                      .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non_buyer'))
                       .map((i) => (
                         <InquiryCard
                           key={i.inquiry_id}
@@ -567,39 +695,35 @@ const ProfilePage = () => {
                           status={i.status}
                           sender_nickname={i.sender_nickname}
                           onClick={() => {
+                            setSelectedInquiryId(i.inquiry_id);
                             setShowInquiryDetail(i);
                           }}
                           onRead={(id) => {
-                            setInquiries((prev) =>
-                              prev.map((item) => (item.inquiry_id === id ? { ...item, status: 'read' } : item)),
-                            );
+                            mutateReadInquiries({ inquiry_id: id });
                           }}
-                          onDelete={(id) => {
-                            setInquiries((prev) => prev.filter((item) => item.inquiry_id !== id));
-                          }}
+                          onDelete={() => {}}
                         />
                       ))}
                 </div>
               </div>
 
               <div className="max-lg:hidden">
-                {showInquiryDetail !== null && (
+                {showInquiryDetail !== null && inquiryDetailData && (
                   <InquiryDetailCard
-                    inquiry={showInquiryDetail}
+                    inquiry={inquiryDetailData!}
                     onClick={() => {
                       setShowInquiryDetail(null);
-                      setInquiries((prev) =>
-                        prev.map((i) => (i.inquiry_id === showInquiryDetail.inquiry_id ? { ...i, status: 'read' } : i)),
-                      );
                     }}
+                    mutatePostReplyInquiries={mutatePostReplyInquiries}
+                    mutateReadInquiries={mutateReadInquiries}
                   />
                 )}
               </div>
 
               <div className="pr-[8px] bg-white lg:hidden max-lg:mt-[-30px]">
                 <div className="max-h-[316px] overflow-auto">
-                  {inquiries
-                    .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non-buyer'))
+                  {inquiryData?.data
+                    .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non_buyer'))
                     .map((i) => (
                       <InquiryCard
                         key={i.inquiry_id}
@@ -608,33 +732,29 @@ const ProfilePage = () => {
                         status={i.status}
                         sender_nickname={i.sender_nickname}
                         onClick={() => {
+                          setSelectedInquiryId(i.inquiry_id);
                           setShowInquiryDetail(i);
                           setShowMsgModal(true);
                         }}
                         onRead={(id) => {
-                          setInquiries((prev) =>
-                            prev.map((item) => (item.inquiry_id === id ? { ...item, status: 'read' } : item)),
-                          );
+                          mutateReadInquiries({ inquiry_id: id });
                         }}
-                        onDelete={(id) => {
-                          setInquiries((prev) => prev.filter((item) => item.inquiry_id !== id));
-                        }}
+                        onDelete={() => {}}
                       />
                     ))}
                 </div>
               </div>
 
               <div className="lg:hidden">
-                {showInquiryDetail !== null && showMsgModal === true && (
+                {showInquiryDetail !== null && showMsgModal === true && inquiryDetailData && (
                   <InquiryDetailCard
-                    inquiry={showInquiryDetail}
+                    inquiry={inquiryDetailData!}
                     onClick={() => {
-                      setInquiries((prev) =>
-                        prev.map((i) => (i.inquiry_id === showInquiryDetail.inquiry_id ? { ...i, status: 'read' } : i)),
-                      );
                       setShowMsgModal(false);
                     }}
                     setShowMsgMoldal={setShowMsgModal}
+                    mutatePostReplyInquiries={mutatePostReplyInquiries}
+                    mutateReadInquiries={mutateReadInquiries}
                   />
                 )}
               </div>
@@ -644,22 +764,27 @@ const ProfilePage = () => {
           {menuId === 3 && (
             <div className="flex flex-col items-center">
               <div className="w-full max-h-[368px] overflow-y-auto">
-                {sns.map((sns) => (
+                {snsData?.data.map((sns) => (
                   <SnsCard
                     key={sns.sns_id}
                     sns_id={sns.sns_id}
                     description={sns.description}
                     url={sns.url}
                     isMyProfile={isMyProfile}
-                    handleDeleteSns={() => handleDeleteSns(sns.sns_id)}
-                    handleUpdateSns={() => handleUpdateSns(sns.sns_id, sns.description, sns.url)}
-                    isEditing={sns.isEditing}
+                    handleDeleteSns={handleDeleteSns}
+                    handleUpdateSns={handleUpdateSns}
                   />
                 ))}
               </div>
               {isMyProfile && (
-                <div onClick={handleAddSns} className="mt-[50px] max-lg:mt-[12px]">
-                  <PrimaryButton buttonType="plus" text="+" onClick={() => {}} />
+                <div className="mt-[50px] max-lg:mt-[12px]">
+                  <PrimaryButton
+                    buttonType="plus"
+                    text="+"
+                    onClick={() => {
+                      handleAddSns({ url: 'https://example.com', description: ' ' });
+                    }}
+                  />
                 </div>
               )}
             </div>

@@ -4,6 +4,8 @@ import { useState } from 'react';
 import DualModal from '@/components/Modal/DualModal';
 import { SingleModal } from './components/MyPageModal';
 import { useNavigate } from 'react-router-dom';
+import { withdrawUser } from '@/apis/MyPage/withdrawl';
+import { useAuth } from '@/context/AuthContext';
 
 // 실제로는 API로 받아올 사용자 정보
 const userInfo: {
@@ -12,16 +14,30 @@ const userInfo: {
   provider: 'google' | 'kakao' | 'naver';
 } = {
   nickname: '주토피아노',
-  email: 'kyaassddff0934@gmail.com',
-  provider: 'google',
+  email: 'kyaassddff0934@naver.com',
+  provider: 'naver',
 };
 
 const MyPageInfo = () => {
   const [deleteStep, setDeleteStep] = useState<'confirm' | 'warning' | 'complete' | null>(null);
   const confirmDelete = () => setDeleteStep('confirm');
   const showWarning = () => setDeleteStep('warning');
+
+  const { logout } = useAuth();
+
   const deleteAccount = () => {
     // 실제 API 호출 로직
+    withdrawUser()
+      .then(() => {
+        console.log('계정 탈퇴 성공');
+        // 추가적인 로직 (예: 리다이렉트, 상태 업데이트 등)
+      })
+      .catch((error) => {
+        console.error('계정 탈퇴 실패:', error);
+        // 에러 처리 로직
+      });
+
+    console.log('계정 탈퇴 요청');
     setDeleteStep('complete');
   };
   const navigate = useNavigate();
@@ -59,7 +75,7 @@ const MyPageInfo = () => {
             label="로그아웃"
             actionText="로그아웃"
             onAction={() => {
-              /* 로그아웃 로직 */
+              logout();
             }}
           />
           <InfoRow label="계정 탈퇴" actionText="탈퇴하기" onAction={confirmDelete} isDestructive />

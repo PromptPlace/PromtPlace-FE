@@ -4,7 +4,8 @@ import { useAuth } from '@/context/AuthContext';
 
 import LogoIcon from '@assets/icon-header-logo.svg';
 import ProfileIcon from '@assets/icon-profile-blue-small.svg';
-import UserProfileIcon from '@assets/img-example-profile2.jpg';
+import UserProfileIcon from '@assets/icon-profile-gray.svg';
+
 import TipIcon from '@assets/mobile/icon-mobile-tip.png';
 
 import PrimaryButton from '@components/Button/PrimaryButton';
@@ -27,6 +28,7 @@ const Navbar = () => {
 
   const handleSearch = () => {
     if (!search.trim()) return;
+    navigate(`/?search=${encodeURIComponent(search)}`);
     setSearch('');
   };
 
@@ -114,7 +116,7 @@ const Navbar = () => {
           )}
           {accessToken && (
             <img
-              src={UserProfileIcon ? UserProfileIcon : ProfileIcon}
+              src={UserProfileIcon}
               alt="로그인된 사용자 이미지"
               onClick={handleSidebarClick}
               className="w-full h-full object-cover cursor-pointer"

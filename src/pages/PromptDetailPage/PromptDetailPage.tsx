@@ -72,8 +72,8 @@ const PromptDetailPage = () => {
       rating_avg: Number.isFinite(data.rating_avg) ? Number(data.rating_avg) : 0,
       updated_at: data.updated_at ?? '',
       user: data.user,
-      tags: data.tags.map((t) => t.tag.name),
-      model: data.models[0]?.model.name ?? '',
+      tags: data.tags.map((t) => t.name),
+      model: data.models[0]?.name ?? '',
     };
   }, [data]);
 

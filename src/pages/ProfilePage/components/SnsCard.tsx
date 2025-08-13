@@ -13,15 +13,16 @@ import CloseIcon from '@assets/icon-close.svg';
 import CircleButton from '@/components/Button/CircleButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import MobileButton from '@/components/Button/MobileButton';
+import type { RequestPatchSNSDto } from '@/types/ProfilePage/sns';
 
 interface SnsCardProps {
   sns_id: number;
   description: string;
   url: string;
   isMyProfile: boolean;
-  handleDeleteSns: (sns_id: number) => void;
-  handleUpdateSns: (sns_id: number, description: string, sns_url: string) => void;
-  isEditing: boolean;
+  handleDeleteSns: ({ sns_id }: { sns_id: number }) => void;
+  handleUpdateSns: ({ sns_id, url, description }: { sns_id: number } & RequestPatchSNSDto) => void;
+  isEditing?: boolean;
 }
 
 const SnsCard = ({
@@ -37,6 +38,7 @@ const SnsCard = ({
     if (url.includes('instagram')) return 'instagram';
     if (url.includes('facebook')) return 'facebook';
     if (url.includes('kakao')) return 'kakao';
+    if (url.includes('example')) return null;
     if (url.includes('x')) return 'x';
     if (url.includes('google')) return 'google';
     if (url.includes('youtube')) return 'youtube';
@@ -87,15 +89,17 @@ const SnsCard = ({
 
   return (
     <div className="bg-white border-b border-b-white-stroke py-[30px] pl-[80px] pr-[33px] max-lg:p-[12px] text-text-on-white text-[20px] font-medium leading-[25px] max-lg:text-[10px] max-lg:font-medium max-lg:leading-[13px] flex items-center gap-[20px]">
-      <div className="max-lg:w-[20px] max-lg:h-[20px]">
-        {snsType === 'instagram' && <img src={InstaIcon} alt="instagram" />}
-        {snsType === 'facebook' && <img src={FacebookIcon} alt="facebook" />}
-        {snsType === 'kakao' && <img src={KakaoIcon} alt="kakao" />}
-        {snsType === 'x' && <img src={XIcon} alt="x" />}
-        {snsType === 'google' && <img src={GoogleIcon} alt="google" />}
-        {snsType === 'youtube' && <img src={YoutubeIcon} alt="youtube" />}
-        {snsType === 'naver' && <img src={NaverIcon} alt="naver" />}
-      </div>
+      <a href={editUrl} target="_blank">
+        <div className="max-lg:w-[20px] max-lg:h-[20px]">
+          {snsType === 'instagram' && <img src={InstaIcon} alt="instagram" />}
+          {snsType === 'facebook' && <img src={FacebookIcon} alt="facebook" />}
+          {snsType === 'kakao' && <img src={KakaoIcon} alt="kakao" />}
+          {snsType === 'x' && <img src={XIcon} alt="x" />}
+          {snsType === 'google' && <img src={GoogleIcon} alt="google" />}
+          {snsType === 'youtube' && <img src={YoutubeIcon} alt="youtube" />}
+          {snsType === 'naver' && <img src={NaverIcon} alt="naver" />}
+        </div>
+      </a>
 
       <div className="flex-1 truncate">{editDescription}</div>
 
@@ -111,7 +115,7 @@ const SnsCard = ({
               isActive={edit}
             />
             <div
-              onClick={() => handleDeleteSns(sns_id)}
+              onClick={() => handleDeleteSns({ sns_id })}
               className="w-[17px] h-[17px] max-lg:p-[4px] cursor-pointer max-lg:mx-[12px]">
               <img src={CloseIcon} alt="삭제" className="w-full h-full object-contain" />
             </div>
@@ -146,7 +150,7 @@ const SnsCard = ({
                       onClick={() => {
                         if (!editDescription.trim() || !editUrl.trim()) return;
                         setEdit(false);
-                        handleUpdateSns(sns_id, editDescription, editUrl);
+                        handleUpdateSns({ sns_id, url: editUrl, description: editDescription });
                       }}
                     />
                   </div>
@@ -208,7 +212,7 @@ const SnsCard = ({
                           onClick={() => {
                             if (!editDescription.trim() || !editUrl.trim()) return;
                             setEdit(false);
-                            handleUpdateSns(sns_id, editDescription, editUrl);
+                            handleUpdateSns({ sns_id, url: editUrl, description: editDescription });
                           }}
                         />
                       </div>

@@ -26,9 +26,8 @@ import useGetAllPromptReviews from '@/hooks/queries/PromptDetailPage/useGetAllPr
 import useFollow from '@/hooks/mutations/PromptDetailPage/useFollow';
 import useUnfollow from '@/hooks/mutations/PromptDetailPage/useUnfollow';
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
-
-import type { PromptDetailDto } from '@/types/PromptDetailPage/PromptDetailDto';
-import type { PromptReviewDto } from '@/types/PromptDetailPage/PromptReviewDto';
+import SocialLoginModal from '@/components/Modal/SocialLoginModal';
+import PaymentModal from './PaymentModal';
 
 interface PromptActionsProps {
   title: string;
@@ -82,8 +81,18 @@ const PromptActions = ({
   const [tags] = useState<string[]>(['#수묵화', '#수채화', '#디자인', '#일러스트', '#그림', '#이미지']);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [liked, setLiked] = useState(false);
-  const [downloadData, setDownloadData] = useState<{ title: string; content: string } | null>(null);
+  const [isPaid, setIsPaid] = useState(false);
+
+  const [downloadData, setDownloadData] = useState<{
+    title: string;
+    downloadUrl: string;
+    content: string;
+  } | null>(null);
+
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  const navigate = useNavigate();
 
   const [reviews, setReviews] = useState<PromptReviewDto[]>([]);
   const [reviewCount, setReviewCount] = useState(reviewCounts);
@@ -250,6 +259,13 @@ const PromptActions = ({
               text={isDownloading ? '불러오는 중…' : '다운로드'}
               onClick={() => handleShowLoginModal(handleDownloadClick)}
             />
+            {isPaymentModalOpen && ( //유료프롬프트 & 미결제 시 PaymentModal 열기
+              <PaymentModal
+                prompt={{ title, price: Number(price) }} //id: promptId 추가 필요
+                onClose={() => setIsPaymentModalOpen(false)}
+                onPaid={handlePaid}
+              />
+            )}
             {downloadData && (
               <DownloadModal
                 isOpen={isDownloadModalOpen}
