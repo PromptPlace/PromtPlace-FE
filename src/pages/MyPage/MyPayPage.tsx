@@ -6,6 +6,7 @@ import TextModal from '@/components/Modal/TextModal';
 import IconButton from '@components/Button/IconButton';
 import CloseIcon from '@assets/icon-close.svg';
 import clsx from 'clsx';
+import { useGetSalesHistory } from '@/hooks/queries/MyPage/useGetPay.ts';
 // 더미 데이터 예시
 const DUMMY_USER_INFO = {
   nickname: '주토피아노',
@@ -16,24 +17,79 @@ const DUMMY_USER_INFO = {
 
 const DUMMY_SALES_HISTORY = [
   {
-    id: 1,
-    date: '2025.06.13',
+    prompt_id: 1,
+    purchased_at: '2025.06.13',
     title: '정부지원사업 무조건 선정되는 사업계획서 프롬프트 정부지원사업 정부지원사업',
     price: 2500,
-    buyer: '홍길동',
+    buyer_nickname: '홍길동',
   },
-  { id: 2, date: '2025.06.12', title: '효율적인 경쟁사 분석 프롬프트', price: 2000, buyer: '율랄라' },
-  { id: 3, date: '2025.06.11', title: '사업 아이디어 시장 검증 프롬프트', price: 1800, buyer: '지나가던 개발자' },
-  { id: 4, date: '2025.06.10', title: '사업 아이디어 시장 검증 프롬프트', price: 1800, buyer: '지나가던 개발자' },
-  { id: 5, date: '2025.06.09', title: '사업 아이디어 시장 검증 프롬프트', price: 1800, buyer: '지나가던 개발자' },
-  { id: 6, date: '2025.06.08', title: '사업 아이디어 시장 검증 프롬프트', price: 1800, buyer: '지나가던 개발자' },
-  { id: 7, date: '2025.06.07', title: '사업 아이디어 시장 검증 프롬프트', price: 1800, buyer: '지나가던 개발자' },
-  { id: 8, date: '2025.06.06', title: '사업 아이디어 시장 검증 프롬프트', price: 1800, buyer: '지나가던 개발자' },
-  { id: 9, date: '2025.06.05', title: '사업 아이디어 시장 검증 프롬프트', price: 1800, buyer: '지나가던 개발자' },
-  { id: 10, date: '2025.06.04', title: '사업 아이디어 시장 검증 프롬프트', price: 1800, buyer: '지나가던 개발자' },
+  {
+    prompt_id: 2,
+    purchased_at: '2025.06.12',
+    title: '효율적인 경쟁사 분석 프롬프트',
+    price: 2000,
+    buyer_nickname: '율랄라',
+  },
+  {
+    prompt_id: 3,
+    purchased_at: '2025.06.11',
+    title: '사업 아이디어 시장 검증 프롬프트',
+    price: 1800,
+    buyer_nickname: '지나가던 개발자',
+  },
+  {
+    prompt_id: 4,
+    purchased_at: '2025.06.10',
+    title: '사업 아이디어 시장 검증 프롬프트',
+    price: 1800,
+    buyer_nickname: '지나가던 개발자',
+  },
+  {
+    prompt_id: 5,
+    purchased_at: '2025.06.09',
+    title: '사업 아이디어 시장 검증 프롬프트',
+    price: 1800,
+    buyer_nickname: '지나가던 개발자',
+  },
+  {
+    prompt_id: 6,
+    purchased_at: '2025.06.08',
+    title: '사업 아이디어 시장 검증 프롬프트',
+    price: 1800,
+    buyer_nickname: '지나가던 개발자',
+  },
+  {
+    prompt_id: 7,
+    purchased_at: '2025.06.07',
+    title: '사업 아이디어 시장 검증 프롬프트',
+    price: 1800,
+    buyer_nickname: '지나가던 개발자',
+  },
+  {
+    prompt_id: 8,
+    purchased_at: '2025.06.06',
+    title: '사업 아이디어 시장 검증 프롬프트',
+    price: 1800,
+    buyer_nickname: '지나가던 개발자',
+  },
+  {
+    prompt_id: 9,
+    purchased_at: '2025.06.05',
+    title: '사업 아이디어 시장 검증 프롬프트',
+    price: 1800,
+    buyer_nickname: '지나가던 개발자',
+  },
+  {
+    prompt_id: 10,
+    purchased_at: '2025.06.04',
+    title: '사업 아이디어 시장 검증 프롬프트',
+    price: 1800,
+    buyer_nickname: '지나가던 개발자',
+  },
 ];
 
 const MyPayPage = () => {
+  const { data: salesResponse } = useGetSalesHistory();
   const [userInfo, setUserInfo] = useState(DUMMY_USER_INFO);
   const [salesHistory, setSalesHistory] = useState(DUMMY_SALES_HISTORY);
   const [showModal, setShowModal] = useState<'noMoney' | 'noAccount' | 'yesAccount' | 'complete' | null>(null);
@@ -79,7 +135,7 @@ const MyPayPage = () => {
         <div className="max-lg:hidden bg-white flex-1 min-h-0">
           <div className="mr-[8px] overflow-y-auto max-h-[564px] max-lg:max-h-[273px] max-lg:mr-[0px]">
             {salesHistory.map((sale) => (
-              <SalesHistoryCard key={sale.id} sale={sale} />
+              <SalesHistoryCard key={sale.prompt_id} sale={sale} />
             ))}
           </div>
         </div>
@@ -91,8 +147,9 @@ const MyPayPage = () => {
               <span className="mx-[12px] w-[23px]">가격</span>
               <span className="w-[34px]">구매자</span>
             </div>
+            {/* api 적용할때 salesHistory를 salesResponse.sales로 변경 */}
             {salesHistory.map((sale) => (
-              <SalesHistoryCard key={sale.id} sale={sale} />
+              <SalesHistoryCard key={sale.prompt_id} sale={sale} />
             ))}
           </div>
         </div>
