@@ -21,9 +21,6 @@ const MyPage = () => {
   const navigate = useNavigate();
   const [loginModalShow, setLoginModalShow] = useState(false);
 
-  const item = localStorage.getItem('user_id');
-  const user_id = item ? JSON.parse(item) : null;
-
   // 회원 정보 불러오기
   const { data } = useGetMember({ member_id: user.user_id });
   console.log(data);
@@ -74,7 +71,7 @@ const MyPage = () => {
               <p className="text-text-on-white text-[14px] font-medium leading-[18px]">{data?.data.name}</p>
 
               <div
-                onClick={() => handleNavigate(`/profile/${user_id}`)}
+                onClick={() => handleNavigate(`/profile/${user.user_id}`)}
                 className="flex items-center justify-center px-[8px] py-[4px] rounded-[4px] border border-primary bg-background text-primary text-[10px] font-normal leading-[13px] cursor-pointer">
                 프로필 홈
               </div>

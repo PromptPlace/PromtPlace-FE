@@ -83,7 +83,7 @@ const ProfilePage = () => {
 
   const myId = user.user_id;
   const isMyProfile = id ? Number(id) === myId : false;
-  const member_id = isMyProfile ? Number(myId) : Number(id);
+  const member_id = isMyProfile ? myId : Number(id);
 
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
 
