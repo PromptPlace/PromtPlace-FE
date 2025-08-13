@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import ModelButton from '@components/Button/ModelButton';
-import Rating from '@components/Rating';
+import EditableRating from '@components/EditableRating';
 import PrimaryButton from '@components/Button/PrimaryButton';
 import Bar from '../assets/bar.svg';
 import useCreateReview from '@/hooks/mutations/PromptDetailPage/useCreateReview';
@@ -69,7 +69,7 @@ const CreateModal = ({ isOpen, onClose, title, promptId, onSuccess }: CreateModa
 
         <div className="mx-4 px-8 py-6 flex flex-col gap-6">
           <div className="flex justify-start">
-            <Rating star={rating} onChange={(value) => setRating(value)} />
+            <EditableRating star={rating} onChange={setRating} />
           </div>
 
           <div className="w-[624px] h-[321px] bg-[#F5F5F5] border border-gray-300 rounded-[8px] p-4 flex flex-col justify-between">
@@ -100,7 +100,7 @@ const CreateModal = ({ isOpen, onClose, title, promptId, onSuccess }: CreateModa
         </div>
 
         <div className="flex items-center gap-[4px] mb-[8px] pt-[20px]">
-          <Rating star={rating} onChange={(value) => setRating(value)} />
+          <EditableRating star={rating} onChange={setRating} />
         </div>
 
         <textarea

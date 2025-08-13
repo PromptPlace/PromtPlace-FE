@@ -24,9 +24,18 @@ export interface RequestCreateReviewDto {
   rating: number;
   content: string;
 }
+export interface ResponseCreateReviewDto {
+  data: PromptReviewDto;
+}
 
 export interface RequestUpdateReviewDto {
-  reviewId: number;
   content: string;
   rating?: number;
+}
+export interface ResponseUpdateReviewDto {
+  data: PromptReviewDto;
+}
+
+export interface ResponseDeleteReviewDto {
+  data: { review_id: number };
 }

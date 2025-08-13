@@ -334,8 +334,6 @@ const ReviewList = ({
           key={selectedReview.review_id}
           onClose={() => setShowUpdateModal(false)}
           title={title}
-          views={2109}
-          downloads={120}
           rating={selectedReview.rating}
           initialReviewText={selectedReview.content}
           onSave={handleSave}

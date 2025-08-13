@@ -4,6 +4,7 @@ import Rating from '@components/Rating';
 import PrimaryButton from '@components/Button/PrimaryButton';
 import Bar from '../assets/bar.svg';
 import useUpdateReview from '@/hooks/mutations/PromptDetailPage/useUpdateReview';
+import EditableRating from '@components/EditableRating';
 
 interface UpdateModalProps {
   isOpen: boolean;
@@ -18,28 +19,35 @@ interface UpdateModalProps {
 const UpdateModal = ({ isOpen, onClose, title, reviewId, rating, initialReviewText, onSave }: UpdateModalProps) => {
   const [reviewText, setReviewText] = useState(initialReviewText);
   const { mutateAsync: updateMutate, isPending } = useUpdateReview();
+  const [updatedRating, setUpdatedRating] = useState<number>(rating);
 
   useEffect(() => {
     setReviewText(initialReviewText);
-  }, [initialReviewText]);
+    setUpdatedRating(rating);
+  }, [initialReviewText, rating]);
 
   if (!isOpen) return null;
 
   const handleSaveClick = async () => {
     try {
-      await updateMutate({ reviewId, rating, content: reviewText });
-      onSave(rating, reviewText);
+      await updateMutate({ reviewId, rating: updatedRating, content: reviewText });
+      onSave(updatedRating, reviewText);
       onClose();
-    } catch (e: any) {
-      const status = e?.response?.status;
-      if (status === 401) {
-        alert('로그인이 필요합니다.');
-        return;
+    } catch (e: unknown) {
+      if (e instanceof Error && 'response' in e) {
+        const err = e as { response?: { status?: number } };
+        const status = err.response?.status;
+
+        if (status === 401) {
+          alert('로그인이 필요합니다.');
+          return;
+        }
+        if (status === 403) {
+          alert('작성 후 30일이 지나 수정할 수 없습니다.');
+          return;
+        }
       }
-      if (status === 403) {
-        alert('작성 후 30일이 지나 수정할 수 없습니다.');
-        return;
-      }
+
       alert('리뷰 수정에 실패했습니다. 잠시 후 다시 시도해 주세요.');
     }
   };
@@ -71,7 +79,7 @@ const UpdateModal = ({ isOpen, onClose, title, reviewId, rating, initialReviewTe
         {/* 본문 */}
         <div className="mx-4 px-8 py-6 flex flex-col gap-6">
           <div className="flex justify-start">
-            <Rating star={rating} />
+            <EditableRating star={updatedRating} onChange={setUpdatedRating} />
           </div>
 
           {/* 리뷰 textarea */}
@@ -105,7 +113,7 @@ const UpdateModal = ({ isOpen, onClose, title, reviewId, rating, initialReviewTe
         </div>
 
         <div className="flex items-center gap-[4px] mb-[8px] pt-[20px]">
-          <Rating star={rating} />
+          <EditableRating star={updatedRating} onChange={setUpdatedRating} />
         </div>
 
         <textarea

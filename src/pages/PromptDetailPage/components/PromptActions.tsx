@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 
@@ -16,6 +16,7 @@ import contentCheckIcon from '../assets/contentcheck.png';
 import ReviewList from './ReviewList';
 import ReportModal from '../components/ReportModal';
 import DownloadModal from '../components/DownloadModal';
+import CreateModal from '../components/CreateModal'; // ✅ 추가
 
 import usePromptDownload from '@/hooks/mutations/PromptDetailPage/usePromptDownload';
 import usePromptLike from '@/hooks/mutations/PromptDetailPage/usePromptLike';
@@ -61,6 +62,8 @@ const PromptActions = ({
   const { id } = useParams<{ id: string }>();
   const promptId = Number(id);
   const qc = useQueryClient();
+
+  const [searchParams] = useSearchParams(); // ✅ 추가
 
   const storedUser = localStorage.getItem('user');
   const currentUserId = storedUser ? JSON.parse(storedUser).user_id : null;
@@ -208,6 +211,25 @@ const PromptActions = ({
     }
   };
 
+  const [showCreateModal, setShowCreateModal] = useState(false);
+
+  useEffect(() => {
+    const shouldOpen = searchParams.get('open_review') === 'true';
+    if (!shouldOpen) return;
+
+    // 비로그인 시: 로그인 모달 먼저 → 로그인 후 작성 모달 오픈
+    if (!currentUserId) {
+      handleShowLoginModal(() => setShowCreateModal(true));
+    } else {
+      setShowCreateModal(true);
+    }
+
+    // URL 정리: 새로고침/뒤로가기 시 재오픈 방지
+    const url = new URL(window.location.href);
+    url.searchParams.delete('open_review');
+    navigate(url.pathname + url.search, { replace: true });
+  }, [searchParams]);
+
   if (showReviews) {
     return (
       <ReviewList
@@ -342,6 +364,20 @@ const PromptActions = ({
       {/* 로그인 모달 */}
       {loginModalShow && (
         <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
+      )}
+
+      {/* 리뷰 작성 모달 */}
+      {showCreateModal && Number.isFinite(promptId) && (
+        <CreateModal
+          isOpen={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          title={title}
+          promptId={promptId}
+          onSuccess={async () => {
+            await qc.invalidateQueries({ queryKey: ['promptReviews', promptId] });
+            setShowReviews(true);
+          }}
+        />
       )}
     </div>
   );

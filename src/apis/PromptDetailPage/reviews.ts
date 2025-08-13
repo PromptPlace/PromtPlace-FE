@@ -1,6 +1,12 @@
 import { axiosInstance } from '@/apis/axios';
 import type { ApiEnvelopeCamel, PromptReviewListDto, PromptReviewDto } from '@/types/PromptDetailPage/PromptReviewDto';
-import type { RequestCreateReviewDto } from '@/types/PromptDetailPage/ReviewDto';
+import type { RequestCreateReviewDto, ResponseCreateReviewDto } from '@/types/PromptDetailPage/PromptReviewDto';
+import type {
+  ResponseDeleteReviewDto,
+  ResponseUpdateReviewDto,
+  RequestUpdateReviewDto,
+} from '@/types/PromptDetailPage/PromptReviewDto';
+import type { CommonResponse } from '@/types/common';
 
 export const getPromptReviews = async (promptId: number, params?: { cursor?: number; limit?: number }) => {
   const { data } = await axiosInstance.get<ApiEnvelopeCamel<PromptReviewListDto>>(`/api/reviews/${promptId}`, {
@@ -29,13 +35,6 @@ export const getAllPromptReviews = async (
   return acc;
 };
 
-import type {
-  ResponseDeleteReviewDto,
-  ResponseUpdateReviewDto,
-  RequestUpdateReviewDto,
-} from '@/types/PromptDetailPage/ReviewDto';
-import type { CommonResponse } from '@/types/common';
-
 export const deleteReview = async (reviewId: number) => {
   const { data } = await axiosInstance.delete<CommonResponse<ResponseDeleteReviewDto['data']>>(
     `/api/reviews/${reviewId}`,
@@ -52,6 +51,9 @@ export const updateReview = async (reviewId: number, body: RequestUpdateReviewDt
 };
 
 export async function createReview(promptId: number, body: RequestCreateReviewDto) {
-  const res = await axiosInstance.post(`/api/reviews/${promptId}`, body);
-  return res.data;
+  const { data } = await axiosInstance.post<CommonResponse<ResponseCreateReviewDto['data']>>(
+    `/api/reviews/${promptId}`,
+    body,
+  );
+  return data;
 }
