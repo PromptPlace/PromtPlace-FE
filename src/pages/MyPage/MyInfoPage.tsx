@@ -25,7 +25,7 @@ const MyPageInfo = () => {
   const showWarning = () => setDeleteStep('warning');
 
   const { logout, user } = useAuth();
-   const { data:userData } = useGetMember({ member_id: user.user_id });
+  const { data: userData } = useGetMember({ member_id: user.user_id });
 
   const deleteAccount = () => {
     // 실제 API 호출 로직

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ArrowIcon from './ArrowIcon';
 import type { RegisterInfo, UpdateAccountInfo } from '@/types/MyPage/account';
 
@@ -77,6 +77,25 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
     }
   };
 
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // 이벤트 핸들러 함수
+    const handleClickOutside = (event: MouseEvent) => {
+      // ref가 있고, 클릭된 곳이 ref가 감싼 영역의 바깥쪽일 때
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false); // 드롭다운 닫기
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
+
   return (
     <div className="flex flex-col flex-1 gap-[40px] max-lg:gap-[12px] pt-[40px] max-lg:pt-[20px]">
       {/* 1. 은행 선택 */}
@@ -106,7 +125,9 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
               <div className="w-[40px] h-[4px] bg-white-stroke rounded-full  mt-[14px] mb-[30px]" />
               <p className="text-[10px] font-medium text-primary self-start">은행 선택</p>
             </div>
-            <div className="grid grid-cols-2 max-lg:grid-cols-3 gap-x-[24px] max-lg:gap-x-[16px] gap-y-[24px] max-lg:gap-y-[12px] p-[24px] max-lg:px-[16px] max-lg:py-[12px]">
+            <div
+              className="grid grid-cols-2 max-lg:grid-cols-3 gap-x-[24px] max-lg:gap-x-[16px] gap-y-[24px] max-lg:gap-y-[12px] p-[24px] max-lg:px-[16px] max-lg:py-[12px]"
+              ref={dropdownRef}>
               {BANKS.map((bank) => (
                 <button
                   key={bank.name}
