@@ -77,7 +77,7 @@ const InquiryCard = ({
 
       <div className="relative cursor-pointer max-w-[115px] max-lg:max-w-none w-full max-lg:w-auto flex items-center justify-center">
         <div
-          onClick={() => setIsDotsClicked(true)}
+          onClick={() => setIsDotsClicked((prev) => !prev)}
           className="w-[28px] h-[28px] hover:bg-secondary-pressed flex items-center justify-center rounded-full">
           <img src={DotsIcon} alt="선택" />
 
