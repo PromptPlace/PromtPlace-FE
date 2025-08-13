@@ -110,7 +110,6 @@ const ProfilePage = () => {
   const [showFollower, setShowFollower] = useState(false);
 
   const [showImgModal, setShowImgModal] = useState(false);
-
   const [showMsgModal, setShowMsgModal] = useState(false);
 
   const [type, setType] = useState<RequestGetInquiriesDto>({ type: 'buyer' });
@@ -714,8 +713,10 @@ const ProfilePage = () => {
                     onClick={() => {
                       setShowInquiryDetail(null);
                     }}
+                    setShowMsgMoldal={setShowMsgModal}
                     mutatePostReplyInquiries={mutatePostReplyInquiries}
                     mutateReadInquiries={mutateReadInquiries}
+                    setShowInquiryDetail={setShowInquiryDetail}
                   />
                 )}
               </div>
@@ -755,6 +756,7 @@ const ProfilePage = () => {
                     setShowMsgMoldal={setShowMsgModal}
                     mutatePostReplyInquiries={mutatePostReplyInquiries}
                     mutateReadInquiries={mutateReadInquiries}
+                    setShowInquiryDetail={setShowInquiryDetail}
                   />
                 )}
               </div>

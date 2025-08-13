@@ -119,7 +119,7 @@ const AskCard = ({ prompts, isMyProfile, type, setType, member_id, mutatePostInq
         </form>
       )}
 
-      {showModal && (
+      {showModal && !isMyProfile && (
         <TextModal
           text="문의가 등록되었습니다."
           onClick={() => {
