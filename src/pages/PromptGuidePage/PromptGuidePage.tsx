@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { Pagination, PromptTableList } from './components/Pagination';
 import { LuChevronDown } from 'react-icons/lu';
 import MobileList from './components/MobileList';
+import axios from 'axios';
 
 /**
  * Memo
@@ -22,139 +23,77 @@ interface PromptGuidePageProps {
   type: 'tip' | 'notice';
 }
 interface Post {
-  id: number;
+  post_id: number;
+  writer_id: number;
   title: string;
-  content: string;
-  is_pinned?: boolean; // Notice에서만 사용
-  create_at: string;
-  update_at: string;
-  is_visible: boolean;
+  created_at: string;
   file_url: null | string;
-  view_count: number;
 }
-// 더미 데이터 (추후 api 연동시 삭제 또는 수정)
-const allPosts: Post[] = [
-  {
-    id: 1,
-    title: '첫 번째 글',
-    content: 'qwerasdf',
-    is_pinned: true,
-    create_at: '2025-07-01',
-    update_at: '2025-07-01,',
-    is_visible: true,
-    file_url: 'a',
-    view_count: 1,
-  },
-  {
-    id: 2,
-    title: '두 번째 글',
-    content: 'qwerasdf',
-    is_pinned: true,
-    create_at: '2025-07-01',
-    update_at: '2025-07-01,',
-    is_visible: true,
-    file_url: null,
-    view_count: 1,
-  },
-  {
-    id: 3,
-    title: '세 번째 글',
-    content: 'qwerasdf',
-    is_pinned: true,
-    create_at: '2025-07-01',
-    update_at: '2025-07-01,',
-    is_visible: true,
-    file_url: 'a',
-    view_count: 1,
-  },
-  {
-    id: 4,
-    title: '네 번째 글',
-    content: 'qwerasdf',
-    is_pinned: true,
-    create_at: '2025-07-01',
-    update_at: '2025-07-01,',
-    is_visible: true,
-    file_url: null,
-    view_count: 1,
-  },
-  {
-    id: 5,
-    title: '다섯 번째 글',
-    content: 'qwerasdf',
-    is_pinned: true,
-    create_at: '2025-07-01',
-    update_at: '2025-07-01,',
-    is_visible: true,
-    file_url: 'a',
-    view_count: 1,
-  },
-  {
-    id: 6,
-    title: '여섯 번째 글',
-    content: 'qwerasdf',
-    is_pinned: true,
-    create_at: '2025-07-01',
-    update_at: '2025-07-01,',
-    is_visible: true,
-    file_url: 'a',
-    view_count: 1,
-  },
-  {
-    id: 7,
-    title: '일곱 번째 글',
-    content: 'qwerasdf',
-    is_pinned: true,
-    create_at: '2025-07-01',
-    update_at: '2025-07-01,',
-    is_visible: true,
-    file_url: null,
-    view_count: 1,
-  },
-  {
-    id: 8,
-    title: '여덟 번째 글',
-    content: 'qwerasdf',
-    is_pinned: true,
-    create_at: '2025-07-01',
-    update_at: '2025-07-01,',
-    is_visible: true,
-    file_url: 'a',
-    view_count: 1,
-  },
-  {
-    id: 9,
-    title: '아홉 번째 글',
-    content: 'qwerasdf',
-    is_pinned: true,
-    create_at: '2025-07-01',
-    update_at: '2025-07-01,',
-    is_visible: true,
-    file_url: null,
-    view_count: 1,
-  },
-  {
-    id: 10,
-    title: '열 번째 글',
-    content: 'qwerasdf',
-    is_pinned: true,
-    create_at: '2025-07-01',
-    update_at: '2025-07-01,',
-    is_visible: true,
-    file_url: 'a',
-    view_count: 1,
-  },
-];
-
-// 페이지 값 계산
-const PAGE_SIZE = 5;
-const TOTAL_PAGES = Math.ceil(allPosts.length / PAGE_SIZE);
 
 const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const navigate = useNavigate();
 
-  // useEffect 등으로 api 호출 필요 (데이터 전체 받아올지는 ? 그리고 의존성 배열에 type)
+  const [allPosts, setAllPosts] = useState<Post[]>([]);
+  const [allNotice, setAllNotice] = useState<Post[]>([]);
+
+  useEffect(() => {
+    const fetchAllPosts = async () => {
+      try {
+        if (type === 'tip') {
+          const base = import.meta.env.VITE_SERVER_API_URL;
+          const res = await axios.get(`${base}/api/tips`, {
+            params: {
+              page: 1,
+              size: 50,
+            },
+          });
+
+          console.log('tip 받은 데이터', res.data.data.data.tips);
+
+          const mapped: Post[] = res.data.data.data.tips.map((item: any) => ({
+            post_id: item.tip_id,
+            writer_id: item.writer_id,
+            title: item.title,
+            created_at: item.created_at.slice(0, 10),
+            file_url: item.file_url,
+          }));
+
+          setAllPosts(mapped);
+        } else if (type === 'notice') {
+          const base = import.meta.env.VITE_SERVER_API_URL;
+          const res = await axios.get(`${base}/api/announcements`, {
+            params: {
+              page: 1,
+              size: 50,
+            },
+          });
+
+          console.log('notice 받은 데이터', res.data.data.data.announcements);
+
+          const mapped: Post[] = res.data.data.data.announcements.map((item: any) => ({
+            post_id: item.announcement_id,
+            writer_id: item.writer_id,
+            title: item.title,
+            created_at: item.created_at.slice(0, 10),
+            file_url: item.file_url,
+          }));
+
+          setAllNotice(mapped);
+        }
+      } catch (error) {
+        console.error(`${type === 'tip' ? 'TIP' : '공지'} 불러오기 실패:`, error);
+      }
+    };
+
+    fetchAllPosts();
+  }, [type]);
+
+  console.log(allPosts);
+  // 페이지 값 계산
+  const PAGE_SIZE = 5;
+  const TOTAL_Tip_PAGES = Math.ceil(allPosts.length / PAGE_SIZE);
+  const TOTAL_Notice_PAGES = Math.ceil(allNotice.length / PAGE_SIZE);
 
   //팁 <> 공지사항 전환
   const handleTypeChange = (nextType: 'tip' | 'notice') => {
@@ -165,7 +104,8 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
   };
 
   // 페이지별 데이터 슬라이싱
-  const pageData = allPosts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const pageTipData = allPosts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const pageNoticeData = allNotice.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   // 페이지네이션에서 페이지 변경시
   const handlePageChange = (page: number) => {
@@ -181,7 +121,6 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
 
   // 모바일 화면 관련
   const [open, setOpen] = useState(false);
-  const [selectedType, setSelectedType] = useState<'tip' | 'notice'>('tip');
   const ref = useRef<HTMLDivElement>(null);
 
   // 바깥 클릭시 닫히게
@@ -222,8 +161,12 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
           </div>
         </div>
         <div>
-          <PromptTableList data={pageData} onRowClick={handleRowClick} />
-          <Pagination currentPage={currentPage} totalPages={TOTAL_PAGES} onPageChange={handlePageChange} />
+          <PromptTableList data={type === 'tip' ? pageTipData : pageNoticeData} onRowClick={handleRowClick} />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={type === 'tip' ? TOTAL_Tip_PAGES : TOTAL_Notice_PAGES}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
 
@@ -276,7 +219,7 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
           )}
         </div>
         <div className="flex justify-center">
-          <MobileList data={allPosts} onRowClick={handleRowClick} />
+          <MobileList data={type === 'tip' ? pageTipData : pageNoticeData} onRowClick={handleRowClick} />
         </div>
       </div>
     </>
