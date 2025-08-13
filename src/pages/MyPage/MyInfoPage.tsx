@@ -5,6 +5,7 @@ import DualModal from '@/components/Modal/DualModal';
 import { SingleModal } from './components/MyPageModal';
 import { useNavigate } from 'react-router-dom';
 import { withdrawUser } from '@/apis/MyPage/withdrawl';
+import { useAuth } from '@/context/AuthContext';
 
 // 실제로는 API로 받아올 사용자 정보
 const userInfo: {
@@ -21,6 +22,8 @@ const MyPageInfo = () => {
   const [deleteStep, setDeleteStep] = useState<'confirm' | 'warning' | 'complete' | null>(null);
   const confirmDelete = () => setDeleteStep('confirm');
   const showWarning = () => setDeleteStep('warning');
+
+  const { logout } = useAuth();
 
   const deleteAccount = () => {
     // 실제 API 호출 로직
@@ -72,7 +75,7 @@ const MyPageInfo = () => {
             label="로그아웃"
             actionText="로그아웃"
             onAction={() => {
-              /* 로그아웃 로직 */
+              logout();
             }}
           />
           <InfoRow label="계정 탈퇴" actionText="탈퇴하기" onAction={confirmDelete} isDestructive />

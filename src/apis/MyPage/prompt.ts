@@ -41,3 +41,7 @@ export const getAuthoredPrompts = async ({
 
   return data;
 };
+
+export const unlikePrompt = async (promptId: number) => {
+  await axiosInstance.delete(`/api/prompts/${promptId}/likes`);
+};

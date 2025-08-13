@@ -13,7 +13,6 @@ import { useInView } from 'react-intersection-observer';
 import ProfileIcon from '@assets/icon-profile-gray.svg';
 import AlarmOffIcon from '@assets/icon-alarm-off.svg';
 import AlarmOnIcon from '@assets/icon-alarm-on.svg';
-import UserProfileIcon from '@assets/img-example-profile2.jpg';
 import Arrow from '@assets/icon-vector-bottom.svg?react';
 import EditPhoto from '@assets/mobile/icon-mobile-photo.svg';
 
@@ -28,31 +27,45 @@ import InquiryCard from './components/InquiryCard';
 import InquiryDetailCard from './components/InquiryDetailCard';
 import FollowCard from './components/FollowCard';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
+import Select from './components/Select';
 
-import PROMPT from '@data/ProfilePage/prompt.json';
-import INQUIRY from '@data/ProfilePage/inquiry.json';
+import type {
+  FollowerWithStatus,
+  FollowingWithStatus,
+  RequestDeletePromptDto,
+  RequestEditMemberDto,
+  RequestIntroDto,
+} from '@/types/ProfilePage/profile';
+import type { RequestDeleteHistoryDto, RequestEditHistoryDto, RequestHistoryDto } from '@/types/ProfilePage/history';
+import type { RequestPatchSNSDto, RequestPostSNS } from '@/types/ProfilePage/sns';
+import type { RequestGetInquiriesDto } from '@/types/ProfilePage/inquiry';
 
 import useImgUpload from '@hooks/useImgUpload';
-import Select from './components/Select';
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
 import useGetFollower from '@/hooks/queries/ProfilePage/useGetFollower';
 import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
 import usePatchEditMember from '@/hooks/mutations/ProfilePage/usePatchEditMember';
-import type { RequestDeletePromptDto, RequestEditMemberDto, RequestIntroDto } from '@/types/ProfilePage/profile';
 import usePostEditIntro from '@/hooks/mutations/ProfilePage/usePostEditIntro';
 import useGetHistories from '@/hooks/queries/ProfilePage/useGetHistories';
 import usePatchHistories from '@/hooks/mutations/ProfilePage/usePatchHistories';
-import type { RequestDeleteHistoryDto, RequestEditHistoryDto, RequestHistoryDto } from '@/types/ProfilePage/history';
 import useDeleteHistories from '@/hooks/mutations/ProfilePage/useDeleteHistories';
 import usePostHistories from '@/hooks/mutations/ProfilePage/usePostHistories';
 import useGetPrompts from '@/hooks/queries/ProfilePage/useGetPrompts';
 import usePatchDeletePrompts from '@/hooks/mutations/ProfilePage/usePatchDeletePrompts';
 import useGetSNS from '@/hooks/queries/ProfilePage/useGetSNS';
 import usePatchSNS from '@/hooks/mutations/ProfilePage/usePatchSNS';
-import type { RequestPatchSNSDto, RequestPostSNS } from '@/types/ProfilePage/sns';
 import useDeleteSNS from '@/hooks/mutations/ProfilePage/useDeleteSNS';
 import usePostSNS from '@/hooks/mutations/ProfilePage/usePostSNS';
+import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
+import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
+import useGetInquiries from '@/hooks/queries/ProfilePage/useGetInquiries';
+import useGetDetailInquiries from '@/hooks/queries/ProfilePage/useGetDetailInquiries';
+import usePostReplyInquiries from '@/hooks/mutations/ProfilePage/usePostReplyInquiries';
+import usePatchReadInquiries from '@/hooks/mutations/ProfilePage/usePatchReadInquiries';
+import usePostInquiries from '@/hooks/mutations/ProfilePage/usePostInquiries';
+import usePostImg from '@/hooks/mutations/ProfilePage/usePostImg';
+import { useAuth } from '@/context/AuthContext';
 
 type Inquiry = {
   inquiry_id: number;
@@ -61,16 +74,16 @@ type Inquiry = {
   type: string;
   status: string;
   title: string;
-  content: string;
-  created_at: string;
   updated_at: string;
 };
 
 const ProfilePage = () => {
   const { id } = useParams();
-  const myId = localStorage.getItem('user_id'); // 로그인 시 저장 필요
-  const isMyProfile = id === myId;
-  const member_id = isMyProfile ? Number(myId) : Number(id);
+  const { user } = useAuth();
+
+  const myId = user.user_id;
+  const isMyProfile = id ? Number(id) === myId : false;
+  const member_id = isMyProfile ? myId : Number(id);
 
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
 
@@ -84,10 +97,12 @@ const ProfilePage = () => {
   const [isBuyer, setIsBuyer] = useState(true);
   const [isArrowClicked, setIsArrowClicked] = useState(false);
 
-  const [inquiries, setInquiries] = useState(INQUIRY);
   const [showInquiryDetail, setShowInquiryDetail] = useState<Inquiry | null>(null);
 
-  const { selectedImg, setSelectedImg, handleUpload } = useImgUpload();
+  // 회원 프로필 이미지 등록
+  const { mutate: mutatePostImg } = usePostImg({ member_id });
+
+  const { selectedImg, setSelectedImg, handleUpload } = useImgUpload(mutatePostImg);
   const [profileEdit, setProfileEdit] = useState(false);
   const imageRef = useRef<HTMLInputElement>(null);
 
@@ -98,7 +113,7 @@ const ProfilePage = () => {
 
   const [showMsgModal, setShowMsgModal] = useState(false);
 
-  const [type, setType] = useState<'buyer' | 'nonBuyer'>('nonBuyer');
+  const [type, setType] = useState<RequestGetInquiriesDto>({ type: 'buyer' });
 
   // 회원 정보 불러오기
   const { data } = useGetMember({ member_id });
@@ -107,6 +122,22 @@ const ProfilePage = () => {
   // 팔로워, 팔로잉 목록
   const { data: followerData } = useGetFollower({ member_id });
   const { data: followingData } = useGetFollowing({ member_id });
+
+  const normalizedFollowerList: FollowerWithStatus[] =
+    followerData?.data.map((f) => ({
+      ...f,
+      isFollowing: followingData?.data.some((fw) => fw.following_id === f.follower_id) ?? false,
+    })) || [];
+
+  const normalizedFollowingList: FollowingWithStatus[] =
+    followingData?.data.map((f) => ({
+      ...f,
+      isFollowing: true,
+    })) || [];
+
+  // 팔로우, 언팔로우
+  const { mutate: mutateFollow } = usePatchFollow({ member_id });
+  const { mutate: mutateUnFollow } = useDeleteFollow({ member_id });
 
   // 회원 정보 수정
   const { mutate } = usePatchEditMember({ member_id });
@@ -117,6 +148,7 @@ const ProfilePage = () => {
 
   // 작성한 프롬프트 목록
   const { data: promptsData, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetPrompts({ member_id });
+
   const { ref, inView } = useInView({ threshold: 1 });
 
   // 프롬프트 삭제
@@ -146,6 +178,22 @@ const ProfilePage = () => {
   // 회원 SNS 작성
   const { mutate: mutatePostSNS } = usePostSNS({ member_id });
 
+  // 받은 문의 목록
+  const { data: inquiryData } = useGetInquiries({ member_id }, { type: type.type });
+
+  // 문의 상세 정보
+  const [selectedInquiryId, setSelectedInquiryId] = useState<number | null>(null);
+  const { data: inquiryDetailData } = useGetDetailInquiries({ member_id }, { inquiry_id: selectedInquiryId });
+
+  // 문의 답변하기
+  const { mutate: mutatePostReplyInquiries } = usePostReplyInquiries({ member_id });
+
+  // 문의 읽음 처리
+  const { mutate: mutateReadInquiries } = usePatchReadInquiries({ member_id });
+
+  // 문의하기
+  const { mutate: mutatePostInquiries } = usePostInquiries({ member_id });
+
   const menuList = [
     {
       id: 0,
@@ -173,8 +221,14 @@ const ProfilePage = () => {
     setProfileEdit(false);
   };
 
+  // 팔로우 및 팔로잉
   const handleFollow = () => {
     handleShowLoginModal(() => {
+      if (isFollow) {
+        mutateUnFollow({ member_id });
+      } else {
+        mutateFollow({ member_id });
+      }
       setIsFollow((prev) => !prev);
     });
   };
@@ -206,8 +260,7 @@ const ProfilePage = () => {
 
   // 회원 SNS 작성
   const handleAddSns = ({ url, description }: RequestPostSNS) => {
-    const res = mutatePostSNS({ url, description });
-    console.log(res);
+    mutatePostSNS({ url, description });
   };
 
   // 회원 SNS 수정
@@ -247,7 +300,7 @@ const ProfilePage = () => {
                     setSelectedImg(null);
                     setShowImgModal(false);
                   }}
-                  className="rounded-b-[4px] border-b border-b-white-stroke bg-secondary py-[4px] px-[12px] text-text-on-background text-[10px] font-normal leading-[13px]">
+                  className="cursor-pointer rounded-b-[4px] border-b border-b-white-stroke bg-secondary py-[4px] px-[12px] text-text-on-background text-[10px] font-normal leading-[13px]">
                   삭제하기
                 </div>
               </div>
@@ -264,7 +317,7 @@ const ProfilePage = () => {
               {isMyProfile && (
                 <>
                   <img
-                    src={selectedImg?.thumbnail || UserProfileIcon}
+                    src={selectedImg?.thumbnail || ProfileIcon}
                     alt="프로필 이미지"
                     className="w-full h-full object-cover"
                   />
@@ -390,7 +443,7 @@ const ProfilePage = () => {
                 팔로워
               </p>
               <div className="px-[10px] max-lg:px-[6px] py-[5px] max-lg:py-[2px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center max-lg:text-[12px] max-lg:leading-[15px]">
-                90
+                {followerData?.data.length}
               </div>
 
               <div className="lg:hidden max-lg:ml-[3px]">
@@ -445,31 +498,34 @@ const ProfilePage = () => {
             {showFollower && (
               <FollowCard
                 title={`${data?.data.name}님의 팔로워 목록`}
-                list={followerData?.data}
+                list={normalizedFollowerList}
                 setShow={setShowFollower}
-                status={false}
+                member_id={member_id}
               />
             )}
             {showFollowing && (
               <FollowCard
                 title={`${data?.data.name}님의 팔로잉 목록`}
-                list={followingData?.data}
+                list={normalizedFollowingList}
                 setShow={setShowFollowing}
-                status={true}
+                member_id={member_id}
               />
             )}
           </>
         )}
       </div>
 
-      <div className="px-[20px] flex lg:hidden  max-lg:mt-[12px]">
+      <div className="px-[20px] flex lg:hidden max-lg:mt-[12px]">
         {menuId !== 2 && <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />}
         {menuId === 2 && isMyProfile && (
           <div className="flex items-start justify-between w-full">
             <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />
             <div className="flex mt-[6px]">
               <div
-                onClick={() => setIsBuyer(true)}
+                onClick={() => {
+                  setIsBuyer(true);
+                  setType({ type: 'buyer' });
+                }}
                 className={clsx(
                   'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
                   isBuyer && 'bg-primary-hover text-white',
@@ -478,7 +534,10 @@ const ProfilePage = () => {
                 구매자 문의
               </div>
               <div
-                onClick={() => setIsBuyer(false)}
+                onClick={() => {
+                  setIsBuyer(false);
+                  setType({ type: 'non_buyer' });
+                }}
                 className={clsx(
                   'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
                   !isBuyer && 'bg-primary-hover text-white',
@@ -494,20 +553,20 @@ const ProfilePage = () => {
             <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />
             <div className="flex mt-[6px]">
               <div
-                onClick={() => setType('buyer')}
+                onClick={() => setType({ type: 'buyer' })}
                 className={clsx(
                   'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
-                  type === 'buyer' && 'bg-primary-hover text-white',
-                  type === 'nonBuyer' && 'bg-white text-text-on-white',
+                  type.type === 'buyer' && 'bg-primary-hover text-white',
+                  type.type === 'non_buyer' && 'bg-white text-text-on-white',
                 )}>
                 구매자 문의
               </div>
               <div
-                onClick={() => setType('nonBuyer')}
+                onClick={() => setType({ type: 'non_buyer' })}
                 className={clsx(
                   'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
-                  type === 'nonBuyer' && 'bg-primary-hover text-white',
-                  type === 'buyer' && 'bg-white text-text-on-white',
+                  type.type === 'non_buyer' && 'bg-primary-hover text-white',
+                  type.type === 'buyer' && 'bg-white text-text-on-white',
                 )}>
                 비구매자 문의
               </div>
@@ -590,7 +649,14 @@ const ProfilePage = () => {
           )}
 
           {menuId === 2 && !isMyProfile && (
-            <AskCard prompts={PROMPT} isMyProfile={isMyProfile} type={type} setType={setType} />
+            <AskCard
+              prompts={promptsData}
+              isMyProfile={isMyProfile}
+              type={type}
+              setType={setType}
+              member_id={member_id}
+              mutatePostInquiries={mutatePostInquiries}
+            />
           )}
 
           {menuId === 2 && isMyProfile && (
@@ -606,6 +672,7 @@ const ProfilePage = () => {
                 {isArrowClicked && (
                   <div
                     onClick={() => {
+                      setType((prev) => (prev.type === 'buyer' ? { type: 'non_buyer' } : { type: 'buyer' }));
                       setIsBuyer((prev) => !prev);
                       setIsArrowClicked(false);
                       setShowInquiryDetail(null);
@@ -618,8 +685,8 @@ const ProfilePage = () => {
               <div className="pr-[8px] bg-white max-lg:hidden">
                 <div className="max-h-[316px] overflow-auto">
                   {showInquiryDetail === null &&
-                    inquiries
-                      .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non-buyer'))
+                    inquiryData?.data
+                      .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non_buyer'))
                       .map((i) => (
                         <InquiryCard
                           key={i.inquiry_id}
@@ -628,39 +695,35 @@ const ProfilePage = () => {
                           status={i.status}
                           sender_nickname={i.sender_nickname}
                           onClick={() => {
+                            setSelectedInquiryId(i.inquiry_id);
                             setShowInquiryDetail(i);
                           }}
                           onRead={(id) => {
-                            setInquiries((prev) =>
-                              prev.map((item) => (item.inquiry_id === id ? { ...item, status: 'read' } : item)),
-                            );
+                            mutateReadInquiries({ inquiry_id: id });
                           }}
-                          onDelete={(id) => {
-                            setInquiries((prev) => prev.filter((item) => item.inquiry_id !== id));
-                          }}
+                          onDelete={() => {}}
                         />
                       ))}
                 </div>
               </div>
 
               <div className="max-lg:hidden">
-                {showInquiryDetail !== null && (
+                {showInquiryDetail !== null && inquiryDetailData && (
                   <InquiryDetailCard
-                    inquiry={showInquiryDetail}
+                    inquiry={inquiryDetailData!}
                     onClick={() => {
                       setShowInquiryDetail(null);
-                      setInquiries((prev) =>
-                        prev.map((i) => (i.inquiry_id === showInquiryDetail.inquiry_id ? { ...i, status: 'read' } : i)),
-                      );
                     }}
+                    mutatePostReplyInquiries={mutatePostReplyInquiries}
+                    mutateReadInquiries={mutateReadInquiries}
                   />
                 )}
               </div>
 
               <div className="pr-[8px] bg-white lg:hidden max-lg:mt-[-30px]">
                 <div className="max-h-[316px] overflow-auto">
-                  {inquiries
-                    .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non-buyer'))
+                  {inquiryData?.data
+                    .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non_buyer'))
                     .map((i) => (
                       <InquiryCard
                         key={i.inquiry_id}
@@ -669,33 +732,29 @@ const ProfilePage = () => {
                         status={i.status}
                         sender_nickname={i.sender_nickname}
                         onClick={() => {
+                          setSelectedInquiryId(i.inquiry_id);
                           setShowInquiryDetail(i);
                           setShowMsgModal(true);
                         }}
                         onRead={(id) => {
-                          setInquiries((prev) =>
-                            prev.map((item) => (item.inquiry_id === id ? { ...item, status: 'read' } : item)),
-                          );
+                          mutateReadInquiries({ inquiry_id: id });
                         }}
-                        onDelete={(id) => {
-                          setInquiries((prev) => prev.filter((item) => item.inquiry_id !== id));
-                        }}
+                        onDelete={() => {}}
                       />
                     ))}
                 </div>
               </div>
 
               <div className="lg:hidden">
-                {showInquiryDetail !== null && showMsgModal === true && (
+                {showInquiryDetail !== null && showMsgModal === true && inquiryDetailData && (
                   <InquiryDetailCard
-                    inquiry={showInquiryDetail}
+                    inquiry={inquiryDetailData!}
                     onClick={() => {
-                      setInquiries((prev) =>
-                        prev.map((i) => (i.inquiry_id === showInquiryDetail.inquiry_id ? { ...i, status: 'read' } : i)),
-                      );
                       setShowMsgModal(false);
                     }}
                     setShowMsgMoldal={setShowMsgModal}
+                    mutatePostReplyInquiries={mutatePostReplyInquiries}
+                    mutateReadInquiries={mutateReadInquiries}
                   />
                 )}
               </div>

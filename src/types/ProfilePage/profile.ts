@@ -19,6 +19,7 @@ export type ResponseMemberDto = CommonResponse<{
 // 회원 팔로워, 팔로잉 목록
 export type Follow = {
   follow_id: number;
+  following_id: number;
   follower_id: number;
   nickname: string;
   email: string;
@@ -27,6 +28,9 @@ export type Follow = {
 };
 
 export type ResponseFollowDto = CommonResponse<Follow[]>;
+
+export type FollowingWithStatus = Follow & { isFollowing: boolean };
+export type FollowerWithStatus = Follow & { isFollowing: boolean };
 
 // 회원 정보 수정
 export type RequestEditMemberDto = {
@@ -103,5 +107,31 @@ export type RequestDeletePromptDto = {
 export type ResponseDeletePromptDto = {
   message: string;
   prompt_id: number;
+  statusCode: number;
+};
+
+// 회원 팔로우
+export type ResponsePostFollowDto = CommonResponse<{
+  follow_id: number;
+  follower_id: number;
+  following_id: number;
+  created_at: string;
+  updated_at: string;
+}>;
+
+// 회원 언팔로우
+export type ResponseDeleteFollow = {
+  message: string;
+  statusCode: number;
+};
+
+// 회원 프로필 이미지 등록
+export type RequestPostImg = {
+  profile_image: File;
+};
+
+export type ResponsePostImg = {
+  error: string;
+  message: string;
   statusCode: number;
 };

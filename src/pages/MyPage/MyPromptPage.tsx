@@ -11,6 +11,7 @@ import usePatchDeletePrompts from '@/hooks/mutations/ProfilePage/usePatchDeleteP
 import type { RequestDeletePromptDto } from '@/types/ProfilePage/profile';
 import useGetPrompts from '@/hooks/queries/ProfilePage/useGetPrompts';
 import { useAuth } from '@/context/AuthContext';
+import { useUnlikePrompt } from '@/hooks/mutations/MyPage/prompt';
 
 /**
  * TODO:
@@ -271,11 +272,6 @@ useEffect(() => {
   }, [activeTab]);
 */
 }
-const DeleteLikedPrompt = (prompt_id: number) => {
-  // 프롬프트 삭제 로직을 여기에 작성합니다.
-  // 예를 들어, API 호출을 통해 프롬프트를 삭제할 수 있습니다.
-  console.log(`프롬프트 ${prompt_id}가 삭제되었습니다.`);
-};
 
 const promptOptions = [
   { value: 'authored', label: '작성 프롬프트' },
@@ -297,6 +293,11 @@ const MyPromptPage = () => {
     // 3. 생성된 URL로 페이지를 이동시킵니다.
     navigate(targetUrl);
   };
+  const { mutate: unlikePromptMutation, isPending } = useUnlikePrompt();
+
+  const DeleteLikedPrompt = (prompt_id: number) => {
+    unlikePromptMutation(prompt_id);
+  };
 
   //iserror, isLoading 처리는 추후 작성 예정
   // 1. useGetPrompts 훅으로 데이터를 가져옵니다.
@@ -307,6 +308,7 @@ const MyPromptPage = () => {
     isFetchingNextPage: isFetchingNextAuthoredPage,
     fetchNextPage: fetchNextAuthoredPage,
   } = useGetPrompts({ member_id: user.user_id });
+  console.log ('마이페이지에서 보이는 user.user_id:', user.user_id);
 
   const { ref, inView } = useInView({ threshold: 0 });
   useEffect(() => {

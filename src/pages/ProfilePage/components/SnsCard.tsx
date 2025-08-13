@@ -89,15 +89,17 @@ const SnsCard = ({
 
   return (
     <div className="bg-white border-b border-b-white-stroke py-[30px] pl-[80px] pr-[33px] max-lg:p-[12px] text-text-on-white text-[20px] font-medium leading-[25px] max-lg:text-[10px] max-lg:font-medium max-lg:leading-[13px] flex items-center gap-[20px]">
-      <div className="max-lg:w-[20px] max-lg:h-[20px]">
-        {snsType === 'instagram' && <img src={InstaIcon} alt="instagram" />}
-        {snsType === 'facebook' && <img src={FacebookIcon} alt="facebook" />}
-        {snsType === 'kakao' && <img src={KakaoIcon} alt="kakao" />}
-        {snsType === 'x' && <img src={XIcon} alt="x" />}
-        {snsType === 'google' && <img src={GoogleIcon} alt="google" />}
-        {snsType === 'youtube' && <img src={YoutubeIcon} alt="youtube" />}
-        {snsType === 'naver' && <img src={NaverIcon} alt="naver" />}
-      </div>
+      <a href={editUrl} target="_blank">
+        <div className="max-lg:w-[20px] max-lg:h-[20px]">
+          {snsType === 'instagram' && <img src={InstaIcon} alt="instagram" />}
+          {snsType === 'facebook' && <img src={FacebookIcon} alt="facebook" />}
+          {snsType === 'kakao' && <img src={KakaoIcon} alt="kakao" />}
+          {snsType === 'x' && <img src={XIcon} alt="x" />}
+          {snsType === 'google' && <img src={GoogleIcon} alt="google" />}
+          {snsType === 'youtube' && <img src={YoutubeIcon} alt="youtube" />}
+          {snsType === 'naver' && <img src={NaverIcon} alt="naver" />}
+        </div>
+      </a>
 
       <div className="flex-1 truncate">{editDescription}</div>
 

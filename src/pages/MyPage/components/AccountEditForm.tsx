@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import ArrowIcon from './ArrowIcon';
-import type { RegisterInfo } from '@/types/MyPage/account';
+import type { RegisterInfo, UpdateAccountInfo } from '@/types/MyPage/account';
 
 /**
  * 조회수 및 다운로드 수를 나타내는 컴포넌트입니다.
@@ -49,7 +49,7 @@ interface Bank {
 }
 
 interface AccountEditFormProps {
-  onSubmit: (info: RegisterInfo) => void;
+  onSubmit: (info: UpdateAccountInfo) => void;
 }
 
 const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
@@ -70,6 +70,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
     if (!isSubmitDisabled) {
       onSubmit({
         bank_code: selectedBank.code,
+        bank_name: selectedBank.name,
         account_number: accountNumber,
         account_holder: accountHolder,
       });
