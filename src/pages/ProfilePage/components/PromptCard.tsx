@@ -7,6 +7,9 @@ import Dots from '@assets/icon-dot.svg';
 import ModelButton from '@/components/Button/ModelButton';
 import TagButton from '@/components/Button/TagButton';
 import type { Model, Tag } from '@/types/ProfilePage/profile';
+import usePromptLike from '@/hooks/mutations/PromptDetailPage/usePromptLike';
+import usePromptUnlike from '@/hooks/mutations/PromptDetailPage/usePromptUnlike';
+import { useGetLikedPrompts } from '@/hooks/queries/MyPage/useGetPrompts';
 
 interface PrompCardProps {
   id: number;
@@ -18,7 +21,15 @@ interface PrompCardProps {
 }
 
 const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }: PrompCardProps) => {
-  const [isLike, setIsLike] = useState(false);
+  // 프롬프트 찜하기
+  const { mutate: mutatePromptLike } = usePromptLike();
+  // 프롬프트 찜 취소하기
+  const { mutate: mutatePromptUnlike } = usePromptUnlike();
+
+  // 찜한 프롬프트 목록
+  const { data: likedList } = useGetLikedPrompts();
+  const isLike = likedList?.data.some((data) => data.prompt_id === id);
+
   const [isDotsClicked, setIsDotsClickes] = useState(false);
   const navigate = useNavigate();
 
@@ -68,7 +79,13 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
 
         {!isMyProfile && (
           <div
-            onClick={() => setIsLike((prev) => !prev)}
+            onClick={() => {
+              if (isLike) {
+                mutatePromptUnlike(id);
+              } else {
+                mutatePromptLike(id);
+              }
+            }}
             className="py-[25px] px-[45px] max-lg:p-0 cursor-pointer lg:w-[115px] lg:h-[72px] max-lg:w-[16px] max-lg:h-[16px] flex items-center justify-center shrink-0">
             <img src={isLike ? HeartBlue : HeartEmpty} alt="좋아요" className="w-full h-full object-contain" />
           </div>
