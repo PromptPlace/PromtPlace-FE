@@ -38,6 +38,12 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const {
+    getItem: getUserFromStorage,
+    setItem: setUserInStorage,
+    removeItem: removeUserFromStorage,
+  } = useLocalStorage(LOCAL_STORAGE_KEY.user);
+
+  const {
     getItem: getAccessTokenFromStorage,
     setItem: setAccessTokenInStorage,
     removeItem: removeAccessTokenFromStorage,
@@ -49,7 +55,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     removeItem: removeRefreshTokenFromStorage,
   } = useLocalStorage(LOCAL_STORAGE_KEY.refreshToken);
 
-  const [user, setUser] = useState<User>(defaultUser);
+  const [user, setUser] = useState<User>(() => getUserFromStorage() || defaultUser);
+  console.log('AuthProvider user:', user.user_id);
   const [accessToken, setAccessToken] = useState<string | null>(getAccessTokenFromStorage());
   const [refreshToken, setRefreshToken] = useState<string | null>(getRefreshTokenFromStorage());
 
@@ -78,7 +85,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         setAccessTokenInStorage(access_token);
         setRefreshTokenInStorage(refresh_token);
         setUser(user);
-
+        setUserInStorage(user);
         console.log(`[${provider}] 로그인 성공!`);
         alert(`환영합니다!`);
         console.log('user 정보:', user);
@@ -97,6 +104,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     } finally {
       removeAccessTokenFromStorage();
       removeRefreshTokenFromStorage();
+      removeUserFromStorage();
       setAccessToken(null);
       setRefreshToken(null);
       setUser(defaultUser);

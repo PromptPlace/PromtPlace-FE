@@ -7,7 +7,7 @@ import AccountDisplay from './components/AccountDisplay';
 import AccountEditForm from './components/AccountEditForm';
 import { useGetAccountInfo } from '@/hooks/queries/MyPage/useGetAccount';
 import { useRegisterAccount, useUpdateAccount } from '@/hooks/mutations/MyPage/account';
-import type { RegisterInfo } from '@/types/MyPage/account';
+import type { RegisterInfo, UpdateAccountInfo } from '@/types/MyPage/account';
 
 interface accountInfo {
   account_id?: number;
@@ -42,12 +42,12 @@ const MyAccountPage = () => {
   };
 
   // '등록 완료' 버튼 클릭 시 (폼 제출)
-  const handleSubmit = (formData: RegisterInfo) => {
+  const handleSubmit = (formData: UpdateAccountInfo) => {
     if (!fetchedAccount) {
-      registerAccount(formData, {
+      const { bank_name, ...registerData } = formData;
+      console.log('은행이름:', bank_name);
+      registerAccount(registerData, {
         onSuccess: () => {
-          // 성공 시, useGetAccountInfo 쿼리가 무효화되어
-          // 최신 정보를 다시 불러오고, useEffect에 의해 자동으로 'view' 모드로 변경됩니다.
           setMode('view');
         },
       });

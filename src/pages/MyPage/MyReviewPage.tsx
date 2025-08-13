@@ -9,6 +9,7 @@ import TextModal from '@/components/Modal/TextModal';
 import Dropdown from './components/Dropdown';
 import { useGetWrittenReviews, useGetReceivedReviews } from '@/hooks/queries/MyPage/useGetReview';
 import { useInView } from 'react-intersection-observer';
+import { useDeleteReview } from '@/hooks/mutations/MyPage/review';
 
 const DUMMY_WRITTEN_REVIEWS = [
   {
@@ -216,7 +217,7 @@ const MyReviewPage = () => {
 
   const confirmDelete = (reviewId: number) => {
     setSelectedReviewId(reviewId);
-    const reviewToDelete = reviews.find((review) => review.review_id === reviewId);
+    const reviewToDelete = reviewsToDisplay.find((review) => review.review_id === reviewId);
 
     if (!reviewToDelete || !isWithin30Days(reviewToDelete.created_at)) {
       setDeleteStep('reject');
@@ -226,10 +227,11 @@ const MyReviewPage = () => {
     setDeleteStep('confirm');
   };
 
+  // 더미데이터용 리뷰 삭제 함수
   const deleteReview = () => {
     if (selectedReviewId !== null) {
       //더미 데이터 삭제
-      setReviews((prevReviews) => prevReviews.filter((review) => review.review_id !== selectedReviewId));
+      deleteReviewMutation(selectedReviewId);
       setDeleteStep('complete');
     }
   };
@@ -237,6 +239,8 @@ const MyReviewPage = () => {
     setDeleteStep(null);
     setSelectedReviewId(null);
   };
+
+  const { mutate: deleteReviewMutation, isPending } = useDeleteReview();
 
   const {
     data: writtenData,
