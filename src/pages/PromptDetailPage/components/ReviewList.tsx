@@ -4,7 +4,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import DualModal from '@components/Modal/DualModal';
 import TextModal from '@components/Modal/TextModal';
 import UpdateModal from './UpdateModal';
-import defaultProfile from '../assets/profile.jpg';
+import defaultProfile from '@/assets/icon-profile-gray.svg';
 import ArrowLeft from '../assets/keyboard_arrow_down _left.svg';
 import useDeleteReview from '@/hooks/mutations/PromptDetailPage/useDeleteReview';
 import useUpdateReview from '@/hooks/mutations/PromptDetailPage/useUpdateReview';
