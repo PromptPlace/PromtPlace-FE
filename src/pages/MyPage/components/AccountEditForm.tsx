@@ -106,17 +106,18 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           className="w-[1082px] max-lg:w-auto pr-[40px] max-lg:px-[12px] max-lg:py-[16px] border-[1px] max-lg:border-[0.5px] border-white-stroke rounded-[8px] text-[18px] max-lg:text-[12px] text-right   font-normal  bg-white">
-          {selectedBank ? (
-            <span className="text-text-on-white ">{selectedBank.name}</span>
-          ) : (
-            <span className="flex lg:justify-end max-lg:justify-between gap-[8px]">
-              <span className="text-text-on-background ">은행을 선택해주세요</span>
-              <span
-                className={`flex items-center justify-center rounded-[50px] w-[24px] max-lg:w-[16px] h-[24px] max-lg:h-[16px] ${isDropdownOpen ? 'bg-primary-pressed' : 'bg-transparent'}`}>
-                <ArrowIcon fillColor={isDropdownOpen ? 'white' : '#999898'} />
-              </span>
+          <span className="flex lg:justify-end max-lg:justify-between gap-[8px]">
+            {selectedBank ? (
+              <span className="text-text-on-white ">{selectedBank.name}</span>
+            ) : (
+              <span className="text-text-on-background">은행을 선택해주세요</span>
+            )}
+
+            <span
+              className={`flex items-center justify-center rounded-[50px] w-[24px] max-lg:w-[16px] h-[24px] max-lg:h-[16px] ${isDropdownOpen ? 'bg-primary-pressed' : 'bg-transparent'}`}>
+              <ArrowIcon fillColor={isDropdownOpen ? 'white' : '#999898'} />
             </span>
-          )}
+          </span>
         </button>
 
         {isDropdownOpen && (
@@ -132,7 +133,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
                 <button
                   key={bank.name}
                   onClick={() => handleBankSelect(bank)}
-                  className="flex flex-col items-center justify-center w-[96px] max-lg:w-[72px] h-[74px] max-lg:w-[48px] bg-white hover:border-[1px] max-lg:hover:border-[0.5px] hover:border-primary">
+                  className="flex flex-col items-center justify-center w-[96px] max-lg:w-[72px] h-[74px] max-lg:w-[48px] bg-white hover:border-[1px] max-lg:hover:border-[0.5px] hover:border-primary hover:rounded-[4px]">
                   <img
                     src={getBankLogoUrl(bank.fileName)}
                     alt={bank.name}
