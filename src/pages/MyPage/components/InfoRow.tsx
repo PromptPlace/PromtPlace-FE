@@ -3,7 +3,7 @@ import KakaoIcon from '@/assets/icon-kakao-logo.svg';
 import NaverIcon from '@/assets/icon-naver-logo.svg';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import arrow from '@assets/icon-arrow-right-black.svg';
-import SocialLoginModal from '@/components/Modal/SocialLoginModal';
+import LoginSwitchModal from '@/components/Modal/LoginSwitchModal';
 import { useState } from 'react';
 
 interface InfoRowProps {
@@ -54,7 +54,7 @@ const InfoRow: React.FC<InfoRowProps> = ({ label, nickname, email, provider, has
             </button>
           )}
           {isModalOpen && (
-            <SocialLoginModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onClick={() => {}} />
+            <LoginSwitchModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onClick={() => {}} />
           )}
         </div>
       )}
