@@ -2,41 +2,56 @@ import React, { useState } from 'react';
 import sendIcon from '../assets/BiSend.png';
 import BiRadioCircle from '../assets/BiRadioCircle.png';
 import BiRadioCircleMarked from '../assets/BiRadioCircleMarked.png';
+import { isAxiosError } from 'axios';
+import { useShowLoginModal } from '@/hooks/useShowLoginModal';
+import useReportPrompt, { type ReportType } from '@/hooks/mutations/PromptDetailPage/useReportPrompt';
 
 interface ReportModalProps {
   isOpen: boolean;
   onClose: () => void;
+  promptId: number;
 }
 
-const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
-  const [selectedOption, setSelectedOption] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
+const ReportModal = ({ isOpen, onClose, promptId }: ReportModalProps) => {
+  const [selectedOption, setSelectedOption] = useState<ReportType | null>(null);
+  const [description, setDescription] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const { mutateAsync: report, isPending } = useReportPrompt();
+  const { handleShowLoginModal } = useShowLoginModal();
 
   if (!isOpen) return null;
 
-  const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedOption(event.target.value);
-    setDescription('');
-  };
+  const OPTIONS: { value: ReportType; label: string; desc?: string }[] = [
+    { value: 'FALSE_OR_EXAGGERATED', label: '허위 또는 과장된 콘텐츠', desc: '프롬프트 및 설명에 허위/과장 정보 포함' },
+    { value: 'COPYRIGHT_INFRINGEMENT', label: '저작권 및 지적재산권 침해', desc: '타인의 프롬프트를 무단 복제/침해' },
+    { value: 'INAPPROPRIATE_OR_HARMFUL', label: '불쾌하거나 부적절한 내용', desc: '혐오, 차별, 음란, 폭력 등' },
+    { value: 'ETC', label: '기타' },
+  ];
 
-  const handleSubmit = () => {
-    if (!description.trim()) return;
-    console.log('신고 항목:', selectedOption);
-    console.log('신고 내용:', description);
-    setIsSubmitted(true);
+  const handleSubmit = async () => {
+    if (!description.trim() || !selectedOption || !Number.isFinite(promptId) || isPending) return;
+    try {
+      await report({ prompt_id: promptId, report_type: selectedOption, description: description.trim() });
+      setIsSubmitted(true);
+      setTimeout(onClose, 1200);
+    } catch (e) {
+      if (isAxiosError(e) && (e.response?.status ?? 0) === 401) {
+        handleShowLoginModal(handleSubmit);
+        return;
+      }
+      alert('신고 처리에 실패했습니다.');
+    }
   };
 
   return (
-    <div className=" bg-overlay fixed inset-0 z-50 flex items-center justify-center bg-opacity-40">
+    <div className="bg-overlay fixed inset-0 z-50 flex items-center justify-center bg-opacity-40">
       <div className="relative flex flex-col bg-white rounded-[16px] shadow-lg px-[42px] py-[45px] w-[758px] h-[635px] max-lg:w-[280px] max-lg:h-[350px] max-lg:pt-0 max-lg:pb-0 max-lg:px-0 text-[#121212]">
-        {/* 제목 영역*/}
+        {/* 제목 */}
         <div className="flex items-center mb-[40px] max-lg:m-0 max-lg:pl-[8px] max-lg:h-[40px] max-lg:pt-[20px] max-lg:pr-[20px]">
           <button
             onClick={onClose}
-            className="text-2xl font-bold leading-none hover:opacity-70
-               max-lg:w-[16px] max-lg:h-[16px] max-lg:text-[16px] max-lg:leading-[16px] max-lg:flex max-lg:items-center max-lg:justify-center"
-            aria-label="뒤로가기">
+            className="text-2xl font-bold leading-none hover:opacity-70 max-lg:w-[16px] max-lg:h-[16px] max-lg:text-[16px] max-lg:leading-[16px]">
             &lt;
           </button>
           <h2 className="text-[24px] font-bold ml-[10px] max-lg:text-[16px] max-lg:ml-[10px] max-lg:leading-[16px]">
@@ -46,30 +61,8 @@ const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
 
         {!isSubmitted ? (
           <div className="flex flex-col gap-[24px] px-[25px] max-lg:pt-[20px] max-lg:px-[20px] max-lg:h-[310px]">
-            {/* 라디오 항목 */}
             <div className="flex flex-col gap-[24px] max-lg:gap-[12px]">
-              {[
-                {
-                  value: '허위 또는 과장된 콘텐츠',
-                  label: '허위 또는 과장된 콘텐츠',
-                  desc: '프롬프트 및 프롬프트 설명에 허위 정보 포함 또는 지나치게 과장된 경우',
-                },
-                {
-                  value: '저작권 및 지적재산권 침해',
-                  label: '저작권 및 지적재산권 침해',
-                  desc: '타인의 프롬프트를 무단 복제하거나 권리를 침해한 경우',
-                },
-                {
-                  value: '불쾌하거나 부적절한 내용',
-                  label: '불쾌하거나 부적절한 내용',
-                  desc: '혐오, 차별, 음란, 폭력 등의 부적절한 내용이 포함된 경우',
-                },
-                {
-                  value: '기타',
-                  label: '기타',
-                  desc: '',
-                },
-              ].map((item) => (
+              {OPTIONS.map((item) => (
                 <label key={item.value} className="flex flex-col gap-[6px] max-lg:gap-[2px] cursor-pointer">
                   <div className="flex items-start max-lg:gap-[12px] max-lg:text-[#000000]">
                     <input
@@ -77,17 +70,15 @@ const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
                       name="reportOption"
                       value={item.value}
                       checked={selectedOption === item.value}
-                      onChange={handleOptionChange}
+                      onChange={(e) => setSelectedOption(e.target.value as ReportType)}
                       className="hidden"
                     />
-                    {/*라디오 아이콘 */}
                     <img
                       src={selectedOption === item.value ? BiRadioCircleMarked : BiRadioCircle}
                       alt="radio"
                       onClick={() => setSelectedOption(item.value)}
-                      className="w-[20px] h-[20px]  max-lg:w-[16px]  max-lg:h-[16px] mt-[6px] max-lg:mt-[2px] cursor-pointer"
+                      className="w-[20px] h-[20px] max-lg:w-[16px] max-lg:h-[16px] mt-[6px] max-lg:mt-[2px] cursor-pointer"
                     />
-
                     <div>
                       <p className="text-[24px] font-bold max-lg:text-[14px]">{item.label}</p>
                       {item.desc && (
@@ -96,7 +87,6 @@ const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
                     </div>
                   </div>
 
-                  {/* 선택된 항목에만 textarea와 전송 버튼 표시 */}
                   {selectedOption === item.value && (
                     <div className="relative mt-[12px] max-lg:pl-[28px] max-lg:m-0 max-lg:h-[68px]">
                       <textarea
@@ -105,10 +95,9 @@ const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
                         placeholder="신고 내용을 입력하세요(구체적으로 작성)"
                         className="w-full h-[96px] bg-[#F5F5F5] border border-gray-300 rounded-[8px] p-4 resize-none focus:outline-none focus:ring-0 transition text-[14px] max-lg:p-[8px] max-lg:text-[10px] max-lg:w-[212px] max-lg:h-[68px]"
                       />
-
                       <button
                         onClick={handleSubmit}
-                        disabled={!description.trim()}
+                        disabled={!description.trim() || !selectedOption || isPending}
                         className="absolute bottom-[12px] right-[12px] text-black opacity-100 transition-opacity">
                         <img src={sendIcon} alt="send" className="w-[20px] h-[20px] max-lg:w-[16px] max-lg:h-[16px]" />
                       </button>

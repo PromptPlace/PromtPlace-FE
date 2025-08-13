@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Count from '@components/Count';
 import ModelButton from '@components/Button/ModelButton';
 import updateIcon from '../assets/updatebutton.png';
@@ -15,21 +15,25 @@ interface Props {
   downloads: number;
   onClose: () => void;
   onClickReview: () => void;
+  model?: string;
+  rating?: number;
+  tags?: string[];
 }
 
-const PromptHeader = ({ title, views, downloads, onClose, onClickReview }: Props) => {
+const PromptHeader = ({ title, views, downloads, onClose, onClickReview, model, rating, tags }: Props) => {
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
   const [liked, setLiked] = useState(false);
 
-  // 모바일용 더미 데이터
-  const rating = 5.0;
+  const safeModel = model && model.trim().length > 0 ? model : 'ChatGPT';
+  const safeRating = Number.isFinite(rating as number) ? Number(rating) : 0;
+  const safeTags = useMemo(() => (Array.isArray(tags) ? tags : []), [tags]);
 
   return (
     <div className="w-[711px] max-lg:max-w-[280px] max-lg:max-h-[191px] bg-[#FFFEFB] px-8 max-lg:pt-[12px] max-lg:px-[12px]">
       {/* PC */}
       <div className="hidden lg:block h-[132px] box-border flex flex-col justify-between">
         <div className="flex items-center justify-between w-full pt-[35px] pb-[5px]">
-          <ModelButton text="ChatGPT" />
+          <ModelButton text={safeModel} />
 
           {isAdmin && (
             <div className="flex gap-[24px]">
@@ -63,10 +67,10 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview }: Props
 
       {/* 모바일 레이아웃 */}
       <div className="lg:hidden max-lg:max-h-[167px]">
-        {/* ChatGPT + 조회/다운로드 */}
+        {/* 모델 + 조회/다운로드 */}
         <div className="flex items-center gap-[8px]">
           <div className="w-[54px] h-[23px] flex items-center justify-center font-medium text-[10px]">
-            <ModelButton text="ChatGPT" />
+            <ModelButton text={safeModel} />
           </div>
           <div className="flex gap-[8px] text-[8px] font-normal">
             <Count imgType="eye" count={views} />
@@ -74,7 +78,7 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview }: Props
           </div>
         </div>
 
-        {/*제목 */}
+        {/* 제목 */}
         <div className="flex items-center justify-between mt-[8px]">
           <h2 className="text-[16px] font-bold">{`[${title}]`}</h2>
         </div>
@@ -84,7 +88,7 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview }: Props
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[6px]">
               <button aria-label="리뷰 보기" onClick={onClickReview} className="flex items-center gap-[4px]">
-                <Rating star={rating} />
+                <Rating star={safeRating} />
                 <img src={rightArrow} alt="arrow" className="w-[12px] h-[12px]" />
               </button>
             </div>
@@ -98,13 +102,13 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview }: Props
           </div>
 
           <div className="grid grid-cols-5 gap-3 mt-[8px] mb-[12px]">
-            <TagButton hasDelete={false} text="#수채화" onClick={() => {}} />
-            <TagButton hasDelete={false} text="#수묵화" onClick={() => {}} />
-            <TagButton hasDelete={false} text="#디자인" onClick={() => {}} />
-            <TagButton hasDelete={false} text="#일러스트" onClick={() => {}} />
-            <TagButton hasDelete={false} text="#그림" onClick={() => {}} />
-            <TagButton hasDelete={false} text="#이미지" onClick={() => {}} />
-            <TagButton hasDelete={false} text="#수채화" onClick={() => {}} />
+            {safeTags.length === 0 ? (
+              <span className="text-[10px] text-[#9aa0a6] col-span-5">태그가 없습니다.</span>
+            ) : (
+              safeTags
+                .slice(0, 7)
+                .map((tag, idx) => <TagButton key={idx} hasDelete={false} text={`#${tag}`} onClick={() => {}} />)
+            )}
           </div>
         </div>
         <div className="h-[1px] bg-[#CCCCCC] w-full max-lg:p-0 max-lg:m-0" />
