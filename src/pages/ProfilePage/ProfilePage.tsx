@@ -348,7 +348,11 @@ const ProfilePage = () => {
             )}
           </div>
 
-          <div className="flex flex-col gap-[5px] max-lg:gap-[4px] text-text-on-white shrink-0 max-lg:items-center">
+          <div
+            className={clsx(
+              profileEdit && 'gap-[15px]',
+              'flex flex-col gap-[5px] max-lg:gap-[4px] text-text-on-white shrink-0 max-lg:items-center',
+            )}>
             {!profileEdit && (
               <div className="flex gap-[4px] max-lg:justify-center">
                 <p className="text-[32px] font-bold leading-[40px] max-lg:text-[16px] max-lg:font-medium max-lg:leading-[20px] ">
@@ -386,7 +390,7 @@ const ProfilePage = () => {
                 <input
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
-                  className="text-[32px] font-bold leading-[40px] outline-none text-primary placeholder:text-primary w-[175px] max-lg:text-[16px] max-lg:leading-[20px] max-lg:font-medium max-lg:border-b max-lg:w-max max-lg:max-w-[45px]"
+                  className="text-[32px] font-bold leading-[40px] outline-none text-primary placeholder:text-primary w-[175px] border-b border-primary max-lg:text-[16px] max-lg:leading-[20px] max-lg:font-medium max-lg:border-b max-lg:w-max max-lg:max-w-[45px]"
                   placeholder={userName}
                 />
                 <div className={clsx('lg:hidden max-lg:relative', showImgModal && 'z-10', !showImgModal && 'z-30')}>
@@ -411,7 +415,7 @@ const ProfilePage = () => {
                 value={userDescription}
                 onChange={(e) => setUserDescription(e.target.value)}
                 placeholder={userDescription}
-                className="text-[20px] font-medium leading-[25px] placeholder:text-primary outline-none text-primary lg:w-[219px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px] max-lg:border-b max-lg:relative max-lg:z-300"
+                className="text-[20px] font-medium leading-[25px] placeholder:text-primary outline-none text-primary lg:w-[219px] max-lg:w-[79px] border-b border-primary max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px] max-lg:border-b max-lg:relative max-lg:z-300"
               />
             )}
           </div>
