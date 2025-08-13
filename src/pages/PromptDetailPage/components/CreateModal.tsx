@@ -5,13 +5,14 @@ import PrimaryButton from '@components/Button/PrimaryButton';
 import Bar from '../assets/bar.svg';
 import useCreateReview from '@/hooks/mutations/PromptDetailPage/useCreateReview';
 import type { AxiosError } from 'axios';
+import type { ResponseCreateReviewDto } from '@/types/PromptDetailPage/PromptReviewDto';
 
 interface CreateModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
   promptId: number;
-  onSuccess: () => void;
+  onSuccess: (data: ResponseCreateReviewDto['data']) => void;
 }
 
 const CreateModal = ({ isOpen, onClose, title, promptId, onSuccess }: CreateModalProps) => {
