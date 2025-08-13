@@ -3,14 +3,14 @@ import KakaoIcon from '@/assets/icon-kakao-logo.svg';
 import NaverIcon from '@/assets/icon-naver-logo.svg';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import arrow from '@assets/icon-arrow-right-black.svg';
-import SocialLoginModal from '@/components/Modal/SocialLoginModal';
+import LoginSwitchModal from '@/components/Modal/LoginSwitchModal';
 import { useState } from 'react';
 
 interface InfoRowProps {
   label: string;
   nickname?: string;
   email?: string;
-  provider?: 'google' | 'kakao' | 'naver';
+  provider?: 'GOOGLE' | 'KAKAO' | 'NAVER';
   hasArrow?: boolean;
   actionText?: string;
   onAction?: () => void;
@@ -19,9 +19,9 @@ interface InfoRowProps {
 
 const InfoRow: React.FC<InfoRowProps> = ({ label, nickname, email, provider, hasArrow, actionText, onAction }) => {
   const ICONS = {
-    google: GoogleIcon,
-    kakao: KakaoIcon,
-    naver: NaverIcon,
+    GOOGLE: GoogleIcon,
+    KAKAO: KakaoIcon,
+    NAVER: NaverIcon,
   };
   const IconComponent = provider ? ICONS[provider] : null;
 
@@ -54,7 +54,7 @@ const InfoRow: React.FC<InfoRowProps> = ({ label, nickname, email, provider, has
             </button>
           )}
           {isModalOpen && (
-            <SocialLoginModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onClick={() => {}} />
+            <LoginSwitchModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onClick={() => {}} />
           )}
         </div>
       )}
