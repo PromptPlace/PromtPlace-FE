@@ -13,7 +13,7 @@ interface InquiryDetailCardProps {
   inquiry: ResponseGetDetailInquiriesDto;
   onClick: () => void;
   setShowMsgMoldal?: (show: boolean) => void;
-  mutatePostInquiries: ({ inquiry_id, content }: RequestGetDetailInquiriesDto & RequestReplyInquiriesDto) => void;
+  mutatePostReplyInquiries: ({ inquiry_id, content }: RequestGetDetailInquiriesDto & RequestReplyInquiriesDto) => void;
   mutateReadInquiries: ({ inquiry_id }: RequestGetDetailInquiriesDto) => void;
 }
 
@@ -21,7 +21,7 @@ const InquiryDetailCard = ({
   inquiry,
   onClick,
   setShowMsgMoldal,
-  mutatePostInquiries,
+  mutatePostReplyInquiries,
   mutateReadInquiries,
 }: InquiryDetailCardProps) => {
   const [replyInput, setReplyInput] = useState<string>('');
@@ -29,7 +29,7 @@ const InquiryDetailCard = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutatePostInquiries({ inquiry_id: inquiry.data.inquiry_id, content: replyInput });
+    mutatePostReplyInquiries({ inquiry_id: inquiry.data.inquiry_id, content: replyInput });
     setShowModal(true);
   };
 
@@ -82,7 +82,7 @@ const InquiryDetailCard = ({
               buttonType="send"
               size="md"
               onClick={() => {
-                mutatePostInquiries({ inquiry_id: inquiry.data.inquiry_id, content: replyInput });
+                mutatePostReplyInquiries({ inquiry_id: inquiry.data.inquiry_id, content: replyInput });
                 mutateReadInquiries({ inquiry_id: inquiry.data.inquiry_id });
                 setShowModal(true);
               }}
@@ -117,6 +117,7 @@ const InquiryDetailCard = ({
             onDragEnd={(_, info) => {
               if (info.point.y > window.innerHeight - 210 && setShowMsgMoldal) {
                 setShowMsgMoldal(false);
+                mutateReadInquiries({ inquiry_id: inquiry.data.inquiry_id });
               }
             }}>
             <div className="pt-[14px] pb-[10px] rounded-t-[24px] bg-white cursor-grab flex justify-center">
@@ -149,7 +150,7 @@ const InquiryDetailCard = ({
               <MobileButton
                 text="전송하기"
                 onClick={() => {
-                  mutatePostInquiries({ inquiry_id: inquiry.data.inquiry_id, content: replyInput });
+                  mutatePostReplyInquiries({ inquiry_id: inquiry.data.inquiry_id, content: replyInput });
                   mutateReadInquiries({ inquiry_id: inquiry.data.inquiry_id });
                   setShowModal(true);
                 }}

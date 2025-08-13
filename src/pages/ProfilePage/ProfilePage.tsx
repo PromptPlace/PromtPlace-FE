@@ -28,37 +28,37 @@ import InquiryCard from './components/InquiryCard';
 import InquiryDetailCard from './components/InquiryDetailCard';
 import FollowCard from './components/FollowCard';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
+import Select from './components/Select';
 
-import PROMPT from '@data/ProfilePage/prompt.json';
+import type { RequestDeletePromptDto, RequestEditMemberDto, RequestIntroDto } from '@/types/ProfilePage/profile';
+import type { RequestDeleteHistoryDto, RequestEditHistoryDto, RequestHistoryDto } from '@/types/ProfilePage/history';
+import type { RequestPatchSNSDto, RequestPostSNS } from '@/types/ProfilePage/sns';
+import type { RequestGetInquiriesDto } from '@/types/ProfilePage/inquiry';
 
 import useImgUpload from '@hooks/useImgUpload';
-import Select from './components/Select';
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
 import useGetFollower from '@/hooks/queries/ProfilePage/useGetFollower';
 import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
 import usePatchEditMember from '@/hooks/mutations/ProfilePage/usePatchEditMember';
-import type { RequestDeletePromptDto, RequestEditMemberDto, RequestIntroDto } from '@/types/ProfilePage/profile';
 import usePostEditIntro from '@/hooks/mutations/ProfilePage/usePostEditIntro';
 import useGetHistories from '@/hooks/queries/ProfilePage/useGetHistories';
 import usePatchHistories from '@/hooks/mutations/ProfilePage/usePatchHistories';
-import type { RequestDeleteHistoryDto, RequestEditHistoryDto, RequestHistoryDto } from '@/types/ProfilePage/history';
 import useDeleteHistories from '@/hooks/mutations/ProfilePage/useDeleteHistories';
 import usePostHistories from '@/hooks/mutations/ProfilePage/usePostHistories';
 import useGetPrompts from '@/hooks/queries/ProfilePage/useGetPrompts';
 import usePatchDeletePrompts from '@/hooks/mutations/ProfilePage/usePatchDeletePrompts';
 import useGetSNS from '@/hooks/queries/ProfilePage/useGetSNS';
 import usePatchSNS from '@/hooks/mutations/ProfilePage/usePatchSNS';
-import type { RequestPatchSNSDto, RequestPostSNS } from '@/types/ProfilePage/sns';
 import useDeleteSNS from '@/hooks/mutations/ProfilePage/useDeleteSNS';
 import usePostSNS from '@/hooks/mutations/ProfilePage/usePostSNS';
 import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
 import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
 import useGetInquiries from '@/hooks/queries/ProfilePage/useGetInquiries';
-import type { RequestGetInquiriesDto } from '@/types/ProfilePage/inquiry';
 import useGetDetailInquiries from '@/hooks/queries/ProfilePage/useGetDetailInquiries';
 import usePostReplyInquiries from '@/hooks/mutations/ProfilePage/usePostReplyInquiries';
 import usePatchReadInquiries from '@/hooks/mutations/ProfilePage/usePatchReadInquiries';
+import usePostInquiries from '@/hooks/mutations/ProfilePage/usePostInquiries';
 
 type Inquiry = {
   inquiry_id: number;
@@ -124,6 +124,8 @@ const ProfilePage = () => {
 
   // 작성한 프롬프트 목록
   const { data: promptsData, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetPrompts({ member_id });
+  console.log(promptsData);
+
   const { ref, inView } = useInView({ threshold: 1 });
 
   // 프롬프트 삭제
@@ -161,10 +163,13 @@ const ProfilePage = () => {
   const { data: inquiryDetailData } = useGetDetailInquiries({ member_id }, { inquiry_id: selectedInquiryId });
 
   // 문의 답변하기
-  const { mutate: mutatePostInquiries } = usePostReplyInquiries({ member_id });
+  const { mutate: mutatePostReplyInquiries } = usePostReplyInquiries({ member_id });
 
   // 문의 읽음 처리
   const { mutate: mutateReadInquiries } = usePatchReadInquiries({ member_id });
+
+  // 문의하기
+  const { mutate: mutatePostInquiries } = usePostInquiries({ member_id });
 
   const menuList = [
     {
@@ -527,20 +532,20 @@ const ProfilePage = () => {
             <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />
             <div className="flex mt-[6px]">
               <div
-                onClick={() => setType('buyer')}
+                onClick={() => setType({ type: 'buyer' })}
                 className={clsx(
                   'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
-                  type === 'buyer' && 'bg-primary-hover text-white',
-                  type === 'nonBuyer' && 'bg-white text-text-on-white',
+                  type.type === 'buyer' && 'bg-primary-hover text-white',
+                  type.type === 'non_buyer' && 'bg-white text-text-on-white',
                 )}>
                 구매자 문의
               </div>
               <div
-                onClick={() => setType('nonBuyer')}
+                onClick={() => setType({ type: 'non_buyer' })}
                 className={clsx(
                   'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
-                  type === 'nonBuyer' && 'bg-primary-hover text-white',
-                  type === 'buyer' && 'bg-white text-text-on-white',
+                  type.type === 'non_buyer' && 'bg-primary-hover text-white',
+                  type.type === 'buyer' && 'bg-white text-text-on-white',
                 )}>
                 비구매자 문의
               </div>
@@ -623,7 +628,14 @@ const ProfilePage = () => {
           )}
 
           {menuId === 2 && !isMyProfile && (
-            <AskCard prompts={PROMPT} isMyProfile={isMyProfile} type={type} setType={setType} />
+            <AskCard
+              prompts={promptsData}
+              isMyProfile={isMyProfile}
+              type={type}
+              setType={setType}
+              member_id={member_id}
+              mutatePostInquiries={mutatePostInquiries}
+            />
           )}
 
           {menuId === 2 && isMyProfile && (
@@ -662,8 +674,6 @@ const ProfilePage = () => {
                           status={i.status}
                           sender_nickname={i.sender_nickname}
                           onClick={() => {
-                            console.log(i.inquiry_id);
-
                             setSelectedInquiryId(i.inquiry_id);
                             setShowInquiryDetail(i);
                           }}
@@ -683,7 +693,7 @@ const ProfilePage = () => {
                     onClick={() => {
                       setShowInquiryDetail(null);
                     }}
-                    mutatePostInquiries={mutatePostInquiries}
+                    mutatePostReplyInquiries={mutatePostReplyInquiries}
                     mutateReadInquiries={mutateReadInquiries}
                   />
                 )}
@@ -722,7 +732,7 @@ const ProfilePage = () => {
                       setShowMsgModal(false);
                     }}
                     setShowMsgMoldal={setShowMsgModal}
-                    mutatePostInquiries={mutatePostInquiries}
+                    mutatePostReplyInquiries={mutatePostReplyInquiries}
                     mutateReadInquiries={mutateReadInquiries}
                   />
                 )}
