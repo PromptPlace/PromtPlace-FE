@@ -6,11 +6,13 @@ import TextModal from '@components/Modal/TextModal';
 import UpdateModal from './UpdateModal';
 import defaultProfile from '../assets/profile.jpg';
 import ArrowLeft from '../assets/keyboard_arrow_down _left.svg';
+import useDeleteReview from '@/hooks/mutations/PromptDetailPage/useDeleteReview';
+import useUpdateReview from '@/hooks/mutations/PromptDetailPage/useUpdateReview';
 
-interface Review {
+export interface Review {
   review_id: number;
   writer_id: number;
-  writer_profile_image_url: string;
+  writer_profile_image_url: string | null;
   writer_nickname: string;
   rating: number;
   content: string;
@@ -46,6 +48,8 @@ const ReviewList = ({
   const [selectedReviewIdx, setSelectedReviewIdx] = useState<number | null>(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+  const { mutateAsync: deleteMutate, isPending: deleting } = useDeleteReview();
+  const { mutateAsync: updateMutate, isPending: updating } = useUpdateReview();
 
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
@@ -78,22 +82,32 @@ const ReviewList = ({
     setShowUpdateModal(true);
   };
 
-  const handleSave = (newRating: number, newComment: string) => {
+  const handleSave = async (newRating: number, newComment: string) => {
     if (selectedReviewIdx === null) return;
+    const target = reviews[selectedReviewIdx];
 
-    const updatedReviews = [...reviews];
-    updatedReviews[selectedReviewIdx] = {
-      ...updatedReviews[selectedReviewIdx],
-      rating: newRating,
-      content: newComment,
-      created_at: new Date().toISOString(),
-    };
+    try {
+      const res = await updateMutate({
+        reviewId: target.review_id,
+        body: { rating: newRating, content: newComment },
+      });
 
-    setReviews(updatedReviews);
-    setSelectedReview(updatedReviews[selectedReviewIdx]);
-    setShowUpdateModal(false);
-    setSelectedReviewIdx(null);
-    setOpenMenuIdx(null);
+      const updated = [...reviews];
+      updated[selectedReviewIdx] = {
+        ...updated[selectedReviewIdx],
+        rating: res.data.rating ?? newRating,
+        content: res.data.content ?? newComment,
+        created_at: res.data.updated_at ?? new Date().toISOString(),
+      };
+
+      setReviews(updated);
+      setSelectedReview(updated[selectedReviewIdx]);
+      setShowUpdateModal(false);
+      setSelectedReviewIdx(null);
+      setOpenMenuIdx(null);
+    } catch {
+      alert('리뷰 수정에 실패했습니다.');
+    }
   };
 
   return (
@@ -252,22 +266,33 @@ const ReviewList = ({
         </div>
       </div>
 
-      {/* 삭제 확인 모달 */}
       {showDeleteModal && (
         <DualModal
           text={isAdmin ? '리뷰를 삭제 조치하시겠습니까?' : '리뷰를 삭제하시겠습니까?'}
-          onClickYes={() => {
-            if (selectedReviewIdx !== null) {
-              const updated = [...reviews];
-              updated.splice(selectedReviewIdx, 1);
-              setReviews(updated);
-              setReviewCount((prev) => prev - 1);
-              setSelectedReviewIdx(null);
-            }
+          onClickYes={async () => {
+            if (selectedReviewIdx === null) return;
+            const review = reviews[selectedReviewIdx];
 
-            setOpenMenuIdx(null);
-            setShowDeleteModal(false);
-            setShowDeleteSuccessModal(true);
+            try {
+              await deleteMutate(review.review_id);
+              const updated = reviews.filter((r) => r.review_id !== review.review_id);
+              setReviews(updated);
+              setReviewCount((prev) => Math.max(0, prev - 1));
+              setSelectedReviewIdx(null);
+              setOpenMenuIdx(null);
+              setShowDeleteModal(false);
+              setShowDeleteSuccessModal(true);
+            } catch (e: any) {
+              const status = e?.response?.status;
+              if (status === 403) {
+                // 30일 초과
+                setShowDeleteModal(false);
+                setShowExpiredModal(true);
+                return;
+              }
+              alert('리뷰 삭제에 실패했습니다.');
+              setShowDeleteModal(false);
+            }
           }}
           onClickNo={() => setShowDeleteModal(false)}
         />
@@ -295,6 +320,7 @@ const ReviewList = ({
           rating={selectedReview.rating}
           initialReviewText={selectedReview.content}
           onSave={handleSave}
+          reviewId={selectedReview.review_id}
         />
       )}
     </>

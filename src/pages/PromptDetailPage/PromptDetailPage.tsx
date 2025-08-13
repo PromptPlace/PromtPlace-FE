@@ -1,8 +1,8 @@
 import PromptHeader from './components/PromptHeader';
 import PromptInfo from './components/PromptInfo';
 import PromptActions from './components/PromptActions';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
 import ReviewList from './components/ReviewList';
 import IconButton from '@components/Button/IconButton';
 import profile from './assets/profile.jpg';
@@ -12,94 +12,134 @@ import ReportModal from './components/ReportModal';
 import DownloadModal from './components/DownloadModal';
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
-
-const mockPrompt = {
-  prompt_id: 123,
-  user_id: 45,
-  title: '동양풍 일러스트 이미지 생성',
-  prompt: '수채화 느낌의 동양풍 여성 일러스트 생성',
-  prompt_result: '아름다운 전통의상을 입은 여성이 자연과 함께 서 있다...',
-  has_image: true,
-  description:
-    '- 수채화, 수묵화 느낌이 나는 동양풍 일러스트를 생성할 때\n- 한복을 입은 인물을 자연스럽게 출력시키고 싶을 때',
-  usage_guide:
-    '프롬프트 내 ##(키워드)## 부분 중 (키워드)에 해당하는 부분에 원하는 키워드를 입력하세요. 일본풍과 한국풍을 나눠서 출력할 수 있습니다. 사이즈는 1990x890과 같은 형식으로 설정하세요. 결과물이 나온 직후 이러한 프롬프트를 활용해서 더 업그레이드 시킬 수 있습니다! "배경의 선명도를....',
-  price: 1800,
-  is_free: false,
-  downloads: 120,
-  views: 2109,
-  likes: 456,
-  review_counts: 24,
-  rating_avg: 4.0,
-  updated_at: '2025-07-06T10:00:00',
-};
-
-const dummyReviews = [
-  {
-    review_id: 101,
-    writer_id: 1,
-    writer_profile_image_url: '',
-    writer_nickname: '홍길동',
-    rating: 4.0,
-    content: '좋은 프롬프트 감사합니다.',
-    created_at: '2025-07-28',
-  },
-  {
-    review_id: 102,
-    writer_id: 2,
-    writer_profile_image_url: '',
-    writer_nickname: '이몽룡',
-    rating: 5.0,
-    content: '바로 써봤는데 너무 좋네요!',
-    created_at: '2025-07-28',
-  },
-];
+import useGetPromptDetail from '@/hooks/queries/PromptDetailPage/useGetPromptDetail';
+import useGetAllPromptReviews from '@/hooks/queries/PromptDetailPage/useGetAllPromptReviews';
+import usePromptDownload from '@/hooks/mutations/PromptDetailPage/usePromptDownload';
+import type { Review as UIReview } from './components/ReviewList';
+import { isAxiosError } from 'axios';
 
 const PromptDetailPage = () => {
   const navigate = useNavigate();
-  const prompt = mockPrompt;
+  const { id } = useParams<{ id: string }>();
+
+  const promptId = useMemo(() => {
+    const n = Number(id);
+    return Number.isFinite(n) && n > 0 ? n : NaN;
+  }, [id]);
+
+  const { data, isLoading, isError } = useGetPromptDetail(promptId);
+
+  const { mutateAsync: fetchDownload, isPending: isDownloading } = usePromptDownload();
+
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
+
   const [showReviews, setShowReviews] = useState(false);
   const [follow, setFollow] = useState(false);
 
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-
   const handleOpenReportModal = () => setIsReportModalOpen(true);
   const handleCloseReportModal = () => setIsReportModalOpen(false);
 
-  const [reviews, setReviews] = useState(dummyReviews);
-  const [reviewCount, setReviewCount] = useState(prompt.review_counts);
+  const [reviews, setReviews] = useState<UIReview[]>([]);
+  const [reviewCount, setReviewCount] = useState<number>(0);
 
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [downloadData, setDownloadData] = useState<{
     title: string;
-    downloadUrl: string;
     content: string;
   } | null>(null);
 
   const [isPaid, setIsPaid] = useState(false);
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
 
-  const handleDownloadClick = () => {
-    const title = '동양풍 일러스트 이미지 생성';
-    const download_url = 'https://cdn.promptplace.com/prompts/1024.txt';
-    const content = `
-1. 전통 동양풍 인물 일러스트
-a graceful Korean noblewoman wearing hanbok, sitting under a cherry blossom tree, Joseon dynasty style, soft lighting, detailed fabric texture, traditional hair style, serene atmosphere, oriental illustration --v 5 --ar 2:3
-a Korean dragon soaring through the clouds, traditional ink painting style, dynamic cloud motion, golden scales shimmering in sunlight, East Asian mythology, majestic and ancient aura --v 5 --ar 3:2 --style scenic
+  const prompt = useMemo(() => {
+    if (!data) return null;
+    return {
+      prompt_id: data.prompt_id,
+      user_id: data.user_id,
+      title: data.title,
+      prompt: data.prompt,
+      prompt_result: data.prompt_result,
+      has_image: !!data.has_image,
+      description: data.description,
+      usage_guide: data.usage_guide,
+      price: Number.isFinite(data.price) ? Number(data.price) : 0,
+      is_free: !!data.is_free,
+      downloads: Number.isFinite(data.downloads) ? Number(data.downloads) : 0,
+      views: Number.isFinite(data.views) ? Number(data.views) : 0,
+      likes: Number.isFinite(data.likes) ? Number(data.likes) : 0,
+      review_counts: Number.isFinite(data.review_counts) ? Number(data.review_counts) : 0,
+      rating_avg: Number.isFinite(data.rating_avg) ? Number(data.rating_avg) : 0,
+      updated_at: data.updated_at ?? '',
+      user: data.user,
+      tags: data.tags.map((t) => t.tag.name),
+      model: data.models[0]?.model.name ?? '',
+    };
+  }, [data]);
 
-2. 동양풍 마을/배경 일러스트
-a peaceful traditional Japanese village in spring, sakura trees in full bloom, tiled rooftops, soft morning light, misty mountain background, Ghibli-style aesthetic, detailed background art --v 5 --ar 16:9
+  useEffect(() => {
+    if (prompt) setReviewCount(prompt.review_counts);
+  }, [prompt]);
 
-3. 퓨전 동양풍 일러스트
-a futuristic city blending Korean traditional architecture and cyberpunk neon lights, hanok buildings with glowing signs, digital screens, night setting, rain-soaked street, Blade Runner meets Joseon, concept art --v 5 --ar 21:9
-  `.trim();
+  const {
+    data: allReviews,
+    isLoading: isReviewsLoading,
+    isError: isReviewsError,
+  } = useGetAllPromptReviews(promptId, { enabled: showReviews, perPage: 50 });
 
-    setDownloadData({ title, downloadUrl: download_url, content });
-    setIsDownloadModalOpen(true);
+  useEffect(() => {
+    if (prompt) setReviewCount(prompt.review_counts);
+  }, [prompt]);
+
+  useEffect(() => {
+    if (!allReviews) return;
+    setReviews(
+      allReviews.map((r) => ({
+        review_id: r.review_id,
+        writer_id: r.writer_id,
+        writer_profile_image_url: r.writer_image_url ?? null,
+        writer_nickname: r.writer_nickname,
+        rating: Number(r.rating) || 0,
+        content: r.content,
+        created_at: r.created_at,
+      })),
+    );
+  }, [allReviews]);
+
+  const handleDownloadClick = async () => {
+    if (!Number.isFinite(promptId)) return;
+    try {
+      const res = await fetchDownload(promptId);
+      setIsPaid(res.is_paid ?? false);
+      setDownloadData({
+        title: res.title,
+        content: res.content ?? '',
+      });
+      setIsDownloadModalOpen(true);
+    } catch (e: unknown) {
+      if (isAxiosError(e)) {
+        const status = e.response?.status;
+        if (status === 401) {
+          handleShowLoginModal(() => handleDownloadClick());
+          return;
+        }
+        if (status === 404) {
+          alert('프롬프트를 찾을 수 없습니다.');
+          return;
+        }
+      }
+      alert('다운로드를 불러오지 못했습니다.');
+    }
   };
 
+  if (!Number.isFinite(promptId)) return <div>잘못된 접근입니다. (유효하지 않은 ID)</div>;
+  if (isLoading) return <div>로딩 중…</div>;
+  if (isError || !prompt) return <div>프롬프트를 불러오지 못했습니다.</div>;
+
   if (showReviews) {
+    if (isReviewsLoading) return <div>리뷰 불러오는 중…</div>;
+    if (isReviewsError) return <div>리뷰를 불러오지 못했습니다.</div>;
+
     return (
       <ReviewList
         reviews={reviews}
@@ -128,12 +168,16 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
 
           {/* 프로필 */}
           <div className="w-[36px] flex items-center justify-center mr-[8px]">
-            <img src={profile} alt="profile" className="w-[36px] h-[36px] rounded-full object-cover" />
+            <img
+              src={prompt.user?.profileImage ?? profile}
+              alt="profile"
+              className="w-[36px] h-[36px] rounded-full object-cover"
+            />
           </div>
 
           {/* 닉네임 + 팔로우 */}
           <div className="flex items-center w-[214px]">
-            <p className="font-medium text-[12px] mr-[10px]">홍길동홍길동홍길동홍길동</p>
+            <p className="font-medium text-[12px] mr-[10px]">{prompt.writer?.nickname ?? '작성자'}</p>
             <FollowButton follow={follow} onClick={() => setFollow(!follow)} />
           </div>
         </div>
@@ -145,15 +189,14 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
           <PromptHeader
             title={prompt.title}
             views={prompt.views}
-            downloads={prompt.downloads}
             onClose={() => navigate(-1)}
+            downloads={prompt.downloads}
             onClickReview={() => setShowReviews(true)}
+            model={prompt.model}
+            tags={prompt.tags}
           />
-          <PromptInfo
-            promptResult={prompt.prompt_result}
-            description={prompt.description}
-            usageGuide={prompt.usage_guide}
-          />
+
+          <PromptInfo description={prompt.description} usageGuide={prompt.usage_guide} />
         </div>
 
         <div className="lg:hidden flex justify-end">
@@ -178,19 +221,27 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
             reviewCounts={prompt.review_counts}
             rating={prompt.rating_avg}
             updatedAt={prompt.updated_at}
-            userId={prompt.user_id}
+            userId={prompt.user.user_id}
             onClickReview={() => setShowReviews(true)}
+            user={{
+              user_id: prompt.user.user_id,
+              nickname: prompt.user.nickname,
+              profileImage: prompt.user.profileImage,
+            }}
           />
         </div>
       </div>
 
-      {/* 모바일 하단 고정 영역 - 가운데 정렬 + TabBar 고려 */}
+      {/* 모바일 하단 고정 영역 */}
       <div className="lg:hidden bottom-0 fixed left-1/2 -translate-x-1/2 z-[10]  max-w-[425px] h-[139px] w-full flex justify-center pointer-events-none">
         <div className="bg-white max-w-[425px] rounded-t-[24px] shadow-[0_-4px_12px_rgba(0,0,0,0.1)] p-[20px] h-[139px] z-[10] w-full h-full pointer-events-auto">
           <div className="flex justify-between w-full h-full">
             <div
-              className={`flex items-center ${isPaid ? 'gap-[10px]' : 'gap-[20px]'} h-[34px] ${isPaid ? 'ml-[8%]' : 'ml-[28%]'}`}>
+              className={`flex items-center ${isPaid ? 'gap-[10px]' : 'gap-[20px]'} h-[34px] ${
+                isPaid ? 'ml-[8%]' : 'ml-[28%]'
+              }`}>
               {isPaid && <span className="text-[16px] font-medium text-black whitespace-nowrap">구매 완료</span>}
+
               <span className="text-[16px] font-medium text-black">{prompt.price.toLocaleString()}원</span>
 
               <IconButton
@@ -205,14 +256,16 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
         </div>
       </div>
 
-      <ReportModal isOpen={isReportModalOpen} onClose={handleCloseReportModal} />
+      <ReportModal isOpen={isReportModalOpen} onClose={handleCloseReportModal} promptId={promptId} />
+
       {downloadData && (
         <DownloadModal
           isOpen={isDownloadModalOpen}
           onClose={() => setIsDownloadModalOpen(false)}
           title={downloadData.title}
-          downloadUrl={downloadData.downloadUrl}
           content={downloadData.content}
+          isFree={prompt.is_free}
+          isPaid={isPaid}
           price={prompt.price}
           onPaid={() => setIsPaid(true)}
         />
