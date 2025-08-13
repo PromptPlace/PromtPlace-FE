@@ -59,6 +59,7 @@ import usePostReplyInquiries from '@/hooks/mutations/ProfilePage/usePostReplyInq
 import usePatchReadInquiries from '@/hooks/mutations/ProfilePage/usePatchReadInquiries';
 import usePostInquiries from '@/hooks/mutations/ProfilePage/usePostInquiries';
 import usePostImg from '@/hooks/mutations/ProfilePage/usePostImg';
+import { useAuth } from '@/context/AuthContext';
 
 type Inquiry = {
   inquiry_id: number;
@@ -72,8 +73,10 @@ type Inquiry = {
 
 const ProfilePage = () => {
   const { id } = useParams();
-  const myId = localStorage.getItem('user_id'); // 로그인 시 저장 필요
-  const isMyProfile = id === myId;
+  const { user } = useAuth();
+
+  const myId = user.user_id;
+  const isMyProfile = id ? Number(id) === myId : false;
   const member_id = isMyProfile ? Number(myId) : Number(id);
 
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
