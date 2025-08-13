@@ -63,7 +63,7 @@ const PromptActions = ({
   const promptId = Number(id);
   const qc = useQueryClient();
 
-  const [searchParams] = useSearchParams(); // ✅ 추가
+  const [searchParams] = useSearchParams();
 
   const storedUser = localStorage.getItem('user');
   const currentUserId = storedUser ? JSON.parse(storedUser).user_id : null;
@@ -233,13 +233,57 @@ const PromptActions = ({
   if (showReviews) {
     return (
       <ReviewList
-        reviews={reviews}
+        reviews={reviews.map((r) => ({
+          review_id: r.review_id,
+          writer_id: r.writer_id,
+          writer_nickname: r.writer_nickname,
+          writer_profile_image_url: r.writer_image_url ?? '',
+          rating: r.rating,
+          content: r.content,
+          created_at: r.created_at,
+        }))}
+        setReviews={(updated) => {
+          if (typeof updated === 'function') {
+            setReviews((prev) =>
+              updated(
+                prev.map((r) => ({
+                  review_id: r.review_id,
+                  writer_id: r.writer_id,
+                  writer_nickname: r.writer_nickname,
+                  writer_profile_image_url: r.writer_image_url ?? '',
+                  rating: r.rating,
+                  content: r.content,
+                  created_at: r.created_at,
+                })),
+              ).map((r) => ({
+                review_id: r.review_id,
+                writer_id: r.writer_id,
+                writer_nickname: r.writer_nickname,
+                writer_image_url: r.writer_profile_image_url,
+                rating: r.rating,
+                content: r.content,
+                created_at: r.created_at,
+              })),
+            );
+          } else {
+            setReviews(
+              updated.map((r) => ({
+                review_id: r.review_id,
+                writer_id: r.writer_id,
+                writer_nickname: r.writer_nickname,
+                writer_image_url: r.writer_profile_image_url,
+                rating: r.rating,
+                content: r.content,
+                created_at: r.created_at,
+              })),
+            );
+          }
+        }}
         title={title}
         reviewCount={reviewCount}
-        setReviews={setReviews}
+        setReviewCount={setReviewCount}
         onClose={() => setShowReviews(false)}
         currentUserId={currentUserId}
-        setReviewCount={setReviewCount}
       />
     );
   }

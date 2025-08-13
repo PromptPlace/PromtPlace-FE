@@ -35,16 +35,16 @@ export async function getPromptDetail(promptId: number): Promise<PromptDetailDto
       profileImage: d.user.profileImage?.url ?? null,
     },
 
-    models: d.models.map((m) => ({
+    models: d.models.map((m: { model: { name: string } }) => ({
       name: m.model.name,
     })),
 
-    tags: d.tags.map((t) => ({
+    tags: d.tags.map((t: { tag: { tag_id: number; name: string } }) => ({
       tag_id: t.tag.tag_id,
       name: t.tag.name,
     })),
 
-    images: d.images.map((img) => ({
+    images: d.images.map((img: { image_url: string; order_index: number }) => ({
       image_url: img.image_url,
       order_index: img.order_index,
     })),

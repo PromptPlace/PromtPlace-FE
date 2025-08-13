@@ -18,6 +18,7 @@ export interface Review {
   rating: number;
   content: string;
   created_at: string;
+  updated_at?: string;
 }
 
 interface ReviewListProps {

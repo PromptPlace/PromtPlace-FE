@@ -30,7 +30,14 @@ const UpdateModal = ({ isOpen, onClose, title, reviewId, rating, initialReviewTe
 
   const handleSaveClick = async () => {
     try {
-      await updateMutate({ reviewId, rating: updatedRating, content: reviewText });
+      await updateMutate({
+        reviewId,
+        body: {
+          rating: updatedRating,
+          content: reviewText,
+        },
+      });
+
       onSave(updatedRating, reviewText);
       onClose();
     } catch (e: unknown) {
@@ -98,8 +105,7 @@ const UpdateModal = ({ isOpen, onClose, title, reviewId, rating, initialReviewTe
               <PrimaryButton
                 buttonType="squareMini"
                 text={isPending ? '수정 중…' : '등록'}
-                onClick={handleSaveClick}
-                disabled={isPending || reviewText.trim().length === 0}
+                onClick={isPending || reviewText.trim().length === 0 ? () => {} : handleSaveClick}
               />
             </div>
           </div>

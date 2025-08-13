@@ -86,7 +86,6 @@ const CreateModal = ({ isOpen, onClose, title, promptId, onSuccess }: CreateModa
                 buttonType="squareMini"
                 text={isPending ? '작성 중…' : '등록'}
                 onClick={handleCreateClick}
-                disabled={isPending || reviewText.trim().length === 0 || rating === 0}
               />
             </div>
           </div>

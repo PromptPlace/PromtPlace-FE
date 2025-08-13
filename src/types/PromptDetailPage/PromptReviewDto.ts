@@ -6,6 +6,7 @@ export type PromptReviewDto = {
   rating: number;
   content: string;
   created_at: string;
+  updated_at?: string;
 };
 
 export type PromptReviewListDto = {
@@ -20,9 +21,8 @@ export type ApiEnvelopeCamel<T> = {
 };
 
 export interface RequestCreateReviewDto {
-  promptId: number;
-  rating: number;
   content: string;
+  rating: number;
 }
 export interface ResponseCreateReviewDto {
   data: PromptReviewDto;

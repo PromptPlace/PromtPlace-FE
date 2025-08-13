@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { updateReview } from '@/apis/PromptDetailPage/reviews';
-import type { RequestUpdateReviewDto } from '@/types/PromptDetailPage/ReviewDto';
+import type { RequestUpdateReviewDto } from '@/types/PromptDetailPage/PromptReviewDto';
 
 type Vars = { reviewId: number; body: RequestUpdateReviewDto };
 
