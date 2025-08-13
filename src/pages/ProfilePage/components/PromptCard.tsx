@@ -106,7 +106,7 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
                   삭제하기
                 </button>
                 <button
-                  onClick={() => navigate('/create')}
+                  onClick={() => navigate(`/mypage/edit/${id}`)}
                   className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-b-[4px] text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white">
                   수정하기
                 </button>
