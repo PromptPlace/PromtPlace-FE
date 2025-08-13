@@ -1,11 +1,20 @@
+/**
+ * author @곽도윤
+ * API 연동 후 creator -> writer or prompter로 수정할 예정
+ **/
+
 import React, { useState } from 'react';
-import type { Creator } from '@/types/prompt.ts';
+import type { Creator } from '@/types/MainPage/prompt';
 import FollowButton from '@/components/Button/FollowButton';
 import profileImage from '@/assets/icon-profile-gray.svg';
-import allowRight from '@/assets/icon-arrow-right.svg';
+import allowRight from '@/assets/icon-arrow-right-blue.svg';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
+import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 
 const PrompterBar = ({ creators }: { creators: Creator[] }) => {
+  const { accessToken } = useAuth();
+  const [loginModalShow, setLoginModalShow] = useState(false);
   const navigate = useNavigate();
 
   const [isFollowed, setIsFollowed] = useState<Record<number, boolean>>(() =>
@@ -28,6 +37,10 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
 
   return (
     <aside className="flex flex-col gap-6 mt-[17px] w-[313px]">
+      {/* 미로그인 시 로그인 모달 연결 */}
+      {loginModalShow && (
+        <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
+      )}
       {/* 🔥 이달의 인기 프롬프터 */}
       <section className="w-[313px] h-[390px] rounded-2xl p-4 shadow-sm bg-white">
         <div className="pb-2 font-bold text-xl flex items-center gap-1">
@@ -52,7 +65,13 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
               <FollowButton
                 follow={isFollowed[c.id]}
                 onClick={() => {
-                  handleFollow(c.id);
+                  if (!accessToken) {
+                    alert('로그인이 필요합니다.');
+                    setLoginModalShow(true);
+                    return;
+                  } else {
+                    handleFollow(c.id);
+                  }
                 }}
               />
             </li>
@@ -84,7 +103,13 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
               <FollowButton
                 follow={isFollowed[c.id]}
                 onClick={() => {
-                  handleFollow(c.id);
+                  if (!accessToken) {
+                    alert('로그인이 필요합니다.');
+                    setLoginModalShow(true);
+                    return;
+                  } else {
+                    handleFollow(c.id);
+                  }
                 }}
               />
             </li>
@@ -95,7 +120,7 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
       <section className="w-[313px] h-[124px] p-[20px] rounded-2xl inline-flex flex-col justify-center shadow-sm bg-white gap-2.5">
         <h4 className="pb-2 font-bold text-xl flex items-center gap-1">프롬프트 작성 가이드라인</h4>
         <button
-          className="w-[136px] px-4 py-2.5 bg-white rounded-[10px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)] outline outline-1 outline-offset-[-1px] outline-primary inline-flex justify-center items-center gap-3.5"
+          className="w-[136px] px-4 py-2.5 bg-white rounded-[10px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)] outline-1 outline-offset-[-1px] outline-primary inline-flex justify-center items-center gap-3.5"
           onClick={() => {
             navigate('/guide/notice');
           }}>
@@ -109,7 +134,7 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
       <section className="w-[313px] h-[124px] p-5 rounded-2xl inline-flex flex-col justify-center shadow-sm bg-white gap-2.5 mt-[-8px]">
         <h4 className="pb-2 font-bold text-xl flex items-center gap-1">프롬프트 작성 꿀팁</h4>
         <button
-          className="w-[136px] px-4 py-2.5 bg-white rounded-[10px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)] outline outline-1 outline-offset-[-1px] outline-primary inline-flex justify-center items-center gap-3.5"
+          className="w-[136px] px-4 py-2.5 bg-white rounded-[10px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.08)] outline-1 outline-offset-[-1px] outline-primary inline-flex justify-center items-center gap-3.5"
           onClick={() => {
             navigate('/guide/tip');
           }}>

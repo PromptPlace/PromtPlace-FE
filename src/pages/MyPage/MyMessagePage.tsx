@@ -5,89 +5,38 @@
  * @author 김진효
  * **/
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageTableList, MessagePagination, MobileMessage } from './components/MessagePagination';
 import { NotificationTableList, NotificationPagination, MobileNotification } from './components/NotificationPagination';
 
 import { LuChevronDown } from 'react-icons/lu';
+import { axiosInstance } from '@/apis/axios';
 
 interface MyMessagePageProps {
   type: 'message' | 'notification';
 }
 //메시지함
 interface Message {
-  id: number; //message_id
-  sender_id: string; // erd 상에서는 num이지만... 편의상 string으로 수정
-  receiver_id: string;
+  message_id: number;
+  sender: string;
   title: string;
-  body: string;
+  created_at: string;
   is_read: boolean;
-  read_at: string;
-  is_deleted: boolean;
-  create_at: string;
-  update_at: string;
-}
-// 더미 데이터 (추후 api 연동시 삭제 또는 수정)
-const allMessages: Message[] = [
-  {
-    id: 1,
-    sender_id: '관리자',
-    receiver_id: '아메리카노',
-    title: '프롬프트 가이드라인 위반 경고',
-    body: '본문',
-    is_read: false,
-    read_at: '2025-07-08',
-    is_deleted: false,
-    create_at: '2025-07-08',
-    update_at: '2025-07-08',
-  },
-  {
-    id: 2,
-    sender_id: '홍길동',
-    receiver_id: '아메리카노',
-    title: '홍길동님이 주토피아노님의 문의에 답변을 남기셨습니다.',
-    body: '본문',
-    is_read: true,
-    read_at: '2025-07-08',
-    is_deleted: false,
-    create_at: '2025-04-12',
-    update_at: '2025-04-12',
-  },
-];
-//알림
-interface Notification {
-  id: number; //notification_id
-  content: string;
-  create_at: string;
-  user_id: string;
 }
 
-const allNotification: Notification[] = [
-  { id: 1, content: '프롬프트에 새로운 문의가 도착했습니다.', create_at: '2025-07-22', user_id: '주토피아노' },
-  { id: 2, content: '신고가 접수되었습니다.', create_at: '2025-07-22', user_id: '주토피아노' },
-  { id: 3, content: '‘홍길동’님이 새 프롬프트를 업로드하셨습니다. ', create_at: '2025-07-22', user_id: '주토피아노' },
-  { id: 4, content: '‘콩쥐’님이 새 프롬프트를 업로드하셨습니다.', create_at: '2025-07-22', user_id: '주토피아노' },
-  { id: 5, content: '‘뽀또’님이 회원님을 팔로우합니다.', create_at: '2025-07-22', user_id: '주토피아노' },
-  { id: 6, content: '프롬프트에 새로운 문의가 도착했습니다. ', create_at: '2025-07-22', user_id: '주토피아노' },
-  { id: 7, content: '프롬프트에 새로운 문의가 도착했습니다.', create_at: '2025-07-22', user_id: '주토피아노' },
-  { id: 8, content: '신고가 접수되었습니다.', create_at: '2025-07-22', user_id: '주토피아노' },
-  {
-    id: 9,
-    content: '‘아메리카노’님이 새 프롬프트를 업로드하셨습니다. ',
-    create_at: '2025-07-22',
-    user_id: '주토피아노',
-  },
-  { id: 10, content: '프롬프트에 새로운 문의가 도착했습니다.', create_at: '2025-07-22', user_id: '주토피아노' },
-];
-// 페이지 값 계산
-const PAGE_SIZE = 8;
-const TOTAL_MESSAGE_PAGES = Math.ceil(allMessages.length / PAGE_SIZE);
-const TOTAL_Notification_PAGES = Math.ceil(allNotification.length / PAGE_SIZE);
+//알림
+interface Notification {
+  notification_id: number;
+  content: string;
+  created_at: string;
+  link_url: string | null;
+}
 
 const MyMessagePage = ({ type }: MyMessagePageProps) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [messages, setMessages] = useState<Message[]>(allMessages); // allMessages 복제
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [notice, setNotice] = useState<Notification[]>([]);
   const navigate = useNavigate();
 
   const handleTypeChange = (nextType: 'message' | 'notification') => {
@@ -97,31 +46,150 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
     }
   };
 
+  useEffect(() => {
+    const fetchAllPosts = async () => {
+      try {
+        if (type === 'message') {
+          const base = import.meta.env.VITE_SERVER_API_URL;
+          const res = await axiosInstance.get(`${base}/api/messages`, {
+            params: {
+              page: 1,
+              size: 30,
+            },
+          });
+
+          console.log('message 받은 데이터', res.data.messages);
+
+          const mapped: Message[] = res.data.messages.map((item: any) => ({
+            message_id: item.message_id,
+            sender: item.sender,
+            title: item.title,
+            created_at: item.created_at,
+            is_read: item.is_read,
+          }));
+
+          setMessages(mapped);
+        } else if (type === 'notification') {
+          const base = import.meta.env.VITE_SERVER_API_URL;
+          const res = await axiosInstance.get(`${base}/api/notifications/me`, {
+            params: {
+              page: 1,
+              limit: 30,
+            },
+          });
+          console.log('noti 받은 데이터', res.data.data.notifications);
+
+          const mapped: Notification[] = res.data.data.notifications.map((item: any, index: number) => {
+            let link: string | null = item.link_url;
+            console.log(`${index}번째 처리 전 link:`, link);
+
+            if (link) {
+              if (link.includes('/inquires/') || link.includes('/inquiries/')) {
+                // 두 경우 모두 처리 (백엔드 수정 전까지 임시)
+                //inquiries가 맞음 (원래는)
+                link = '/mypage';
+              } else if (link.includes('/announcements/')) {
+                console.log(`${index}번째: announcements 변환`);
+                const segs = link.split('/').filter(Boolean);
+                const id = segs[segs.length - 1];
+                link = `/guide/notice/${id}`;
+              }
+            }
+
+            console.log(`${index}번째 처리 후 link:`, link);
+
+            return {
+              notification_id: item.notification_id,
+              content: item.content,
+              created_at: item.created_at.slice(0, 10),
+              link_url: link,
+            };
+          });
+
+          console.log('최종 결과:', mapped);
+
+          setNotice(mapped);
+        }
+      } catch (error) {
+        console.error(`${type === 'message' ? '메시지' : '알림'} 불러오기 실패:`, error);
+      }
+    };
+
+    fetchAllPosts();
+  }, [type]);
+
+  // 페이지 값 계산
+  const PAGE_SIZE = 8;
+  const TOTAL_MESSAGE_PAGES = Math.ceil(messages.length / PAGE_SIZE);
+  const TOTAL_Notification_PAGES = Math.ceil(notice.length / PAGE_SIZE);
+
   // 페이지별 데이터 슬라이싱
   const pageMessageData = messages.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
-  const pageNotificationData = allNotification.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const pageNotificationData = notice.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   // 페이지네이션에서 페이지 변경시
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-  const handleRowClick = (id: number) => {
+  const handleMessageRowClick = (id: number) => {
     navigate(`/mypage/message/message/${id}`);
   };
 
   // 메시지 삭제
-  const handleDelete = (id: number) => {
-    setMessages((prev) => prev.filter((msg) => msg.id !== id));
+  const handleDelete = async (id: number) => {
+    console.log('삭제 시도하는 ID:', id);
+    console.log('현재 messages:', messages);
+
+    // 낙관적 업데이트
+    setMessages((prev) => prev.filter((msg) => msg.message_id !== id));
+
+    try {
+      console.log('API 호출 URL:', `/api/messages/${id}/delete`);
+      const res = await axiosInstance.patch(`/api/messages/${id}/delete`);
+      console.log('삭제 성공:', res);
+    } catch (err) {
+      // 실패 시 롤백 - 삭제된 항목 복구
+      setMessages((prev) => {
+        // 현재 messages에서 삭제하려던 항목 찾기
+        const originalItem = messages.find((m) => m.message_id === id);
+        if (originalItem && !prev.some((m) => m.message_id === id)) {
+          return [...prev, originalItem].sort((a, b) => b.message_id - a.message_id);
+        }
+        return prev;
+      });
+    }
   };
 
   // 메시지 읽음
-  const handleRead = (id: number) => {
-    setMessages((prev) => prev.map((msg) => (msg.id === id ? { ...msg, is_read: true } : msg)));
+  const handleRead = async (id: number) => {
+    // 낙관적 업데이트
+    setMessages((prev) => prev.map((m) => (m.message_id === id ? { ...m, is_read: true } : m)));
+
+    try {
+      const res = await axiosInstance.patch(`/api/messages/${id}/read`);
+      console.log(res);
+    } catch (err) {
+      // 실패 시 롤백
+      setMessages((prev) => prev.map((m) => (m.message_id === id ? { ...m, is_read: false } : m)));
+      console.error('읽음 처리 실패:', err);
+    }
   };
 
-  //모바일 화면
+  //모바일 화면 전용
   const [openType, setOpenType] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  //알림 이동
+  const handleNoticeRowClick = (noticelink: string | null) => {
+    if (!noticelink) return; // 링크 없으면 무시
+    //혹시 모를 외부경로
+    if (/^https?:\/\//.test(noticelink)) {
+      window.location.href = noticelink;
+    } else {
+      navigate(noticelink);
+    }
+  };
+
   return (
     <>
       <div className="hidden lg:block">
@@ -155,7 +223,7 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
               <>
                 <MessageTableList
                   data={pageMessageData}
-                  onRowClick={handleRowClick}
+                  handleMessageRowClick={handleMessageRowClick}
                   onDelete={handleDelete}
                   onRead={handleRead}
                 />
@@ -167,7 +235,7 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
               </>
             ) : (
               <>
-                <NotificationTableList data={pageNotificationData} />
+                <NotificationTableList data={pageNotificationData} handleNoticeRowClick={handleNoticeRowClick} />
                 <NotificationPagination
                   currentPage={currentPage}
                   totalPages={TOTAL_Notification_PAGES}
@@ -232,14 +300,14 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
             <>
               <MobileMessage
                 data={pageMessageData}
-                onRowClick={handleRowClick}
+                handleMessageRowClick={handleMessageRowClick}
                 onDelete={handleDelete}
                 onRead={handleRead}
               />
             </>
           ) : (
             <>
-              <MobileNotification data={pageNotificationData} />
+              <MobileNotification data={pageNotificationData} handleNoticeRowClick={handleNoticeRowClick} />
             </>
           )}
         </div>

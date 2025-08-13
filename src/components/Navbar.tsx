@@ -27,6 +27,7 @@ const Navbar = () => {
 
   const handleSearch = () => {
     if (!search.trim()) return;
+    navigate(`/?search=${encodeURIComponent(search)}`);
     setSearch('');
   };
 
