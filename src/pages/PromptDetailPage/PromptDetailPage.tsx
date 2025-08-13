@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 import ReviewList from './components/ReviewList';
 import IconButton from '@components/Button/IconButton';
-import profile from './assets/profile.jpg';
+import profile from '@assets/icon-profile-blue-small.svg';
 import FollowButton from '@components/Button/FollowButton';
 import ArrowLeft from './assets/keyboard_arrow_down _left.svg';
 import ReportModal from './components/ReportModal';
@@ -72,8 +72,17 @@ const PromptDetailPage = () => {
       rating_avg: Number.isFinite(data.rating_avg) ? Number(data.rating_avg) : 0,
       updated_at: data.updated_at ?? '',
       user: data.user,
-      tags: data.tags.map((t) => t.name),
-      model: data.models[0]?.name ?? '',
+      tags: (data.tags ?? [])
+        .filter((t) => t?.tag)
+        .map((t) => ({
+          tag_id: t.tag.tag_id,
+          name: t.tag.name,
+        })),
+
+      model:
+        Array.isArray(data.models) && data.models.length > 0 && data.models[0]?.model?.name
+          ? data.models[0].model.name
+          : '',
     };
   }, [data]);
 
@@ -169,7 +178,7 @@ const PromptDetailPage = () => {
           {/* 프로필 */}
           <div className="w-[36px] flex items-center justify-center mr-[8px]">
             <img
-              src={prompt.user?.profileImage ?? profile}
+              src={prompt.user?.profileImage?.url ?? profile}
               alt="profile"
               className="w-[36px] h-[36px] rounded-full object-cover"
             />
@@ -177,7 +186,7 @@ const PromptDetailPage = () => {
 
           {/* 닉네임 + 팔로우 */}
           <div className="flex items-center w-[214px]">
-            <p className="font-medium text-[12px] mr-[10px]">{prompt.writer?.nickname ?? '작성자'}</p>
+            <p className="font-medium text-[12px] mr-[10px]">{prompt.user?.nickname ?? '작성자'}</p>
             <FollowButton follow={follow} onClick={() => setFollow(!follow)} />
           </div>
         </div>
@@ -193,7 +202,7 @@ const PromptDetailPage = () => {
             downloads={prompt.downloads}
             onClickReview={() => setShowReviews(true)}
             model={prompt.model}
-            tags={prompt.tags}
+            tags={prompt.tags.map((tag) => tag.name)}
           />
 
           <PromptInfo description={prompt.description} usageGuide={prompt.usage_guide} />
@@ -217,11 +226,10 @@ const PromptDetailPage = () => {
             price={prompt.price}
             isFree={prompt.is_free}
             downloads={prompt.downloads}
-            likes={prompt.likes}
             reviewCounts={prompt.review_counts}
             rating={prompt.rating_avg}
             updatedAt={prompt.updated_at}
-            userId={prompt.user.user_id}
+            tags={prompt.tags}
             onClickReview={() => setShowReviews(true)}
             user={{
               user_id: prompt.user.user_id,

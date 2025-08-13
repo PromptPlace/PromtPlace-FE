@@ -1,8 +1,8 @@
 import { axiosInstance } from '@/apis/axios';
-import type { PromptDetailDto, ApiEnvelopeSnake } from '@/types/PromptDetailPage/PromptDetailDto';
+import type { PromptDetailDto } from '@/types/PromptDetailPage/PromptDetailDto';
 
 export async function getPromptDetail(promptId: number): Promise<PromptDetailDto> {
-  const res = await axiosInstance.get<ApiEnvelopeSnake<PromptDetailDto>>(`api/prompts/${promptId}/details`);
+  const res = await axiosInstance.get(`api/prompts/${promptId}/details`);
   const d = res.data.data;
 
   if (!d || typeof d.prompt_id !== 'number') {
@@ -29,14 +29,24 @@ export async function getPromptDetail(promptId: number): Promise<PromptDetailDto
     updated_at: d.updated_at,
     inactive_date: d.inactive_date,
     download_url: d.download_url ?? null,
-
     user: {
       user_id: d.user.user_id,
       nickname: d.user.nickname,
-      profileImage: d.user.profileImage,
+      profileImage: d.user.profileImage?.url ?? null,
     },
-    models: d.models ?? [],
-    tags: d.tags ?? [],
-    images: d.images ?? [],
+
+    models: d.models.map((m) => ({
+      name: m.model.name,
+    })),
+
+    tags: d.tags.map((t) => ({
+      tag_id: t.tag.tag_id,
+      name: t.tag.name,
+    })),
+
+    images: d.images.map((img) => ({
+      image_url: img.image_url,
+      order_index: img.order_index,
+    })),
   };
 }

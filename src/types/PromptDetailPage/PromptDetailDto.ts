@@ -31,11 +31,20 @@ export type PromptDetailDto = {
   user: {
     user_id: number;
     nickname: string;
-    profileImage: string | null;
+    profileImage: { url: string } | null;
   };
-
-  tags: TagDto[];
-  models: ModelDto[];
+  models: {
+    promptmodel_id: number;
+    prompt_id: number;
+    model_id: number;
+    model: { name: string };
+  }[];
+  tags: {
+    prompttag_id: number;
+    prompt_id: number;
+    tag_id: number;
+    tag: { tag_id: number; name: string };
+  }[];
   images: {
     image_url: string;
     order_index: number;

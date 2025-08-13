@@ -18,3 +18,15 @@ export type ApiEnvelopeCamel<T> = {
   data: T;
   statusCode: number;
 };
+
+export interface RequestCreateReviewDto {
+  promptId: number;
+  rating: number;
+  content: string;
+}
+
+export interface RequestUpdateReviewDto {
+  reviewId: number;
+  content: string;
+  rating?: number;
+}

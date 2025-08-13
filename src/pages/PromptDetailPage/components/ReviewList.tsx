@@ -8,6 +8,7 @@ import defaultProfile from '../assets/profile.jpg';
 import ArrowLeft from '../assets/keyboard_arrow_down _left.svg';
 import useDeleteReview from '@/hooks/mutations/PromptDetailPage/useDeleteReview';
 import useUpdateReview from '@/hooks/mutations/PromptDetailPage/useUpdateReview';
+import { useMemo } from 'react';
 
 export interface Review {
   review_id: number;
@@ -26,8 +27,21 @@ interface ReviewListProps {
   setReviewCount: React.Dispatch<React.SetStateAction<number>>;
   onClose: () => void;
   title: string;
-  currentUserId: number;
+  currentUserId?: number;
 }
+
+const getViewerId = (): number | null => {
+  if (typeof window === 'undefined') return null;
+  const raw = localStorage.getItem('user');
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as { user_id?: unknown };
+    const id = typeof parsed.user_id === 'number' ? parsed.user_id : Number(parsed.user_id);
+    return Number.isFinite(id) ? id : null;
+  } catch {
+    return null;
+  }
+};
 
 const ReviewList = ({
   reviews,
@@ -62,6 +76,11 @@ const ReviewList = ({
     const now = Date.now();
     return now - createdTime <= 30 * 24 * 60 * 60 * 1000;
   };
+
+  const viewerId = useMemo<number | null>(
+    () => (Number.isFinite(currentUserId) ? (currentUserId as number) : getViewerId()),
+    [currentUserId],
+  );
 
   const onClickDelete = (idx: number) => {
     setOpenMenuIdx(null);
@@ -161,7 +180,7 @@ const ReviewList = ({
                       <Rating star={review.rating} />
                     </div>
 
-                    {(review.writer_id === currentUserId || isAdmin) && (
+                    {(review.writer_id === viewerId || isAdmin) && (
                       <button
                         onClick={() => toggleMenu(idx)}
                         className="hover:bg-secondary-pressed rounded-full p-1 transition-colors duration-150">
@@ -218,7 +237,7 @@ const ReviewList = ({
               className="w-full max-w-[280px] h-[92px] bg-[#FFFEFB] p-[12px] shadow-sm relative">
               {/* 점 버튼 (오른쪽 상단) */}
               <div className="absolute top-[12px] right-[12px]">
-                {(review.writer_id === currentUserId || isAdmin) && (
+                {(review.writer_id === viewerId || isAdmin) && (
                   <button
                     onClick={() => toggleMenu(idx)}
                     className="hover:bg-gray-200 rounded-full p-1 h-[16px] w-[16px]">

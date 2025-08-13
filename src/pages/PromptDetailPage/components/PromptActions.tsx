@@ -28,17 +28,22 @@ import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 import PaymentModal from './PaymentModal';
 
+import type { PromptDetailDto } from '@/types/PromptDetailPage/PromptDetailDto';
+import type { PromptReviewDto } from '@/types/PromptDetailPage/PromptReviewDto';
+
 interface PromptActionsProps {
   title: string;
   price: number;
   isFree: boolean;
   downloads: number;
-  likes: number;
   reviewCounts: number;
   rating: number;
   updatedAt: string;
-  userId: number;
   user: PromptDetailDto['user'];
+  tags: {
+    tag_id: number;
+    name: string;
+  }[];
   onClickReview: () => void;
 }
 
@@ -46,19 +51,19 @@ const PromptActions = ({
   title,
   price,
   isFree,
-  downloads,
-  likes,
   reviewCounts,
   rating,
-  updatedAt,
-  userId,
   user,
   onClickReview,
+  tags,
 }: PromptActionsProps) => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const promptId = Number(id);
   const qc = useQueryClient();
+
+  const storedUser = localStorage.getItem('user');
+  const currentUserId = storedUser ? JSON.parse(storedUser).user_id : null;
 
   const followMut = useFollow();
   const unfollowMut = useUnfollow();
@@ -77,15 +82,19 @@ const PromptActions = ({
 
   const [follow, setFollow] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
-  const [tags] = useState<string[]>(['#수묵화', '#수채화', '#디자인', '#일러스트', '#그림', '#이미지']);
+
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [liked, setLiked] = useState(false);
 
+  const handlePaid = () => {
+    setIsPaid(true);
+    setIsPaymentModalOpen(false);
+  };
+
   const [downloadData, setDownloadData] = useState<{
     title: string;
-    downloadUrl: string;
     content: string;
   } | null>(null);
 
@@ -125,14 +134,18 @@ const PromptActions = ({
   }, [likedSet, promptId]);
 
   const handleToggleFollow = async () => {
-    if (!Number.isFinite(userId)) return;
+    const targetUserId = user?.user_id;
+    if (!Number.isFinite(targetUserId)) return;
 
     const prev = follow;
     setFollow(!prev);
 
     try {
-      if (!prev) await followMut.mutateAsync(userId);
-      else await unfollowMut.mutateAsync(userId);
+      if (!prev) {
+        await followMut.mutateAsync(targetUserId);
+      } else {
+        await unfollowMut.mutateAsync(targetUserId);
+      }
     } catch (e) {
       setFollow(prev);
       if (isAxiosError(e) && (e.response?.status ?? 0) === 401) {
@@ -203,7 +216,7 @@ const PromptActions = ({
         reviewCount={reviewCount}
         setReviews={setReviews}
         onClose={() => setShowReviews(false)}
-        currentUserId={1}
+        currentUserId={currentUserId}
         setReviewCount={setReviewCount}
       />
     );
@@ -214,11 +227,12 @@ const PromptActions = ({
       {/* 유저 정보 */}
       <div className="h-[96px] box-border flex items-center gap-3">
         <img
-          src={user.profileImage ?? profile}
+          src={user?.profileImage?.url ?? profile}
           alt="profile"
           className="w-10 h-10 rounded-full cursor-pointer"
           onClick={() => navigate(`/profile/${user.user_id}`)}
         />
+
         <div className="flex items-center w-full">
           <p
             className="font-semibold text-[20px] mr-8 cursor-pointer"
@@ -280,7 +294,7 @@ const PromptActions = ({
           src={liked ? heartOnClick : heartNone}
           alt="heart"
           className="ml-[34px] w-[28px] h-[25px] cursor-pointer"
-          onClick={() => handleShowLoginModal(handleToggleLike)}
+          onClick={handleToggleLike}
         />
       </div>
 
@@ -306,8 +320,8 @@ const PromptActions = ({
 
       <div
         className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-[30px] ${isAdmin ? 'mb-[25px]' : 'mb-[30px]'}`}>
-        {tags.map((tag, idx) => (
-          <TagButton key={idx} hasDelete={false} text={tag} onClick={() => {}} />
+        {tags.map((tag) => (
+          <TagButton key={tag.tag_id} hasDelete={false} text={tag.name} onClick={() => {}} />
         ))}
       </div>
 

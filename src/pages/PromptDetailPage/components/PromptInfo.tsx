@@ -16,7 +16,13 @@ const PromptInfo = ({ description: descProp, usageGuide: usageProp }: Props) => 
   const description = descProp ?? data?.description ?? '';
   const usageGuide = usageProp ?? data?.usage_guide ?? '';
 
-  const images: string[] = Array.isArray(data?.images) ? data!.images!.slice(0, 2) : [];
+  const images: string[] = Array.isArray(data?.images)
+    ? data.images
+        .sort((a, b) => a.order_index - b.order_index)
+        .slice(0, 2)
+        .map((img) => img.image_url)
+    : [];
+
   const hasImages = images.length > 0;
 
   return (
