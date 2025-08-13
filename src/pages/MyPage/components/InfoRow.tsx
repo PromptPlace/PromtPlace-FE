@@ -10,7 +10,7 @@ interface InfoRowProps {
   label: string;
   nickname?: string;
   email?: string;
-  provider?: 'google' | 'kakao' | 'naver';
+  provider?: 'GOOGLE' | 'KAKAO' | 'NAVER';
   hasArrow?: boolean;
   actionText?: string;
   onAction?: () => void;
@@ -19,9 +19,9 @@ interface InfoRowProps {
 
 const InfoRow: React.FC<InfoRowProps> = ({ label, nickname, email, provider, hasArrow, actionText, onAction }) => {
   const ICONS = {
-    google: GoogleIcon,
-    kakao: KakaoIcon,
-    naver: NaverIcon,
+    GOOGLE: GoogleIcon,
+    KAKAO: KakaoIcon,
+    NAVER: NaverIcon,
   };
   const IconComponent = provider ? ICONS[provider] : null;
 
