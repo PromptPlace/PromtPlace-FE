@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import type { Prompt } from '@/types/prompt.ts';
+import type { Prompt } from '@/types/MainPage/prompt';
 import iconEye from '@/assets/icon-eye.svg';
 import iconDownload from '@/assets/icon-download-gray.svg';
 import Rating from '@/components/Rating';
@@ -15,28 +15,15 @@ import TagButton from '@/components/Button/TagButton';
 import ModelButton from '@/components/Button/ModelButton';
 import { useNavigate } from 'react-router-dom';
 
-type props = {
+interface promptCardProps {
   prompt: Prompt;
-};
+}
 
-const PromptCard = ({ prompt }: props) => {
+const PromptCard = ({ prompt }: promptCardProps) => {
   const navigate = useNavigate();
-  const {
-    author_id,
-    authorname,
-    prompt_id,
-    authorimage,
-    title,
-    description,
-    is_free,
-    model,
-    price,
-    downloadCount,
-    views,
-    rating_avg,
-    tags,
-  } = prompt;
   const [isLiked, setIsLiked] = useState(false);
+
+  console.log(prompt.tags);
 
   const handleLike = () => {
     setIsLiked((prev) => !prev);
@@ -48,23 +35,25 @@ const PromptCard = ({ prompt }: props) => {
       {/* 작성자 정보 (카드 바깥쪽) */}
       <div
         className="inline-flex justify-start items-center gap-3.5 cursor-pointer"
-        onClick={() => navigate(`/profile/${author_id}`)}>
+        onClick={() => navigate(`/profile/${prompt.user_id}`)}>
         <img
-          src={authorimage ? authorimage : profileImage}
+          src={prompt.user.profile_img_url ? prompt.user.profile_img_url : profileImage}
           alt="authorImage"
           className="w-14 h-14 rounded-[100px] inline-flex flex-col justify-center items-center"
         />
-        <span className="text-[18px] font-medium">{authorname}</span>
+        <span className="text-[18px] font-medium">{prompt.user.nickname}</span>
       </div>
 
       {/* 카드 본문 */}
       <div className="relative w-full max-w-[780px] max-h-[320px] bg-white rounded-2xl shadow-md px-5 py-6 overflow-hidden ml-auto">
         {/* 모델 + 태그 */}
         <div className="flex flex-wrap items-center gap-2.5 mb-4">
-          <ModelButton text={model} />
-          {tags.map((tag, index) => (
-            <span key={index}>
-              <TagButton hasDelete={false} text={`#${tag}`} onClick={() => {}} />
+          {prompt.models.map((modelObj, idx) => (
+            <ModelButton key={modelObj.promptmodel_id || idx} text={modelObj.model.name} />
+          ))}
+          {prompt.tags.map((tag, index) => (
+            <span key={tag.tag_id || index}>
+              <TagButton hasDelete={false} text={`#${tag?.tag.name ?? ''}`} onClick={() => {}} />
             </span>
           ))}
         </div>
@@ -72,18 +61,20 @@ const PromptCard = ({ prompt }: props) => {
         {/* 제목 + 가격 + 통계 */}
         <div
           className="flex justify-between items-center mb-3 cursor-pointer"
-          onClick={() => navigate(`/prompt/${prompt_id}`)}>
-          <span className="text-xl font-medium text-gray-900">{title}</span>
+          onClick={() => navigate(`/prompt/${prompt.prompt_id}`)}>
+          <span className="text-xl font-medium text-gray-900">{prompt.title}</span>
           <div className="flex items-center gap-4 text-sm text-gray-600">
-            <div className="flex items-center gap-1 text-lg">{is_free ? '무료' : `${price.toLocaleString()}원`}</div>
+            <div className="flex items-center gap-1 text-lg">
+              {prompt.is_free ? '무료' : `${prompt.price.toLocaleString()}원`}
+            </div>
             <div>
-              <Rating star={rating_avg} />
+              <Rating star={prompt.rating_avg} />
             </div>
             <div className="flex items-center gap-1">
-              <img src={iconEye} className="w-4 h-4" /> {views}
+              <img src={iconEye} className="w-4 h-4" /> {prompt.views}
             </div>
             <div className="flex items-center gap-1">
-              <img src={iconDownload} className="w-4 h-4" /> {downloadCount}
+              <img src={iconDownload} className="w-4 h-4" /> {prompt.downloads}
             </div>
           </div>
         </div>
@@ -91,8 +82,8 @@ const PromptCard = ({ prompt }: props) => {
         {/* 설명 */}
         <p
           className="text-base text-gray-800 whitespace-pre-line cursor-pointer"
-          onClick={() => navigate(`/prompt/${prompt_id}`)}>
-          {description}
+          onClick={() => navigate(`/prompt/${prompt.prompt_id}`)}>
+          {prompt.description}
         </p>
 
         {/* 찜 아이콘 */}
