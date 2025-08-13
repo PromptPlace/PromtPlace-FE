@@ -308,6 +308,7 @@ const MyPromptPage = () => {
     isFetchingNextPage: isFetchingNextAuthoredPage,
     fetchNextPage: fetchNextAuthoredPage,
   } = useGetPrompts({ member_id: user.user_id });
+  console.log ('마이페이지에서 보이는 user.user_id:', user.user_id);
 
   const { ref, inView } = useInView({ threshold: 0 });
   useEffect(() => {
