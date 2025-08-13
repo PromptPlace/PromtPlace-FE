@@ -120,3 +120,14 @@ export type ResponseDeleteFollow = {
   message: string;
   statusCode: number;
 };
+
+// 회원 프로필 이미지 등록
+export type RequestPostImg = {
+  profile_image: File;
+};
+
+export type ResponsePostImg = {
+  error: string;
+  message: string;
+  statusCode: number;
+};

@@ -13,7 +13,6 @@ import { useInView } from 'react-intersection-observer';
 import ProfileIcon from '@assets/icon-profile-gray.svg';
 import AlarmOffIcon from '@assets/icon-alarm-off.svg';
 import AlarmOnIcon from '@assets/icon-alarm-on.svg';
-import UserProfileIcon from '@assets/img-example-profile2.jpg';
 import Arrow from '@assets/icon-vector-bottom.svg?react';
 import EditPhoto from '@assets/mobile/icon-mobile-photo.svg';
 
@@ -59,6 +58,7 @@ import useGetDetailInquiries from '@/hooks/queries/ProfilePage/useGetDetailInqui
 import usePostReplyInquiries from '@/hooks/mutations/ProfilePage/usePostReplyInquiries';
 import usePatchReadInquiries from '@/hooks/mutations/ProfilePage/usePatchReadInquiries';
 import usePostInquiries from '@/hooks/mutations/ProfilePage/usePostInquiries';
+import usePostImg from '@/hooks/mutations/ProfilePage/usePostImg';
 
 type Inquiry = {
   inquiry_id: number;
@@ -90,7 +90,10 @@ const ProfilePage = () => {
 
   const [showInquiryDetail, setShowInquiryDetail] = useState<Inquiry | null>(null);
 
-  const { selectedImg, setSelectedImg, handleUpload } = useImgUpload();
+  // 회원 프로필 이미지 등록
+  const { mutate: mutatePostImg } = usePostImg({ member_id });
+
+  const { selectedImg, setSelectedImg, handleUpload } = useImgUpload(mutatePostImg);
   const [profileEdit, setProfileEdit] = useState(false);
   const imageRef = useRef<HTMLInputElement>(null);
 
@@ -124,7 +127,6 @@ const ProfilePage = () => {
 
   // 작성한 프롬프트 목록
   const { data: promptsData, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetPrompts({ member_id });
-  console.log(promptsData);
 
   const { ref, inView } = useInView({ threshold: 1 });
 
@@ -277,7 +279,7 @@ const ProfilePage = () => {
                     setSelectedImg(null);
                     setShowImgModal(false);
                   }}
-                  className="rounded-b-[4px] border-b border-b-white-stroke bg-secondary py-[4px] px-[12px] text-text-on-background text-[10px] font-normal leading-[13px]">
+                  className="cursor-pointer rounded-b-[4px] border-b border-b-white-stroke bg-secondary py-[4px] px-[12px] text-text-on-background text-[10px] font-normal leading-[13px]">
                   삭제하기
                 </div>
               </div>
@@ -294,7 +296,7 @@ const ProfilePage = () => {
               {isMyProfile && (
                 <>
                   <img
-                    src={selectedImg?.thumbnail || UserProfileIcon}
+                    src={selectedImg?.thumbnail || ProfileIcon}
                     alt="프로필 이미지"
                     className="w-full h-full object-cover"
                   />

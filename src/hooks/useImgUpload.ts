@@ -6,7 +6,7 @@ interface SelectedImg {
   type: string;
 }
 
-const useImgUpload = () => {
+const useImgUpload = (mutatePostImg) => {
   const [selectedImg, setSelectedImg] = useState<SelectedImg | null>(null);
 
   useEffect(() => {
@@ -27,6 +27,8 @@ const useImgUpload = () => {
         thumbnail: url,
         type: fileList[0].type.split('/')[0],
       });
+
+      mutatePostImg({ profile_image: fileList[0] });
     }
   };
 
