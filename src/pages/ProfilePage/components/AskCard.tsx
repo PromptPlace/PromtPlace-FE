@@ -65,7 +65,7 @@ const AskCard = ({ prompts, isMyProfile, type, setType, member_id, mutatePostInq
                           return (
                             <div
                               key={prompt.prompt_id}
-                              className="bg-secondary shadow-button-hover text-center cursor-pointer py-[5px] px-[10px] h-[34px] flex justify-center align-center">
+                              className="bg-secondary shadow-button-hover text-center cursor-pointer py-[5px] px-[10px] h-[34px] flex justify-center align-center items-center">
                               <p
                                 onClick={() => {
                                   setPrompt(prompt.title);

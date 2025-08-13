@@ -721,7 +721,7 @@ const ProfilePage = () => {
                 )}
               </div>
 
-              <div className="pr-[8px] bg-white lg:hidden max-lg:mt-[-30px]">
+              <div className="pr-[8px] bg-transparent lg:hidden max-lg:mt-[-30px]">
                 <div className="max-h-[316px] overflow-auto">
                   {inquiryData?.data
                     .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non_buyer'))
