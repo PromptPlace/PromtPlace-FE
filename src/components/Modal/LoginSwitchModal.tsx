@@ -87,21 +87,19 @@ const LoginSwitchModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
         <button className="max-lg:hidden absolute top-[34px] right-[34px]" onClick={onClose}>
           <img src={CloseIcon} alt="닫기" className="h-[24px] w-[24px]" />
         </button>
-        <div>
-          <div className=" mb-[48px] max-lg:mb-[20px] mt-[105px] max-lg:mt-[21px] flex flex-col lg:items-center gap-[15px]">
-            <img
-              src={PromptPlaceLogo}
-              alt="PromptPlace 로고"
-              className="w-[72px] max-lg:w-[48px] h-[72px] max-lg:h-[48px]"
-            />
 
-            <img src={HeaderLogo} alt="PromptPlace 헤더 로고" className="max-lg:hidden h-[35px] w-[350px]" />
-          </div>
+        <div className=" mb-[48px] max-lg:mb-[20px] mt-[105px] max-lg:mt-[21px] flex flex-col items-center gap-[15px]">
+          <img
+            src={PromptPlaceLogo}
+            alt="PromptPlace 로고"
+            className="w-[72px] max-lg:w-[48px] h-[72px] max-lg:h-[48px]"
+          />
 
-          <p className="lg:hidden text-[16px], text-text-on-white font-bold mb-[8px]">프롬프트 플레이스,</p>
-          <p className="lg:hidden text-[14px], text-text-on-white font-medium mb-[48px]">
-            로그인 후 더 많은 서비스를 이용하세요.
-          </p>
+          <img
+            src={HeaderLogo}
+            alt="PromptPlace 헤더 로고"
+            className="h-[35px] max-lg:h-[23px] w-[350px] max-lg:w-[232px]"
+          />
         </div>
 
         <div className="flex flex-col items-center w-[334px]  gap-[32px] mb-[226px] max-lg:mb-[48px] mx-[114px] max-lg:mx-[0px]">
@@ -113,7 +111,7 @@ const LoginSwitchModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
 
         <button
           onClick={onClose}
-          className="lg:hidden flex  underline text-[12px] text-primary text-normal w-[130px] h-[15px] ">
+          className="lg:hidden flex  underline text-[12px] text-primary text-normal w-[130px] h-[15px] justify-center">
           돌아가기
         </button>
       </div>
