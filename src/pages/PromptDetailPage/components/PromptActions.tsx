@@ -7,7 +7,6 @@ import IconButton from '@components/Button/IconButton';
 import FollowButton from '@components/Button/FollowButton';
 import Rating from '@components/Rating';
 import TagButton from '@components/Button/TagButton';
-import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 
 import profile from '../assets/profile.jpg';
 import heartNone from '../../../assets/icon-heart-none-big.svg';
@@ -83,16 +82,12 @@ const PromptActions = ({
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [liked, setLiked] = useState(false);
-  const [isPaid, setIsPaid] = useState(false);
 
   const [downloadData, setDownloadData] = useState<{
     title: string;
     downloadUrl: string;
     content: string;
   } | null>(null);
-
-  const isAdmin = localStorage.getItem('isAdmin') === 'true';
-  const navigate = useNavigate();
 
   const [reviews, setReviews] = useState<PromptReviewDto[]>([]);
   const [reviewCount, setReviewCount] = useState(reviewCounts);
