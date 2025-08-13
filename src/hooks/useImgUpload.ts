@@ -1,3 +1,5 @@
+import type { RequestPostImg, ResponsePostImg } from '@/types/ProfilePage/profile';
+import type { UseMutateFunction } from '@tanstack/react-query';
 import { useEffect, useState, type ChangeEvent } from 'react';
 
 interface SelectedImg {
@@ -6,7 +8,7 @@ interface SelectedImg {
   type: string;
 }
 
-const useImgUpload = (mutatePostImg) => {
+const useImgUpload = (mutatePostImg: UseMutateFunction<ResponsePostImg, unknown, RequestPostImg, unknown>) => {
   const [selectedImg, setSelectedImg] = useState<SelectedImg | null>(null);
 
   useEffect(() => {
