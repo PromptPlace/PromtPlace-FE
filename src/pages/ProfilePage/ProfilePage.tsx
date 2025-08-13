@@ -87,8 +87,6 @@ const ProfilePage = () => {
 
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
 
-  const [isFollow, setIsFollow] = useState(false);
-
   const [isAlarmOn, setIsAlarmOn] = useState<{ state: boolean; icon: string }>({
     state: false,
     icon: AlarmOffIcon,
@@ -121,6 +119,11 @@ const ProfilePage = () => {
   // 팔로워, 팔로잉 목록
   const { data: followerData } = useGetFollower({ member_id });
   const { data: followingData } = useGetFollowing({ member_id });
+  const { data: myFollowingData } = useGetFollowing({ member_id: user.user_id });
+
+  const [isFollow, setIsFollow] = useState(() =>
+    Boolean(myFollowingData?.data.some((f) => f.following_id === member_id)),
+  );
 
   const normalizedFollowerList: FollowerWithStatus[] =
     followerData?.data.map((f) => ({
