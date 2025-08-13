@@ -43,7 +43,7 @@ const AskCard = ({ prompts, isMyProfile, type, setType, member_id, mutatePostInq
             />
 
             <div className="flex gap-[32px] items-center justify-end w-full absolute right-[32px] bottom-[34px] max-lg:static">
-              <div className="relative bg-primary rounded-[4px] py-[5px] max-lg:py-[6px] px-[10px] max-lg:px-[8px] flex justify-between lg:max-h-[34px] lg:truncate max-lg:h-auto max-w-[631px] max-lg:max-w-none max-lg:w-[calc(100%-24px)] w-full max-lg:absolute max-lg:top-[24px] max-lg:left-1/2 max-lg:-translate-1/2">
+              <div className="relative bg-primary rounded-[4px] py-[5px] max-lg:py-[6px] px-[10px] max-lg:px-[8px] flex justify-between lg:max-h-[34px] max-lg:h-auto max-w-[631px] max-lg:max-w-none max-lg:w-[calc(100%-24px)] w-full max-lg:absolute max-lg:top-[24px] max-lg:left-1/2 max-lg:-translate-1/2">
                 <p className="text-white text-[18px] font-normal leading-[23px] max-lg:text-[12px] max-lg:leading-[15px] lg:truncate">
                   [{prompt}]
                   {/* {type.type === 'buyer' && `${prompt.purchased_at.slice(0, 10).replaceAll('-', '.')}구매`} */}
