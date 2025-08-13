@@ -1,8 +1,8 @@
-import axios from 'axios';
+import { axiosInstance } from '@/apis/axios';
 import type { PromptDetailDto, ApiEnvelopeSnake } from '@/types/PromptDetailPage/PromptDetailDto';
 
 export async function getPromptDetail(promptId: number): Promise<PromptDetailDto> {
-  const res = await axios.get<ApiEnvelopeSnake<PromptDetailDto>>(`/api/prompts/${promptId}/details`);
+  const res = await axiosInstance.get<ApiEnvelopeSnake<PromptDetailDto>>(`api/prompts/${promptId}/details`);
   const d = res.data.data;
 
   if (!d || typeof d.prompt_id !== 'number') {
