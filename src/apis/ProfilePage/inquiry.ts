@@ -3,6 +3,7 @@ import type {
   RequestGetInquiriesDto,
   RequestInquiriesDto,
   RequestReplyInquiriesDto,
+  ResponseGetDetailInquiriesDto,
   ResponseGetInquiriesDto,
   ResponseInquiriesDto,
   ResponseReadInquiriesDto,
@@ -33,7 +34,7 @@ export const getInquiries = async ({ type }: RequestGetInquiriesDto): Promise<Re
 // 문의 상세 정보
 export const getDetailInquiries = async ({
   inquiry_id,
-}: RequestGetDetailInquiriesDto): Promise<ResponseGetInquiriesDto> => {
+}: RequestGetDetailInquiriesDto): Promise<ResponseGetDetailInquiriesDto> => {
   const { data } = await axiosInstance.get(`/api/inquiries/${inquiry_id}`);
 
   return data;
