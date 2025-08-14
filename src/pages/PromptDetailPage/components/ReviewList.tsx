@@ -185,7 +185,8 @@ const ReviewList = ({
                     {canEditReview(review, currentUserId) && (
                       <button
                         onClick={() => toggleMenu(idx)}
-                        className="hover:bg-secondary-pressed rounded-full p-1 transition-colors duration-150">
+                        className={`rounded-full p-1 transition-colors duration-150
+    ${openMenuIdx === idx ? 'bg-secondary-pressed' : 'hover:bg-gray-200'}`}>
                         <BsThreeDotsVertical className="text-lg text-gray-500" />
                       </button>
                     )}
@@ -248,7 +249,8 @@ const ReviewList = ({
                 {canEditReview(review, currentUserId) && (
                   <button
                     onClick={() => toggleMenu(idx)}
-                    className="hover:bg-gray-200 rounded-full p-1 h-[16px] w-[16px]">
+                    className={`rounded-full p-1 h-[16px] w-[16px] flex items-center justify-center
+    ${openMenuIdx === idx ? 'bg-secondary-pressed' : 'hover:bg-gray-200'}`}>
                     <BsThreeDotsVertical className="text-[16px] text-gray-500" />
                   </button>
                 )}
