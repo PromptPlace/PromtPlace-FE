@@ -1,14 +1,13 @@
+// MobilePrompter.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import userImage from '@/assets/icon-profile-gray.svg';
 import FollowButton from '@/components/Button/FollowButton';
 import { useAuth } from '@/context/AuthContext';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
-import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
-import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
-import type { PromptWriter } from '@/types/MainPage/prompt';
-import useGetFollower from '@/hooks/queries/ProfilePage/useGetFollower';
+import useOptimisticFollow from '@/hooks/mutations/MainPage/useOptimisticFollow';
 import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
+import type { PromptWriter } from '@/types/MainPage/prompt';
 
 interface MobilePrompterProps {
   prompter: PromptWriter;
@@ -19,20 +18,22 @@ const MobilePrompter = ({ prompter }: MobilePrompterProps) => {
   const [loginModalShow, setLoginModalShow] = useState(false);
   const navigate = useNavigate();
 
+  const { follow, unfollow } = useOptimisticFollow();
   const { data: myFollowingData } = useGetFollowing({ member_id: user.user_id });
 
-  const isFollow = Boolean(myFollowingData?.data.some((f) => f.following_id === prompter.user_id));
-
-  console.log(myFollowingData);
-
-  const { mutate: mutateFollow } = usePatchFollow({ member_id: prompter.user_id });
-  const { mutate: mutateUnFollow } = useDeleteFollow({ member_id: prompter.user_id });
+  const isFollow = myFollowingData?.data.some((f) => f.following_id === prompter.user_id);
 
   const handleFollow = () => {
+    if (!accessToken) {
+      alert('로그인이 필요합니다.');
+      setLoginModalShow(true);
+      return;
+    }
+
     if (isFollow) {
-      mutateUnFollow({ member_id: prompter.user_id });
+      unfollow(prompter.user_id);
     } else {
-      mutateFollow({ member_id: prompter.user_id });
+      follow(prompter.user_id);
     }
   };
 
@@ -43,29 +44,13 @@ const MobilePrompter = ({ prompter }: MobilePrompterProps) => {
       )}
       <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate(`/profile/${prompter.user_id}`)}>
         <div className="w-[36px] h-[36px] rounded-full bg-gray-200 flex justify-center items-center">
-          <img
-            src={prompter.profile_img_url ? prompter.profile_img_url : userImage}
-            alt="authorImage"
-            className="w-full h-full rounded-full"
-          />
+          <img src={prompter.profile_img_url ?? userImage} alt="authorImage" className="w-full h-full rounded-full" />
         </div>
-        <div className="max-w-44 text-black text-xs font-medium uppercase leading-relaxed tracking-wide truncate">
+        <div className="max-w-44 text-black text-Black text-xs font-medium font-['Spoqa_Han_Sans_Neo'] uppercase leading-relaxed tracking-wide truncate ">
           {prompter.nickname}
         </div>
       </div>
-      <FollowButton
-        follow={isFollow}
-        onClick={() => {
-          if (!accessToken) {
-            alert('로그인이 필요합니다.');
-            setLoginModalShow(true);
-          } else {
-            handleFollow();
-          }
-        }}
-        size="sm"
-        type="button"
-      />
+      <FollowButton follow={isFollow} onClick={handleFollow} size="sm" type="button" />
     </div>
   );
 };
