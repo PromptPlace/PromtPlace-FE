@@ -216,6 +216,9 @@ const PromptCreatePage = () => {
       }
 
       setModalText('업로드가 완료되었습니다.');
+      setTimeout(() => {
+        navigate(`/prompt/${prompt_ID}`);
+      }, 2000);
     } catch (err) {
       console.error(err);
       setModalText('업로드가 실패했습니다.');
