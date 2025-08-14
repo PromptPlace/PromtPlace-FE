@@ -1,4 +1,3 @@
-// MobilePrompter.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import userImage from '@/assets/icon-profile-gray.svg';
@@ -21,7 +20,7 @@ const MobilePrompter = ({ prompter }: MobilePrompterProps) => {
   const { follow, unfollow } = useOptimisticFollow();
   const { data: myFollowingData } = useGetFollowing({ member_id: user.user_id });
 
-  const isFollow = myFollowingData?.data.some((f) => f.following_id === prompter.user_id);
+  const isFollow = Boolean(myFollowingData?.data.some((f) => f.following_id === prompter.user_id));
 
   const handleFollow = () => {
     if (!accessToken) {

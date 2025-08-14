@@ -16,3 +16,9 @@ export type ResponsePaymentDTO = {
   redirect_url: string;
   statusCode: number;
 };
+
+export type ResponseError = {
+  error: string;
+  message: string;
+  statusCode: number;
+}
