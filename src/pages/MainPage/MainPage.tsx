@@ -2,6 +2,11 @@
 
 * Author @곽도윤
 
+Todo
+1. 검색창 debounce 적용
+2. 프롬프트 카드 스켈레톤 UI 적용
+3. Optimistic update를 활용한 찜, 팔로우 반영
+
 **/
 
 import { useEffect, useState } from 'react';
@@ -17,6 +22,8 @@ import MobileFilter from './components/MobileFilter';
 import MobilePrompt from './components/MobilePrompt';
 import useGetPromptList from '@/hooks/queries/MainPage/useGetPromptList';
 import usePostSearchPromptList from '@/hooks/mutations/MainPage/usePostSearchPromptList';
+import MobilePrompter from './components/MobilePrompter';
+import useGetFollower from '@/hooks/queries/ProfilePage/useGetFollower';
 
 const MainPage = () => {
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
@@ -37,24 +44,42 @@ const MainPage = () => {
   console.log(keyword);
 
   // 검색 API 호출
-  const searchPromptResult = usePostSearchPromptList(
-    {
-      keyword: keyword,
-      model: selectedModels,
-      tag: selectedTags,
-      sort: selectedSort,
-      is_free: onlyFree,
-      page: 1,
-      size: 20,
-    },
-    !!keyword,
-  );
+  const searchPromptMutation = usePostSearchPromptList();
+
+  // Use mutation only when needed, and store result in state
+  const [searchPromptData, setSearchPromptData] = useState<any>(null);
+
+  useEffect(() => {
+    if (keyword) {
+      searchPromptMutation.mutate(
+        {
+          keyword: keyword,
+          model: selectedModels,
+          tag: selectedTags,
+          sort: selectedSort,
+          is_free: onlyFree,
+          page: 1,
+          size: 20,
+        },
+        {
+          onSuccess: (data) => {
+            setSearchPromptData(data);
+          },
+        },
+      );
+    } else {
+      setSearchPromptData(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keyword, selectedModels, selectedTags, selectedSort, onlyFree]);
 
   const promptResult = useGetPromptList();
   const promptList = promptResult.data?.data ?? [];
 
   const searchPromptIds =
-    keyword && searchPromptResult.data?.data ? searchPromptResult.data.data.map((item) => item.prompt_id) : [];
+    keyword && searchPromptData && searchPromptData.data
+      ? searchPromptData.data.map((item: any) => item.prompt_id)
+      : [];
 
   const filteredPromptList = keyword
     ? searchPromptIds.length > 0
@@ -129,17 +154,14 @@ const MainPage = () => {
           ))}
         </div>
 
-        <div className="flex flex-col lg:hidden scroll-auto">
-          {sortPromptByFilter.map((prompt) => (
-            <MobilePrompt key={prompt.prompt_id} prompt={prompt} />
+        {sortPromptByFilter
+          .filter((prompt) => prompt.user)
+          .map((prompt) => (
+            <div className="flex flex-col lg:hidden scroll-auto">
+              <MobilePrompter key={prompt.user.user_id} user={prompt.user} />
+              <MobilePrompt key={prompt.prompt_id} prompt={prompt} />
+            </div>
           ))}
-        </div>
-      </div>
-
-      <div className="hidden lg:flex">
-        <div className="flex flex-col gap-[14px]">
-          <PrompterBar creators={dummyCreators} />
-        </div>
       </div>
 
       <div className="hidden lg:flex">

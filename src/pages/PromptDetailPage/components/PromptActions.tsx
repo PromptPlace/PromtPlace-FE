@@ -179,6 +179,11 @@ const PromptActions = ({
           handleShowLoginModal(handleDownloadClick);
           return;
         }
+        if (status === 403) {
+          // 403(미결제)일 때 PaymentModal을 띄움
+          setIsPaymentModalOpen(true);
+          return;
+        }
         if (status === 404) {
           alert('프롬프트를 찾을 수 없습니다.');
           return;
@@ -336,7 +341,8 @@ const PromptActions = ({
             />
             {isPaymentModalOpen && ( //유료프롬프트 & 미결제 시 PaymentModal 열기
               <PaymentModal
-                prompt={{ title, price: Number(price) }} //id: promptId 추가 필요
+                prompt={{ title, price: Number(price), id: promptId }} //id: promptId 추가 필요
+                user={user}
                 onClose={() => setIsPaymentModalOpen(false)}
                 onPaid={handlePaid}
               />

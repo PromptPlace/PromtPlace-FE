@@ -1,18 +1,21 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY } from '@constants/key';
 import { postSearchPromptList } from '@/apis/MainPage/prompt';
-import type { ResponsePromptDTO } from '@/types/MainPage/prompt';
 
-import type { RequestSearchPrompt } from '@/types/MainPage/prompt';
+export const usePostSearchPromptList = () => {
+  const queryClient = useQueryClient();
 
-function usePostSearchPromptList(params: RequestSearchPrompt, enabled: boolean) {
-  return useQuery<ResponsePromptDTO>({
-    queryKey: [QUERY_KEY.searchpromptList, params],
-    queryFn: () => postSearchPromptList(params),
-    staleTime: 1000 * 6 * 5,
-    gcTime: 1000 * 6 * 10,
-    enabled,
+  return useMutation({
+    mutationFn: postSearchPromptList,
+    onSuccess: (data) => {
+      console.log('검색 성공', data);
+      queryClient.invalidateQueries({ queryKey: QUERY_KEY.searchpromptList });
+    },
+
+    onError: (error) => {
+      console.error('검색 실패:', error);
+    },
   });
-}
+};
 
 export default usePostSearchPromptList;
