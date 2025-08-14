@@ -21,9 +21,9 @@ const MobilePrompter = ({ prompter }: MobilePrompterProps) => {
 
   const { data: myFollowingData } = useGetFollowing({ member_id: user.user_id });
 
-  const [isFollow, setIsFollow] = useState(() =>
-    Boolean(myFollowingData?.data.some((f) => f.following_id === prompter.user_id)),
-  );
+  const isFollow = Boolean(myFollowingData?.data.some((f) => f.following_id === prompter.user_id));
+
+  console.log(myFollowingData);
 
   const { mutate: mutateFollow } = usePatchFollow({ member_id: prompter.user_id });
   const { mutate: mutateUnFollow } = useDeleteFollow({ member_id: prompter.user_id });
@@ -34,7 +34,6 @@ const MobilePrompter = ({ prompter }: MobilePrompterProps) => {
     } else {
       mutateFollow({ member_id: prompter.user_id });
     }
-    setIsFollow((prev) => !prev);
   };
 
   return (
