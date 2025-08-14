@@ -233,7 +233,7 @@ const MobileUploadModal = ({
                   <button
                     key={model}
                     className={`
-                      w-[130px] h-[34px] rounded-[4px] border-[0.5px] flex items-center justify-center text-[14px] font-normal
+                      min-w-[130px] h-[34px] rounded-[4px] border-[0.5px] flex items-center justify-center text-[14px] font-normal
                       ${selected ? `text-primary border-primary bg-secondary` : 'text-white-stroke border-white-stroke bg-white'}
                       transition
                     `}
