@@ -211,7 +211,7 @@ const PromptDetailPage = () => {
         setReviewCount={setReviewCount}
         title={prompt.title}
         onClose={() => setShowReviews(false)}
-        currentUserId={1}
+        currentUserId={currentUserId}
       />
     );
   }
