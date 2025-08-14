@@ -21,6 +21,12 @@ interface Props {
 }
 
 const PromptHeader = ({ title, views, downloads, onClose, onClickReview, model, rating, tags }: Props) => {
+  const MAX_TITLE_LENGTH = 19;
+  const truncateTitle = (text: string) => {
+    if (text.length <= MAX_TITLE_LENGTH) return text;
+    return text.slice(0, MAX_TITLE_LENGTH) + '...';
+  };
+
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
   const [liked, setLiked] = useState(false);
 
@@ -55,7 +61,7 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview, model, 
               aria-label="뒤로가기">
               &lt;
             </button>
-            <h2 className="font-bold text-[32px] pb-[10px]">{title}</h2>
+            <h2 className="font-bold text-[32px] pb-[10px]">{truncateTitle(title)}</h2>
           </div>
 
           <div className="flex gap-8">
@@ -80,7 +86,7 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview, model, 
 
         {/* 제목 */}
         <div className="flex items-center justify-between mt-[8px]">
-          <h2 className="text-[16px] font-bold">{`[${title}]`}</h2>
+          <h2 className="text-[16px] font-bold">{`[${truncateTitle(title)}]`}</h2>
         </div>
 
         {/* 리뷰/하트/해시태그 */}
