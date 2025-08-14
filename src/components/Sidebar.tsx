@@ -4,6 +4,8 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import ProfileIcon from '@assets/icon-profile-blue-big.svg';
+import GradientIcon from '@assets/icon-profile-blue-small.svg';
+
 import UserProfileIcon from '@assets/icon-profile-gray.svg';
 
 import MailIcon from '@assets/icon-sidebar-mail.svg?react';
@@ -52,7 +54,7 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
           <>
             <div className="flex-1 mt-[93px] flex flex-col gap-[17px] items-center">
               <div className="w-[80px] h-[80px]">
-                <img src={ProfileIcon} alt="프로필" className="w-full h-full object-contain" />
+                <img src={GradientIcon} alt="프로필" className="w-full h-full object-contain" />
               </div>
               <p className="text-text-on-white text-xl font-medium leading-[25px]">로그인 하세요</p>
             </div>
