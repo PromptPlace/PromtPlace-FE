@@ -112,7 +112,7 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
           </div>
         )}
 
-        {type === 'liked' && (
+        {type === 'downloaded' && (
           <>
             <div className="max-lg:hidden flex items-center justify-center h-[72px]  w-[198px]">
               <PrimaryButton
