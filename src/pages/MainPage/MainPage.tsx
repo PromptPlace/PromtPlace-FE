@@ -48,42 +48,30 @@ const MainPage = () => {
   const [searchPromptData, setSearchPromptData] = useState<any>(null);
 
   useEffect(() => {
-    if (keyword) {
-      searchPromptMutation.mutate(
-        {
-          keyword: keyword,
-          model: selectedModels,
-          tag: selectedTags,
-          sort: selectedSort,
-          is_free: onlyFree,
-          page: 1,
-          size: 20,
+    searchPromptMutation.mutate(
+      {
+        keyword: keyword,
+        model: selectedModels,
+        tag: selectedTags,
+        sort: selectedSort,
+        is_free: onlyFree,
+        page: 1,
+        size: 20,
+      },
+      {
+        onSuccess: (data) => {
+          setSearchPromptData(data);
         },
-        {
-          onSuccess: (data) => {
-            setSearchPromptData(data);
-          },
-        }
-      );
-    } else {
-      setSearchPromptData(null);
-    }
+      },
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keyword, selectedModels, selectedTags, selectedSort, onlyFree]);
 
   const promptResult = useGetPromptList();
-  const promptList = promptResult.data?.data ?? [];
-
-  const searchPromptIds =
-    keyword && searchPromptData && searchPromptData.data
-      ? searchPromptData.data.map((item: any) => item.prompt_id)
-      : [];
-
-  const filteredPromptList = keyword
-    ? searchPromptIds.length > 0
-      ? promptList.filter((prompt) => searchPromptIds.includes(prompt.prompt_id))
-      : []
-    : promptList;
+  const promptList =
+    keyword || selectedModels.length > 0 || selectedTags.length > 0 || onlyFree || selectedSort !== 'recent'
+      ? (searchPromptData?.data ?? [])
+      : (promptResult.data?.data ?? []);
 
   // 코치마크 관련
   const { accessToken } = useAuth();
@@ -98,31 +86,31 @@ const MainPage = () => {
     }
   }, [showCoachMark]);
 
-  const filterPromptsByModel = filteredPromptList?.filter((prompt) => {
-    const matchModel =
-      selectedModels.length > 0
-        ? Array.isArray(prompt.models) && prompt.models.some((m) => selectedModels.includes(m.model.name))
-        : true;
-    const matchFree = onlyFree ? prompt.price === 0 : true;
-    return matchModel && matchFree;
-  });
+  // const filterPromptsByModel = filteredPromptList?.filter((prompt) => {
+  //   const matchModel =
+  //     selectedModels.length > 0
+  //       ? Array.isArray(prompt.models) && prompt.models.some((m) => selectedModels.includes(m.model.name))
+  //       : true;
+  //   const matchFree = onlyFree ? prompt.price === 0 : true;
+  //   return matchModel && matchFree;
+  // });
 
-  const sortPromptByFilter = [...filterPromptsByModel].sort((a, b) => {
-    switch (selectedSort) {
-      case '조회순':
-        return b.views - a.views;
-      case '별점순':
-        return b.rating_avg - a.rating_avg;
-      case '다운로드순':
-        return b.downloads - a.downloads;
-      case '가격 낮은 순':
-        return a.price - b.price;
-      case '가격 높은 순':
-        return b.price - a.price;
-      default:
-        return 0; // 기본 정렬
-    }
-  });
+  // const sortPromptByFilter = [...filterPromptsByModel].sort((a, b) => {
+  //   switch (selectedSort) {
+  //     case '조회순':
+  //       return b.views - a.views;
+  //     case '별점순':
+  //       return b.rating_avg - a.rating_avg;
+  //     case '다운로드순':
+  //       return b.downloads - a.downloads;
+  //     case '가격 낮은 순':
+  //       return a.price - b.price;
+  //     case '가격 높은 순':
+  //       return b.price - a.price;
+  //     default:
+  //       return 0; // 기본 정렬
+  //   }
+  // });
 
   return (
     <div className="flex gap-[59px] justify-center bg-[#F5F5F5] relative overflow-hidden">
@@ -147,13 +135,13 @@ const MainPage = () => {
         </div>
 
         <div className="hidden lg:flex flex-col scroll-auto">
-          {sortPromptByFilter.map((prompt) => (
+          {promptList.map((prompt) => (
             <PromptCard key={prompt.prompt_id} prompt={prompt} />
           ))}
         </div>
 
         <div className="flex flex-col lg:hidden scroll-auto">
-          {sortPromptByFilter.map((prompt) => (
+          {promptList.map((prompt) => (
             <MobilePrompt key={prompt.prompt_id} prompt={prompt} />
           ))}
         </div>
