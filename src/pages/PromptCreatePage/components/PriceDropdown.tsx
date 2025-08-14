@@ -111,7 +111,7 @@ const PriceDropdown: React.FC<PriceDropdownProps> = ({
       {/* 드롭다운 (무료/유료) */}
       {isOpen && (
         <div
-          className="absolute z-20 left-0 mt-1 py-[10px] max-w-[142px] w-full h-[102px] bg-white  rounded-[8px] border-[1px] border-[var(--color-white-stroke)]"
+          className="absolute z-20 left-0 py-[10px] max-w-[142px] w-full h-[102px] bg-white  rounded-[8px] border-[1px] border-[var(--color-white-stroke)]"
           style={{ boxShadow: '0px 4px 8px 0px rgba(0,0,0,0.12)' }}
           ref={dropdownRef}>
           <div
@@ -149,7 +149,7 @@ const PriceDropdown: React.FC<PriceDropdownProps> = ({
       {/* 유료 선택 시 가격 입력 모달 */}
       {showPriceInput && (
         <div
-          className="absolute z-30 left-36 top-25 w-[354px] h-[102px] bg-white border border-[var(--color-white-stroke)] rounded-xl shadow-xl p-4"
+          className={`absolute z-30 left-36 top-25 w-[354px] ${showError ? 'h-[122px]' : 'h-[102px]'} bg-white border border-[var(--color-white-stroke)] rounded-xl shadow-xl p-4`}
           style={{ boxShadow: '0px 4px 8px 0px rgba(0,0,0,0.12)' }}
           ref={priceInputRef}>
           <div className="flex w-full items-center gap-[10px]">
@@ -164,7 +164,7 @@ const PriceDropdown: React.FC<PriceDropdownProps> = ({
                   value={input}
                   min={100}
                   max={100000}
-                  className="ml-[24px] outline-none border-none max-w-[244px] h-[59px] w-full text-[18px] text-[var(--color-text-on-white)]"
+                  className="ml-[24px] outline-none border-none max-w-[244px] h-[59px] w-full text-[18px] text-text-on-white"
                   onChange={(e) => {
                     setInput(e.target.value.replace(/[^0-9]/g, ''));
                     setShowError(false);
@@ -174,15 +174,15 @@ const PriceDropdown: React.FC<PriceDropdownProps> = ({
                 />
                 <span className="mr-[24px] text-[18px]">원</span>
               </div>
-              <div className="text-[14px] text-[var(--color-text-on-background)] mb-2 ml-[30px]">
-                100원부터 100,000원까지 가능해요.
-              </div>
-              {/* {showError && <div className="text-alert text-xs mb-2">금액을 다시 확인해 주세요 (100~100,000)</div>} */}
+              <div className="text-[14px] text-text-on-background ml-[30px]">100원부터 100,000원까지 가능해요.</div>
+              {showError && (
+                <div className="text-alert text-[10px] ml-[30px]">금액을 다시 확인해 주세요 (100~100,000)</div>
+              )}
             </div>
             <button
               className="w-full max-w-[60px] h-[32px] py-[1px] 
-              border border-[var(--color-primary)] rounded-[10px] text-blue-700 text-[16px] font-normal text-center 
-              active:bg-[var(--color-secondary)] items-center"
+              border border-primary rounded-[10px] text-blue-700 text-[16px] font-normal text-center 
+              active:bg-secondary items-center"
               onClick={() => {
                 if (priceType === '유료') {
                   if (!isValidPrice(input)) {

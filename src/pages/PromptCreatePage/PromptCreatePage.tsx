@@ -81,7 +81,17 @@ const PromptCreatePage = () => {
     if (valid) {
       setShowDualModal(true);
     } else {
-      setModalText('업로드 세부 설정을 완료해 주세요.');
+      if (title.trim() === '') {
+        setModalText('프롬프트 제목을 입력해주세요.');
+      } else if (content.trim() === '') {
+        setModalText('프롬프트 내용을 입력해주세요.');
+      } else if (selectedModels.length <= 0) {
+        setModalText('모델을 설정해주세요.');
+      } else if (previewText.trim() !== '') {
+        setModalText('프롬프트 미리보기를 입력해주세요.');
+      } else if (previewText.trim() !== '') {
+        setModalText('프롬프트 설명을 입력해주세요.');
+      }
       setAlertModal(true);
     }
   };
@@ -118,7 +128,7 @@ const PromptCreatePage = () => {
         let img_url = first_step.data.url;
         let img_key = first_step.data.key;
 
-        // 실제 파일 전송 - localhost에서는 CORS 오류 나는게 정상
+        // 실제 파일 전송
         const second_step = await axios.put(img_url, file, {
           headers: { 'Content-Type': contentType },
         });
@@ -156,7 +166,6 @@ const PromptCreatePage = () => {
         is_free: is_free,
         tags: tags,
         models: selectedModels,
-        download_url: 'example.com',
       });
 
       console.log('전송 성공!', res.data);
@@ -169,7 +178,6 @@ const PromptCreatePage = () => {
   };
 
   // 이미지와 프롬프트 매핑
-  // CORS 차단으로 인해서 localhost에서는 전송 안 되는게 정상
   const handleMapImgToPrompt = async (prompt_ID: number, imageKeys: Array<{ key: string; order_index: number }>) => {
     for (const imageInfo of imageKeys) {
       try {
@@ -207,6 +215,9 @@ const PromptCreatePage = () => {
       }
 
       setModalText('업로드가 완료되었습니다.');
+      setTimeout(() => {
+        navigate(`/prompt/${prompt_ID}`);
+      }, 2000);
     } catch (err) {
       console.error(err);
       setModalText('업로드가 실패했습니다.');

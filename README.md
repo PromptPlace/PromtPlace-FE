@@ -1,5 +1,3 @@
-> 추후 수정 예정
-
 <div align="center">
 
 # PromtPlace FE
@@ -149,10 +147,20 @@ develop ← 작업 브랜치
   - favicons - 파비콘
   - fonts - 폰트
 - src
+  - apis - 서버와 통신하는 API 함수 모음
   - assets - 사용되는 모든 에셋
   - components - 공용 컴포넌트 및 스타일
   - data - json 데이터
   - hooks - 전역으로 사용되는 훅
+    - mutaions - React Query의 useMutation 훅 관련 로직
+    - queries - React Query의 useQuery / useInfiniteQuery 관련 로직
+  - layouts - 페이지의 공통 레이아웃 컴포넌트
+  - pages - 실제 라우팅되는 페이지 컴포넌트
   - routes - 도메인 별 라우팅 페이지와 컴포넌트 및 스타일 등
-  - styles - 글로벌 스타일
+  - types - TypeScript 타입 정의 모음
   - utils - 전역으로 사용되는 함수
+
+<details>
+  <summary> <h3>🔍 개발 중 어려움과 해결 과정</h3></summary>
+  <a href="https://www.notion.so/24f87a06720780958686fb8cf470032a"> 🔗 노션 링크</link>
+</details>
