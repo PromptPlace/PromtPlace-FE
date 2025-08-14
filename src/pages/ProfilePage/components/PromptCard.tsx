@@ -7,6 +7,9 @@ import Dots from '@assets/icon-dot.svg';
 import ModelButton from '@/components/Button/ModelButton';
 import TagButton from '@/components/Button/TagButton';
 import type { Model, Tag } from '@/types/ProfilePage/profile';
+import usePromptLike from '@/hooks/mutations/PromptDetailPage/usePromptLike';
+import usePromptUnlike from '@/hooks/mutations/PromptDetailPage/usePromptUnlike';
+import { useGetLikedPrompts } from '@/hooks/queries/MyPage/useGetPrompts';
 
 interface PrompCardProps {
   id: number;
@@ -18,7 +21,15 @@ interface PrompCardProps {
 }
 
 const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }: PrompCardProps) => {
-  const [isLike, setIsLike] = useState(false);
+  // 프롬프트 찜하기
+  const { mutate: mutatePromptLike } = usePromptLike();
+  // 프롬프트 찜 취소하기
+  const { mutate: mutatePromptUnlike } = usePromptUnlike();
+
+  // 찜한 프롬프트 목록
+  const { data: likedList } = useGetLikedPrompts();
+  const isLike = likedList?.data.some((data) => data.prompt_id === id);
+
   const [isDotsClicked, setIsDotsClickes] = useState(false);
   const navigate = useNavigate();
 
@@ -68,7 +79,13 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
 
         {!isMyProfile && (
           <div
-            onClick={() => setIsLike((prev) => !prev)}
+            onClick={() => {
+              if (isLike) {
+                mutatePromptUnlike(id);
+              } else {
+                mutatePromptLike(id);
+              }
+            }}
             className="py-[25px] px-[45px] max-lg:p-0 cursor-pointer lg:w-[115px] lg:h-[72px] max-lg:w-[16px] max-lg:h-[16px] flex items-center justify-center shrink-0">
             <img src={isLike ? HeartBlue : HeartEmpty} alt="좋아요" className="w-full h-full object-contain" />
           </div>
@@ -85,12 +102,12 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
               <div className="absolute z-10 top-[60px] right-[44px] max-lg:top-[22px] max-lg:right-[0px] flex flex-col whitespace-nowrap">
                 <button
                   onClick={() => handleDeletePrompts(id)}
-                  className="py-[8px] px-[16px] bg-secondary rounded-t-[4px] border-b border-b-white-stroke text-text-on-background text-[16px] font-normal leading-[20px] active:bg-secondary-pressed active:text-text-on-white">
+                  className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-t-[4px] border-b border-b-white-stroke text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white">
                   삭제하기
                 </button>
                 <button
-                  onClick={() => navigate('/create')}
-                  className="py-[8px] px-[16px] bg-secondary rounded-b-[4px] text-text-on-background text-[16px] font-normal leading-[20px] active:bg-secondary-pressed active:text-text-on-white">
+                  onClick={() => navigate(`/mypage/edit/${id}`)}
+                  className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-b-[4px] text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white">
                   수정하기
                 </button>
               </div>

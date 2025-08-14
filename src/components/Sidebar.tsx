@@ -1,5 +1,5 @@
 import { useAuth } from '@/context/AuthContext';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import clsx from 'clsx';
 import { useState } from 'react';
 
@@ -24,7 +24,6 @@ interface SidebarProps {
 
 const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarProps) => {
   const { accessToken, user } = useAuth();
-  const navigate = useNavigate();
   const [loginModalShow, setLoginModalShow] = useState(false);
 
   const LINKS = [
@@ -39,7 +38,7 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
     setSidebarVisible(false);
     setTimeout(() => {
       setSidebarOpen(false);
-      navigate(url);
+      window.location.href = url;
     }, 300);
   };
 
@@ -92,7 +91,7 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
                       setSidebarVisible(false);
                       setTimeout(() => {
                         setSidebarOpen(false);
-                        navigate(to);
+                        window.location.href = to;
                       }, 300);
                     }}
                     to={to}
