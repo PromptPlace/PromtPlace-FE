@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import ArrowIcon from './ArrowIcon';
 import type { RegisterInfo, UpdateAccountInfo } from '@/types/MyPage/account';
+import { motion } from 'framer-motion';
 
 /**
  * 조회수 및 다운로드 수를 나타내는 컴포넌트입니다.
@@ -121,29 +122,70 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
         </button>
 
         {isDropdownOpen && (
-          <div className="absolute max-lg:fixed z-20 mt-[104px] right-[40px] max-lg:right-[0px] w-[264px] max-lg:w-full  mt-2 bg-white max-h-[579px] max-lg:max-h-[62vh] overflow-y-auto shadow-[0_4px_8px_0_rgba(0,0,0,0.12)] max-lg:shadow-[2px_2px_30px_0_rgba(0,0,0,0.25)] rounded-[8px] max-lg:rounded-t-[25px] border-[1px] max-lg:border-[0px] border-white-stroke">
-            <div className="lg:hidden flex flex-col px-[20px] items-center mb-[8px]">
-              <div className="w-[40px] h-[4px] bg-white-stroke rounded-full  mt-[14px] mb-[30px]" />
-              <p className="text-[10px] font-medium text-primary self-start">은행 선택</p>
+          <>
+            <div className="max-lg:hidden absolute max-lg:fixed z-20 mt-[104px] right-[40px] max-lg:right-[0px] w-[264px] max-lg:w-full  mt-2 bg-white max-h-[579px] max-lg:max-h-[62vh] overflow-y-auto shadow-[0_4px_8px_0_rgba(0,0,0,0.12)] max-lg:shadow-[2px_2px_30px_0_rgba(0,0,0,0.25)] rounded-[8px] max-lg:rounded-t-[25px] border-[1px] max-lg:border-[0px] border-white-stroke">
+              <div className="lg:hidden flex flex-col px-[20px] items-center mb-[8px]">
+                <div className="w-[40px] h-[4px] bg-white-stroke rounded-full  mt-[14px] mb-[30px]" />
+                <p className="text-[10px] font-medium text-primary self-start">은행 선택</p>
+              </div>
+              <div className="grid grid-cols-2 max-lg:grid-cols-3 gap-x-[24px] max-lg:gap-x-[16px] gap-y-[24px] max-lg:gap-y-[12px] p-[24px] max-lg:px-[16px] max-lg:py-[12px]">
+                {BANKS.map((bank) => (
+                  <button
+                    key={bank.name}
+                    onClick={() => handleBankSelect(bank)}
+                    className="flex flex-col items-center justify-center w-[96px] max-lg:w-[72px] h-[74px] max-lg:w-[48px] bg-white hover:border-[1px] max-lg:hover:border-[0.5px] hover:border-primary hover:rounded-[4px]">
+                    <img
+                      src={getBankLogoUrl(bank.fileName)}
+                      alt={bank.name}
+                      className="w-[40px] max-lg:w-[30px] h-[40px] max-lg:h-[30px]"
+                    />
+                    <span className="text-[14px] max-lg:text-[12px] text-text-on-white font-normal">{bank.name}</span>
+                  </button>
+                ))}
+              </div>
             </div>
-            <div
-              className="grid grid-cols-2 max-lg:grid-cols-3 gap-x-[24px] max-lg:gap-x-[16px] gap-y-[24px] max-lg:gap-y-[12px] p-[24px] max-lg:px-[16px] max-lg:py-[12px]"
-              ref={dropdownRef}>
-              {BANKS.map((bank) => (
-                <button
-                  key={bank.name}
-                  onClick={() => handleBankSelect(bank)}
-                  className="flex flex-col items-center justify-center w-[96px] max-lg:w-[72px] h-[74px] max-lg:w-[48px] bg-white hover:border-[1px] max-lg:hover:border-[0.5px] hover:border-primary hover:rounded-[4px]">
-                  <img
-                    src={getBankLogoUrl(bank.fileName)}
-                    alt={bank.name}
-                    className="w-[40px] max-lg:w-[30px] h-[40px] max-lg:h-[30px]"
-                  />
-                  <span className="text-[14px] max-lg:text-[12px] text-text-on-white font-normal">{bank.name}</span>
-                </button>
-              ))}
+
+            <div className="lg:hidden">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsDropdownOpen(false)}
+                className="fixed inset-0 bg-overlay z-10"
+              />
+              <motion.div
+                drag="y"
+                dragConstraints={{ top: 0, bottom: 50 }}
+                initial={{ y: '100%' }}
+                animate={{ y: 0 }}
+                exit={{ y: '100%' }}
+                transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+                onDragEnd={(_, info) => {
+                  if (info.offset.y - 308) {
+                    setIsDropdownOpen(false);
+                  }
+                }}
+                className="fixed bottom-0 left-0 right-0 z-120 bg-white shadow-[0_4px_8px_0_rgba(0,0,0,0.12)] rounded-t-2xl cursor-grab">
+                <div className="flex flex-col px-[20px] items-center">
+                  <div className="w-[40px] h-[4px] bg-white-stroke rounded-full  mt-[14px] mb-[30px]" />
+                  <p className="text-[10px] font-medium text-primary self-start">은행 선택</p>
+                </div>
+                <div className="max-h-[336px] overflow-y-auto pb-10">
+                  <div className="flex  grid grid-cols-3 gap-x-[16px] gap-y-[12px] px-[16px] py-[12px]">
+                    {BANKS.map((bank) => (
+                      <button
+                        key={bank.name}
+                        onClick={() => handleBankSelect(bank)}
+                        className="flex flex-col items-center  justify-center  h-[72px] w-[48px] bg-white  hover:border-[0.5px] hover:border-primary hover:rounded-[4px]">
+                        <img src={getBankLogoUrl(bank.fileName)} alt={bank.name} className="w-[30px] h-[30px]" />
+                        <span className="text-[12px] text-text-on-white font-normal">{bank.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
             </div>
-          </div>
+          </>
         )}
       </div>
 
