@@ -3,6 +3,8 @@ import FilterDropdown from './FilterDropdown';
 import TagFilter from './TagFilter';
 import arrowDown from '@/assets/icon-arrow-down.svg';
 import arrowDownWhite from '@/assets/icon-arrow-down-white.svg';
+import checkbox from '@/assets/icon-bi-check-square.svg';
+import box from '@/assets/icon-bi-noncheck-square.svg';
 
 type FilterBarProps = {
   onModelChange: (models: string[] | null) => void;
@@ -125,14 +127,11 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
       ))}
 
       {/* 무료만 보기 */}
-      <label className="ml-2 flex items-center gap-1 px-2 py-1 text-lg cursor-pointer">
-        <span>무료만 보기</span>
-        <input
-          type="checkbox"
-          checked={onlyFree}
-          onChange={() => setOnlyFree(!onlyFree)}
-          className="accent-primary-pressed w-4 h-4"
-        />
+      <label className="flex items-center gap-1 px-2 py-1 text-lg cursor-pointer">
+        <div className="justify-start text-text-on-background text-lg font-normal font-['Spoqa_Han_Sans_Neo']">무료만 보기</div>
+        <div className="w-5 h-5 relative flex justify-center items-center">
+          <img className={`w-[20px] h-[20px] rounded-sm absolute ml-[10px]`} src={onlyFree ? checkbox : box} />
+        </div>
       </label>
     </section>
   );
