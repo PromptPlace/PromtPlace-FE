@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import ArrowIcon from './ArrowIcon';
 import type { RegisterInfo, UpdateAccountInfo } from '@/types/MyPage/account';
-import { motion } from 'framer-motion';
+import { motion, useDragControls } from 'framer-motion';
 
 /**
  * 조회수 및 다운로드 수를 나타내는 컴포넌트입니다.
@@ -20,22 +20,22 @@ const BANKS = [
   { name: '카카오뱅크', code: '090', fileName: 'Kakao.svg' },
   { name: '하나은행', code: '005', fileName: 'Hana.svg' },
   { name: '우리은행', code: '020', fileName: 'Woori.svg' },
-  { name: '신한은행', code: '088', fileName: 'Shinhan.svg' },
-  { name: 'KB국민은행', code: '004', fileName: 'KB.svg' },
-  { name: 'IBK기업은행', code: '003', fileName: 'IBK.svg' },
-  { name: 'KDB산업은행', code: '002', fileName: 'KDB.svg' },
+  { name: '신한', code: '088', fileName: 'Shinhan.svg' },
+  { name: 'KB국민', code: '004', fileName: 'KB.svg' },
+  { name: 'IBK기업', code: '003', fileName: 'IBK.svg' },
+  { name: 'KDB산업', code: '002', fileName: 'KDB.svg' },
   { name: '케이뱅크', code: '089', fileName: 'K.svg' },
-  { name: 'SC제일은행', code: '023', fileName: 'SC.svg' },
-  { name: '씨티은행', code: '027', fileName: 'City.svg' },
+  { name: 'SC제일', code: '023', fileName: 'SC.svg' },
+  { name: '씨티', code: '027', fileName: 'City.svg' },
   { name: '새마을금고', code: '045', fileName: 'Saemaul.svg' },
-  { name: 'NH농협은행', code: '011', fileName: 'NH.svg' },
+  { name: 'NH농협', code: '011', fileName: 'NH.svg' },
   { name: '우체국', code: '071', fileName: 'Post.svg' },
-  { name: '부산은행', code: '032', fileName: 'Busan.svg' },
-  { name: '제주은행', code: '035', fileName: 'Jeju.svg' },
-  { name: '광주은행', code: '034', fileName: 'Gwangju.svg' },
-  { name: '전북은행', code: '037', fileName: 'Jeonbuk.svg' },
-  { name: 'DGB대구은행', code: '031', fileName: 'Daegu.svg' },
-  { name: 'Sh수협은행', code: '007', fileName: 'Suhyup.svg' },
+  { name: '부산', code: '032', fileName: 'Busan.svg' },
+  { name: '제주', code: '035', fileName: 'Jeju.svg' },
+  { name: '광주', code: '034', fileName: 'Gwangju.svg' },
+  { name: '전북', code: '037', fileName: 'Jeonbuk.svg' },
+  { name: 'DGB대구', code: '031', fileName: 'Daegu.svg' },
+  { name: 'Sh수협', code: '007', fileName: 'Suhyup.svg' },
 ];
 const getBankLogoUrl = (fileName: string) => {
   // new URL(상대 경로, 기준 URL)
@@ -97,6 +97,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
     };
   }, [isDropdownOpen]);
 
+  const controls = useDragControls();
   return (
     <div className="flex flex-col flex-1 gap-[40px] max-lg:gap-[12px] pt-[40px] max-lg:pt-[20px]">
       {/* 1. 은행 선택 */}
@@ -161,12 +162,12 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
                 exit={{ y: '100%' }}
                 transition={{ type: 'spring', damping: 30, stiffness: 300 }}
                 onDragEnd={(_, info) => {
-                  if (info.offset.y - 308) {
+                  if (info.offset.y > 200) {
                     setIsDropdownOpen(false);
                   }
                 }}
                 className="fixed bottom-0 left-0 right-0 z-120 bg-white h-[360px] shadow-[0_4px_8px_0_rgba(0,0,0,0.12)] max-lg:shadow-[2px_2px_30px_0_rgba(0,0,0,0.25)] rounded-t-2xl cursor-grab">
-                <div className="flex flex-col px-[20px] items-center">
+                <div onPointerDown={(e) => controls.start(e)} className="flex flex-col px-[20px] items-center">
                   <div className="w-[40px] h-[4px] bg-white-stroke rounded-full  mt-[14px] mb-[30px]" />
                   <p className="text-[10px] font-medium text-primary self-start">은행 선택</p>
                 </div>

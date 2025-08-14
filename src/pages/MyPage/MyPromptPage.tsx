@@ -377,7 +377,7 @@ const MyPromptPage = () => {
   console.log('promptsToDisplay:', promptsToDisplay);
 
   return (
-    <div className="flex  justify-center pt-[92px] max-lg:pt-[12px] min-h-screen bg-background">
+    <div className="flex justify-center pt-[92px] max-lg:pt-[12px] min-h-screen bg-background">
       <div className=" w-full max-w-[1236px] mx-[102px] max-lg:mx-[0px] max-lg:px-[20px]">
         <div className="flex items-center gap-[10px] max-lg:gap-[6px] mb-[56px] max-lg:mb-[20px]">
           <img
