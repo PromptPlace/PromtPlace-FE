@@ -92,7 +92,7 @@ const PaymentHistoryPage = () => {
         <div className="flex-grow min-h-0 p-[8px] max-lg:p-[0px] bg-white">
           <div className="overflow-y-auto h-full">
             {/* api 적용할때 purchasesResponse.purchases로 변경 */}
-            {paymentHistory.map((item) => (
+            {purchasesResponse?.purchases.map((item) => (
               <PaymentHistoryRow key={item.prompt_id} transaction={item} />
             ))}
           </div>

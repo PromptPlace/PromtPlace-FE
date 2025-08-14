@@ -24,3 +24,9 @@ export interface UpdateAccountInfo {
   account_number: string;
   account_holder: string;
 }
+
+export interface WithdrawableAmountApiResponse {
+  message: string;
+  available_amount: number;
+  statusCode: number;
+}
