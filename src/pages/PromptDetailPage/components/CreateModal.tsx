@@ -5,13 +5,14 @@ import PrimaryButton from '@components/Button/PrimaryButton';
 import Bar from '../assets/bar.svg';
 import useCreateReview from '@/hooks/mutations/PromptDetailPage/useCreateReview';
 import type { AxiosError } from 'axios';
+import type { ResponseCreateReviewDto } from '@/types/PromptDetailPage/PromptReviewDto';
 
 interface CreateModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
   promptId: number;
-  onSuccess: () => void;
+  onSuccess: (data: ResponseCreateReviewDto['data']) => void;
 }
 
 const CreateModal = ({ isOpen, onClose, title, promptId, onSuccess }: CreateModalProps) => {
@@ -23,24 +24,19 @@ const CreateModal = ({ isOpen, onClose, title, promptId, onSuccess }: CreateModa
 
   const handleCreateClick = async () => {
     try {
-      await createMutate({
+      const res = await createMutate({
         promptId,
-        body: {
-          content: reviewText,
-          rating,
-        },
+        body: { content: reviewText, rating },
       });
-      onSuccess();
+
+      onSuccess(res.data);
       onClose();
     } catch (error) {
       const axiosError = error as AxiosError;
-      const status = axiosError.response?.status;
-
-      if (status === 401) {
+      if (axiosError.response?.status === 401) {
         alert('로그인이 필요합니다.');
         return;
       }
-
       alert('리뷰 작성에 실패했습니다. 잠시 후 다시 시도해 주세요.');
     }
   };
