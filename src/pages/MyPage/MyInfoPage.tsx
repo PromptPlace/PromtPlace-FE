@@ -82,7 +82,13 @@ const MyPageInfo = () => {
           />
           <InfoRow label="계정 탈퇴" actionText="탈퇴하기" onAction={confirmDelete} isDestructive />
           {deleteStep === 'confirm' && (
-            <DualModal text="회원을 탈퇴하시겠습니까?" onClickYes={showWarning} onClickNo={closeModal} />
+            <DualModal
+              text="회원을 탈퇴하시겠습니까?"
+              onClickYes={showWarning}
+              onClickNo={closeModal}
+              colorYesText="white"
+              colorNoText="blue"
+            />
           )}
           {deleteStep === 'warning' && (
             <DualModal
@@ -95,6 +101,8 @@ const MyPageInfo = () => {
               }
               onClickYes={deleteAccount}
               onClickNo={closeModal}
+              colorYesText="white"
+              colorNoText="blue"
             />
           )}
           {deleteStep === 'complete' && (

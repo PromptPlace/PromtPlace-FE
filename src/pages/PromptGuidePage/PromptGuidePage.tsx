@@ -12,6 +12,9 @@ import { LuChevronDown } from 'react-icons/lu';
 import MobileList from './components/MobileList';
 import axios from 'axios';
 
+import { useShowLoginModal } from '@/hooks/useShowLoginModal';
+import SocialLoginModal from '@/components/Modal/SocialLoginModal';
+
 /**
  * Memo
  * 1. url : guide/tip, guide/notice
@@ -36,6 +39,8 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
 
   const [allPosts, setAllPosts] = useState<Post[]>([]);
   const [allNotice, setAllNotice] = useState<Post[]>([]);
+
+  const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
 
   useEffect(() => {
     const fetchAllPosts = async () => {
@@ -114,9 +119,9 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
 
   // 게시글 클릭시 상세로 이동
   const handleRowClick = (id: number) => {
-    navigate(`/guide/${type}/${id}`, { state: { type } });
-    //이렇게 안 하면 pageRoutes에서 <Route path="/guide/:type/:id" element={<PromptGuideDetailPage />} />
-    //이런 식으로 해야 함 (아마도?)
+    handleShowLoginModal(() => {
+      navigate(`/guide/${type}/${id}`, { state: { type } });
+    });
   };
 
   // 모바일 화면 관련
@@ -136,6 +141,10 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
 
   return (
     <>
+      {/** 소셜 로그인 트리거  */}
+      {loginModalShow && (
+        <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
+      )}
       <div className="hidden lg:block">
         <div className="flex justify-center pt-[92px] mx-[102px]">
           <div className="w-full max-w-[1236px] justify-start ml-[20px]">
