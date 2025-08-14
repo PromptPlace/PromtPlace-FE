@@ -66,6 +66,7 @@ import usePatchReadInquiries from '@/hooks/mutations/ProfilePage/usePatchReadInq
 import usePostInquiries from '@/hooks/mutations/ProfilePage/usePostInquiries';
 import usePostImg from '@/hooks/mutations/ProfilePage/usePostImg';
 import { useAuth } from '@/context/AuthContext';
+import usePostNotifications from '@/hooks/mutations/ProfilePage/usePostNotifications';
 
 type Inquiry = {
   inquiry_id: number;
@@ -91,6 +92,9 @@ const ProfilePage = () => {
     state: false,
     icon: AlarmOffIcon,
   });
+
+  // 알림 등록 & 취소
+  const { mutate: mutateNotification } = usePostNotifications({ member_id });
 
   const [isBuyer, setIsBuyer] = useState(true);
   const [isArrowClicked, setIsArrowClicked] = useState(false);
@@ -360,9 +364,12 @@ const ProfilePage = () => {
                 </p>
                 {!isMyProfile && (
                   <div
-                    onClick={() =>
-                      setIsAlarmOn((prev) => ({ state: !prev.state, icon: prev.state ? AlarmOffIcon : AlarmOnIcon }))
-                    }
+                    onClick={() => {
+                      if (isFollow) {
+                        mutateNotification({ prompter_id: member_id });
+                        setIsAlarmOn((prev) => ({ state: !prev.state, icon: prev.state ? AlarmOffIcon : AlarmOnIcon }));
+                      }
+                    }}
                     className={clsx(
                       'lg:hidden w-[20px] h-[20px] bg-white rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out p-[3px]',
                       !isAlarmOn.state && 'border border-text-on-background',
