@@ -7,11 +7,13 @@ import IconButton from '@components/Button/IconButton';
 import CloseIcon from '@assets/icon-close.svg';
 import clsx from 'clsx';
 import { useGetSalesHistory } from '@/hooks/queries/MyPage/useGetPay.ts';
+import { useRequestWithdrawal } from '@/hooks/mutations/MyPage/account';
+import { useGetWithdrawableAmount } from '@/hooks/queries/MyPage/useGetAccount';
 // 더미 데이터 예시
 const DUMMY_USER_INFO = {
   nickname: '주토피아노',
   balance: 11100,
-  hasAccount: false,
+  hasAccount: true,
   accountNumber: 1234355533,
 };
 
@@ -93,8 +95,11 @@ const MyPayPage = () => {
   const [userInfo, setUserInfo] = useState(DUMMY_USER_INFO);
   const [salesHistory, setSalesHistory] = useState(DUMMY_SALES_HISTORY);
   const [showModal, setShowModal] = useState<'noMoney' | 'noAccount' | 'yesAccount' | 'complete' | null>(null);
+  const { mutate: requestWithdrawalMutation } = useRequestWithdrawal();
+  const { data: amount } = useGetWithdrawableAmount();
+  console.log('출금가능 금액:', amount);
 
-  const handleWithdraw = () => {
+  const CheckWithdraw = () => {
     console.log('출금하기 모달을 엽니다.');
 
     if (!userInfo.hasAccount) {
@@ -103,6 +108,12 @@ const MyPayPage = () => {
     } else {
       setShowModal('yesAccount');
     }
+  };
+
+  const handleWithdraw = () => {
+    requestWithdrawalMutation(userInfo.balance);
+    console.log('출금 요청을 보냅니다.');
+    setShowModal('complete');
   };
 
   const closeModal = () => {
@@ -124,7 +135,7 @@ const MyPayPage = () => {
           <div className="lg:hidden text-[14px] font-medium text-primary-hover mb-[12px]">
             {userInfo.nickname}님의 출금 가능 금액
           </div>
-          <PossiblepayAmount nickname={userInfo.nickname} balance={userInfo.balance} onWithdraw={handleWithdraw} />
+          <PossiblepayAmount nickname={userInfo.nickname} balance={userInfo.balance} onWithdraw={CheckWithdraw} />
 
           <div className="text-[24px] text-primary-hover font-bold pl-[40px] py-[20px] border-b-[1px] border-primary-hover max-lg:text-[14px] max-lg:text-primary max-lg:pl-[12px] max-lg:py-[12px] max-lg:border-b-[0.5px] max-lg:border-primary">
             <span className="max-lg:hidden">판매 내역</span>
@@ -134,7 +145,7 @@ const MyPayPage = () => {
 
         <div className="max-lg:hidden bg-white flex-1 min-h-0">
           <div className="mr-[8px] overflow-y-auto max-h-[564px] max-lg:max-h-[273px] max-lg:mr-[0px]">
-            {salesHistory.map((sale) => (
+            {salesResponse?.sales.map((sale) => (
               <SalesHistoryCard key={sale.prompt_id} sale={sale} />
             ))}
           </div>
@@ -148,7 +159,7 @@ const MyPayPage = () => {
               <span className="w-[34px]">구매자</span>
             </div>
             {/* api 적용할때 salesHistory를 salesResponse.sales로 변경 */}
-            {salesHistory.map((sale) => (
+            {salesResponse?.sales.map((sale) => (
               <SalesHistoryCard key={sale.prompt_id} sale={sale} />
             ))}
           </div>
@@ -204,7 +215,9 @@ const MyPayPage = () => {
                 imgType="none"
                 textButton="blue"
                 text="예"
-                onClick={() => setShowModal('complete')}
+                onClick={() => {
+                  handleWithdraw();
+                }}
               />
               <IconButton
                 buttonType="round"

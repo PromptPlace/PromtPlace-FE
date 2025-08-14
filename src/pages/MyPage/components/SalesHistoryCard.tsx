@@ -2,7 +2,7 @@ import CardHeader from './CardHeader';
 
 interface Sale {
   prompt_id: number;
-  purchased_at: string;
+  sold_at: string;
   title: string;
   price: number;
   buyer_nickname: string;
@@ -18,7 +18,7 @@ const SalesHistoryCard: React.FC<SalesHistoryCardProps> = ({ sale }) => {
     <div className="overflow-hidden whitespace-nowrap flex items-center  border-b-[1px] border-white-stroke bg-white text-[20px] text-text-on-white font-medium max-lg:border-b-[0.5px] max-lg:px-[12px] max-lg:flex max-lg:justify-between max-lg:text-[12px] max-lg:h-[39px] ">
       <div className="w-[635px] max-lg:w-[155px] max-lg:h-[15px] pl-[40px] max-lg:pl-[0px]">
         <CardHeader
-          date={sale.purchased_at}
+          date={sale.sold_at}
           title={sale.title}
           linkUrl={`/prompt/${sale.prompt_id}`}
           dateFormat="dateOnly"
