@@ -259,7 +259,7 @@ const PromptDetailPage = () => {
             tags={prompt.tags.map((tag) => tag.name)}
           />
 
-          <PromptInfo description={prompt.description} usageGuide={prompt.usage_guide} />
+          <PromptInfo description={prompt.description} usageGuide={prompt.usage_guide} isPaid={isPaid} />
         </div>
 
         <div className="lg:hidden flex justify-end">
