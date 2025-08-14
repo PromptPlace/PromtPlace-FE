@@ -118,14 +118,14 @@ const UploadModal = ({
           </div>
           {/*프롬프트 결과 미리보기*/}
           <div>
-            <div className="w-full max-w-[845px] h-full max-h-[200px]">
-              <div className="flex items-center gap-2 font-semibold text-[16px]">
+            <div className="w-full max-w-[845px] h-full max-h-[200px] mt-[20px]">
+              <div className="flex items-center gap-2 font-bold text-[24px]">
                 프롬프트 결과 미리 보기 <span className="text-alert">*</span>
-                <label className="flex items-center ml-4 text-[15px] font-normal cursor-pointer gap-[10px]">
-                  <p> 이미지</p>
+                <label className="flex items-center ml-4 font-normal cursor-pointer gap-[10px]">
+                  <p className="text-[18px]"> 이미지</p>
                   <input
                     type="checkbox"
-                    className="mr-1 mt-[1px] accent-primary-pressed"
+                    className="mr-1 mt-[1px] accent-primary-pressed hidden"
                     checked={withImage}
                     onChange={(e) => {
                       setWithImage(e.target.checked);
@@ -134,6 +134,11 @@ const UploadModal = ({
                       }
                     }}
                   />
+                  {withImage ? (
+                    <img className="w-[24px] h-[24px]" src={checkbox} alt="박스임" />
+                  ) : (
+                    <img className="w-[24px] h-[24px]" src={box} alt="박스임" />
+                  )}
                 </label>
               </div>
               <div className="mt-[16px] pt-[20px] px-[24px] pb-[11px] bg-gray-100 rounded-lg w-full max-w-[845px] h-[150px] overflow-y-auto">
@@ -161,14 +166,15 @@ const UploadModal = ({
                   value={previewText}
                   onChange={(e) => setPreviewText(e.target.value)}
                   placeholder="미리 공개할 프롬프트 결과 일부를 입력해 주세요"
-                  className="w-full h-full max-h-[110px] bg-transparent outline-none resize-none placeholder:text-gray-400 text-[15px] mt-[4px] overflow-scroll"
+                  className="w-full h-full max-h-[110px] bg-transparent outline-none resize-none  text-[18px] 
+                  placeholder:text-text-on-background  placeholder:text-[18px] placeholder:font-normal mt-[4px] overflow-scroll"
                 />
               </div>
             </div>
           </div>
           {/*프롬프트 설명*/}
           <div className="mt-[28px]">
-            <div className="flex items-center gap-2 font-semibold text-[16px]">
+            <div className="flex items-center gap-2 font-bold text-[24px]">
               프롬프트 설명 <span className="text-alert">*</span>
             </div>
             <div className="mt-[16px] pt-[24px] px-[24px] pb-[11px] bg-background rounded-[8px] h-[150px]">
@@ -176,24 +182,26 @@ const UploadModal = ({
                 value={discriptionText}
                 onChange={(e) => setDescriptionText(e.target.value)}
                 placeholder="프롬프트에 대한 설명을 적어주세요"
-                className="w-full h-full bg-transparent outline-none resize-none placeholder:text-text-on-background text-[18px] mt-1"
+                className="w-full h-full bg-transparent outline-none resize-none text-[18px] 
+                 placeholder:text-text-on-background placeholder:font-normal placeholder:text-[18px] mt-1"
               />
             </div>
             {/*프롬프트 활용법*/}
             <div className="mt-[28px]">
-              <div className="flex items-center gap-2 font-semibold text-[16px]">프롬프트 활용법</div>
+              <div className="flex items-center gap-2 font-bold text-[24px]">프롬프트 활용법</div>
               <div className="mt-[16px] pt-[24px] px-[24px] pb-[11px] bg-background rounded-[8px] h-[150px]">
                 <textarea
                   value={howToUseText}
                   onChange={(e) => setHowToUseText(e.target.value)}
                   placeholder="프롬프트 활용법을 적어주세요"
-                  className="w-full h-full bg-transparent outline-none resize-none placeholder:text-text-on-background text-[18px] mt-1"
+                  className="w-full h-full bg-transparent outline-none resize-none text-[18px]
+                   placeholder:text-text-on-background placeholder:font-normal placeholder:text-[18px] mt-1"
                 />
               </div>
             </div>
           </div>
         </div>
-        <div className="absolute bottom-15 left-197 bg-white rounded-[50px]">
+        <div className="absolute bottom-5 left-197 bg-white rounded-[50px]">
           <IconButton
             buttonType="round"
             style="outline"
