@@ -251,7 +251,7 @@ const MobileUploadModal = ({
               <div className="flex justify-center items-center gap-[20px]">
                 <button
                   className={`
-                    flex w-[130px] h-[34px] rounded-[4px] border-[0.5px] text-[14px] font-normal items-center justify-center
+                    flex w-full min-w-[130px] h-[34px] rounded-[4px] border-[0.5px] text-[14px] font-normal items-center justify-center
                     ${
                       priceType === '무료'
                         ? `text-primary-hover border-primary-hover bg-secondary`
@@ -265,7 +265,7 @@ const MobileUploadModal = ({
 
                 <button
                   className={`
-                    flex w-[130px] h-[34px] rounded-[4px] border-[0.5px] text-[14px] font-normal items-center justify-center
+                    flex w-full min-w-[130px] h-[34px] rounded-[4px] border-[0.5px] text-[14px] font-normal items-center justify-center
                     ${
                       priceType === '유료'
                         ? `text-primary-hover border-primary-hover bg-secondary`
