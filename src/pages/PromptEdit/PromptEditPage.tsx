@@ -99,8 +99,17 @@ const PromptEditPage = () => {
     if (valid) {
       setShowDualModal(true);
     } else {
-      setModalText('업로드 세부 설정을 완료해 주세요.');
-
+      if (title.trim() === '') {
+        setModalText('프롬프트 제목을 입력해주세요.');
+      } else if (content.trim() === '') {
+        setModalText('프롬프트 내용을 입력해주세요.');
+      } else if (selectedModels.length <= 0) {
+        setModalText('모델을 설정해주세요.');
+      } else if (previewText.trim() !== '') {
+        setModalText('프롬프트 미리보기를 입력해주세요.');
+      } else if (previewText.trim() !== '') {
+        setModalText('프롬프트 설명을 입력해주세요.');
+      }
       setAlertModal(true);
     }
   };
