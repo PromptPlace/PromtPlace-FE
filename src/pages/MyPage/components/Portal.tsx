@@ -1,9 +1,13 @@
 import type { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
-const Portal = ({ children }: { children: ReactNode }) => {
-  const el = document.body;
-  return createPortal(children, el);
+interface PortalProps {
+  children: ReactNode;
+}
+
+const Portal = ({ children }: PortalProps) => {
+  const el = document.getElementById('portal-root');
+  return el ? createPortal(children, el) : null;
 };
 
 export default Portal;
