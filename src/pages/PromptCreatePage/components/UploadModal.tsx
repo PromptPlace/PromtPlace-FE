@@ -6,6 +6,9 @@ import TagInput from './TagInput';
 import { ImageList } from './ImageList';
 import IconButton from '@/components/Button/IconButton';
 
+import checkbox from '@/assets/icon-bi-check-square.svg';
+import box from '@/assets/icon-bi-noncheck-square.svg';
+
 const UploadModal = ({
   setuploadModal,
   selectedModels,
@@ -118,10 +121,11 @@ const UploadModal = ({
             <div className="w-full max-w-[845px] h-full max-h-[200px]">
               <div className="flex items-center gap-2 font-semibold text-[16px]">
                 프롬프트 결과 미리 보기 <span className="text-alert">*</span>
-                <label className="flex items-center ml-4 text-[15px] font-normal cursor-pointer">
+                <label className="flex items-center ml-4 text-[15px] font-normal cursor-pointer gap-[10px]">
+                  <p> 이미지</p>
                   <input
                     type="checkbox"
-                    className="mr-1 accent-blue-600"
+                    className="mr-1 mt-[1px] accent-primary-pressed"
                     checked={withImage}
                     onChange={(e) => {
                       setWithImage(e.target.checked);
@@ -130,14 +134,9 @@ const UploadModal = ({
                       }
                     }}
                   />
-                  이미지
                 </label>
               </div>
-              <div
-                className="mt-[16px] pt-[20px] px-[24px] pb-[11px] bg-gray-100 rounded-lg w-full max-w-[845px] h-[150px] overflow-y-auto"
-                style={{
-                  boxShadow: 'inset 0px 2px 4px 0px rgba(0,0,0,0.05)',
-                }}>
+              <div className="mt-[16px] pt-[20px] px-[24px] pb-[11px] bg-gray-100 rounded-lg w-full max-w-[845px] h-[150px] overflow-y-auto">
                 {withImage && (
                   <div className="mb-2">
                     <IconButton

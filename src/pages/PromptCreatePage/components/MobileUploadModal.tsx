@@ -278,19 +278,26 @@ const MobileUploadModal = ({
                 </button>
               </div>
               {priceType === '유료' && (
-                <div className="flex flex-col gap-1 mt-[20px]">
-                  <label className="text-[10px] text-primary font-medium mb-[8px]">가격 입력하기</label>
-                  <input
-                    ref={costInputRef}
-                    type="text"
-                    value={costInput ? `${formatNumber(Number(costInput))}원` : ''}
-                    onChange={handleCostChange}
-                    className={`w-[280px] h-[34px] px-3 rounded-[4px] text-[10px] border-[0.5px] border-primary`}
-                    placeholder="가격을 입력해주세요"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                  />
-                </div>
+                <>
+                  <div className="flex flex-col gap-1 mt-[20px]">
+                    <label className="text-[10px] text-primary font-medium mb-[8px]">가격 입력하기</label>
+                    <input
+                      ref={costInputRef}
+                      type="text"
+                      value={costInput ? `${formatNumber(Number(costInput))}원` : ''}
+                      onChange={handleCostChange}
+                      className={`w-[280px] h-[34px] px-3 rounded-[4px] text-[10px] border-[0.5px] border-primary`}
+                      placeholder="가격을 입력해주세요"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                    />
+                  </div>
+                  <div>
+                    {Number(costInput) >= 100000 && (
+                      <div className="text-alert text-[10px]">금액을 다시 확인해 주세요 (100~100,000)</div>
+                    )}
+                  </div>
+                </>
               )}
             </>
           )}
