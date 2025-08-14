@@ -148,7 +148,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
             <div className="lg:hidden">
               <motion.div
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                animate={{ opacity: 0 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setIsDropdownOpen(false)}
                 className="fixed inset-0 bg-overlay z-10"
@@ -165,13 +165,13 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
                     setIsDropdownOpen(false);
                   }
                 }}
-                className="fixed bottom-0 left-0 right-0 z-120 bg-white shadow-[0_4px_8px_0_rgba(0,0,0,0.12)] rounded-t-2xl cursor-grab">
+                className="fixed bottom-0 left-0 right-0 z-120 bg-white h-[360px] shadow-[0_4px_8px_0_rgba(0,0,0,0.12)] max-lg:shadow-[2px_2px_30px_0_rgba(0,0,0,0.25)] rounded-t-2xl cursor-grab">
                 <div className="flex flex-col px-[20px] items-center">
                   <div className="w-[40px] h-[4px] bg-white-stroke rounded-full  mt-[14px] mb-[30px]" />
                   <p className="text-[10px] font-medium text-primary self-start">은행 선택</p>
                 </div>
                 <div className="max-h-[336px] overflow-y-auto pb-10">
-                  <div className="flex  grid grid-cols-3 gap-x-[16px] gap-y-[12px] px-[16px] py-[12px]">
+                  <div className="flex justify-items-center grid grid-cols-3 gap-x-[16px] gap-y-[12px] px-[16px] py-[12px]">
                     {BANKS.map((bank) => (
                       <button
                         key={bank.name}
