@@ -64,13 +64,6 @@ const MobileUploadModal = ({
     console.log('selectedModels : ', selectedModels);
   }, [selectedModels]);
 
-  // 모바일 키보드 대응: input 포커스 시 자동 스크롤
-  // const handleInputFocus = () => {
-  //   setTimeout(() => {
-  //     inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  //   }, 350);
-  // };
-
   // 모델 다중 선택 토글
   const handleModelToggle = (model: string) => {
     if (selectedModels.includes(model)) {

@@ -178,7 +178,6 @@ const PromptCreatePage = () => {
   };
 
   // 이미지와 프롬프트 매핑
-  // CORS 차단으로 인해서 localhost에서는 전송 안 되는게 정상
   const handleMapImgToPrompt = async (prompt_ID: number, imageKeys: Array<{ key: string; order_index: number }>) => {
     for (const imageInfo of imageKeys) {
       try {

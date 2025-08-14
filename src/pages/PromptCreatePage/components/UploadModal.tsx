@@ -60,10 +60,6 @@ const UploadModal = ({
     (priceType === '무료' || (priceType === '유료' && cost !== null))
   );
 
-  // useEffect(() => {
-  //   console.log(tags);
-  // }, [tags]);
-
   // 이미지 업로드
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
