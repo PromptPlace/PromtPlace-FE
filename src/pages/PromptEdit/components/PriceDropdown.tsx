@@ -149,7 +149,7 @@ const PriceDropdown: React.FC<PriceDropdownProps> = ({
       {/* 유료 선택 시 가격 입력 모달 */}
       {showPriceInput && (
         <div
-          className="absolute z-30 left-36 top-25 w-[354px] h-[102px] bg-white border border-[var(--color-white-stroke)] rounded-xl shadow-xl p-4"
+          className={`absolute z-30 left-36 top-25 w-[354px] ${showError ? 'h-[122px]' : 'h-[102px]'} bg-white border border-[var(--color-white-stroke)] rounded-xl shadow-xl p-4`}
           style={{ boxShadow: '0px 4px 8px 0px rgba(0,0,0,0.12)' }}
           ref={priceInputRef}>
           <div className="flex w-full items-center gap-[10px]">
@@ -174,10 +174,12 @@ const PriceDropdown: React.FC<PriceDropdownProps> = ({
                 />
                 <span className="mr-[24px] text-[18px]">원</span>
               </div>
-              <div className="text-[14px] text-[var(--color-text-on-background)] mb-2 ml-[30px]">
+              <div className="text-[14px] text-[var(--color-text-on-background)] ml-[30px]">
                 100원부터 100,000원까지 가능해요.
               </div>
-              {/* {showError && <div className="text-alert text-xs mb-2">금액을 다시 확인해 주세요 (100~100,000)</div>} */}
+              {showError && (
+                <div className="text-alert text-[10px] ml-[30px]">금액을 다시 확인해 주세요 (100~100,000)</div>
+              )}
             </div>
             <button
               className="w-full max-w-[60px] h-[32px] py-[1px] 
