@@ -1,5 +1,3 @@
-import sample1 from '../assets/sample1.png';
-import sample2 from '../assets/sample2.png';
 import { useParams } from 'react-router-dom';
 import useGetPromptDetail from '@/hooks/queries/PromptDetailPage/useGetPromptDetail';
 
@@ -34,7 +32,7 @@ const PromptInfo = ({ description: descProp, usageGuide: usageProp }: Props) => 
         </h4>
 
         <div className="w-[447px] h-[174px] flex pt-[15px] gap-[10px] overflow-hidden opacity-100 max-lg:gap-[4px] max-lg:pt-[8px] max-lg:w-[256px] max-lg:h-[100px]">
-          {hasImages ? (
+          {hasImages &&
             images.map((url, i) => (
               <img
                 key={url + i}
@@ -42,21 +40,7 @@ const PromptInfo = ({ description: descProp, usageGuide: usageProp }: Props) => 
                 alt={`prompt-preview-${i + 1}`}
                 className="rounded w-[218.5px] h-[174px] object-cover max-lg:w-1/2 max-lg:h-[100px] max-lg:object-contain"
               />
-            ))
-          ) : (
-            <>
-              <img
-                src={sample1}
-                alt="sample1"
-                className="rounded w-[218.5px] h-[174px] object-cover max-lg:w-1/2 max-lg:h-[100px] max-lg:object-contain"
-              />
-              <img
-                src={sample2}
-                alt="sample2"
-                className="rounded w-[218.5px] h-[174px] object-cover max-lg:w-1/2 max-lg:h-[100px] max-lg:object-contain"
-              />
-            </>
-          )}
+            ))}
         </div>
       </section>
 

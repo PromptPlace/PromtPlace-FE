@@ -8,7 +8,7 @@ import FollowButton from '@components/Button/FollowButton';
 import Rating from '@components/Rating';
 import TagButton from '@components/Button/TagButton';
 
-import profile from '../assets/profile.jpg';
+import profile from '@/assets/icon-profile-gray.svg';
 import heartNone from '../../../assets/icon-heart-none-big.svg';
 import heartOnClick from '../../../assets/icon-heart-blue-big.svg';
 import contentCheckIcon from '../assets/contentcheck.png';
@@ -16,7 +16,7 @@ import contentCheckIcon from '../assets/contentcheck.png';
 import ReviewList from './ReviewList';
 import ReportModal from '../components/ReportModal';
 import DownloadModal from '../components/DownloadModal';
-import CreateModal from '../components/CreateModal'; // ✅ 추가
+import CreateModal from '../components/CreateModal';
 
 import usePromptDownload from '@/hooks/mutations/PromptDetailPage/usePromptDownload';
 import usePromptLike from '@/hooks/mutations/PromptDetailPage/usePromptLike';
@@ -31,6 +31,7 @@ import PaymentModal from './PaymentModal';
 
 import type { PromptDetailDto } from '@/types/PromptDetailPage/PromptDetailDto';
 import type { PromptReviewDto } from '@/types/PromptDetailPage/PromptReviewDto';
+import { reviewKeys } from '@/hooks/queries/PromptDetailPage/useGetAllPromptReviews';
 
 interface PromptActionsProps {
   title: string;
@@ -164,6 +165,12 @@ const PromptActions = ({
       alert('잘못된 접근입니다.');
       return;
     }
+
+    if (!isFree && !isPaid) {
+      setIsPaymentModalOpen(true);
+      return;
+    }
+
     try {
       const res = await fetchDownload(promptId);
       setIsPaid(!!res.is_paid);
@@ -417,6 +424,7 @@ const PromptActions = ({
       )}
 
       {/* 리뷰 작성 모달 */}
+
       {showCreateModal && Number.isFinite(promptId) && (
         <CreateModal
           isOpen={showCreateModal}
@@ -424,8 +432,10 @@ const PromptActions = ({
           title={title}
           promptId={promptId}
           onSuccess={async () => {
-            await qc.invalidateQueries({ queryKey: ['promptReviews', promptId] });
-            setShowReviews(true);
+            await qc.invalidateQueries({ queryKey: reviewKeys.allForPrompt(promptId) });
+
+            setShowCreateModal(false);
+            setTimeout(() => setShowReviews(true), 0);
           }}
         />
       )}

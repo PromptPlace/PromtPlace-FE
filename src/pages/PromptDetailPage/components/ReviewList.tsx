@@ -4,7 +4,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import DualModal from '@components/Modal/DualModal';
 import TextModal from '@components/Modal/TextModal';
 import UpdateModal from './UpdateModal';
-import defaultProfile from '../assets/profile.jpg';
+import defaultProfile from '@/assets/icon-profile-gray.svg';
 import ArrowLeft from '../assets/keyboard_arrow_down _left.svg';
 import useDeleteReview from '@/hooks/mutations/PromptDetailPage/useDeleteReview';
 import useUpdateReview from '@/hooks/mutations/PromptDetailPage/useUpdateReview';
@@ -220,14 +220,20 @@ const ReviewList = ({
       {/* ✅ 모바일 전용 리뷰 UI */}
       <div className="lg:hidden w-full min-h-screen px-[20px] pt-[12px] pb-[20px] bg-[#F5F5F5]">
         {/* 상단 헤더 */}
-        <div className="flex items-center mb-[20px]">
+        <div className="flex items-center justify-between mb-[20px] relative">
+          {/* 뒤로가기 아이콘 */}
           <img
             src={ArrowLeft}
             alt="뒤로가기"
-            className="text-[20px] font-bold leading-none hover:opacity-70"
+            className="w-[20px] h-[20px] cursor-pointer hover:opacity-70"
             onClick={onClose}
           />
-          <h2 className="text-[16px] font-medium text-center flex justify-center w-full">구매자 리뷰</h2>
+
+          {/* 가운데 제목 */}
+          <h2 className="absolute left-1/2 -translate-x-1/2 text-[16px] font-medium">구매자 리뷰</h2>
+
+          {/* 오른쪽 더미 영역 (아이콘 크기 맞춤) */}
+          <div className="w-[20px]" />
         </div>
 
         {/* 리뷰 리스트 */}

@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 import ReviewList from './components/ReviewList';
 import IconButton from '@components/Button/IconButton';
-import profile from '@assets/icon-profile-blue-small.svg';
+import profile from '@/assets/icon-profile-gray.svg';
 import FollowButton from '@components/Button/FollowButton';
 import ArrowLeft from './assets/keyboard_arrow_down _left.svg';
 import ReportModal from './components/ReportModal';
