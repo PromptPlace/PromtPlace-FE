@@ -281,8 +281,8 @@ const ProfilePage = () => {
   }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   return (
-    <div className="flex flex-col justify-center pt-[120px] max-lg:pt-[12px] items-center max-w-[1440px] w-full m-auto">
-      <div className="px-[102px] w-full flex flex-col justify-center">
+    <div className="flex flex-col justify-center pt-[120px] max-lg:pt-[12px] items-center lg:max-w-[1440px] lg:w-full lg:m-auto">
+      <div className="lg:px-[102px] w-full flex flex-col justify-center">
         <div
           className={clsx(
             'p-[10px] flex items-center max-lg:flex-col max-lg:justify-center max-lg:p-0 relative',
