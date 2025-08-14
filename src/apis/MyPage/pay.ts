@@ -7,6 +7,6 @@ export const getSalesHistory = async (): Promise<SalesHistoryApiResponse> => {
 };
 
 export const getPurchaseHistory = async (): Promise<PurchaseHistoryApiResponse> => {
-  const { data } = await axiosInstance.get<PurchaseHistoryApiResponse>(`/api/purchases`);
+  const { data } = await axiosInstance.get<PurchaseHistoryApiResponse>(`/api/prompts/purchases`);
   return data;
 };

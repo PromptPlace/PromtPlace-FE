@@ -115,27 +115,23 @@ const UploadModal = ({
           </div>
           {/*프롬프트 결과 미리보기*/}
           <div>
-            <div className="w-full max-w-[845px] h-full max-h-[200px]">
-              <div className="flex items-center gap-2 font-semibold text-[16px]">
+            <div className="w-full max-w-[845px] h-full max-h-[200px] mt-[20px]">
+              <div className="flex items-center gap-2 font-bold text-[24px]">
                 프롬프트 결과 미리 보기 <span className="text-alert">*</span>
               </div>
-              <div
-                className="mt-[16px] pt-[20px] px-[24px] pb-[11px] bg-gray-100 rounded-lg w-full max-w-[845px] h-[150px] overflow-y-auto"
-                style={{
-                  boxShadow: 'inset 0px 2px 4px 0px rgba(0,0,0,0.05)',
-                }}>
+              <div className="mt-[16px] pt-[20px] px-[24px] pb-[11px] bg-gray-100 rounded-lg w-full max-w-[845px] h-[150px] overflow-y-auto">
                 <textarea
                   value={previewText}
                   onChange={(e) => setPreviewText(e.target.value)}
                   placeholder="미리 공개할 프롬프트 결과 일부를 입력해 주세요"
-                  className="w-full h-full max-h-[110px] bg-transparent outline-none resize-none placeholder:text-gray-400 text-[15px] mt-[4px] overflow-scroll"
+                  className="w-full h-full max-h-[110px] bg-transparent outline-none resize-none text-[18px] placeholder:text-text-on-background placeholder:text-[18px] mt-[4px] overflow-scroll"
                 />
               </div>
             </div>
           </div>
           {/*프롬프트 설명*/}
           <div className="mt-[28px]">
-            <div className="flex items-center gap-2 font-semibold text-[16px]">
+            <div className="flex items-center gap-2 font-bold text-[24px]">
               프롬프트 설명 <span className="text-alert">*</span>
             </div>
             <div className="mt-[16px] pt-[24px] px-[24px] pb-[11px] bg-background rounded-[8px] h-[150px]">
@@ -143,18 +139,18 @@ const UploadModal = ({
                 value={discriptionText}
                 onChange={(e) => setDescriptionText(e.target.value)}
                 placeholder="프롬프트에 대한 설명을 적어주세요"
-                className="w-full h-full bg-transparent outline-none resize-none placeholder:text-text-on-background text-[18px] mt-1"
+                className="w-full h-full bg-transparent outline-none resize-none text-[18px] placeholder:text-text-on-background placeholder:text-[18px] mt-1"
               />
             </div>
             {/*프롬프트 활용법*/}
             <div className="mt-[28px]">
-              <div className="flex items-center gap-2 font-semibold text-[16px]">프롬프트 활용법</div>
+              <div className="flex items-center gap-2 font-bold text-[24px]">프롬프트 활용법</div>
               <div className="mt-[16px] pt-[24px] px-[24px] pb-[11px] bg-background rounded-[8px] h-[150px]">
                 <textarea
                   value={howToUseText}
                   onChange={(e) => setHowToUseText(e.target.value)}
                   placeholder="프롬프트 활용법을 적어주세요"
-                  className="w-full h-full bg-transparent outline-none resize-none placeholder:text-text-on-background text-[18px] mt-1"
+                  className="w-full h-full bg-transparent outline-none resize-none text-[18px] placeholder:text-text-on-background placeholder:text-[18px] mt-1"
                 />
               </div>
             </div>

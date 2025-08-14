@@ -124,7 +124,6 @@ const PromptEditPage = () => {
         is_free: is_free,
         tags: tags,
         models: selectedModels,
-        download_url: 'example.com',
       });
       console.log('전송 성공!', res.data);
     } catch (err) {
@@ -159,7 +158,7 @@ const PromptEditPage = () => {
   };
   return (
     <>
-      <div>PromptEditPage : {promptId}번째 게시글 수정중...</div>
+      {/* <div>PromptEditPage : {promptId}번째 게시글 수정중...</div> */}
       <>
         <div className="hidden lg:block">
           <div className="h-[calc(100vh-24px)] flex items-center justify-center bg-[var(--color-background)]">
