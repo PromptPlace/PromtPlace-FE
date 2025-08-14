@@ -60,6 +60,12 @@ const PromptActions = ({
   onClickReview,
   tags,
 }: PromptActionsProps) => {
+  const MAX_TITLE_LENGTH = 19;
+  const truncateTitle = (text: string) => {
+    if (!text) return '';
+    return text.length > MAX_TITLE_LENGTH ? text.slice(0, MAX_TITLE_LENGTH) + '...' : text;
+  };
+
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const promptId = Number(id);
@@ -192,6 +198,9 @@ const PromptActions = ({
 
     try {
       const res = await fetchDownload(promptId);
+      await qc.invalidateQueries({ queryKey: ['prompt-detail', promptId] });
+      await qc.invalidateQueries({ queryKey: ['prompts', 'downloaded'] });
+
       setIsPaid(!!res.is_paid);
       setDownloadData({
         title: res.title || title,
@@ -342,7 +351,7 @@ const PromptActions = ({
       <div className="h-[1px] bg-[#CCCCCC] w-full" />
 
       {/* 제목 */}
-      <div className="font-bold text-[24px] pt-[25px]">{title}</div>
+      <div className="font-bold text-[24px] pt-[25px]">{truncateTitle(title)}</div>
 
       {/* 가격 */}
       <div className="text-[24px] pt-[30px] font-bold">{isFree ? '무료' : `${price.toLocaleString()}원`}</div>

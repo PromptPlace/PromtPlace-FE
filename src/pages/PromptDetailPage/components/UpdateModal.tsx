@@ -5,6 +5,7 @@ import PrimaryButton from '@components/Button/PrimaryButton';
 import Bar from '../assets/bar.svg';
 import useUpdateReview from '@/hooks/mutations/PromptDetailPage/useUpdateReview';
 import EditableRating from '@components/EditableRating';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface UpdateModalProps {
   isOpen: boolean;
@@ -112,31 +113,63 @@ const UpdateModal = ({ isOpen, onClose, title, reviewId, rating, initialReviewTe
         </div>
       </div>
 
-      {/*  모바일 */}
-      <div className="lg:hidden fixed bottom-0 left-0 w-full h-[276px] bg-white rounded-t-[24px] shadow-[0_-4px_12px_rgba(0,0,0,0.1)] p-[20px] pt-0 z-50">
-        <div className="flex justify-center pt-[8px] pb-[12px]">
-          <img src={Bar} alt="bar" className="w-[40px] h-[4px] rounded-full" />
-        </div>
+      {/* 모바일 */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* 오버레이 */}
+            <motion.div
+              className="lg:hidden fixed inset-0 bg-black/40 z-40"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => {
+                if (!isPending) onClose();
+              }}
+            />
 
-        <div className="flex items-center gap-[4px] mb-[8px] pt-[20px]">
-          <EditableRating star={updatedRating} onChange={setUpdatedRating} />
-        </div>
+            {/* 바텀시트 */}
+            <motion.div
+              className="lg:hidden fixed bottom-0 left-0 w-full h-[276px] bg-white rounded-t-[24px] 
+                   shadow-[0_-4px_12px_rgba(0,0,0,0.1)] p-[20px] pt-0 z-50"
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={0.05}
+              onDragEnd={(_, info) => {
+                if (info.offset.y > 120 || info.velocity.y > 800) {
+                  if (!isPending) onClose();
+                }
+              }}>
+              <div className="flex justify-center pt-[8px] pb-[12px]">
+                <img src={Bar} alt="bar" className="w-[40px] h-[4px] rounded-full" />
+              </div>
 
-        <textarea
-          className="w-full h-[120px] bg-[#F5F5F5] rounded-[8px] p-[10px] text-[12px] text-[#333] resize-none focus:outline-none"
-          value={reviewText}
-          onChange={(e) => setReviewText(e.target.value)}
-          placeholder="리뷰 내용을 입력하세요."
-          disabled={isPending}
-        />
+              <div className="flex items-center gap-[4px] mb-[8px] pt-[20px]">
+                <EditableRating star={updatedRating} onChange={setUpdatedRating} />
+              </div>
 
-        <button
-          onClick={handleSaveClick}
-          disabled={isPending || reviewText.trim().length === 0}
-          className="mt-[16px] w-full h-[40px] bg-[#337EFF] text-white text-[14px] font-medium rounded-[6px]">
-          {isPending ? '수정 중…' : '수정하기'}
-        </button>
-      </div>
+              <textarea
+                className="w-full h-[120px] bg-[#F5F5F5] rounded-[8px] p-[10px] text-[12px] text-[#333] resize-none focus:outline-none"
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                placeholder="리뷰 내용을 입력하세요."
+                disabled={isPending}
+              />
+
+              <button
+                onClick={handleSaveClick}
+                disabled={isPending || reviewText.trim().length === 0}
+                className="mt-[16px] w-full h-[40px] bg-[#337EFF] text-white text-[14px] font-medium rounded-[6px]">
+                {isPending ? '수정 중…' : '수정하기'}
+              </button>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
