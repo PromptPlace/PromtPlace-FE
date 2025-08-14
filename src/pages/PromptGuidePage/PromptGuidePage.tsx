@@ -137,7 +137,7 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
   return (
     <>
       <div className="hidden lg:block">
-        <div className="flex justify-center pt-[92px] ">
+        <div className="flex justify-center pt-[92px] mx-[102px]">
           <div className="w-full max-w-[1236px] justify-start ml-[20px]">
             <div className="flex justify-between items-center w-full max-w-[360px] h-[60px]">
               <button
@@ -174,7 +174,7 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
 
       {/*모바일 화면 */}
       <div className="lg:hidden block">
-        <div className="ml-[20px] pt-[12px] ">
+        <div className="ml-[20px] pt-[12px]">
           <p className="text-primary-hover text-[20px] font-bold">프롬프트 TIP</p>
         </div>
         <div className="relative inline-block w-full max-w-[108px] h-[31px] mt-[20px] ml-[20px]" ref={ref}>
