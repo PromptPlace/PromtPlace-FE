@@ -192,6 +192,9 @@ const PromptActions = ({
 
     try {
       const res = await fetchDownload(promptId);
+      await qc.invalidateQueries({ queryKey: ['prompt-detail', promptId] });
+      await qc.invalidateQueries({ queryKey: ['prompts', 'downloaded'] });
+
       setIsPaid(!!res.is_paid);
       setDownloadData({
         title: res.title || title,
