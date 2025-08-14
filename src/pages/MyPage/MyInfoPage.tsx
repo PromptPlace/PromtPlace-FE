@@ -5,6 +5,8 @@ import DualModal from '@/components/Modal/DualModal';
 import { SingleModal } from './components/MyPageModal';
 import { useNavigate } from 'react-router-dom';
 import { withdrawUser } from '@/apis/MyPage/withdrawl';
+import { useAuth } from '@/context/AuthContext';
+import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
 
 // 실제로는 API로 받아올 사용자 정보
 const userInfo: {
@@ -21,6 +23,9 @@ const MyPageInfo = () => {
   const [deleteStep, setDeleteStep] = useState<'confirm' | 'warning' | 'complete' | null>(null);
   const confirmDelete = () => setDeleteStep('confirm');
   const showWarning = () => setDeleteStep('warning');
+
+  const { logout, user } = useAuth();
+  const { data: userData } = useGetMember({ member_id: user.user_id });
 
   const deleteAccount = () => {
     // 실제 API 호출 로직
@@ -51,9 +56,9 @@ const MyPageInfo = () => {
         </div>
 
         <div className="bg-white border-t-[1px] max-lg:border-t-[0px] border-t-primary-hover">
-          <InfoRow label="닉네임" nickname={userInfo.nickname} />
-          <InfoRow label="가입한 계정" email={userInfo.email} provider={userInfo.provider} />
-          <InfoRow label="계정 바꾸기" email={userInfo.email} provider={userInfo.provider} hasArrow />
+          <InfoRow label="닉네임" nickname={userData?.data.nickname} />
+          <InfoRow label="가입한 계정" email={userData?.data.email} provider={user.social_type} />
+          <InfoRow label="계정 바꾸기" email={userData?.data.email} provider={user.social_type} hasArrow />
           <InfoRow
             label="계좌 정보 등록"
             actionText="등록하기"
@@ -72,7 +77,7 @@ const MyPageInfo = () => {
             label="로그아웃"
             actionText="로그아웃"
             onAction={() => {
-              /* 로그아웃 로직 */
+              logout();
             }}
           />
           <InfoRow label="계정 탈퇴" actionText="탈퇴하기" onAction={confirmDelete} isDestructive />

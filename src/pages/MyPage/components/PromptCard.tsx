@@ -1,7 +1,7 @@
 import BigBlueHeart from '@/assets/icon-heart-blue-big.svg';
 import PrimaryButton from '@components/Button/PrimaryButton';
 import kebabMenu from '@/assets/icon-kebabMenu.svg';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
@@ -30,15 +30,29 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
 
   const navigate = useNavigate();
 
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // 이벤트 핸들러 함수
+    const handleClickOutside = (event: MouseEvent) => {
+      // ref가 있고, 클릭된 곳이 ref가 감싼 영역의 바깥쪽일 때
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false); // 드롭다운 닫기
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
+
+  //리뷰 작성하기 버튼 클릭 시 상세페이지 이동 함수
   const handleWriteReviewClick = (prompt_id: number) => {
-    // 1. 이동할 프롬프트의 ID를 가져옵니다.
     const promptId = prompt_id;
-
-    // 2. 상세 페이지 경로와 쿼리 파라미터를 조합하여 URL을 만듭니다.
-    //    /prompt/123?open_review=true 와 같은 형태가 됩니다.
     const targetUrl = `/prompt/${promptId}?open_review=true`;
-
-    // 3. 생성된 URL로 페이지를 이동시킵니다.
     navigate(targetUrl);
   };
 
@@ -68,7 +82,7 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
         </Link>
         {type === 'authored' && (
           <div className="flex items-center justify-center h-[72px] max-lg:h-auto  w-[115px] max-lg:w-auto py-[10px] max-lg:py-[0px]  ">
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className={`flex items-center justify-center h-[28px] w-[28px] rounded-[50px]  ${isDropdownOpen ? 'bg-secondary-pressed' : 'bg-transparent'}`}>

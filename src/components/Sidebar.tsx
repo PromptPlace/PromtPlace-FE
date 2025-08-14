@@ -1,10 +1,10 @@
 import { useAuth } from '@/context/AuthContext';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import clsx from 'clsx';
 import { useState } from 'react';
 
 import ProfileIcon from '@assets/icon-profile-blue-big.svg';
-import UserProfileIcon from '@assets/img-example-profile2.jpg';
+import UserProfileIcon from '@assets/icon-profile-gray.svg';
 
 import MailIcon from '@assets/icon-sidebar-mail.svg?react';
 import PersonIcon from '@assets/icon-sidebar-person.svg?react';
@@ -23,8 +23,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarProps) => {
-  const { accessToken } = useAuth();
-  const navigate = useNavigate();
+  const { accessToken, user } = useAuth();
   const [loginModalShow, setLoginModalShow] = useState(false);
 
   const LINKS = [
@@ -39,7 +38,7 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
     setSidebarVisible(false);
     setTimeout(() => {
       setSidebarOpen(false);
-      navigate(url);
+      window.location.href = url;
     }, 300);
   };
 
@@ -75,10 +74,10 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
                 <img src={UserProfileIcon || ProfileIcon} alt="프로필" className="w-full h-full object-contain" />
               </div>
 
-              <p className="text-text-on-white text-xl font-medium leading-[25px]">안송연</p>
+              <p className="text-text-on-white text-xl font-medium leading-[25px]">{user?.name}</p>
 
               <div
-                onClick={() => handleNavigate('/profile/10')}
+                onClick={() => handleNavigate(`/profile/${user?.user_id}`)}
                 className="flex items-center justify-center px-[8px] py-[4px] rounded-[4px] border border-white-stroke bg-background text-text-on-background text-sm font-normal leading-[18px] cursor-pointer">
                 프로필 홈
               </div>
@@ -92,7 +91,7 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
                       setSidebarVisible(false);
                       setTimeout(() => {
                         setSidebarOpen(false);
-                        navigate(to);
+                        window.location.href = to;
                       }, 300);
                     }}
                     to={to}

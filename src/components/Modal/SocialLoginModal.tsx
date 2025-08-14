@@ -82,7 +82,7 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
         <button className="max-lg:hidden absolute top-[34px] right-[34px]" onClick={onClose}>
           <img src={CloseIcon} alt="닫기" className="h-[24px] w-[24px]" />
         </button>
-        <div>
+        <div className="w-full max-w-[280px]">
           <div className=" mb-[48px] max-lg:mb-[20px] mt-[105px] max-lg:mt-[21px] flex flex-col lg:items-center gap-[15px]">
             <img
               src={PromptPlaceLogo}

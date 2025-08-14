@@ -10,7 +10,7 @@
  * @author luii
  * **/
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BsPaperclip } from 'react-icons/bs';
 import { LuChevronLeft } from 'react-icons/lu';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -23,6 +23,7 @@ import instagram from '@assets/icon-instagram-logo.svg';
 import facebook from '@assets/icon-facebook-logo.svg';
 import kakaotalk from '@assets/icon-kakao-logo.svg';
 import twitter from '@assets/icon-x-logo.svg';
+import { axiosInstance } from '@/apis/axios';
 
 interface PromptGuideDetailPageProps {
   type: 'tip' | 'notice';
@@ -32,41 +33,21 @@ interface Post {
   id: number;
   title: string;
   content: string;
-  is_pinned: boolean;
   create_at: string;
   update_at: string;
   is_visible: boolean;
   file_url: string | null;
-  view_count: number;
 }
 const PromptGuideDetailPage = ({ type }: PromptGuideDetailPageProps) => {
   const { id } = useParams<{ id: string }>();
   const [post, setPost] = useState<Post>({
-    id: Number(id),
-    title: '프롬프트 업로드 정책',
-    content: `PromptPlace 프롬프트 업로드 정책은 사용자 간의 신뢰를 기반으로 한
-건강한 거래 환경 조성을 목표로 합니다.
-모든 창작자는 업로드하는 프롬프트가 본인의 창작물임을 보장해야 하며,
-타인의 지적재산권을 침해하거나 무단 복제된 콘텐츠는 업로드할 수 없습니다.
-또한 프롬프트의 설명은 실제 기능 및 결과와 일치해야 하며,
-과장되거나 오해를 유발하는 표현은 금지됩니다.
-불쾌하거나 부적절한 내용(혐오, 차별, 음란성, 정치적 선동 등)이 포함된 프롬프트는
-삭제될 수 있으며, 반복적으로 위반 시 계정 제재가 이루어질 수 있습니다.
-판매를 목적으로 등록하는 프롬프트는 실사용 가능성을 갖추고 있어야 하며,
-충분한 예시와 맥락 제공을 권장합니다.
-프롬프트 등록 시에는 구매자가 내용을 충분히 이해하고 판단할 수 있도록
-명확하고 구체적인 설명을 제공해야 하며,
-AI가 해당 프롬프트를 정상적으로 처리할 수 있도록 구성되어야 합니다.
-관리자는 업로드된 프롬프트의 품질과 정책 위반 여부를 상시 모니터링하며,
- 신고 접수된 콘텐츠에 대해서는 내부 검토를 거쳐 조치를 취할 수 있습니다.
-
-`,
-    is_pinned: true,
-    create_at: '2025-07-01',
-    update_at: '2025-07-01,',
+    id: 0,
+    title: 'title',
+    content: 'conntent',
+    create_at: 'create_date',
+    update_at: 'update_date',
     is_visible: true,
-    file_url: 'null',
-    view_count: 1,
+    file_url: null,
   });
 
   const navigate = useNavigate();
@@ -74,6 +55,71 @@ AI가 해당 프롬프트를 정상적으로 처리할 수 있도록 구성되�
   const handleNavigate = () => {
     navigate(`/guide/${type}`);
   };
+
+  /**api 연동 */
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        if (type === 'tip') {
+          const base = import.meta.env.VITE_SERVER_API_URL;
+          const res = await axiosInstance.get(`${base}/api/tips/${id}/details`);
+          console.log(res.data.data.data);
+
+          const fetched_data = res.data.data.data;
+
+          const tipdetail: Post = {
+            id: fetched_data.tip_id,
+            title: fetched_data.title,
+            content: fetched_data.content,
+
+            create_at: fetched_data.created_at.slice(0, 10),
+            update_at: fetched_data.updated_at.slice(0, 10),
+            is_visible: fetched_data.is_visible,
+            file_url: fetched_data.file_url,
+          };
+          setPost(tipdetail);
+        } else if (type === 'notice') {
+          const base = import.meta.env.VITE_SERVER_API_URL;
+          const res = await axiosInstance.get(`${base}/api/announcements/${id}/details`);
+
+          const fetched_data = res.data.data.data;
+
+          const noticedetail: Post = {
+            id: fetched_data.announcement_id,
+            title: fetched_data.title,
+            content: fetched_data.content,
+
+            create_at: fetched_data.created_at.slice(0, 10),
+            update_at: fetched_data.updated_at.slice(0, 10),
+            is_visible: fetched_data.is_visible,
+            file_url: fetched_data.file_url,
+          };
+          setPost(noticedetail);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchPosts();
+  }, [id, type]);
+
+  /**파일 다운로드 기능 */
+  // 파일 다운로드 함수 - 다운로드 가능한 url을 백엔드에서 전달
+  const handleFileDownload = useCallback(() => {
+    if (!post.file_url) return;
+
+    // URL에서 파일명 추출
+    const fileName = post.file_url.split('/').pop() || 'download';
+
+    // 임시 링크 생성해서 다운로드
+    const link = document.createElement('a');
+    link.href = post.file_url;
+    link.download = fileName;
+    link.target = '_blank'; // 새 탭에서 열기
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }, [post.file_url]);
 
   /*페이지 공유 기능 관련 */
 

@@ -40,7 +40,7 @@ export type ResponseGetInquiriesDto = CommonResponse<
 
 // 문의 상세 정보
 export type RequestGetDetailInquiriesDto = {
-  inquiry_id: number;
+  inquiry_id: number | null;
 };
 
 export type ResponseGetDetailInquiriesDto = CommonResponse<{

@@ -32,11 +32,18 @@ interface AuthContextType {
   refreshToken: string | null;
   login: (provider: 'google' | 'kakao' | 'naver', authCode: string) => Promise<void>;
   logout: () => Promise<void>;
+  switchAccount: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
+  const {
+    getItem: getUserFromStorage,
+    setItem: setUserInStorage,
+    removeItem: removeUserFromStorage,
+  } = useLocalStorage(LOCAL_STORAGE_KEY.user);
+
   const {
     getItem: getAccessTokenFromStorage,
     setItem: setAccessTokenInStorage,
@@ -49,7 +56,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     removeItem: removeRefreshTokenFromStorage,
   } = useLocalStorage(LOCAL_STORAGE_KEY.refreshToken);
 
-  const [user, setUser] = useState<User>(defaultUser);
+  const [user, setUser] = useState<User>(() => getUserFromStorage() || defaultUser);
+  console.log('AuthProvider user:', user.user_id);
   const [accessToken, setAccessToken] = useState<string | null>(getAccessTokenFromStorage());
   const [refreshToken, setRefreshToken] = useState<string | null>(getRefreshTokenFromStorage());
 
@@ -78,7 +86,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         setAccessTokenInStorage(access_token);
         setRefreshTokenInStorage(refresh_token);
         setUser(user);
-
+        setUserInStorage(user);
         console.log(`[${provider}] 로그인 성공!`);
         alert(`환영합니다!`);
         console.log('user 정보:', user);
@@ -97,6 +105,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     } finally {
       removeAccessTokenFromStorage();
       removeRefreshTokenFromStorage();
+      removeUserFromStorage();
       setAccessToken(null);
       setRefreshToken(null);
       setUser(defaultUser);
@@ -105,8 +114,26 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     window.location.href = '/'; // 로그아웃 후 메인 페이지로 이동
   };
 
+  const switchAccount = async () => {
+    try {
+      await axiosInstance.get('/api/auth/logout');
+      console.log('서버 로그아웃 성공');
+    } catch (error) {
+      console.error('서버 로그아웃 요청 실패:', error);
+    } finally {
+      removeAccessTokenFromStorage();
+      removeRefreshTokenFromStorage();
+      removeUserFromStorage();
+      setAccessToken(null);
+      setRefreshToken(null);
+      setUser(defaultUser);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, accessToken, refreshToken, login, logout }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, accessToken, refreshToken, login, logout, switchAccount }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 

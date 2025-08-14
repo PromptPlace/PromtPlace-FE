@@ -1,6 +1,6 @@
 // src/components/Dropdown.tsx
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { LuChevronDown } from 'react-icons/lu';
 
 // Dropdown 컴포넌트가 받을 props 타입 정의
@@ -13,6 +13,25 @@ interface DropdownProps {
 const Dropdown = ({ options, selectedValue, onSelect }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // 이벤트 핸들러 함수
+    const handleClickOutside = (event: MouseEvent) => {
+      // ref가 있고, 클릭된 곳이 ref가 감싼 영역의 바깥쪽일 때
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false); // 드롭다운 닫기
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
   // 현재 선택된 값의 label을 찾음
   const selectedLabel = options.find((option) => option.value === selectedValue)?.label;
 
@@ -22,7 +41,7 @@ const Dropdown = ({ options, selectedValue, onSelect }: DropdownProps) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center justify-center rounded-[8px] px-[12px] py-[8px] gap-[8px] text-[12px] font-medium text-text-on-white bg-white shadow-[0_1px_3px_0_rgba(0,0,0,0.08)] ">

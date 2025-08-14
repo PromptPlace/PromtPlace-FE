@@ -36,6 +36,7 @@ export const useShowLoginModal = () => {
 
   const handleShowLoginModal = (callback: () => void) => {
     if (!accessToken) {
+      alert('로그인이 필요합니다.');
       setLoginModalShow(true);
     } else {
       callback();

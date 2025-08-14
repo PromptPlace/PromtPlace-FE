@@ -26,7 +26,7 @@ const InquiryCard = ({
   const [isDotsClicked, setIsDotsClicked] = useState(false);
 
   return (
-    <div className="flex justify-between items-center pl-[80px] py-[20px] max-lg:p-[12px] bg-white border-b border-b-white-stroke">
+    <div className="flex justify-between items-center pl-[80px] py-[20px] max-lg:p-[12px] max-lg:mr-[4px] bg-white border-b border-b-white-stroke">
       <div onClick={onClick} className="flex w-full justify-between items-center">
         <div className="flex flex-col gap-[10px] max-lg:gap-[4px] flex-1 w-full max-w-[636px] max-lg:max-w-[116px] w-full cursor-pointer">
           <div
@@ -77,7 +77,7 @@ const InquiryCard = ({
 
       <div className="relative cursor-pointer max-w-[115px] max-lg:max-w-none w-full max-lg:w-auto flex items-center justify-center">
         <div
-          onClick={() => setIsDotsClicked(true)}
+          onClick={() => setIsDotsClicked((prev) => !prev)}
           className="w-[28px] h-[28px] hover:bg-secondary-pressed flex items-center justify-center rounded-full">
           <img src={DotsIcon} alt="선택" />
 
@@ -85,7 +85,7 @@ const InquiryCard = ({
             <div className="absolute z-10 bottom-[-83.5px] right-[44px] max-lg:top-[22px] max-lg:right-[0px] flex flex-col whitespace-nowrap">
               <button
                 onClick={() => onDelete(inquiry_id)}
-                className="py-[8px] px-[16px] bg-secondary rounded-t-[4px] border-b border-b-white-stroke text-text-on-background text-[16px] font-normal leading-[20px] active:bg-secondary-pressed active:text-text-on-white">
+                className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-t-[4px] border-b border-b-white-stroke text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white">
                 삭제하기
               </button>
               <button
@@ -93,7 +93,7 @@ const InquiryCard = ({
                   onRead(inquiry_id);
                   setTimeout(() => setIsDotsClicked(false), 0);
                 }}
-                className="py-[8px] px-[16px] bg-secondary rounded-b-[4px] text-text-on-background text-[16px] font-normal leading-[20px] active:bg-secondary-pressed active:text-text-on-white">
+                className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-b-[4px] text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white">
                 읽음표시
               </button>
             </div>

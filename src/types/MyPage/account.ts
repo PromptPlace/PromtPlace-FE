@@ -17,3 +17,10 @@ export interface RegisterInfo {
   account_number: string;
   account_holder: string;
 }
+
+export interface UpdateAccountInfo {
+  bank_code: string;
+  bank_name: string;
+  account_number: string;
+  account_holder: string;
+}

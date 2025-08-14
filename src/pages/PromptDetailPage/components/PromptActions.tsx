@@ -1,208 +1,296 @@
-import { useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
+
 import IconButton from '@components/Button/IconButton';
 import FollowButton from '@components/Button/FollowButton';
 import Rating from '@components/Rating';
-import profile from '../assets/profile.jpg';
 import TagButton from '@components/Button/TagButton';
+
+import profile from '@/assets/icon-profile-gray.svg';
 import heartNone from '../../../assets/icon-heart-none-big.svg';
 import heartOnClick from '../../../assets/icon-heart-blue-big.svg';
 import contentCheckIcon from '../assets/contentcheck.png';
+
 import ReviewList from './ReviewList';
 import ReportModal from '../components/ReportModal';
 import DownloadModal from '../components/DownloadModal';
-import { useNavigate } from 'react-router-dom';
+import CreateModal from '../components/CreateModal';
+
+import usePromptDownload from '@/hooks/mutations/PromptDetailPage/usePromptDownload';
+import usePromptLike from '@/hooks/mutations/PromptDetailPage/usePromptLike';
+import usePromptUnlike from '@/hooks/mutations/PromptDetailPage/usePromptUnlike';
+import useMyLikedPrompts, { likedKeys } from '@/hooks/queries/PromptDetailPage/useMyLikedPrompts';
+import useGetAllPromptReviews from '@/hooks/queries/PromptDetailPage/useGetAllPromptReviews';
+import useFollow from '@/hooks/mutations/PromptDetailPage/useFollow';
+import useUnfollow from '@/hooks/mutations/PromptDetailPage/useUnfollow';
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 import PaymentModal from './PaymentModal';
 
-interface Props {
+import type { PromptDetailDto } from '@/types/PromptDetailPage/PromptDetailDto';
+import type { PromptReviewDto } from '@/types/PromptDetailPage/PromptReviewDto';
+import { reviewKeys } from '@/hooks/queries/PromptDetailPage/useGetAllPromptReviews';
+
+interface PromptActionsProps {
   title: string;
   price: number;
   isFree: boolean;
   downloads: number;
-  likes: number;
   reviewCounts: number;
   rating: number;
   updatedAt: string;
-  userId: number;
+  user: PromptDetailDto['user'];
+  tags: {
+    tag_id: number;
+    name: string;
+  }[];
   onClickReview: () => void;
 }
 
-const dummyReviews = [
-  {
-    review_id: 101,
-    writer_id: 1,
-    writer_profile_image_url: profile,
-    writer_nickname: '홍길동',
-    rating: 4.0,
-    content: '가격도 저렴하고 퀄리티 좋아요. 잘 쓰고 있어요.',
-    created_at: '2025-07-06T12:34:56',
-  },
-  {
-    review_id: 100,
-    writer_id: 2,
-    writer_profile_image_url: profile,
-    writer_nickname: '김땡땡',
-    rating: 4.5,
-    content: '최고에요',
-    created_at: '2025-07-08T12:34:51',
-  },
-  {
-    review_id: 99,
-    writer_id: 3,
-    writer_profile_image_url: profile,
-    writer_nickname: '이수지',
-    rating: 3.5,
-    content: '괜찮긴 한데 원하는 느낌은 아니었어요.',
-    created_at: '2025-07-09T09:20:00',
-  },
-  {
-    review_id: 98,
-    writer_id: 4,
-    writer_profile_image_url: profile,
-    writer_nickname: '박보검',
-    rating: 5.0,
-    content: '진짜 완벽해요. 이런 퀄리티 처음 봐요!',
-    created_at: '2025-07-10T16:45:30',
-  },
-  {
-    review_id: 50,
-    writer_id: 5,
-    writer_profile_image_url: profile,
-    writer_nickname: '김민지',
-    rating: 5.0,
-    content: '진짜 완벽해요. 이런 퀄리티 처음 봐요!',
-    created_at: '2025-07-10T16:45:30',
-  },
-  {
-    review_id: 51,
-    writer_id: 6,
-    writer_profile_image_url: profile,
-    writer_nickname: '김도영',
-    rating: 5.0,
-    content: '너무 만족합니다.',
-    created_at: '2025-07-10T16:45:30',
-  },
-  {
-    review_id: 52,
-    writer_id: 7,
-    writer_profile_image_url: profile,
-    writer_nickname: '박땡땡',
-    rating: 3.5,
-    content: '좋았어요',
-    created_at: '2025-07-10T16:45:30',
-  },
-  {
-    review_id: 53,
-    writer_id: 8,
-    writer_profile_image_url: profile,
-    writer_nickname: '오땡땡',
-    rating: 3,
-    content: '좋았어요!',
-    created_at: '2025-07-10T16:45:32',
-  },
-];
+const PromptActions = ({
+  title,
+  price,
+  isFree,
+  reviewCounts,
+  rating,
+  user,
+  onClickReview,
+  tags,
+}: PromptActionsProps) => {
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const promptId = Number(id);
+  const qc = useQueryClient();
 
-const PromptActions = ({ title, price, isFree, reviewCounts, rating }: Props) => {
+  const [searchParams] = useSearchParams();
+
+  const storedUser = localStorage.getItem('user');
+  const currentUserId = storedUser ? JSON.parse(storedUser).user_id : null;
+
+  const followMut = useFollow();
+  const unfollowMut = useUnfollow();
+
+  const likeMut = usePromptLike();
+  const unlikeMut = usePromptUnlike();
+  const isLiking = likeMut.isPending || unlikeMut.isPending;
+
+  const isAdmin = useMemo(() => {
+    try {
+      return typeof window !== 'undefined' && localStorage.getItem('isAdmin') === 'true';
+    } catch {
+      return false;
+    }
+  }, []);
+
   const [follow, setFollow] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
-  const [tags] = useState<string[]>(['#수묵화', '#수채화', '#디자인', '#일러스트', '#그림', '#이미지']);
+
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [liked, setLiked] = useState(false);
-  const [isPaid, setIsPaid] = useState(false);
+
+  const handlePaid = () => {
+    setIsPaid(true);
+    setIsPaymentModalOpen(false);
+  };
 
   const [downloadData, setDownloadData] = useState<{
     title: string;
-    downloadUrl: string;
     content: string;
   } | null>(null);
 
-  const isAdmin = localStorage.getItem('isAdmin') === 'true';
-  const navigate = useNavigate();
-
-  const [reviews, setReviews] = useState(dummyReviews);
+  const [reviews, setReviews] = useState<PromptReviewDto[]>([]);
   const [reviewCount, setReviewCount] = useState(reviewCounts);
 
+  const {
+    data: fetchedReviews = [],
+    isLoading: isReviewsLoading,
+    isError: isReviewsError,
+  } = useGetAllPromptReviews(promptId, { enabled: Number.isFinite(promptId), perPage: 100 });
+
+  useEffect(() => {
+    if (fetchedReviews.length) {
+      setReviews(fetchedReviews);
+      setReviewCount(fetchedReviews.length);
+    } else if (!isReviewsLoading && !isReviewsError) {
+      setReviews([]);
+      setReviewCount(0);
+    }
+  }, [fetchedReviews, isReviewsLoading, isReviewsError]);
+
+  const [isPaid, setIsPaid] = useState(false);
+  const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
+
+  const { mutateAsync: fetchDownload, isPending: isDownloading } = usePromptDownload();
+
+  const handleReportButtonClick = () => setIsReportModalOpen(true);
+  const handleCloseReportModal = () => setIsReportModalOpen(false);
+
+  const { data: likedSet } = useMyLikedPrompts(Number.isFinite(promptId));
+
+  useEffect(() => {
+    if (likedSet && Number.isFinite(promptId)) {
+      setLiked(likedSet.has(promptId));
+    }
+  }, [likedSet, promptId]);
+
+  const handleToggleFollow = async () => {
+    const targetUserId = user?.user_id;
+    if (!Number.isFinite(targetUserId)) return;
+
+    const prev = follow;
+    setFollow(!prev);
+
+    try {
+      if (!prev) {
+        await followMut.mutateAsync(targetUserId);
+      } else {
+        await unfollowMut.mutateAsync(targetUserId);
+      }
+    } catch (e) {
+      setFollow(prev);
+      if (isAxiosError(e) && (e.response?.status ?? 0) === 401) {
+        handleShowLoginModal(handleToggleFollow);
+        return;
+      }
+      alert('팔로우 처리에 실패했습니다.');
+    }
+  };
+
   const handleDownloadClick = async () => {
-    // 테스트용 더미 데이터
-    const title = '동양풍 일러스트 이미지 생성';
-    const download_url = 'https://cdn.promptplace.com/prompts/1024.txt';
-
-    if (isFree || isPaid) {
-      // 무료 프롬프트이거나 결제 완료 프롬프트인 경우 DownloadModalOpen
-      setDownloadData({
-        title,
-        downloadUrl: download_url,
-        content: `
-1. 전통 동양풍 인물 일러스트
-a graceful Korean noblewoman wearing hanbok, sitting under a cherry blossom tree, Joseon dynasty style, soft lighting, detailed fabric texture, traditional hair style, serene atmosphere, oriental illustration --v 5 --ar 2:3
-a Korean dragon soaring through the clouds, traditional ink painting style, dynamic cloud motion, golden scales shimmering in sunlight, East Asian mythology, majestic and ancient aura --v 5 --ar 3:2 --style scenic
-
-2. 동양풍 마을/배경 일러스트
-a peaceful traditional Japanese village in spring, sakura trees in full bloom, tiled rooftops, soft morning light, misty mountain background, Ghibli-style aesthetic, detailed background art --v 5 --ar 16:9
-
-3. 퓨전 동양풍 일러스트
-a futuristic city blending Korean traditional architecture and cyberpunk neon lights, hanok buildings with glowing signs, digital screens, night setting, rain-soaked street, Blade Runner meets Joseon, concept art --v 5 --ar 21:9
-        `.trim(),
-      });
-      setIsDownloadModalOpen(true);
-    } else {
-      setIsPaymentModalOpen(true); // 유료 프롬프트인 경우 PaymentModalOpen
+    if (!Number.isFinite(promptId)) {
+      alert('잘못된 접근입니다.');
+      return;
     }
 
-    // const promptId = 1024;
-    // const token = localStorage.getItem('accessToken');
-    // if (!token) {
-    //   alert('로그인이 필요합니다.');
-    //   return;
-    // }
+    if (!isFree && !isPaid) {
+      setIsPaymentModalOpen(true);
+      return;
+    }
 
-    // const response = await axios.post(
-    //   `/api/prompts/${promptId}/downloads`,
-    //   { prompt_id: promptId },
-    //   {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //   },
-    // );
-
-    // const { download_url, title } = response.data;
+    try {
+      const res = await fetchDownload(promptId);
+      setIsPaid(!!res.is_paid);
+      setDownloadData({
+        title: res.title || title,
+        content: res.content ?? '',
+      });
+      setIsDownloadModalOpen(true);
+    } catch (e: unknown) {
+      if (isAxiosError(e)) {
+        const status = e.response?.status ?? 0;
+        if (status === 401) {
+          handleShowLoginModal(handleDownloadClick);
+          return;
+        }
+        if (status === 404) {
+          alert('프롬프트를 찾을 수 없습니다.');
+          return;
+        }
+      }
+      alert('다운로드 정보를 불러오지 못했습니다.');
+    }
   };
 
-  // 결제 완료 시 호출
-  const handlePaid = () => {
-    setIsPaid(true); // 결제 완료 상태 변경
-    setIsPaymentModalOpen(false); // 결제 완료 후 프롬프트 디테일 페이지로 이동
-    setDownloadData({
-      title: '동양풍 일러스트 이미지 생성',
-      downloadUrl: 'https://cdn.promptplace.com/prompts/1024.txt',
-      content: `.....................`,
-    });
+  const handleToggleLike = async () => {
+    if (!Number.isFinite(promptId) || isLiking) return;
+
+    const prev = liked;
+    setLiked(!prev);
+
+    try {
+      if (!prev) {
+        await likeMut.mutateAsync(promptId);
+      } else {
+        await unlikeMut.mutateAsync(promptId);
+      }
+      await qc.invalidateQueries({ queryKey: likedKeys.all });
+    } catch (e) {
+      setLiked(prev);
+      if (isAxiosError(e) && (e.response?.status ?? 0) === 401) {
+        handleShowLoginModal(handleToggleLike);
+        return;
+      }
+      alert('찜 처리에 실패했습니다.');
+    }
   };
 
-  const handleReportButtonClick = () => {
-    setIsReportModalOpen(true);
-  };
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const handleCloseReportModal = () => {
-    setIsReportModalOpen(false);
-  };
+  useEffect(() => {
+    const shouldOpen = searchParams.get('open_review') === 'true';
+    if (!shouldOpen) return;
 
-  const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
+    // 비로그인 시: 로그인 모달 먼저 → 로그인 후 작성 모달 오픈
+    if (!currentUserId) {
+      handleShowLoginModal(() => setShowCreateModal(true));
+    } else {
+      setShowCreateModal(true);
+    }
+
+    // URL 정리: 새로고침/뒤로가기 시 재오픈 방지
+    const url = new URL(window.location.href);
+    url.searchParams.delete('open_review');
+    navigate(url.pathname + url.search, { replace: true });
+  }, [searchParams]);
 
   if (showReviews) {
     return (
       <ReviewList
-        reviews={reviews}
-        title="동양풍 일러스트 이미지 생성"
+        reviews={reviews.map((r) => ({
+          review_id: r.review_id,
+          writer_id: r.writer_id,
+          writer_nickname: r.writer_nickname,
+          writer_profile_image_url: r.writer_image_url ?? '',
+          rating: r.rating,
+          content: r.content,
+          created_at: r.created_at,
+        }))}
+        setReviews={(updated) => {
+          if (typeof updated === 'function') {
+            setReviews((prev) =>
+              updated(
+                prev.map((r) => ({
+                  review_id: r.review_id,
+                  writer_id: r.writer_id,
+                  writer_nickname: r.writer_nickname,
+                  writer_profile_image_url: r.writer_image_url ?? '',
+                  rating: r.rating,
+                  content: r.content,
+                  created_at: r.created_at,
+                })),
+              ).map((r) => ({
+                review_id: r.review_id,
+                writer_id: r.writer_id,
+                writer_nickname: r.writer_nickname,
+                writer_image_url: r.writer_profile_image_url,
+                rating: r.rating,
+                content: r.content,
+                created_at: r.created_at,
+              })),
+            );
+          } else {
+            setReviews(
+              updated.map((r) => ({
+                review_id: r.review_id,
+                writer_id: r.writer_id,
+                writer_nickname: r.writer_nickname,
+                writer_image_url: r.writer_profile_image_url,
+                rating: r.rating,
+                content: r.content,
+                created_at: r.created_at,
+              })),
+            );
+          }
+        }}
+        title={title}
         reviewCount={reviewCount}
-        setReviews={setReviews}
-        onClose={() => setShowReviews(false)}
-        currentUserId={1}
         setReviewCount={setReviewCount}
+        onClose={() => setShowReviews(false)}
+        currentUserId={currentUserId}
       />
     );
   }
@@ -212,16 +300,19 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
       {/* 유저 정보 */}
       <div className="h-[96px] box-border flex items-center gap-3">
         <img
-          src={profile}
+          src={user?.profileImage?.url ?? profile}
           alt="profile"
           className="w-10 h-10 rounded-full cursor-pointer"
-          onClick={() => navigate(`/profile/1`)}
+          onClick={() => navigate(`/profile/${user.user_id}`)}
         />
+
         <div className="flex items-center w-full">
-          <p className="font-semibold text-[20px] mr-8 cursor-pointer" onClick={() => navigate(`/profile/1`)}>
-            디자인킹
+          <p
+            className="font-semibold text-[20px] mr-8 cursor-pointer"
+            onClick={() => navigate(`/profile/${user.user_id}`)}>
+            {user.nickname}
           </p>
-          <FollowButton follow={follow} onClick={() => setFollow(!follow)} />
+          <FollowButton follow={follow} onClick={handleToggleFollow} />
         </div>
       </div>
       <div className="h-[1px] bg-[#CCCCCC] w-full" />
@@ -247,7 +338,7 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
               buttonType="squareBig"
               style="fill"
               imgType="download"
-              text="다운로드"
+              text={isDownloading ? '불러오는 중…' : '다운로드'}
               onClick={() => handleShowLoginModal(handleDownloadClick)}
             />
             {isPaymentModalOpen && ( //유료프롬프트 & 미결제 시 PaymentModal 열기
@@ -262,9 +353,10 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
                 isOpen={isDownloadModalOpen}
                 onClose={() => setIsDownloadModalOpen(false)}
                 title={downloadData.title}
-                downloadUrl={downloadData.downloadUrl}
                 content={downloadData.content}
                 price={price}
+                isFree={isFree}
+                isPaid={isPaid}
                 onPaid={() => setIsPaid(true)}
               />
             )}
@@ -275,22 +367,25 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
           src={liked ? heartOnClick : heartNone}
           alt="heart"
           className="ml-[34px] w-[28px] h-[25px] cursor-pointer"
-          onClick={() => setLiked((prev) => !prev)}
+          onClick={handleToggleLike}
         />
       </div>
 
       {/* 별점 및 리뷰보기 */}
       <div>
         <div className="pt-[30px] flex justify-start gap-[30px]">
-          <Rating star={rating} />
+          <Rating star={Number.isFinite(rating) ? Number(rating) : 0} />
         </div>
         <div className="pt-[30px] text-[20px] flex items-center gap-[10px]">
-          <p className="cursor-pointer" onClick={() => setShowReviews(true)}>
+          <button
+            type="button"
+            className="cursor-pointer"
+            onClick={() => setShowReviews(true)}
+            disabled={isReviewsLoading}
+            title={isReviewsLoading ? '리뷰 불러오는 중' : '리뷰 보기'}>
             리뷰보기
-          </p>
-          <span
-            className="w-[37px] h-[28px] px-[10px] py-[5px] border border-[#999999] rounded-full text-[16px] text-[#999898] flex items-center justify-center cursor-pointer"
-            onClick={() => setShowReviews(true)}>
+          </button>
+          <span className="w-[37px] h-[28px] px-[10px] py-[5px] border border-[#999999] rounded-full text-[16px] text-[#999898] flex items-center justify-center cursor-pointer">
             {reviewCount}
           </span>
         </div>
@@ -298,8 +393,8 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
 
       <div
         className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-[30px] ${isAdmin ? 'mb-[25px]' : 'mb-[30px]'}`}>
-        {tags.map((tag, idx) => (
-          <TagButton key={idx} hasDelete={false} text={tag} onClick={() => {}} />
+        {tags.map((tag) => (
+          <TagButton key={tag.tag_id} hasDelete={false} text={tag.name} onClick={() => {}} />
         ))}
       </div>
 
@@ -313,7 +408,7 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
             text="프롬프트 신고하기"
             onClick={handleReportButtonClick}
           />
-          <ReportModal isOpen={isReportModalOpen} onClose={handleCloseReportModal} />
+          <ReportModal isOpen={isReportModalOpen} onClose={handleCloseReportModal} promptId={promptId} />
         </>
       )}
 
@@ -321,7 +416,25 @@ a futuristic city blending Korean traditional architecture and cyberpunk neon li
       {loginModalShow && (
         <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
       )}
+
+      {/* 리뷰 작성 모달 */}
+
+      {showCreateModal && Number.isFinite(promptId) && (
+        <CreateModal
+          isOpen={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          title={title}
+          promptId={promptId}
+          onSuccess={async () => {
+            await qc.invalidateQueries({ queryKey: reviewKeys.allForPrompt(promptId) });
+
+            setShowCreateModal(false);
+            setTimeout(() => setShowReviews(true), 0);
+          }}
+        />
+      )}
     </div>
   );
 };
+
 export default PromptActions;
