@@ -83,12 +83,12 @@ const LoginSwitchModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-110 p-4 max-lg:p-[0px]">
-      <div className="relative flex justify-center items-center w-[563px] max-lg:w-full h-[757px] max-lg:h-full flex-col  rounded-[16px] max-lg:rounded-none max-lg:px-[20px] bg-white shadow-gradient ">
+      <div className="relative flex justify-center items-center w-[563px] max-lg:w-full h-[661px] max-lg:h-full flex-col  rounded-[16px] max-lg:rounded-none max-lg:px-[20px] bg-white shadow-gradient ">
         <button className="max-lg:hidden absolute top-[34px] right-[34px]" onClick={onClose}>
           <img src={CloseIcon} alt="닫기" className="h-[24px] w-[24px]" />
         </button>
 
-        <div className=" mb-[48px] max-lg:mb-[20px] mt-[105px] max-lg:mt-[21px] flex flex-col items-center gap-[15px]">
+        <div className=" mb-[48px] max-lg:mb-[56px] mt-[105px] max-lg:mt-[21px] flex flex-col items-center gap-[15px]">
           <img
             src={PromptPlaceLogo}
             alt="PromptPlace 로고"
@@ -102,8 +102,7 @@ const LoginSwitchModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
           />
         </div>
 
-        <div className="flex flex-col items-center w-[334px]  gap-[32px] mb-[226px] max-lg:mb-[48px] mx-[114px] max-lg:mx-[0px]">
-          <SocialButton icon={KakaoIcon} text="카카오톡으로 로그인" onClick={handleSwitchKakaoLogin} />
+        <div className="flex flex-col items-center w-[334px]  gap-[32px] max-lg:gap-[20px] mb-[226px] max-lg:mb-[82px] mx-[114px] max-lg:mx-[0px]">
           <SocialButton icon={GoogleIcon} text="구글로 로그인" onClick={handleSwitchGoogleLogin} />
           <SocialButton icon={NaverIcon} text="네이버로 로그인" onClick={handleSwitchNaverLogin} />
           <div id="naverIdLogin" style={{ display: 'none' }} />
