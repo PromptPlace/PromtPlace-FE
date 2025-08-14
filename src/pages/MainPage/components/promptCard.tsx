@@ -9,11 +9,10 @@ import iconEye from '@/assets/icon-eye.svg';
 import iconDownload from '@/assets/icon-download-gray.svg';
 import Rating from '@/components/Rating';
 import profileImage from '@/assets/icon-profile-gray.svg';
-import likeIcon from '@/assets/icon-heart-blue-big.svg';
-import unLikeIcon from '@/assets/icon-heart-none-big.svg';
 import TagButton from '@/components/Button/TagButton';
 import ModelButton from '@/components/Button/ModelButton';
 import { useNavigate } from 'react-router-dom';
+import Likes from './likes';
 
 interface promptCardProps {
   prompt: Prompt;
@@ -21,14 +20,6 @@ interface promptCardProps {
 
 const PromptCard = ({ prompt }: promptCardProps) => {
   const navigate = useNavigate();
-  const [isLiked, setIsLiked] = useState(false);
-
-  console.log(prompt.tags);
-
-  const handleLike = () => {
-    setIsLiked((prev) => !prev);
-    // 찜 기능 서버 연동
-  };
 
   return (
     <div className="flex flex-col w-full max-w-[832px] mt-[42px]">
@@ -87,9 +78,7 @@ const PromptCard = ({ prompt }: promptCardProps) => {
         </p>
 
         {/* 찜 아이콘 */}
-        <button onClick={handleLike} className="absolute right-6 bottom-6 z-10">
-          <img src={isLiked ? likeIcon : unLikeIcon} className="w-5 h-5" />
-        </button>
+        <Likes key={prompt.prompt_id} {...prompt} />
       </div>
     </div>
   );

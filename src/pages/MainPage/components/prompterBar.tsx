@@ -11,9 +11,10 @@ import allowRight from '@/assets/icon-arrow-right-blue.svg';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
+import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
 
 const PrompterBar = ({ creators }: { creators: Creator[] }) => {
-  const { accessToken } = useAuth();
+  const { accessToken, user } = useAuth();
   const [loginModalShow, setLoginModalShow] = useState(false);
   const navigate = useNavigate();
 
@@ -27,12 +28,22 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
     ),
   );
 
+  const { mutate: mutateFollow } = usePatchFollow({ member_id: user?.user_id });
+  const { mutate: mutateUnFollow } = usePatchFollow({ member_id: user?.user_id });
+
   const handleFollow = (id: number) => {
+    const currentlyFollowed = isFollowed[id];
+
+    if (currentlyFollowed) {
+      mutateUnFollow({ member_id: id });
+    } else {
+      mutateFollow({ member_id: id });
+    }
+
     setIsFollowed((prev) => ({
       ...prev,
       [id]: !prev[id],
     }));
-    // 팔로우 기능 서버 연동
   };
 
   return (
