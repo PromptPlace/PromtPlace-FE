@@ -166,7 +166,6 @@ const PromptCreatePage = () => {
         is_free: is_free,
         tags: tags,
         models: selectedModels,
-        download_url: 'example.com',
       });
 
       console.log('전송 성공!', res.data);
