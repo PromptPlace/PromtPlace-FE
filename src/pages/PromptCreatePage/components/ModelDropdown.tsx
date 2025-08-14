@@ -78,29 +78,27 @@ const ModelDropdown: React.FC<ModelDropdownProps> = ({
   return (
     <div className="relative w-full max-w-[185px] h-[59px]">
       <button
-        className="flex items-center gap-[10px] w-full h-full text-left rounded-[8px] font-medium text-[var(--color-text-on-white)] text-[20px] cursor-pointer transition-colors"
+        className="flex items-center gap-[10px] w-full h-full text-left rounded-[8px] font-medium text-text-on-white text-[20px] cursor-pointer transition-colors"
         onClick={() => setIsOpen(true)}
         type="button">
-        <span className="font-medium text-[var(--color-text-on-white)] text-[20px]">
-          {getModelSummary(selectedModels)}
-        </span>
-        <LuChevronDown size={24} />
+        <span className="font-medium text-text-on-white text-[20px]">{getModelSummary(selectedModels)}</span>
+        <div className={`${isOpen ? 'rounded-xl bg-primary-pressed text-white' : ''}`}>
+          <LuChevronDown size={24} />
+        </div>
       </button>
       {isOpen && (
         <div
-          className="max-w-[142px] w-full absolute z-10 mt-2 bg-white rounded-[8px] border-[1px] border-[var(--color-white-stroke)]"
+          className="max-w-[142px] w-full absolute z-10 bg-white rounded-[8px] border-[1px] border-white-stroke"
           ref={dropdownRef}
           style={{ boxShadow: '0px 4px 8px 0px rgba(0,0,0,0.12)' }}>
           {MODEL_OPTIONS.map((model, idx) => (
             <div
               key={model}
               className={[
-                'w-[112px] h-[41px] mx-auto py-[9px] px-[10px] border-b-[1px] border-[var(--color-white-stroke)] flex flex-col items-center text-[var(--color-text-on-background)] cursor-pointer',
-                selectedModels.includes(model)
-                  ? 'bg-[var(--color-secondary-pressed)] text-[var(--color-text-on-white)] font-[400]'
-                  : '',
+                'w-[112px] h-[41px] mx-auto py-[9px] px-[10px] border-b-[1px] border-white-stroke flex flex-col items-center text-text-on-background cursor-pointer',
+                selectedModels.includes(model) ? 'bg-secondary-pressed text-text-on-white font-[400]' : '',
                 idx === 0 ? 'mt-[10px]' : '',
-                hoverIdx === idx ? 'bg-[var(--color-secondary)]' : '',
+                hoverIdx === idx ? 'bg-secondary' : '',
                 model === '기타' ? 'border-none mb-[10px]' : '',
               ].join(' ')}
               onMouseEnter={() => setHoverIdx(idx)}

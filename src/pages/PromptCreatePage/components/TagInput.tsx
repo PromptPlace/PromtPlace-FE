@@ -7,20 +7,29 @@ interface TagInputProps {
   setTags: (tags: string[]) => void;
 }
 
-const PAGE_MAX_LEN = 10;
+const PAGE_MAX_LEN = 17;
 
 function splitTags(input: string) {
   return input
     .split('#')
-    .map((tag) => tag.trim())
+    .map((tag) => tag.trim().replace(/\s+/g, '')) // 띄어쓰기 제거
     .filter((tag) => tag.length > 0);
 }
 
 function getPageTags(tags: string[], page: number, maxLen = PAGE_MAX_LEN) {
+  // 태그를 길이 오름차순으로 정렬 (같은 길이면 알파벳 순)
+  const sortedTags = [...tags].sort((a, b) => {
+    if (a.length !== b.length) {
+      return a.length - b.length; // 길이 오름차순
+    }
+    return a.localeCompare(b); // 같은 길이면 알파벳 순
+  });
+
   let pages: string[][] = [];
   let curr: string[] = [];
   let sum = 0;
-  tags.forEach((tag) => {
+  sortedTags.forEach((tag) => {
+    // 현재 태그를 추가했을 때 최대 길이를 초과하는지 확인
     if (sum + tag.length > maxLen) {
       pages.push(curr);
       curr = [];
@@ -29,6 +38,7 @@ function getPageTags(tags: string[], page: number, maxLen = PAGE_MAX_LEN) {
     curr.push(tag);
     sum += tag.length;
   });
+  // 마지막 페이지 추가 (curr에 남은 태그들이 있으면)
   if (curr.length > 0) pages.push(curr);
 
   return {
@@ -42,7 +52,13 @@ function getPageTags(tags: string[], page: number, maxLen = PAGE_MAX_LEN) {
       },
       { idxs: [], i: 0 },
     ).idxs,
+    sortedTags, // 정렬된 태그 배열도 반환
   };
+}
+
+// 태그 텍스트를 10자까지만 표시하고 초과시 ... 처리하는 함수
+function getTruncatedTag(tag: string) {
+  return tag.length > 10 ? tag.slice(0, 10) + '...' : tag;
 }
 
 const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
@@ -77,8 +93,11 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
   };
 
   // 태그 삭제(글로벌 인덱스 사용)
-  const handleDeleteTag = (globalIdx: number) => {
-    const newTags = tags.filter((_, i) => i !== globalIdx);
+  const handleDeleteTag = (sortedIdx: number) => {
+    // 정렬된 배열에서의 인덱스를 사용하여 해당 태그를 찾아 원본 배열에서 제거
+    const { sortedTags } = getPageTags(tags, 0);
+    const tagToDelete = sortedTags[sortedIdx];
+    const newTags = tags.filter((tag) => tag !== tagToDelete);
     setTags(newTags);
     setTimeout(() => {
       const { totalPages } = getPageTags(newTags, 0);
@@ -87,8 +106,8 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
   };
 
   // 페이지 정보
-  const { pageTags, totalPages, pageStartIdxs } = getPageTags(tags, page);
-  //현재 페이지의 태그 각각이 전체 tags 배열에서 몇 번째 태그인지를 계산
+  const { pageTags, totalPages, pageStartIdxs, sortedTags } = getPageTags(tags, page);
+  //현재 페이지의 태그 각각이 정렬된 tags 배열에서 몇 번째 태그인지를 계산
   const pageTagGlobalIdxs = pageTags.map((_, i) => (pageStartIdxs[page] ?? 0) + i);
 
   useEffect(() => {
@@ -98,7 +117,7 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
   //입력모드: 텍스트형태 (#코딩 #개발 #파이썬 ...)
   if (isEdit) {
     return (
-      <div className="max-w-[490px] w-full min-h-[60px] flex items-center border border-primary rounded-[8px] px-[8px] py-[4px] gap-[8px]  bg-white ">
+      <div className="max-w-[470px] w-full min-h-[60px] flex items-center border border-primary rounded-[8px] px-[8px] py-[4px] gap-[8px]  bg-white ">
         <input
           ref={inputRef}
           value={input}
@@ -112,7 +131,7 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
         <button
           type="button"
           onClick={handleComplete}
-          className="border border-primary rounded-[10px] px-4 py-1 text-primary text-base font-normal bg-white hover:bg-primary-hover hover:text-primary-hover">
+          className="border border-primary rounded-[10px] px-4 py-1 text-primary text-base font-normal bg-white hover:bg-primary-hover hover:text-white">
           완료
         </button>
       </div>
@@ -124,11 +143,11 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
   // 태그가 1개일때
   if (!isEdit && tags.length === 1) {
     const onlyTag = tags[0];
-    const displayTag = onlyTag.length > 45 ? onlyTag.slice(0, 35) + '...' : onlyTag; //35자까지만 보이게
+    const displayTag = getTruncatedTag(onlyTag); // 함수 사용으로 변경
 
     return (
       <div
-        className="max-w-[490px] w-full min-h-[60px] flex items-center border border-primary rounded-[8px] px-[8px] py-[4px] gap-[8px] bg-white"
+        className="max-w-[470px] w-full min-h-[60px] flex items-center border border-primary rounded-[8px] px-[8px] py-[4px] gap-[8px] bg-white"
         style={{ cursor: 'text' }}
         onClick={handleAreaClick}
         tabIndex={0}>
@@ -145,7 +164,7 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
   // 태그가 2개 이상일 때
   return (
     <div
-      className="max-w-[490px] w-full min-h-[60px] flex items-center border border-primary rounded-[8px] px-[8px] py-[4px] gap-[8px] bg-white"
+      className="max-w-[470px] w-full min-h-[60px] flex items-center border border-primary rounded-[8px] px-[8px] py-[4px] gap-[8px] bg-white"
       style={{ cursor: 'text' }}
       onClick={handleAreaClick}
       tabIndex={0}>
@@ -171,7 +190,7 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
             className="flex items-center rounded-[50px] px-4 py-1 border border-text-on-background mr-2 text-[14px] font-normal text-text-on-background"
             style={{ boxShadow: '0px 4px 8px 0px rgba(0,0,0,0.12)' }}
             onClick={(e) => e.stopPropagation()}>
-            #{tag}
+            #{getTruncatedTag(tag)}
             <button
               type="button"
               className="ml-2 text-text-on-background focus:outline-none font-normal"
