@@ -88,7 +88,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         setUser(user);
         setUserInStorage(user);
         console.log(`[${provider}] 로그인 성공!`);
-        alert(`환영합니다!`);
         console.log('user 정보:', user);
       }
     } catch (error) {

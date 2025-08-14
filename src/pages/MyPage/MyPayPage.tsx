@@ -111,7 +111,7 @@ const MyPayPage = () => {
   };
 
   const handleWithdraw = () => {
-    requestWithdrawalMutation(userInfo.balance);
+    requestWithdrawalMutation();
     console.log('출금 요청을 보냅니다.');
     setShowModal('complete');
   };

@@ -4,6 +4,7 @@ import kebabMenu from '@/assets/icon-kebabMenu.svg';
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import Portal from './Portal';
 
 export interface Prompt {
   prompt_id: number;
@@ -30,7 +31,9 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
 
   const navigate = useNavigate();
 
+  const buttonRef = useRef<HTMLButtonElement>(null); // 버튼의 위치를 얻기 위한 ref
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
     // 이벤트 핸들러 함수
@@ -48,6 +51,35 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isDropdownOpen]);
+
+  // 드롭다운 메뉴 위치 설정
+  useEffect(() => {
+    // 버튼 ref를 기준으로 좌표를 계산
+    if (isDropdownOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const dropdownWidth = 91; // w-[91px] 클래스에 해당하는 너비
+
+      setMenuPosition({
+        top: rect.bottom + window.scrollY + 8, // 버튼 바로 아래 + 8px 간격
+        left: rect.right + window.scrollX - dropdownWidth, // 버튼의 오른쪽 끝에서 드롭다운 너비만큼 왼쪽으로 이동
+      });
+    }
+  }, [isDropdownOpen]);
+
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDropdownOpen(false);
+    };
+
+    // resize 이벤트가 발생할 때 handleResize 함수를 호출합니다.
+    window.addEventListener('resize', handleResize);
+
+    // 컴포넌트가 언마운트될 때(사라질 때) 이벤트 리스너를 꼭 제거해줍니다. (메모리 누수 방지)
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   //리뷰 작성하기 버튼 클릭 시 상세페이지 이동 함수
   const handleWriteReviewClick = (prompt_id: number) => {
@@ -84,29 +116,35 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
           <div className="flex items-center justify-center h-[72px] max-lg:h-auto  w-[115px] max-lg:w-auto py-[10px] max-lg:py-[0px]  ">
             <div className="relative" ref={dropdownRef}>
               <button
+                ref={buttonRef}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className={`flex items-center justify-center h-[28px] w-[28px] rounded-[50px]  ${isDropdownOpen ? 'bg-secondary-pressed' : 'bg-transparent'}`}>
                 <img src={kebabMenu} alt="케밥 메뉴" className="max-lg:w-[16px] max-lg:h-[16px]" />
               </button>
               {isDropdownOpen && (
-                <div className="absolute  right-0 top-full mt-[11px] w-[91px] max-lg:w-[61px] bg-white rounded-md z-10 shadow-[0_4px_8px_0_rgba(0,0,0,0.12)]">
-                  <button
-                    onClick={() => {
-                      DeletePrompt(promptData.prompt_id);
-                      setIsDropdownOpen(false);
-                    }}
-                    className="block  px-[16px] max-lg:px-[12px] py-[8px] max-lg:py-[4px] text-[16px] max-lg:text-[10px] border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary active:bg-secondary-pressed rounded-t-[4px]">
-                    삭제하기
-                  </button>
-                  <button
-                    onClick={() => {
-                      EditPrompt(promptData.prompt_id);
-                      setIsDropdownOpen(false);
-                    }}
-                    className="block px-[16px] max-lg:px-[12px] py-[8px] max-lg:py-[4px] text-[16px] max-lg:text-[10px] text-text-on-background bg-secondary active:bg-secondary-pressed rounded-b-[4px]">
-                    수정하기
-                  </button>
-                </div>
+                <Portal>
+                  <div
+                    ref={dropdownRef}
+                    className="fixed mt-[11px] w-[91px] max-lg:w-[61px] bg-white rounded-md z-10 shadow-[0_4px_8px_0_rgba(0,0,0,0.12)]"
+                    style={{ top: `${menuPosition.top}px`, left: `${menuPosition.left}px` }}>
+                    <button
+                      onClick={() => {
+                        DeletePrompt(promptData.prompt_id);
+                        setIsDropdownOpen(false);
+                      }}
+                      className="block  px-[16px] max-lg:px-[12px] py-[8px] max-lg:py-[4px] text-[16px] max-lg:text-[10px] border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary active:bg-secondary-pressed rounded-t-[4px]">
+                      삭제하기
+                    </button>
+                    <button
+                      onClick={() => {
+                        EditPrompt(promptData.prompt_id);
+                        setIsDropdownOpen(false);
+                      }}
+                      className="block px-[16px] max-lg:px-[12px] py-[8px] max-lg:py-[4px] text-[16px] max-lg:text-[10px] text-text-on-background bg-secondary active:bg-secondary-pressed rounded-b-[4px]">
+                      수정하기
+                    </button>
+                  </div>
+                </Portal>
               )}
             </div>
           </div>
