@@ -36,8 +36,6 @@ const PromptEditPage = () => {
   //prompId
   const { id: promptId } = useParams<{ id: string }>();
 
-  const navigate = useNavigate();
-
   // 초기 내용 가져오기
   useEffect(() => {
     // API 호출해서 data를 받아온 후
@@ -61,7 +59,7 @@ const PromptEditPage = () => {
 
         // 가격 타입 설정
         setPriceType(data.is_free ? '무료' : '유료');
-        setCost(data.price || null);
+        setCost(data.is_free ? 0 : data.price);
 
         // 태그 배열 변환
         const tagNames = data.tags?.map((tag: { tag: { name: string } }) => tag.tag.name) || [];
@@ -102,6 +100,7 @@ const PromptEditPage = () => {
       setShowDualModal(true);
     } else {
       setModalText('업로드 세부 설정을 완료해 주세요.');
+
       setAlertModal(true);
     }
   };
@@ -142,7 +141,7 @@ const PromptEditPage = () => {
       setAlertModal(true);
       // 2초 후에 이동
       setTimeout(() => {
-        navigate('/mypage/prompt');
+        window.location.href = '/mypage/prompt';
       }, 2000);
     } catch (err) {
       console.error(err);
