@@ -17,6 +17,7 @@ export default function TagFilter({ placeholder = '태그를 입력해주세요.
   };
 
   const handleAddTags = () => {
+    if (tags.length >= 10) return;
     const splitTags = input
       .split(/[\s,]+/)
       .map((t) => t.trim().replace(/^#/, ''))

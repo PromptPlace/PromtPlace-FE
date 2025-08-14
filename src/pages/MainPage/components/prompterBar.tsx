@@ -3,7 +3,7 @@
  * API 연동 후 creator -> writer or prompter로 수정할 예정
  **/
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import type { Creator } from '@/types/MainPage/prompt';
 import FollowButton from '@/components/Button/FollowButton';
 import profileImage from '@/assets/icon-profile-gray.svg';
@@ -11,39 +11,47 @@ import allowRight from '@/assets/icon-arrow-right-blue.svg';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
-import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
+import usePatchFollow from '@/hooks/mutations/MainPage/usePatchFollow';
+import useGetPrompterList from '@/hooks/queries/MainPage/useGetPrompterList';
+import type { Prompter } from '@/types/MainPage/prompter';
+import useGetFollower from '@/hooks/queries/ProfilePage/useGetFollower';
+import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
+import useDeleteFollow from '@/hooks/mutations/MainPage/useDeleteFollow';
 
-const PrompterBar = ({ creators }: { creators: Creator[] }) => {
+const PrompterBar = () => {
   const { accessToken, user } = useAuth();
   const [loginModalShow, setLoginModalShow] = useState(false);
   const navigate = useNavigate();
 
-  const [isFollowed, setIsFollowed] = useState<Record<number, boolean>>(() =>
-    creators.reduce(
-      (acc, creator) => {
-        acc[creator.id] = creator.followed;
-        return acc;
-      },
-      {} as Record<number, boolean>,
-    ),
-  );
+  const { data: promptersData } = useGetPrompterList();
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-  const { mutate: mutateFollow } = usePatchFollow({ member_id: user?.user_id });
-  const { mutate: mutateUnFollow } = usePatchFollow({ member_id: user?.user_id });
+  // allPromptersData: Prompter[]
+  const allPrompters = promptersData?.data?.members ?? [];
+  const newPrompters = allPrompters.filter((m) => new Date(m.created_at) >= oneWeekAgo);
 
-  const handleFollow = (id: number) => {
-    const currentlyFollowed = isFollowed[id];
+  // 정렬
+  const topPrompters = [...allPrompters].sort((a, b) => b.follower_cnt - a.follower_cnt).slice(0, 4);
+  const topNewPrompters = [...newPrompters].sort((a, b) => b.follower_cnt - a.follower_cnt).slice(0, 2);
 
-    if (currentlyFollowed) {
-      mutateUnFollow({ member_id: id });
+  console.log('data', promptersData);
+  console.log('allPrompters', allPrompters);
+  console.log('topPrompters', topPrompters);
+  console.log('topNewPrompters', topNewPrompters);
+
+  const { data: myFollowingData } = useGetFollowing({ member_id: user.user_id });
+  const myFollowingSet = useMemo(() => new Set(myFollowingData?.data.map((f) => f.following_id)), [myFollowingData]);
+
+  const followMutate = usePatchFollow();
+  const unfollowMutate = useDeleteFollow();
+
+  const handleFollow = (targetId: number, isFollowed: boolean) => {
+    if (isFollowed) {
+      unfollowMutate.mutate({ member_id: targetId });
     } else {
-      mutateFollow({ member_id: id });
+      followMutate.mutate({ member_id: targetId });
     }
-
-    setIsFollowed((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
   };
 
   return (
@@ -58,35 +66,38 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
           이달의 인기 프롬프터 <span>🔥</span>
         </div>
         <ul className="mt-4 space-y-4 ">
-          {creators.slice(0, 4).map((c) => (
-            <li key={c.id} className="flex items-center justify-between">
-              <div
-                className="flex items-center gap-[10px] mt-[12px] cursor-pointer"
-                onClick={() => navigate(`/profile/${c.id}`)}>
-                <img
-                  src={c.avatar ? c.avatar : profileImage}
-                  alt={c.name}
-                  className="w-11 h-11 rounded-full object-cover mr-[10px]"
-                />
-                <div>
-                  <p className="text-lg font-normal">{c.name}</p>
-                  <p className="text-sm font-normal">팔로워 {c.followers}명</p>
+          {topPrompters.map((p) => {
+            const isFollowed = myFollowingSet.has(p.user_id);
+            return (
+              <li key={p.user_id} className="flex items-center justify-between">
+                <div
+                  className="flex items-center gap-[10px] mt-[12px] cursor-pointer"
+                  onClick={() => navigate(`/profile/${p.user_id}`)}>
+                  <img
+                    src={profileImage} // 추후 이미지 포함 변경 예쩡
+                    alt={p.nickname}
+                    className="w-11 h-11 rounded-full object-cover mr-[10px]"
+                  />
+                  <div>
+                    <p className="text-lg font-normal">{p.nickname}</p>
+                    <p className="text-sm font-normal">팔로워 {p.follower_cnt}명</p>
+                  </div>
                 </div>
-              </div>
-              <FollowButton
-                follow={isFollowed[c.id]}
-                onClick={() => {
-                  if (!accessToken) {
-                    alert('로그인이 필요합니다.');
-                    setLoginModalShow(true);
-                    return;
-                  } else {
-                    handleFollow(c.id);
-                  }
-                }}
-              />
-            </li>
-          ))}
+                <FollowButton
+                  follow={isFollowed}
+                  onClick={() => {
+                    if (!accessToken) {
+                      alert('로그인이 필요합니다.');
+                      setLoginModalShow(true);
+                      return;
+                    } else {
+                      handleFollow(p.user_id, isFollowed);
+                    }
+                  }}
+                />
+              </li>
+            );
+          })}
         </ul>
       </section>
 
@@ -96,35 +107,37 @@ const PrompterBar = ({ creators }: { creators: Creator[] }) => {
           신규 인기 프롬프터 <span>⭐</span>
         </h4>
         <ul className="mt-4 space-y-4">
-          {creators.slice(4, 6).map((c) => (
-            <li key={c.id} className="flex items-center justify-between">
-              <div
-                className="flex items-center gap-[10px] mt-[12px] cursor-pointer"
-                onClick={() => navigate(`/profile/${c.id}`)}>
-                <img
-                  src={c.avatar ? c.avatar : profileImage}
-                  alt={c.name}
-                  className="w-11 h-11 rounded-full object-cover mr-[10px]"
-                />
-                <div>
-                  <p className="text-lg">{c.name}</p>
-                  <p className="text-sm">팔로워 {c.followers}명</p>
+          {topNewPrompters.map((p) => {
+            const isFollowed = myFollowingSet.has(p.user_id);
+            return (
+              <li key={p.user_id} className="flex items-center justify-between">
+                <div
+                  className="flex items-center gap-[10px] mt-[12px] cursor-pointer"
+                  onClick={() => navigate(`/profile/${p.user_id}`)}>
+                  <img
+                    src={profileImage} //API 응답 추가 후 수정 필요
+                    alt={p.nickname}
+                    className="w-11 h-11 rounded-full object-cover mr-[10px]"
+                  />
+                  <div>
+                    <p className="text-lg">{p.nickname}</p>
+                    <p className="text-sm">팔로워 {p.follower_cnt}명</p>
+                  </div>
                 </div>
-              </div>
-              <FollowButton
-                follow={isFollowed[c.id]}
-                onClick={() => {
-                  if (!accessToken) {
-                    alert('로그인이 필요합니다.');
-                    setLoginModalShow(true);
-                    return;
-                  } else {
-                    handleFollow(c.id);
-                  }
-                }}
-              />
-            </li>
-          ))}
+                <FollowButton
+                  follow={isFollowed}
+                  onClick={() => {
+                    if (!accessToken) {
+                      alert('로그인이 필요합니다.');
+                      setLoginModalShow(true);
+                      return;
+                    }
+                    handleFollow(p.user_id, isFollowed);
+                  }}
+                />
+              </li>
+            );
+          })}
         </ul>
       </section>
 

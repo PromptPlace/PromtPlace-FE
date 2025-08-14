@@ -3,13 +3,12 @@ import { QUERY_KEY } from '@constants/key';
 import { getPrompterList } from '@/apis/MainPage/prompter';
 import type { ResponsePrompterDTO } from '@/types/MainPage/prompter';
 
-function useGetPrompterList() {
+export const useGetPrompterList = (page = 1, limit = 50) => {
   return useQuery<ResponsePrompterDTO>({
-    queryKey: [QUERY_KEY.prompterList],
-    queryFn: () => getPrompterList(),
-    staleTime: 1000 * 6 * 5,
-    gcTime: 1000 * 6 * 10,
+    queryKey: [QUERY_KEY.prompters, page, limit],
+    queryFn: () => getPrompterList(page, limit),
+    staleTime: 1000 * 60,
   });
-}
+};
 
 export default useGetPrompterList;
