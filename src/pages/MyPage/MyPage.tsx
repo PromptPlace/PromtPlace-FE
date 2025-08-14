@@ -1,5 +1,5 @@
 import { useAuth } from '@/context/AuthContext';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import clsx from 'clsx';
 import { useState } from 'react';
 
@@ -18,7 +18,6 @@ import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
 
 const MyPage = () => {
   const { accessToken, user, logout } = useAuth();
-  const navigate = useNavigate();
   const [loginModalShow, setLoginModalShow] = useState(false);
 
   // 회원 정보 불러오기
@@ -34,7 +33,7 @@ const MyPage = () => {
   ];
 
   const handleNavigate = (url: string) => {
-    navigate(url);
+    window.location.href = url;
   };
 
   return (
@@ -84,8 +83,7 @@ const MyPage = () => {
                   key={to}
                   onClick={(e) => {
                     e.preventDefault();
-
-                    navigate(to);
+                    window.location.href = to;
                   }}
                   to={to}
                   className="relative flex text-text-on-white text-[14px] font-medium leading-[18px] cursor-pointer">

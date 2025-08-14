@@ -1,6 +1,8 @@
 import { useState } from 'react';
 
 import CircleButton from '@components/Button/CircleButton';
+import TextModal from '@/components/Modal/TextModal';
+
 import DotsIcon from '@assets/icon-dot-white.svg';
 import type { RequestGetInquiriesDto, RequestInquiriesDto } from '@/types/ProfilePage/inquiry';
 import type { ResponsePromptsDto } from '@/types/ProfilePage/profile';
@@ -16,18 +18,20 @@ interface AskCardProps {
 }
 
 const AskCard = ({ prompts, isMyProfile, type, setType, member_id, mutatePostInquiries }: AskCardProps) => {
-  console.log(prompts);
-
   const [isListClicked, setIsListClicked] = useState(false);
   const [prompt, setPrompt] = useState(prompts?.pages[0]?.data.prompts[0].title);
   const [content, setContent] = useState('');
 
   const [isClicked, setIsClicked] = useState(false);
 
+  const [showModal, setShowModal] = useState(false);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutatePostInquiries({ receiver_id: member_id, type: type.type!, title: prompt!, content });
-    alert('문의 완료');
+    if (content.trim()) {
+      mutatePostInquiries({ receiver_id: member_id, type: type.type!, title: prompt!, content });
+      setShowModal(true);
+    }
   };
 
   return (
@@ -61,7 +65,7 @@ const AskCard = ({ prompts, isMyProfile, type, setType, member_id, mutatePostInq
                           return (
                             <div
                               key={prompt.prompt_id}
-                              className="bg-secondary shadow-button-hover text-center cursor-pointer py-[5px] px-[10px] h-[34px] flex justify-center align-center">
+                              className="bg-secondary shadow-button-hover text-center cursor-pointer py-[5px] px-[10px] h-[34px] flex justify-center align-center items-center">
                               <p
                                 onClick={() => {
                                   setPrompt(prompt.title);
@@ -113,6 +117,17 @@ const AskCard = ({ prompts, isMyProfile, type, setType, member_id, mutatePostInq
             </div>
           </div>
         </form>
+      )}
+
+      {showModal && !isMyProfile && (
+        <TextModal
+          text="문의가 등록되었습니다."
+          onClick={() => {
+            setShowModal((prev) => !prev);
+            setContent('');
+          }}
+          size="lg"
+        />
       )}
     </>
   );

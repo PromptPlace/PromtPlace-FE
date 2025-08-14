@@ -12,9 +12,10 @@ import type { ResponseGetDetailInquiriesDto } from '@/types/ProfilePage/inquiry'
 interface InquiryDetailCardProps {
   inquiry: ResponseGetDetailInquiriesDto;
   onClick: () => void;
-  setShowMsgMoldal?: (show: boolean) => void;
+  setShowMsgMoldal: (show: boolean) => void;
   mutatePostReplyInquiries: ({ inquiry_id, content }: RequestGetDetailInquiriesDto & RequestReplyInquiriesDto) => void;
   mutateReadInquiries: ({ inquiry_id }: RequestGetDetailInquiriesDto) => void;
+  setShowInquiryDetail: (item: null) => void;
 }
 
 const InquiryDetailCard = ({
@@ -23,6 +24,7 @@ const InquiryDetailCard = ({
   setShowMsgMoldal,
   mutatePostReplyInquiries,
   mutateReadInquiries,
+  setShowInquiryDetail,
 }: InquiryDetailCardProps) => {
   const [replyInput, setReplyInput] = useState<string>('');
   const [showModal, setShowModal] = useState(false);
@@ -115,7 +117,7 @@ const InquiryDetailCard = ({
               stiffness: 300,
             }}
             onDragEnd={(_, info) => {
-              if (info.point.y > window.innerHeight - 210 && setShowMsgMoldal) {
+              if (info.point.y > window.innerHeight - 210) {
                 setShowMsgMoldal(false);
                 mutateReadInquiries({ inquiry_id: inquiry.data.inquiry_id });
               }
@@ -150,6 +152,10 @@ const InquiryDetailCard = ({
               <MobileButton
                 text="전송하기"
                 onClick={() => {
+                  setShowModal(true);
+                  if (showModal) {
+                    setShowMsgMoldal(false);
+                  }
                   mutatePostReplyInquiries({ inquiry_id: inquiry.data.inquiry_id, content: replyInput });
                   mutateReadInquiries({ inquiry_id: inquiry.data.inquiry_id });
                   setShowModal(true);
@@ -161,7 +167,11 @@ const InquiryDetailCard = ({
         </div>
       </div>
 
-      {showModal && <TextModal text="답변 등록이 완료되었습니다." onClick={onClick} size="lg" />}
+      {showModal && (
+        <div className="relative z-300">
+          <TextModal text="답변 등록이 완료되었습니다." onClick={() => setShowInquiryDetail(null)} size="lg" />
+        </div>
+      )}
     </>
   );
 };
