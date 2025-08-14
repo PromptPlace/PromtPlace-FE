@@ -23,11 +23,12 @@ import usePromptLike from '@/hooks/mutations/PromptDetailPage/usePromptLike';
 import usePromptUnlike from '@/hooks/mutations/PromptDetailPage/usePromptUnlike';
 import useMyLikedPrompts, { likedKeys } from '@/hooks/queries/PromptDetailPage/useMyLikedPrompts';
 import useGetAllPromptReviews from '@/hooks/queries/PromptDetailPage/useGetAllPromptReviews';
-import useFollow from '@/hooks/mutations/PromptDetailPage/useFollow';
-import useUnfollow from '@/hooks/mutations/PromptDetailPage/useUnfollow';
+import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
+import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 import PaymentModal from './PaymentModal';
+import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
 
 import type { PromptDetailDto } from '@/types/PromptDetailPage/PromptDetailDto';
 import type { PromptReviewDto } from '@/types/PromptDetailPage/PromptReviewDto';
@@ -69,12 +70,25 @@ const PromptActions = ({
   const storedUser = localStorage.getItem('user');
   const currentUserId = storedUser ? JSON.parse(storedUser).user_id : null;
 
-  const followMut = useFollow();
-  const unfollowMut = useUnfollow();
+  const { data: myFollowings } = useGetFollowing({
+    member_id: Number.isFinite(currentUserId) ? Number(currentUserId) : -1,
+  });
+
+  const targetUserId = Number(user.user_id);
+  const followMut = usePatchFollow({ member_id: targetUserId });
+  const unfollowMut = useDeleteFollow({ member_id: targetUserId });
 
   const likeMut = usePromptLike();
   const unlikeMut = usePromptUnlike();
   const isLiking = likeMut.isPending || unlikeMut.isPending;
+  const [liked, setLiked] = useState(false);
+  const [follow, setFollow] = useState(false);
+
+  useEffect(() => {
+    if (!Array.isArray(myFollowings) || !Number.isFinite(targetUserId)) return;
+    const isFollowing = myFollowings.some((f: { member_id: number }) => f.member_id === targetUserId);
+    setFollow(isFollowing);
+  }, [myFollowings, targetUserId]);
 
   const isAdmin = useMemo(() => {
     try {
@@ -84,13 +98,11 @@ const PromptActions = ({
     }
   }, []);
 
-  const [follow, setFollow] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
 
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [liked, setLiked] = useState(false);
 
   const handlePaid = () => {
     setIsPaid(true);
@@ -138,7 +150,6 @@ const PromptActions = ({
   }, [likedSet, promptId]);
 
   const handleToggleFollow = async () => {
-    const targetUserId = user?.user_id;
     if (!Number.isFinite(targetUserId)) return;
 
     const prev = follow;
@@ -146,10 +157,18 @@ const PromptActions = ({
 
     try {
       if (!prev) {
-        await followMut.mutateAsync(targetUserId);
+        await followMut.mutateAsync({ member_id: targetUserId });
       } else {
-        await unfollowMut.mutateAsync(targetUserId);
+        await unfollowMut.mutateAsync({ member_id: targetUserId });
       }
+
+      const tasks: Promise<unknown>[] = [];
+      if (Number.isFinite(currentUserId)) {
+        tasks.push(qc.invalidateQueries({ queryKey: ['member-following', Number(currentUserId)] }));
+      }
+      tasks.push(qc.invalidateQueries({ queryKey: ['member-follower', targetUserId] }));
+
+      await Promise.all(tasks);
     } catch (e) {
       setFollow(prev);
       if (isAxiosError(e) && (e.response?.status ?? 0) === 401) {
@@ -317,7 +336,7 @@ const PromptActions = ({
             onClick={() => navigate(`/profile/${user.user_id}`)}>
             {user.nickname}
           </p>
-          <FollowButton follow={follow} onClick={handleToggleFollow} />
+          {currentUserId !== user.user_id && <FollowButton follow={follow} onClick={handleToggleFollow} />}
         </div>
       </div>
       <div className="h-[1px] bg-[#CCCCCC] w-full" />
