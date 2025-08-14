@@ -71,7 +71,7 @@ const MyPage = () => {
 
               <div
                 onClick={() => handleNavigate(`/profile/${user.user_id}`)}
-                className="flex items-center justify-center px-[8px] py-[4px] rounded-[4px] border border-primary bg-background text-primary text-[10px] font-normal leading-[13px] cursor-pointer">
+                className="flex items-center justify-center px-[8px] py-[4px] rounded-[4px] border border-primary bg-background text-primary text-[10px] font-normal leading-[13px] cursor-pointer bg-white">
                 프로필 홈
               </div>
             </div>

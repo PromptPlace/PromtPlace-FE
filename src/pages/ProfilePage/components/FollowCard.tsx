@@ -115,7 +115,7 @@ const FollowCard = ({ title, list, setShow, member_id }: FollowCardProps) => {
       <div className="lg:hidden fixed left-0 right-0 bottom-0 z-200 max-w-[425px] w-full mx-auto">
         <motion.div
           drag="y"
-          dragConstraints={{ top: 0, bottom: 100 }}
+          dragConstraints={{ top: 0, bottom: 320 }}
           dragElastic={false}
           initial={{ y: '100%' }}
           animate={{ y: 0 }}
