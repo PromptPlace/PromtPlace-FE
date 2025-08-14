@@ -175,13 +175,6 @@ const MainPage = () => {
             }}
           />
         </div>
-        <div
-          onClick={() => {
-            navigate('/payment');
-          }}
-          className="fixed bottom-4 right-4 z-[10] cursor-pointer">
-          프롬프트 결제하기
-        </div>
       </div>
     </div>
   );
