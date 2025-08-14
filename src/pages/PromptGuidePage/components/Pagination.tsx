@@ -78,7 +78,7 @@ export function Pagination({
     );
   }
   return (
-    <div className="absolute top-[900px] left-[60px]">
+    <div className="absolute top-[900px] left-1/2 -translate-x-1/2">
       <nav className="flex items-center justify-center h-[50px] mx-[545px] mb-[60px] text-text-on-background">
         <button
           className="w-[50px] h-[50px] px-[6px] py-[8px] rounded-[50px] flex items-center 

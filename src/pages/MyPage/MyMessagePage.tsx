@@ -194,27 +194,29 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
     <>
       <div className="hidden lg:block">
         <div className="min-w-[1440px] min-h-[1024px] w-full h-full bg-background">
-          <div className="flex justify-between items-center">
-            <div className=" w-[360px] h-[60px] mt-[92px] ml-[102px]">
-              <button
-                onClick={() => handleTypeChange('message')}
-                className={`${
-                  type === 'message'
-                    ? 'text-primary-hover font-bold text-[32px] border-r-[2px] border-r-primary-hover'
-                    : 'text-text-on-background font-bold text-[24px]'
-                } h-[60px] pt-[10px] pb-[10px] pr-[40px]  -translate-y-[10px]`}>
-                <p className="h-[40px]  -translate-y-[6px]">메시지함</p>
-              </button>
+          <div className="flex justify-center">
+            <div className="w-full max-w-[1236px] flex justify-between items-center pt-[92px]">
+              <div className="w-[360px] h-[60px] ">
+                <button
+                  onClick={() => handleTypeChange('message')}
+                  className={`${
+                    type === 'message'
+                      ? 'text-primary-hover font-bold text-[32px] border-r-[2px] border-r-primary-hover'
+                      : 'text-text-on-background font-bold text-[24px]'
+                  } h-[60px] pt-[10px] pb-[10px] pr-[40px]  -translate-y-[10px]`}>
+                  <p className="h-[40px]  -translate-y-[6px]">메시지함</p>
+                </button>
 
-              <button
-                onClick={() => handleTypeChange('notification')}
-                className={`${
-                  type === 'notification'
-                    ? 'text-primary-hover font-bold text-[32px] border-l-[2px] border-l-primary-hover'
-                    : 'text-text-on-background font-bold text-[24px] '
-                } h-[60px] pt-[10px] pb-[10px] pl-[40px]  -translate-y-[10px]`}>
-                <p className="h-[40px] -translate-y-[6px]">알림</p>
-              </button>
+                <button
+                  onClick={() => handleTypeChange('notification')}
+                  className={`${
+                    type === 'notification'
+                      ? 'text-primary-hover font-bold text-[32px] border-l-[2px] border-l-primary-hover'
+                      : 'text-text-on-background font-bold text-[24px] '
+                  } h-[60px] pt-[10px] pb-[10px] pl-[40px]  -translate-y-[10px]`}>
+                  <p className="h-[40px] -translate-y-[6px]">알림</p>
+                </button>
+              </div>
             </div>
           </div>
 

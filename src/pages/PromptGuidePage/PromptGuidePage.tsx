@@ -137,27 +137,29 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
   return (
     <>
       <div className="hidden lg:block">
-        <div className="pl-[102px] pt-[92px]">
-          <div className="flex justify-between items-center w-full max-w-[360px] h-[60px]">
-            <button
-              onClick={() => handleTypeChange('tip')}
-              className={`${
-                type === 'tip'
-                  ? 'text-primary-hover font-bold text-[32px] border-r-[2px] border-r-primary-hover'
-                  : 'text-text-on-background font-bold text-[24px]'
-              } pt-[10px] pb-[10px] pr-[40px]`}>
-              프롬프트 TIP
-            </button>
+        <div className="flex justify-center pt-[92px] ">
+          <div className="w-full max-w-[1236px] justify-start ml-[20px]">
+            <div className="flex justify-between items-center w-full max-w-[360px] h-[60px]">
+              <button
+                onClick={() => handleTypeChange('tip')}
+                className={`${
+                  type === 'tip'
+                    ? 'text-primary-hover font-bold text-[32px] border-r-[2px] border-r-primary-hover'
+                    : 'text-text-on-background font-bold text-[24px]'
+                } pt-[10px] pb-[10px] pr-[40px]`}>
+                프롬프트 TIP
+              </button>
 
-            <button
-              onClick={() => handleTypeChange('notice')}
-              className={`${
-                type === 'notice'
-                  ? 'text-primary-hover font-bold text-[32px] border-l-[2px] border-l-primary-hover'
-                  : 'text-text-on-background font-bold text-[24px]'
-              } pt-[10px] pb-[10px] pl-[40px]`}>
-              공지사항
-            </button>
+              <button
+                onClick={() => handleTypeChange('notice')}
+                className={`${
+                  type === 'notice'
+                    ? 'text-primary-hover font-bold text-[32px] border-l-[2px] border-l-primary-hover'
+                    : 'text-text-on-background font-bold text-[24px]'
+                } pt-[10px] pb-[10px] pl-[40px]`}>
+                공지사항
+              </button>
+            </div>
           </div>
         </div>
         <div>
