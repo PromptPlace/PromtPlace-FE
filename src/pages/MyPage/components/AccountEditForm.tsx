@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import ArrowIcon from './ArrowIcon';
 import type { RegisterInfo, UpdateAccountInfo } from '@/types/MyPage/account';
-import { motion } from 'framer-motion';
+import { motion, useDragControls } from 'framer-motion';
 
 /**
  * 조회수 및 다운로드 수를 나타내는 컴포넌트입니다.
@@ -97,6 +97,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
     };
   }, [isDropdownOpen]);
 
+  const controls = useDragControls();
   return (
     <div className="flex flex-col flex-1 gap-[40px] max-lg:gap-[12px] pt-[40px] max-lg:pt-[20px]">
       {/* 1. 은행 선택 */}
@@ -161,12 +162,12 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
                 exit={{ y: '100%' }}
                 transition={{ type: 'spring', damping: 30, stiffness: 300 }}
                 onDragEnd={(_, info) => {
-                  if (info.offset.y - 308) {
+                  if (info.offset.y > 200) {
                     setIsDropdownOpen(false);
                   }
                 }}
                 className="fixed bottom-0 left-0 right-0 z-120 bg-white h-[360px] shadow-[0_4px_8px_0_rgba(0,0,0,0.12)] max-lg:shadow-[2px_2px_30px_0_rgba(0,0,0,0.25)] rounded-t-2xl cursor-grab">
-                <div className="flex flex-col px-[20px] items-center">
+                <div onPointerDown={(e) => controls.start(e)} className="flex flex-col px-[20px] items-center">
                   <div className="w-[40px] h-[4px] bg-white-stroke rounded-full  mt-[14px] mb-[30px]" />
                   <p className="text-[10px] font-medium text-primary self-start">은행 선택</p>
                 </div>
