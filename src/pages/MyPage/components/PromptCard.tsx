@@ -4,6 +4,7 @@ import kebabMenu from '@/assets/icon-kebabMenu.svg';
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import Portal from './Portal';
 
 export interface Prompt {
   prompt_id: number;
@@ -31,6 +32,7 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
   const navigate = useNavigate();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
     // 이벤트 핸들러 함수
@@ -47,6 +49,17 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
+  }, [isDropdownOpen]);
+
+  // 드롭다운 메뉴 위치 설정
+  useEffect(() => {
+    if (isDropdownOpen && dropdownRef.current) {
+      const rect = dropdownRef.current.getBoundingClientRect();
+      setMenuPosition({
+        top: rect.bottom + window.scrollY , // 버튼 바로 아래 + 8px
+        left: rect.right + window.scrollX , // 버튼 왼쪽 기준 - 30px
+      });
+    }
   }, [isDropdownOpen]);
 
   //리뷰 작성하기 버튼 클릭 시 상세페이지 이동 함수
@@ -89,7 +102,9 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
                 <img src={kebabMenu} alt="케밥 메뉴" className="max-lg:w-[16px] max-lg:h-[16px]" />
               </button>
               {isDropdownOpen && (
-                <div className="absolute  right-0 top-full mt-[11px] w-[91px] max-lg:w-[61px] bg-white rounded-md z-10 shadow-[0_4px_8px_0_rgba(0,0,0,0.12)]">
+                <div
+                  className="absolute  right-0 top-full mt-[11px] w-[91px] max-lg:w-[61px] bg-white rounded-md z-10 shadow-[0_4px_8px_0_rgba(0,0,0,0.12)]"
+                  style={{ top: `${menuPosition.top}px`, left: `${menuPosition.left}px` }}>
                   <button
                     onClick={() => {
                       DeletePrompt(promptData.prompt_id);

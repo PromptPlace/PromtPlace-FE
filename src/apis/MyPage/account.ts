@@ -1,5 +1,11 @@
 import { axiosInstance } from '@/apis/axios';
-import type { AccountInfo, AccountApiResponse, RegisterInfo, UpdateAccountInfo, WithdrawableAmountApiResponse } from '@/types/MyPage/account'; // 타입 파일 경로
+import type {
+  AccountInfo,
+  AccountApiResponse,
+  RegisterInfo,
+  UpdateAccountInfo,
+  WithdrawableAmountApiResponse,
+} from '@/types/MyPage/account'; // 타입 파일 경로
 
 export const getAccountInfo = async (): Promise<AccountInfo> => {
   const { data } = await axiosInstance.get<AccountApiResponse>('/api/members/me/accounts');
@@ -16,18 +22,14 @@ export const updateAccountInfo = async (accountData: UpdateAccountInfo) => {
   return data;
 };
 
-
-export const requestWithdrawal = async (amount: number) => {
-  const { data } = await axiosInstance.post('/api/settlements/withdrawals', { amount });
+export const requestWithdrawal = async () => {
+  const { data } = await axiosInstance.post('/api/settlements/withdrawals');
   return data;
 };
 
-
 export const getWithdrawableAmount = async (): Promise<number> => {
-  const { data } = await axiosInstance.get<WithdrawableAmountApiResponse>(
-    '/api/settlements/withdrawals/available'
-  );
-  
+  const { data } = await axiosInstance.get<WithdrawableAmountApiResponse>('/api/settlements/withdrawals/available');
+
   // 응답 객체에서 available_amount 숫자 값만 추출하여 반환
-  return data.available_amount; 
+  return data.available_amount;
 };
