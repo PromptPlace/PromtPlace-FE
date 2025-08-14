@@ -27,12 +27,15 @@ const PrompterBar = () => {
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
+  // allPromptersData: Prompter[]
   const allPrompters = promptersData?.data?.members ?? [];
   const newPrompters = allPrompters.filter((m) => new Date(m.created_at) >= oneWeekAgo);
-  const topPrompters = allPrompters.sort((a, b) => b.follower_cnt - a.follower_cnt).slice(0, 4);
-  const topNewPrompters = newPrompters.sort((a, b) => b.follower_cnt - a.follower_cnt).slice(0, 2);
 
-  console.log('data', promptersData)
+  // 정렬
+  const topPrompters = [...allPrompters].sort((a, b) => b.follower_cnt - a.follower_cnt).slice(0, 4);
+  const topNewPrompters = [...newPrompters].sort((a, b) => b.follower_cnt - a.follower_cnt).slice(0, 2);
+
+  console.log('data', promptersData);
   console.log('allPrompters', allPrompters);
   console.log('topPrompters', topPrompters);
   console.log('topNewPrompters', topNewPrompters);
@@ -128,10 +131,8 @@ const PrompterBar = () => {
                       alert('로그인이 필요합니다.');
                       setLoginModalShow(true);
                       return;
-                    } else {
-                      handleFollow(p.user_id, isFollowed);
-                      isFollowed((prev) => !prev);
                     }
+                    handleFollow(p.user_id, isFollowed);
                   }}
                 />
               </li>

@@ -16,4 +16,4 @@ export interface Prompter {
   follower_cnt: number;
 }
 
-export type ResponsePrompterDTO = CommonResponse<Prompter[]>;
+export type ResponsePrompterDTO = CommonResponse<Prompter>;

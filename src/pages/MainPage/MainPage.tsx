@@ -22,6 +22,7 @@ import MobileFilter from './components/MobileFilter';
 import MobilePrompt from './components/MobilePrompt';
 import useGetPromptList from '@/hooks/queries/MainPage/useGetPromptList';
 import usePostSearchPromptList from '@/hooks/mutations/MainPage/usePostSearchPromptList';
+import type { Prompt } from '@/types/MainPage/prompt';
 
 const MainPage = () => {
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
@@ -135,21 +136,21 @@ const MainPage = () => {
         </div>
 
         <div className="hidden lg:flex flex-col scroll-auto">
-          {promptList.map((prompt) => (
-            <PromptCard key={prompt.prompt_id} prompt={prompt} />
+          {promptList.map((p: Prompt) => (
+            <PromptCard key={p.prompt_id} prompt={p} />
           ))}
         </div>
 
         <div className="flex flex-col lg:hidden scroll-auto">
-          {promptList.map((prompt) => (
-            <MobilePrompt key={prompt.prompt_id} prompt={prompt} />
+          {promptList.map((p: Prompt) => (
+            <MobilePrompt key={p.prompt_id} prompt={p} />
           ))}
         </div>
       </div>
 
       <div className="hidden lg:flex">
         <div className="flex flex-col gap-[14px]">
-          <PrompterBar creators={dummyCreators} />
+          <PrompterBar />
         </div>
       </div>
 
