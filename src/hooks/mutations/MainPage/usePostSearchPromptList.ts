@@ -9,7 +9,7 @@ export const usePostSearchPromptList = () => {
     mutationFn: postSearchPromptList,
     onSuccess: (data) => {
       console.log('검색 성공', data);
-      queryClient.invalidateQueries({ queryKey: QUERY_KEY.searchpromptList });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.searchpromptList] });
     },
 
     onError: (error) => {

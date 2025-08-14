@@ -48,8 +48,8 @@ const PaymentModal = ({
       redirect_url: `${window.location.origin}/prompt/${prompt.prompt_id}/`,
       products: [
         {
-          categoryType: prompt.category ?? '기타',
-          categoryId: prompt.categoryId ?? 0,
+          categoryType: '기타',
+          categoryId: '0',
           uid: `product_${prompt.prompt_id}`,
           name: prompt.title,
           count: prompt.downloads,

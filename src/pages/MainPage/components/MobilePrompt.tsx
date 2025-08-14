@@ -10,6 +10,7 @@ import iconDownload from '@/assets/icon-download-gray.svg';
 import likeIcon from '@/assets/icon-heart-blue-big.svg';
 import unLikeIcon from '@/assets/icon-heart-none-big.svg';
 import MobilePrompter from './MobilePrompter';
+import Likes from './likes';
 
 type Props = {
   prompt: Prompt;
@@ -74,9 +75,7 @@ const MobilePrompt = ({ prompt }: Props) => {
           </div>
         </div>
         {/* 찜 버튼 */}
-        <button onClick={handleLike} className="absolute right-3 bottom-3">
-          <img src={isLiked ? likeIcon : unLikeIcon} className="w-4 h-4" />
-        </button>
+        <Likes key={prompt.prompt_id} {...prompt} />
       </div>
     </div>
   );
