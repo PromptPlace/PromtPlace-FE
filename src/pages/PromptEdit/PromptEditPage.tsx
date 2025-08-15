@@ -178,14 +178,24 @@ const PromptEditPage = () => {
               {/**프롬프트 제목 */}
               <div className="max-w-[1236px] min-h-[120px] rounded-t-[16px] bg-[var(--color-white)] flex justify-center ">
                 <div className="w-[1100px] max-h-[60px] mt-[35px] ">
-                  <Editor placeholder={'프롬프트 제목을 입력하세요'} onChange={setTitle} value={title} />
+                  <Editor
+                    placeholder={'프롬프트 제목을 입력하세요'}
+                    onChange={setTitle}
+                    value={title}
+                    maxHight="max-h-[40px]"
+                  />
                   <div className="border-b-[1px] border-[var(--color-text-on-background)] mt-[17px]"></div>
                 </div>
               </div>
               {/**프롬프트 내용 */}
               <div className="max-w-[1236px] min-h-[465px] bg-[var(--color-white)] flex justify-center">
                 <div className="w-[1100px] mt-[15px] ">
-                  <Editor placeholder={'프롬프트를 입력하세요'} onChange={setContent} value={content} />
+                  <Editor
+                    placeholder={'프롬프트를 입력하세요'}
+                    onChange={setContent}
+                    value={content}
+                    maxHight="max-h-[430px]"
+                  />
                 </div>
               </div>
               {/**하단 */}
@@ -265,13 +275,23 @@ const PromptEditPage = () => {
                 {/*제목 입력 */}
                 <div className="w-full min-w-[280px] h-[63px] flex items-center justify-start border-b-[1px] border-white-stroke">
                   <div className="w-full min-w-[240px] h-[17px] ml-[10px]">
-                    <MobileEditor placeholder={'프롬프트 제목을 입력하세요'} onChange={setTitle} value={title} />
+                    <MobileEditor
+                      placeholder={'프롬프트 제목을 입력하세요'}
+                      onChange={setTitle}
+                      value={title}
+                      maxHight="max-h-[22px]"
+                    />
                   </div>
                 </div>
                 {/**프롬프트 내용 */}
                 <div className="min-w-[280px] min-h-[278px] flex justify-center items-center p-[10px]">
                   <div className="w-full min-w-[260px] h-full min-h-[238px] ">
-                    <MobileEditor placeholder={'프롬프트를 입력하세요'} onChange={setContent} value={content} />
+                    <MobileEditor
+                      placeholder={'프롬프트를 입력하세요'}
+                      onChange={setContent}
+                      value={content}
+                      maxHight=""
+                    />
                   </div>
                 </div>
               </div>
@@ -279,7 +299,7 @@ const PromptEditPage = () => {
           </div>
           {/**하단 */}
           <div className="flex justify-center">
-            <div className="w-full max-w-[254px] h-[36px] mt-[20px]">
+            <div className="w-full max-w-[254px] h-[36px] mt-[20px] mb-[35px]">
               <div className="flex justify-between">
                 <div className="w-[117px] text-[10px]">
                   <IconButton
