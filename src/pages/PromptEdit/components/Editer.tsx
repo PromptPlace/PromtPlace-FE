@@ -41,10 +41,12 @@ export const Editor = ({
   placeholder,
   onChange,
   value,
+  maxHight,
 }: {
   placeholder: string;
   onChange: (value: string) => void;
   value: string;
+  maxHight: string;
 }) => {
   const initialConfig = useMemo(
     //  재마운트 방지를 위해 memo
@@ -68,13 +70,13 @@ export const Editor = ({
   return (
     <div
       className={`w-full mx-auto mt-5 rounded text-black relative leading-[36px] font-normal text-left rounded-tl-[10px] rounded-tr-[10px]`}>
-      <div className="bg-white relative">
+      <div className={`bg-white relative overflow-y-auto ${maxHight} overflow-x-hidden`}>
         <LexicalComposer initialConfig={initialConfig}>
           <SyncValue value={value} />
           <RichTextPlugin
             contentEditable={
               <ContentEditable
-                className={`w-full h-[40px] resize-none text-[25px] caret-[#444] relative [tab-size:1] outline-none px-[10px] `}
+                className={`w-full min-h-[40px] ${maxHight} resize-none text-[25px] caret-[#444] relative [tab-size:1] outline-none px-[10px] `}
                 aria-placeholder={placeholder}
                 placeholder={
                   <div
@@ -98,10 +100,12 @@ export const MobileEditor = ({
   placeholder,
   onChange,
   value,
+  maxHight,
 }: {
   placeholder: string;
   onChange: (value: string) => void;
   value?: string;
+  maxHight: string;
 }) => {
   const initialConfig = useMemo(
     () => ({
@@ -124,7 +128,7 @@ export const MobileEditor = ({
   return (
     <div
       className={`w-full mx-auto rounded text-black relative leading-[17px] font-normal text-left rounded-tl-[10px] rounded-tr-[10px]`}>
-      <div className="bg-white relative">
+      <div className={`bg-white relative overflow-y-auto ${maxHight} overflow-x-hidden`}>
         <LexicalComposer initialConfig={initialConfig}>
           <SyncValue value={value} />
           <RichTextPlugin
