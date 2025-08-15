@@ -370,7 +370,7 @@ const PromptCreatePage = () => {
         </div>
         {/**하단 */}
         <div className="flex justify-center">
-          <div className="w-full max-w-[254px] h-[36px] mt-[20px] mb-[30px]">
+          <div className="w-full max-w-[254px] h-[36px] mt-[20px] mb-[35px]">
             <div className="flex justify-between">
               <div className="w-[117px] text-[10px]">
                 <IconButton
