@@ -36,6 +36,8 @@ const PromptDetailPage = () => {
 
   const prompt = useMemo(() => {
     if (!data) return null;
+    const tags = (data.tags ?? []).filter((t) => t?.tag).map((t) => t.tag.name);
+    console.log('parsed tags', tags);
     return {
       prompt_id: data.prompt_id,
       user_id: data.user_id,
@@ -237,6 +239,7 @@ const PromptDetailPage = () => {
       />
     );
   }
+  console.log('prompt.tags', prompt?.tags);
 
   return (
     <div className="bg-[#F5F5F5]">

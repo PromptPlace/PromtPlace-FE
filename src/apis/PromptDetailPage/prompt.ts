@@ -39,9 +39,14 @@ export async function getPromptDetail(promptId: number): Promise<PromptDetailDto
       name: m.model.name,
     })),
 
-    tags: d.tags.map((t: { tag: { tag_id: number; name: string } }) => ({
-      tag_id: t.tag.tag_id,
-      name: t.tag.name,
+    tags: d.tags.map((t: any) => ({
+      prompttag_id: t.prompttag_id,
+      prompt_id: t.prompt_id,
+      tag_id: t.tag_id,
+      tag: {
+        tag_id: t.tag.tag_id,
+        name: t.tag.name,
+      },
     })),
 
     images: d.images.map((img: { image_url: string; order_index: number }) => ({
