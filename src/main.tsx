@@ -12,4 +12,6 @@ createRoot(document.getElementById('root')!).render(
 
 if (import.meta.env.VITE_DEV_MODE === 'Production') {
   registerSW();
+  console.log('Service Worker registered successfully.');
+  console.log('서비스 워커 최신화 완료');
 }
