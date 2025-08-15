@@ -143,7 +143,9 @@ const PromptDetailPage = () => {
     if (!Number.isFinite(promptId)) return;
     try {
       const res = await fetchDownload(promptId);
-      setIsPaid(res.is_paid ?? false);
+      if (!prompt?.is_free) {
+        setIsPaid(res.is_paid ?? false);
+      }
       setDownloadData({
         title: res.title,
         content: res.content ?? '',
@@ -248,7 +250,7 @@ const PromptDetailPage = () => {
 
       <div className="flex max-lg:flex-col max-lg:gap-[20px] max-w-7xl max-lg:px-[20px] max-lg:pt-0 max-lg:max-w-[320px] gap-10 p-10 mx-auto">
         {/* 왼쪽: 정보 */}
-        <div className="w-[711px] max-lg:max-w-[280px] max-lg:max-h-[544px] bg-[#FFFEFB] rounded-[16px] overflow-hidden">
+        <div className="w-[711px] max-lg:max-w-[280px] max-lg:max-h-[544px] bg-[#FFFEFB] rounded-[16px] flex flex-col h-[736px]">
           <PromptHeader
             title={prompt.title}
             views={prompt.views}
@@ -302,7 +304,9 @@ const PromptDetailPage = () => {
               className={`flex items-center ${isPaid ? 'gap-[10px]' : 'gap-[20px]'} h-[34px] ${
                 isPaid ? 'ml-[8%]' : 'ml-[28%]'
               }`}>
-              {isPaid && <span className="text-[16px] font-medium text-black whitespace-nowrap">구매 완료</span>}
+              {isPaid && !prompt.is_free && (
+                <span className="text-[16px] font-medium text-black whitespace-nowrap">구매 완료</span>
+              )}
 
               <span className="text-[16px] font-medium text-black">{prompt.price.toLocaleString()}원</span>
 

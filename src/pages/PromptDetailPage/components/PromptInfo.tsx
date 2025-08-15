@@ -62,11 +62,10 @@ const PromptInfo = ({ description: descProp, usageGuide: usageProp, isPaid = fal
       {/* 프롬프트 활용법 */}
       <section className="max-lg:h-[133px]">
         <h4 className="font-semibold text-[24px] max-lg:text-[12px] max-lg:pt-[12px]">프롬프트 활용법</h4>
-        <div className="font-normal pt-[15px] text-[16px] max-lg:text-[10px] max-lg:pt-[8px] whitespace-pre-line line-clamp-4">
+        <div className="font-normal pt-[15px] text-[16px] max-lg:text-[10px] max-lg:pt-[8px] whitespace-pre-line">
           {isLoading ? '불러오는 중…' : usageGuide}
         </div>
 
-        {/* 무료도 아니고, 결제도 안 했을 때만 표시 */}
         {!isFree && !isPaid && (
           <p className="text-[16px] font-medium pt-[10px] max-lg:font-normal pb-[20px] text-primary underline max-lg:text-[10px] max-lg:pt-[8px]  max-lg:pb-[8px] cursor-pointer">
             해당 프롬프트를 구매하고 마저 확인하세요
