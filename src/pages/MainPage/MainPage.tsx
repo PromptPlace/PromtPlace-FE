@@ -2,11 +2,6 @@
 
 * Author @곽도윤
 
-Todo
-1. 검색창 debounce 적용
-2. 프롬프트 카드 스켈레톤 UI 적용
-3. Optimistic update를 활용한 찜, 팔로우 반영
-
 **/
 
 import { useEffect, useState } from 'react';
@@ -63,41 +58,52 @@ const MainPage = () => {
   console.log('검색 조건:', {
     selectedModels,
     selectedTags,
-    selectedSort: mapSortValue(selectedSort),
+    selectedSort,
     onlyFree,
     keyword,
   });
 
+  // 검색어와 태그가 있을 때만 백엔드 API 호출
   useEffect(() => {
-    const searchParams: SearchPromptDto = {
-      keyword: keyword || null,
-      model: selectedModels.length > 0 ? selectedModels : null, // 여러 개를 배열로 전달
-      tag: selectedTags.length > 0 ? selectedTags : null, // 여러 개 태그 그대로 전송
-      sort: mapSortValue(selectedSort) as SearchPromptDto['sort'],
-      is_free: onlyFree,
-      page: 1,
-      size: 20,
-    };
+    if (keyword || selectedTags.length > 0) {
+      const searchParams: SearchPromptDto = {
+        keyword: keyword || null,
+        model: null, // 모델 필터링은 프론트엔드에서 처리
+        tag: selectedTags.length > 0 ? selectedTags : null,
+        sort: mapSortValue(selectedSort) as SearchPromptDto['sort'],
+        is_free: false, // 기본값으로 설정 (무료 필터링은 프론트엔드에서 처리)
+        page: 1,
+        size: 20,
+      };
 
-    console.log('검색 API 호출 파라미터:', searchParams);
+      console.log('검색 API 호출 파라미터:', searchParams);
 
-    searchPromptMutation.mutate(searchParams, {
-      onSuccess: (data) => {
-        setSearchPromptData(data);
-      },
-    });
+      searchPromptMutation.mutate(searchParams, {
+        onSuccess: (data) => {
+          setSearchPromptData(data);
+        },
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyword, selectedModels, selectedTags, selectedSort, onlyFree]);
+  }, [keyword, selectedTags]); // 검색어와 태그만 dependency로 설정
 
   const promptResult = useGetPromptList();
-  const promptList =
-    keyword || selectedModels.length > 0 || selectedTags.length > 0 || onlyFree || selectedSort !== 'recent'
-      ? Array.isArray(searchPromptData?.data)
-        ? searchPromptData.data
-        : []
-      : Array.isArray(promptResult.data?.data)
-        ? promptResult.data.data
-        : [];
+
+  // 백엔드 검색 결과와 기본 프롬프트 리스트를 합쳐서 사용
+  const basePromptList =
+    keyword || selectedTags.length > 0 ? searchPromptData?.data || [] : promptResult.data?.data || [];
+
+  // const promptList =
+  //   keyword || selectedModels.length > 0 || selectedTags.length > 0 || onlyFree || selectedSort !== 'recent'
+  //     ? Array.isArray(searchPromptData?.data)
+  //       ? searchPromptData.data
+  //       : []
+  //     : Array.isArray(promptResult.data?.data)
+  //       ? promptResult.data.data
+  //       : [];
+
+  console.log('promptResult:', promptResult);
+  console.log('searchPromptData:', searchPromptData);
 
   // 코치마크 관련
   const { accessToken } = useAuth();
@@ -112,31 +118,42 @@ const MainPage = () => {
     }
   }, [showCoachMark]);
 
-  // const filterPromptsByModel = filteredPromptList?.filter((prompt) => {
-  //   const matchModel =
-  //     selectedModels.length > 0
-  //       ? Array.isArray(prompt.models) && prompt.models.some((m) => selectedModels.includes(m.model.name))
-  //       : true;
-  //   const matchFree = onlyFree ? prompt.price === 0 : true;
-  //   return matchModel && matchFree;
-  // });
+  // 프론트엔드에서 모델 필터링 및 정렬 처리 (검색어/태그는 백엔드에서 처리됨)
+  const filterPromptsByModel =
+    basePromptList?.filter((prompt: Prompt) => {
+      const matchModel =
+        selectedModels.length > 0
+          ? Array.isArray(prompt.models) &&
+            prompt.models.some((m: { model: { name: string } }) => selectedModels.includes(m.model.name))
+          : true;
+      const matchFree = onlyFree ? prompt.price === 0 : true;
+      // 태그와 키워드 필터링은 제거 (백엔드에서 처리)
+      // const matchTag =
+      //   selectedTags.length > 0
+      //     ? Array.isArray(prompt.tags) && prompt.tags.some((tag: any) => selectedTags.includes(tag.tag.name))
+      //     : true;
+      // const matchKeyword = keyword ? prompt.title.toLowerCase().includes(keyword.toLowerCase()) : true;
+      return matchModel && matchFree; // && matchTag && matchKeyword;
+    }) || [];
 
-  // const sortPromptByFilter = [...filterPromptsByModel].sort((a, b) => {
-  //   switch (selectedSort) {
-  //     case '조회순':
-  //       return b.views - a.views;
-  //     case '별점순':
-  //       return b.rating_avg - a.rating_avg;
-  //     case '다운로드순':
-  //       return b.downloads - a.downloads;
-  //     case '가격 낮은 순':
-  //       return a.price - b.price;
-  //     case '가격 높은 순':
-  //       return b.price - a.price;
-  //     default:
-  //       return 0; // 기본 정렬
-  //   }
-  // });
+  const sortPromptByFilter = [...filterPromptsByModel].sort((a, b) => {
+    switch (selectedSort) {
+      case '조회순':
+        return b.views - a.views;
+      case '별점순':
+        return b.rating_avg - a.rating_avg;
+      case '다운로드순':
+        return b.downloads - a.downloads;
+      case '가격 낮은 순':
+        return a.price - b.price;
+      case '가격 높은 순':
+        return b.price - a.price;
+      default:
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime(); // 기본 정렬
+    }
+  });
+
+  const promptList = sortPromptByFilter;
 
   return (
     <div className="flex gap-[59px] justify-center bg-[#F5F5F5] relative overflow-hidden">
