@@ -1,8 +1,8 @@
 import GradientButton from '@/components/Button/GradientButton';
 
 interface PossiblepayAmountProps {
-  nickname: string;
-  balance: number;
+  nickname?: string;
+  balance?: number;
   onWithdraw: () => void;
 }
 
@@ -15,7 +15,7 @@ const PossiblepayAmount: React.FC<PossiblepayAmountProps> = ({ nickname, balance
         </p>
 
         <p className="text-[32px] font-bold text-primary-hover pl-[40px]  max-lg:text-[14px] max-lg:pl-[20px] ">
-          {balance.toLocaleString()}원
+          {balance?.toLocaleString()}원
         </p>
       </div>
       <div className="pr-[93px] max-lg:pr-[20px]">
