@@ -7,6 +7,7 @@ import ProfileIcon from '@assets/icon-profile-gray.svg?react';
 import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
 import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
 import type { Follow, FollowerWithStatus, FollowingWithStatus } from '@/types/ProfilePage/profile';
+import { queryClient } from '@/App';
 
 type FollowWithTargetID = Follow & { isFollowing: boolean; targetId: number; count: number };
 
@@ -18,26 +19,24 @@ interface FollowCardProps {
 }
 
 const FollowCard = ({ title, list, setShow, member_id }: FollowCardProps) => {
+  console.log(list);
+
   const normalizedList: FollowWithTargetID[] =
     list?.map((f) => ({
       ...f,
       targetId: f.follower_id ?? f.following_id,
-      count: f.follower_cnt ?? f.following_cnt,
+      count: f.follower_cnt || f.following_cnt,
     })) ?? [];
 
-  const [following, setFollowing] = useState<Record<number, boolean>>(() => {
-    const initialState: Record<number, boolean> = {};
-
-    normalizedList.forEach((f) => {
-      const isFollower = 'follower_id' in f;
-      const isFollowing = isFollower ? list.some((f) => f.follow_id === f.follower_id) : true;
-      initialState[f.targetId] = isFollowing;
-    });
-
-    return initialState;
-  });
-
-  const [followCount, setFollowCount] = useState(normalizedList);
+  const [following, setFollowing] = useState<Record<number, boolean>>(() =>
+    normalizedList.reduce(
+      (acc, f) => {
+        acc[f.targetId] = f.isFollowing ?? false;
+        return acc;
+      },
+      {} as Record<number, boolean>,
+    ),
+  );
 
   // 팔로우, 언팔로우
   const { mutate: mutateFollow } = usePatchFollow({ member_id });
@@ -47,16 +46,32 @@ const FollowCard = ({ title, list, setShow, member_id }: FollowCardProps) => {
     const isFollowing = following[id];
 
     if (isFollowing) {
-      mutateUnFollow({ member_id: id });
+      mutateUnFollow(
+        { member_id: id },
+        {
+          onSuccess: () => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            queryClient.invalidateQueries(['member-follower', member_id] as any);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            queryClient.invalidateQueries(['member-following', member_id] as any);
+          },
+        },
+      );
     } else {
-      mutateFollow({ member_id: id });
+      mutateFollow(
+        { member_id: id },
+        {
+          onSuccess: () => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            queryClient.invalidateQueries(['member-follower', member_id] as any);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            queryClient.invalidateQueries(['member-following', member_id] as any);
+          },
+        },
+      );
     }
 
     setFollowing((prev) => ({ ...prev, [id]: !prev[id] }));
-
-    setFollowCount((prev) =>
-      prev.map((f) => (f.targetId === id ? { ...f, count: f.count + (isFollowing ? -1 : 1) } : f)),
-    );
   };
 
   return (
@@ -77,13 +92,13 @@ const FollowCard = ({ title, list, setShow, member_id }: FollowCardProps) => {
                       {f.nickname}
                     </p>
                     <p className="text-text-on-white text-[14px] font-normal leading-[26px] tracking-[0.46px]">
-                      팔로워 {followCount.find((item) => item.targetId === f.targetId)?.count}명
+                      팔로워 {f.count}명
                     </p>
                   </div>
                 </div>
 
                 <FollowButton
-                  follow={f.isFollowing ?? false}
+                  follow={following[f.targetId]}
                   onClick={() => {
                     toggleFollowing(f.targetId);
                   }}
@@ -136,13 +151,13 @@ const FollowCard = ({ title, list, setShow, member_id }: FollowCardProps) => {
                         {f.nickname}
                       </p>
                       <p className="text-text-on-white text-[14px] font-normal leading-[26px] tracking-[0.46px] max-lg:text-[8px] max-lg:leading-[13px] max-lg:tracking-[0.23px]">
-                        팔로워 {followCount.find((item) => item.targetId === f.targetId)?.count}명
+                        팔로워 {f.count}명
                       </p>
                     </div>
                   </div>
 
                   <FollowButton
-                    follow={f.isFollowing ?? false}
+                    follow={following[f.targetId]}
                     onClick={() => {
                       toggleFollowing(f.targetId);
                     }}
