@@ -35,11 +35,6 @@ const PrompterBar = () => {
   const topPrompters = [...allPrompters].sort((a, b) => b.follower_cnt - a.follower_cnt).slice(0, 4);
   const topNewPrompters = [...newPrompters].sort((a, b) => b.follower_cnt - a.follower_cnt).slice(0, 2);
 
-  console.log('data', promptersData);
-  console.log('allPrompters', allPrompters);
-  console.log('topPrompters', topPrompters);
-  console.log('topNewPrompters', topNewPrompters);
-
   const { data: myFollowingData } = useGetFollowing({ member_id: user.user_id });
   const myFollowingSet = useMemo(() => new Set(myFollowingData?.data.map((f) => f.following_id)), [myFollowingData]);
 
@@ -79,7 +74,7 @@ const PrompterBar = () => {
                     className="w-11 h-11 rounded-full object-cover mr-[10px]"
                   />
                   <div>
-                    <p className="text-lg font-normal">{p.nickname}</p>
+                    <p className="text-lg font-normal max-w-[120px] truncate">{p.nickname}</p>
                     <p className="text-sm font-normal">팔로워 {p.follower_cnt}명</p>
                   </div>
                 </div>

@@ -62,10 +62,10 @@ const PromptCard = ({ prompt }: promptCardProps) => {
               <Rating star={prompt.rating_avg} />
             </div>
             <div className="flex items-center gap-1">
-              <img src={iconEye} className="w-4 h-4" /> {prompt.views}
+              <img src={iconEye} className="w-[24px] h-[24px]" /> {prompt.views}
             </div>
             <div className="flex items-center gap-1">
-              <img src={iconDownload} className="w-4 h-4" /> {prompt.downloads}
+              <img src={iconDownload} className="w-[24px] h-[24px]" /> {prompt.downloads}
             </div>
           </div>
         </div>

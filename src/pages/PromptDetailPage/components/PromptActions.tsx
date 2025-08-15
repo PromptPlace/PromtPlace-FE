@@ -376,8 +376,9 @@ const PromptActions = ({
             />
             {isPaymentModalOpen && ( //유료프롬프트 & 미결제 시 PaymentModal 열기
               <PaymentModal
-                prompt={{ user, title, price, isFree } as unknown as PromptDetailDto}
-                user={user}
+                promptId={Number(id)}
+                title={title}
+                price={price}
                 onClose={() => setIsPaymentModalOpen(false)}
                 onPaid={handlePaid}
               />

@@ -69,14 +69,24 @@ export interface searchPrompt {
 }
 
 export type RequestSearchPrompt = {
-  model?: string[] | null;
-  tag?: string[] | null;
-  keyword: string;
-  page?: number;
-  size?: number;
-  sort?: string;
-  is_free?: boolean;
+  model: string[] | null;
+  tag: string[] | null;
+  keyword: string | null;
+  page: number;
+  size: number;
+  sort: 'recent' | 'popular' | 'download' | 'views' | 'rating_avg';
+  is_free: boolean;
 };
+
+export interface SearchPromptDto {
+  model: string[] | null;
+  tag: string[] | null;
+  keyword: string | null;
+  page: number;
+  size: number;
+  sort: 'recent' | 'popular' | 'download' | 'views' | 'rating_avg';
+  is_free: boolean;
+}
 
 export type Creator = {
   id: number;
@@ -84,7 +94,7 @@ export type Creator = {
   avatar: string | null;
   followers: number;
   followed: boolean;
-}
+};
 
 export type ResponsePromptDTO = CommonResponse<Prompt[]>;
 export type ResponseSearchPromptDTO = CommonResponse<searchPrompt[]>;
