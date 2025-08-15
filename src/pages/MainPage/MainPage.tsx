@@ -92,8 +92,12 @@ const MainPage = () => {
   const promptResult = useGetPromptList();
   const promptList =
     keyword || selectedModels.length > 0 || selectedTags.length > 0 || onlyFree || selectedSort !== 'recent'
-      ? (searchPromptData?.data ?? [])
-      : (promptResult.data?.data ?? []);
+      ? Array.isArray(searchPromptData?.data)
+        ? searchPromptData.data
+        : []
+      : Array.isArray(promptResult.data?.data)
+        ? promptResult.data.data
+        : [];
 
   // 코치마크 관련
   const { accessToken } = useAuth();
