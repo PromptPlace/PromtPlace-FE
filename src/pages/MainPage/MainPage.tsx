@@ -44,7 +44,7 @@ const MainPage = () => {
 
   // 검색 API 호출
   const searchPromptMutation = usePostSearchPromptList();
-  const [searchPromptData, setSearchPromptData] = useState<ResponseSearchPromptDTO | null>(null);
+  const [searchPromptData, setSearchPromptData] = useState<ResponsePromptDTO | null>(null);
 
   // 정렬 값 매핑 함수 - 백엔드 API 스펙에 맞게 수정
   const mapSortValue = (sort: string | null): 'recent' | 'popular' | 'download' | 'views' | 'rating_avg' => {
@@ -94,29 +94,15 @@ const MainPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keyword, selectedTags, selectedSort]); // 정렬 조건도 dependency에 추가
 
-  console.log(searchPromptData?.data.map);
-
   const promptResult = useGetPromptList();
-
-  // searchPrompt 타입을 Prompt 타입으로 변환하는 함수
-  const convertSearchPromptToPrompt = (searchPrompt: searchPrompt): Prompt => {
-    return {
-      ...searchPrompt,
-      download_url: '', // searchPrompt에는 없지만 Prompt에는 있는 필드
-    };
-  };
 
   // 백엔드 검색 결과와 기본 프롬프트 리스트를 안전하게 처리
   const basePromptList: Prompt[] = (() => {
     if (keyword || selectedTags.length > 0) {
-      // 검색 API 응답 구조: data.prompts 배열 사용
-      console.log('searchPromptData structure:', searchPromptData);
-      if (Array.isArray(searchPromptData?.data?.prompts)) {
-        return searchPromptData.data.prompts.map(convertSearchPromptToPrompt);
-      }
-      return [];
+      // 검색 API 응답: data가 이미 Prompt[]
+      return Array.isArray(searchPromptData?.data) ? searchPromptData.data : [];
     } else {
-      // 기본 프롬프트 리스트 사용
+      // 기본 프롬프트 리스트
       return Array.isArray(promptResult.data?.data) ? promptResult.data.data : [];
     }
   })();
@@ -231,9 +217,7 @@ const MainPage = () => {
         </div>
 
         <div className="hidden lg:flex flex-col scroll-auto">
-          {promptList.map((p: Prompt) => (
-            <PromptCard key={p.prompt_id} prompt={p} />
-          ))}
+          {Array.isArray(promptList) && promptList.map((p: Prompt) => <PromptCard key={p.prompt_id} prompt={p} />)}
         </div>
 
         <div className="flex flex-col lg:hidden scroll-auto">
