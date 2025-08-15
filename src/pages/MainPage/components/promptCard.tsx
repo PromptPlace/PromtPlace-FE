@@ -59,7 +59,7 @@ const PromptCard = ({ prompt }: promptCardProps) => {
               {prompt.is_free ? '무료' : `${prompt.price.toLocaleString()}원`}
             </div>
             <div>
-              <Rating star={prompt.rating_avg} />
+              <Rating star={prompt.review_rating_avg} />
             </div>
             <div className="flex items-center gap-1">
               <img src={iconEye} className="w-4 h-4" /> {prompt.views}
