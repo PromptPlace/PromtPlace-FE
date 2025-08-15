@@ -22,11 +22,14 @@ export const getAllPromptReviews = async (
 ): Promise<PromptReviewDto[]> => {
   let cursor: number | undefined = undefined;
   const acc: PromptReviewDto[] = [];
+  let totalCount: number | undefined;
 
   for (let i = 0; i < maxLoops; i++) {
     const page = await getPromptReviews(promptId, { cursor, limit: perPage });
     const reviews = page.reviews ?? [];
     acc.push(...reviews);
+
+    if (typeof totalCount === 'number' && acc.length >= totalCount) break;
 
     if (!page.has_more || reviews.length === 0) break;
     cursor = reviews[reviews.length - 1].review_id;

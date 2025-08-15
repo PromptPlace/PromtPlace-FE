@@ -8,6 +8,7 @@ import AccountEditForm from './components/AccountEditForm';
 import { useGetAccountInfo } from '@/hooks/queries/MyPage/useGetAccount';
 import { useRegisterAccount, useUpdateAccount } from '@/hooks/mutations/MyPage/account';
 import type { RegisterInfo, UpdateAccountInfo } from '@/types/MyPage/account';
+import axios from 'axios';
 
 interface accountInfo {
   account_id?: number;
@@ -49,6 +50,13 @@ const MyAccountPage = () => {
       registerAccount(registerData, {
         onSuccess: () => {
           setMode('view');
+        },
+        onError: (error) => {
+          if (axios.isAxiosError(error) && error.response) {
+            if (error.response.data.error === 'InvalidBankCode') {
+              alert('유효하지 않은 은행 코드입니다. 은행을 다시 선택해주세요.');
+            }
+          }
         },
       });
     } else {

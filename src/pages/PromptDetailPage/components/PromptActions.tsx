@@ -351,7 +351,7 @@ const PromptActions = ({
       <div className="h-[1px] bg-[#CCCCCC] w-full" />
 
       {/* 제목 */}
-      <div className="font-bold text-[24px] pt-[25px]">{truncateTitle(title)}</div>
+      <div className="font-bold text-[24px] pt-[25px]">[{truncateTitle(title)}]</div>
 
       {/* 가격 */}
       <div className="text-[24px] pt-[30px] font-bold">{isFree ? '무료' : `${price.toLocaleString()}원`}</div>

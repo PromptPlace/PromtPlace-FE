@@ -9,6 +9,10 @@ import clsx from 'clsx';
 import { useGetSalesHistory } from '@/hooks/queries/MyPage/useGetPay.ts';
 import { useRequestWithdrawal } from '@/hooks/mutations/MyPage/account';
 import { useGetWithdrawableAmount } from '@/hooks/queries/MyPage/useGetAccount';
+import { useGetAccountInfo } from '@/hooks/queries/MyPage/useGetAccount';
+import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
+import axios from 'axios';
+import { useAuth } from '@/context/AuthContext';
 // 더미 데이터 예시
 const DUMMY_USER_INFO = {
   nickname: '주토피아노',
@@ -18,20 +22,6 @@ const DUMMY_USER_INFO = {
 };
 
 const DUMMY_SALES_HISTORY = [
-  {
-    prompt_id: 1,
-    purchased_at: '2025.06.13',
-    title: '정부지원사업 무조건 선정되는 사업계획서 프롬프트 정부지원사업 정부지원사업',
-    price: 2500,
-    buyer_nickname: '홍길동',
-  },
-  {
-    prompt_id: 2,
-    purchased_at: '2025.06.12',
-    title: '효율적인 경쟁사 분석 프롬프트',
-    price: 2000,
-    buyer_nickname: '율랄라',
-  },
   {
     prompt_id: 3,
     purchased_at: '2025.06.11',
@@ -46,48 +36,6 @@ const DUMMY_SALES_HISTORY = [
     price: 1800,
     buyer_nickname: '지나가던 개발자',
   },
-  {
-    prompt_id: 5,
-    purchased_at: '2025.06.09',
-    title: '사업 아이디어 시장 검증 프롬프트',
-    price: 1800,
-    buyer_nickname: '지나가던 개발자',
-  },
-  {
-    prompt_id: 6,
-    purchased_at: '2025.06.08',
-    title: '사업 아이디어 시장 검증 프롬프트',
-    price: 1800,
-    buyer_nickname: '지나가던 개발자',
-  },
-  {
-    prompt_id: 7,
-    purchased_at: '2025.06.07',
-    title: '사업 아이디어 시장 검증 프롬프트',
-    price: 1800,
-    buyer_nickname: '지나가던 개발자',
-  },
-  {
-    prompt_id: 8,
-    purchased_at: '2025.06.06',
-    title: '사업 아이디어 시장 검증 프롬프트',
-    price: 1800,
-    buyer_nickname: '지나가던 개발자',
-  },
-  {
-    prompt_id: 9,
-    purchased_at: '2025.06.05',
-    title: '사업 아이디어 시장 검증 프롬프트',
-    price: 1800,
-    buyer_nickname: '지나가던 개발자',
-  },
-  {
-    prompt_id: 10,
-    purchased_at: '2025.06.04',
-    title: '사업 아이디어 시장 검증 프롬프트',
-    price: 1800,
-    buyer_nickname: '지나가던 개발자',
-  },
 ];
 
 const MyPayPage = () => {
@@ -97,12 +45,16 @@ const MyPayPage = () => {
   const [showModal, setShowModal] = useState<'noMoney' | 'noAccount' | 'yesAccount' | 'complete' | null>(null);
   const { mutate: requestWithdrawalMutation } = useRequestWithdrawal();
   const { data: amount } = useGetWithdrawableAmount();
+  const { data: Account, error: getAccountError, isError: isGetAccountError } = useGetAccountInfo();
+  const { user } = useAuth();
+  const { data: userData } = useGetMember({ member_id: user.user_id });
   console.log('출금가능 금액:', amount);
+  console.log('계좌 정보', Account);
 
   const CheckWithdraw = () => {
     console.log('출금하기 모달을 엽니다.');
 
-    if (!userInfo.hasAccount) {
+    if (isGetAccountError && axios.isAxiosError(getAccountError) && getAccountError.response?.status === 404) {
       setShowModal('noAccount');
       return;
     } else {
@@ -133,9 +85,9 @@ const MyPayPage = () => {
             <div className=" text-[32px] text-primary-hover font-bold max-lg:text-[20px]">정산관리</div>
           </div>
           <div className="lg:hidden text-[14px] font-medium text-primary-hover mb-[12px]">
-            {userInfo.nickname}님의 출금 가능 금액
+            {userData?.data.nickname}님의 출금 가능 금액
           </div>
-          <PossiblepayAmount nickname={userInfo.nickname} balance={userInfo.balance} onWithdraw={CheckWithdraw} />
+          <PossiblepayAmount nickname={userData?.data.nickname} balance={amount} onWithdraw={CheckWithdraw} />
 
           <div className="text-[24px] text-primary-hover font-bold pl-[40px] py-[20px] border-b-[1px] border-primary-hover max-lg:text-[14px] max-lg:text-primary max-lg:pl-[12px] max-lg:py-[12px] max-lg:border-b-[0.5px] max-lg:border-primary">
             <span className="max-lg:hidden">판매 내역</span>
@@ -158,7 +110,6 @@ const MyPayPage = () => {
               <span className="mx-[12px] w-[23px]">가격</span>
               <span className="w-[34px]">구매자</span>
             </div>
-            {/* api 적용할때 salesHistory를 salesResponse.sales로 변경 */}
             {salesResponse?.sales.map((sale) => (
               <SalesHistoryCard key={sale.prompt_id} sale={sale} />
             ))}
@@ -191,18 +142,18 @@ const MyPayPage = () => {
         </div>
       )}
 
-      {showModal === 'yesAccount' && userInfo.balance < 10000 && (
+      {showModal === 'yesAccount' && amount !== undefined && amount < 10000 && (
         <TextModal text="10,000원부터 출금하실 수 있습니다." onClick={() => setShowModal(null)} size="lg" />
       )}
 
-      {showModal === 'yesAccount' && userInfo.balance > 10000 && (
+      {showModal === 'yesAccount' && amount !== undefined && amount > 10000 && (
         <div className="fixed inset-0 flex items-center justify-center z-50 max-lg:px-[57px]">
           <div className="absolute inset-0 bg-overlay"></div>
 
           <div className="relative px-[150px] max-lg:px-[20px] py-[64px] max-lg:py-[20px] bg-white rounded-[16px] max-lg:rounded-[8px] shadow-gradient z-10 flex flex-col items-center justify-center gap-[24px] max-lg:gap-[12px] text-center max-lg:w-full">
             <div className="flex flex-col gap-[24px] max-lg:gap-[12px] ">
               <p className="text-[28px] max-lg:text-[10px] font-medium leading-[40px] max-lg:leading-[15px] text-text-on-white">
-                우리은행 1002-536-732228
+                {Account?.bank_name} {Account?.account_number}
               </p>
               <p className="text-[32px] max-lg:text-[12px] font-bold leading-[40px] max-lg:leading-[15px] text-text-on-white">
                 해당계좌로 출금할까요?
