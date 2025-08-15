@@ -89,8 +89,7 @@ const MainPage = () => {
 
   const promptResult = useGetPromptList();
 
-  // 백엔드 검색 결과와 기본 프롬프트 리스트를 합쳐서 사용
-  const basePromptList =
+  const basePromptList: Prompt[] =
     keyword || selectedTags.length > 0 ? searchPromptData?.data || [] : promptResult.data?.data || [];
 
   // const promptList =
@@ -119,22 +118,24 @@ const MainPage = () => {
   }, [showCoachMark]);
 
   // 프론트엔드에서 모델 필터링 및 정렬 처리 (검색어/태그는 백엔드에서 처리됨)
-  const filterPromptsByModel =
-    basePromptList?.filter((prompt: Prompt) => {
-      const matchModel =
-        selectedModels.length > 0
-          ? Array.isArray(prompt.models) &&
-            prompt.models.some((m: { model: { name: string } }) => selectedModels.includes(m.model.name))
-          : true;
-      const matchFree = onlyFree ? prompt.price === 0 : true;
-      // 태그와 키워드 필터링은 제거 (백엔드에서 처리)
-      // const matchTag =
-      //   selectedTags.length > 0
-      //     ? Array.isArray(prompt.tags) && prompt.tags.some((tag: any) => selectedTags.includes(tag.tag.name))
-      //     : true;
-      // const matchKeyword = keyword ? prompt.title.toLowerCase().includes(keyword.toLowerCase()) : true;
-      return matchModel && matchFree; // && matchTag && matchKeyword;
-    }) || [];
+  const filterPromptsByModel = basePromptList.filter((prompt: Prompt) => {
+    const modelsArray = Array.isArray(prompt.models) ? prompt.models : [];
+    const matchModel =
+      selectedModels.length > 0 ? modelsArray.some((m) => selectedModels.includes(m.model.name)) : true;
+
+    const matchFree = onlyFree ? prompt.price === 0 : true;
+
+    return matchModel && matchFree;
+  });
+
+  // 태그와 키워드 필터링은 제거 (백엔드에서 처리)
+  // const matchTag =
+  //   selectedTags.length > 0
+  //     ? Array.isArray(prompt.tags) && prompt.tags.some((tag: any) => selectedTags.includes(tag.tag.name))
+  //     : true;
+  // const matchKeyword = keyword ? prompt.title.toLowerCase().includes(keyword.toLowerCase()) : true;
+  //   return matchModel && matchFree; // && matchTag && matchKeyword;
+  // }) || [];
 
   const sortPromptByFilter = [...filterPromptsByModel].sort((a, b) => {
     switch (selectedSort) {
@@ -152,7 +153,7 @@ const MainPage = () => {
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime(); // 기본 정렬
     }
   });
-
+ 
   const promptList = sortPromptByFilter;
 
   return (
