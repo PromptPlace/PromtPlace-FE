@@ -6,29 +6,9 @@ import ArrowIcon from '@assets/icon-arrow-left-black.svg?react';
 import ProfileIcon from '@assets/icon-profile-gray.svg?react';
 import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
 import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
-import type { FollowerWithStatus, FollowingWithStatus } from '@/types/ProfilePage/profile';
+import type { Follow, FollowerWithStatus, FollowingWithStatus } from '@/types/ProfilePage/profile';
 
-type Following = {
-  follow_id: number;
-  following_id: number;
-  nickname: string;
-  email: string;
-  created_at: string;
-  updated_at: string;
-  isFollowing: boolean;
-};
-
-type Follower = {
-  follow_id: number;
-  follower_id: number;
-  nickname: string;
-  email: string;
-  created_at: string;
-  updated_at: string;
-  isFollowing: boolean;
-};
-
-type FollowWithTargetID = (Following | Follower) & { targetId: number };
+type FollowWithTargetID = Follow & { isFollowing: boolean; targetId: number; count: number };
 
 interface FollowCardProps {
   title: string;
@@ -42,6 +22,7 @@ const FollowCard = ({ title, list, setShow, member_id }: FollowCardProps) => {
     list?.map((f) => ({
       ...f,
       targetId: f.follower_id ?? f.following_id,
+      count: f.follower_cnt ?? f.following_cnt,
     })) ?? [];
 
   const [following, setFollowing] = useState<Record<number, boolean>>(() => {
@@ -55,6 +36,8 @@ const FollowCard = ({ title, list, setShow, member_id }: FollowCardProps) => {
 
     return initialState;
   });
+
+  const [followCount, setFollowCount] = useState(normalizedList);
 
   // 팔로우, 언팔로우
   const { mutate: mutateFollow } = usePatchFollow({ member_id });
@@ -70,6 +53,10 @@ const FollowCard = ({ title, list, setShow, member_id }: FollowCardProps) => {
     }
 
     setFollowing((prev) => ({ ...prev, [id]: !prev[id] }));
+
+    setFollowCount((prev) =>
+      prev.map((f) => (f.targetId === id ? { ...f, count: f.count + (isFollowing ? -1 : 1) } : f)),
+    );
   };
 
   return (
@@ -90,7 +77,7 @@ const FollowCard = ({ title, list, setShow, member_id }: FollowCardProps) => {
                       {f.nickname}
                     </p>
                     <p className="text-text-on-white text-[14px] font-normal leading-[26px] tracking-[0.46px]">
-                      팔로워 1234명
+                      팔로워 {followCount.find((item) => item.targetId === f.targetId)?.count}명
                     </p>
                   </div>
                 </div>
@@ -149,7 +136,7 @@ const FollowCard = ({ title, list, setShow, member_id }: FollowCardProps) => {
                         {f.nickname}
                       </p>
                       <p className="text-text-on-white text-[14px] font-normal leading-[26px] tracking-[0.46px] max-lg:text-[8px] max-lg:leading-[13px] max-lg:tracking-[0.23px]">
-                        팔로워 1234명
+                        팔로워 {followCount.find((item) => item.targetId === f.targetId)?.count}명
                       </p>
                     </div>
                   </div>
