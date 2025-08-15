@@ -12,6 +12,7 @@ export type PromptReviewDto = {
 export type PromptReviewListDto = {
   reviews: PromptReviewDto[];
   has_more: boolean;
+  total_count: number;
 };
 
 export type ApiEnvelopeCamel<T> = {

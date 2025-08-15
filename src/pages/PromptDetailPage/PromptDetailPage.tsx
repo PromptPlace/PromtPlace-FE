@@ -250,7 +250,7 @@ const PromptDetailPage = () => {
 
       <div className="flex max-lg:flex-col max-lg:gap-[20px] max-w-7xl max-lg:px-[20px] max-lg:pt-0 max-lg:max-w-[320px] gap-10 p-10 mx-auto">
         {/* 왼쪽: 정보 */}
-        <div className="w-[711px] max-lg:max-w-[280px] max-lg:max-h-[544px] bg-[#FFFEFB] rounded-[16px] flex flex-col h-[736px]">
+        <div className="w-[711px] max-lg:max-w-[280px] max-lg:h-[544px] bg-[#FFFEFB] rounded-[16px] flex flex-col h-[736px]">
           <PromptHeader
             title={prompt.title}
             views={prompt.views}
