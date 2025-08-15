@@ -21,6 +21,7 @@ import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
 import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
 import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
 import { useQueryClient } from '@tanstack/react-query';
+import PaymentModal from './components/PaymentModal';
 
 const PromptDetailPage = () => {
   const navigate = useNavigate();
@@ -96,6 +97,7 @@ const PromptDetailPage = () => {
   const [reviewCount, setReviewCount] = useState<number>(0);
 
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [downloadData, setDownloadData] = useState<{
     title: string;
     content: string;
@@ -141,6 +143,13 @@ const PromptDetailPage = () => {
 
   const handleDownloadClick = async () => {
     if (!Number.isFinite(promptId)) return;
+
+    // 유료 프롬프트이고 아직 결제하지 않은 경우 PaymentModal 표시
+    if (prompt && !prompt.is_free && !isPaid) {
+      setIsPaymentModalOpen(true);
+      return;
+    }
+
     try {
       const res = await fetchDownload(promptId);
       setIsPaid(res.is_paid ?? false);
@@ -156,6 +165,11 @@ const PromptDetailPage = () => {
           handleShowLoginModal(() => handleDownloadClick());
           return;
         }
+        if (status === 403) {
+          // 결제가 필요한 경우
+          setIsPaymentModalOpen(true);
+          return;
+        }
         if (status === 404) {
           alert('프롬프트를 찾을 수 없습니다.');
           return;
@@ -163,6 +177,12 @@ const PromptDetailPage = () => {
       }
       alert('다운로드를 불러오지 못했습니다.');
     }
+  };
+
+  const handlePaid = () => {
+    setIsPaid(true);
+    setIsPaymentModalOpen(false);
+    // 결제 완료 후 자동으로 다운로드 모달 열기
   };
 
   const handleToggleFollow = async () => {
@@ -245,7 +265,6 @@ const PromptDetailPage = () => {
           </div>
         </div>
       </div>
-
       <div className="flex max-lg:flex-col max-lg:gap-[20px] max-w-7xl max-lg:px-[20px] max-lg:pt-0 max-lg:max-w-[320px] gap-10 p-10 mx-auto">
         {/* 왼쪽: 정보 */}
         <div className="w-[711px] max-lg:max-w-[280px] max-lg:max-h-[544px] bg-[#FFFEFB] rounded-[16px] overflow-hidden">
@@ -293,7 +312,6 @@ const PromptDetailPage = () => {
           />
         </div>
       </div>
-
       {/* 모바일 하단 고정 영역 */}
       <div className="lg:hidden bottom-0 fixed left-1/2 -translate-x-1/2 z-[10]  max-w-[425px] h-[139px] w-full flex justify-center pointer-events-none">
         <div className="bg-white max-w-[425px] rounded-t-[24px] shadow-[0_-4px_12px_rgba(0,0,0,0.1)] p-[20px] h-[139px] z-[10] w-full h-full pointer-events-auto">
@@ -317,22 +335,28 @@ const PromptDetailPage = () => {
           </div>
         </div>
       </div>
-
       <ReportModal isOpen={isReportModalOpen} onClose={handleCloseReportModal} promptId={promptId} />
-
+      {isPaymentModalOpen && ( //유료프롬프트 & 미결제 시 PaymentModal 열기
+        <PaymentModal
+          promptId={Number(id)}
+          title={prompt.title}
+          price={prompt.price}
+          onClose={() => setIsPaymentModalOpen(false)}
+          onPaid={handlePaid}
+        />
+      )}
       {downloadData && (
         <DownloadModal
           isOpen={isDownloadModalOpen}
           onClose={() => setIsDownloadModalOpen(false)}
           title={downloadData.title}
           content={downloadData.content}
+          price={prompt.price}
           isFree={prompt.is_free}
           isPaid={isPaid}
-          price={prompt.price}
           onPaid={() => setIsPaid(true)}
         />
       )}
-
       {loginModalShow && (
         <SocialLoginModal
           isOpen={loginModalShow}

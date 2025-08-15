@@ -71,7 +71,7 @@ const Likes: React.FC<Prompt> = ({ prompt_id }) => {
         }}
         className="absolute right-6 bottom-6 z-10"
       >
-        <img src={liked ? likeIcon : unLikeIcon} className="w-5 h-5 sm:w-4 sm:h-4" />
+        <img src={liked ? likeIcon : unLikeIcon} className="lg:w-[24px] lg:h-[24px] sm:w-4 sm:h-4" />
       </button>
     </>
   );

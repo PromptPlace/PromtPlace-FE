@@ -9,16 +9,16 @@ import box from '@/assets/icon-bi-noncheck-square.svg';
 type FilterBarProps = {
   onModelChange: (models: string[] | null) => void;
   onSortChange: (sort: string | null) => void;
+  onTagChange: (tags: string[] | null) => void;
   onlyFree?: boolean;
   setOnlyFree: (free: boolean) => void;
 };
 
-const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: FilterBarProps) => {
+const FilterBar = ({ onModelChange, onSortChange, onTagChange, onlyFree, setOnlyFree }: FilterBarProps) => {
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [tags, setTags] = useState<string[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -36,10 +36,6 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
 
   const toggleDropdown = (label: string) => {
     setSelectedFilter((prev) => (prev === label ? null : label));
-  };
-
-  const toggleTag = (tag: string) => {
-    setSelectedTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]));
   };
 
   const handleModelSelect = (model: string) => {
@@ -66,7 +62,7 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
 
   return (
     <section
-      className="h-11 px-5 inline-flex justify-center items-center gap-3.5 text-text-on-background text-xl font-medium"
+      className="h-11 px-5 inline-flex justify-start items-center gap-3.5 text-text-on-background text-xl font-medium"
       ref={dropdownRef}>
       {(['모델', '필터', '태그'] as filterLabel[]).map((label) => (
         <div
@@ -79,10 +75,12 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
                 ? selectedModels.join(', ')
                 : '모델'
               : label === '필터'
-                ? selectedSort
-                  ? selectedSort
-                  : '필터'
-                : label}
+                ? selectedSort || '필터'
+                : label === '태그'
+                  ? selectedTags.length > 0
+                    ? `태그 (${selectedTags.length})`
+                    : '태그'
+                  : label}
           </span>
 
           <div
@@ -120,17 +118,33 @@ const FilterBar = ({ onModelChange, onSortChange, onlyFree, setOnlyFree }: Filte
             <div
               className="absolute top-full left-0 w-[400px] rounded-lg p-4 z-10"
               onClick={(e) => e.stopPropagation()}>
-              <TagFilter tags={tags} setTags={setTags} placeholder="태그를 입력해주세요." />
+              <TagFilter
+                tags={selectedTags}
+                setTags={(newTags) => {
+                  setSelectedTags(newTags);
+                  onTagChange(newTags.length > 0 ? newTags : null);
+                }}
+                placeholder="태그를 입력해주세요."
+                onComplete={() => setSelectedFilter(null)}
+              />
             </div>
           )}
         </div>
       ))}
 
       {/* 무료만 보기 */}
-      <label className="flex items-center gap-1 px-2 py-1 text-lg cursor-pointer">
-        <div className="justify-start text-text-on-background text-lg font-normal font-['Spoqa_Han_Sans_Neo']">무료만 보기</div>
+      <label
+        className="flex items-center gap-1 px-2 py-1 text-lg cursor-pointer"
+        onClick={() => setOnlyFree(!onlyFree)}>
+        <div className="justify-start text-text-on-background text-lg font-normal font-['Spoqa_Han_Sans_Neo']">
+          무료만 보기
+        </div>
         <div className="w-5 h-5 relative flex justify-center items-center">
-          <img className={`w-[20px] h-[20px] rounded-sm absolute ml-[10px]`} src={onlyFree ? checkbox : box} />
+          <img
+            className={`w-[24px] h-[24px] rounded-sm absolute ml-[10px]`}
+            src={onlyFree ? checkbox : box}
+            alt="checkbox"
+          />
         </div>
       </label>
     </section>
