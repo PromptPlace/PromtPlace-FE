@@ -230,6 +230,7 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
                   onRead={handleRead}
                 />
                 <MessagePagination
+                  data={pageMessageData}
                   currentPage={currentPage}
                   totalPages={TOTAL_MESSAGE_PAGES}
                   onPageChange={handlePageChange}
@@ -239,6 +240,7 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
               <>
                 <NotificationTableList data={pageNotificationData} handleNoticeRowClick={handleNoticeRowClick} />
                 <NotificationPagination
+                  data={pageMessageData}
                   currentPage={currentPage}
                   totalPages={TOTAL_Notification_PAGES}
                   onPageChange={handlePageChange}
