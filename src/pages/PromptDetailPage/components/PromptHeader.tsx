@@ -35,7 +35,7 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview, model, 
   const safeTags = useMemo(() => (Array.isArray(tags) ? tags : []), [tags]);
 
   return (
-    <div className="w-[711px] max-lg:max-w-[280px] max-lg:max-h-[191px] bg-[#FFFEFB] px-8 max-lg:pt-[12px] max-lg:px-[12px]">
+    <div className="w-[711px] max-lg:max-w-[280px] max-lg:max-h-[191px] bg-[#FFFEFB] px-8 max-lg:pt-[12px] max-lg:px-[12px] rounded-[16px]">
       {/* PC */}
       <div className="hidden lg:block h-[132px] box-border flex flex-col justify-between">
         <div className="flex items-center justify-between w-full pt-[35px] pb-[5px]">

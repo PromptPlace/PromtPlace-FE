@@ -15,20 +15,6 @@ const DUMMY_PAYMENT_HISTORY: Purchase[] = [
     pg: 'tosspay',
   },
   {
-    prompt_id: 2,
-    purchased_at: '2025-07-04T12:30:00.000Z',
-    title: '효율적인 경쟁사 분석 프롬프트',
-    price: 20000,
-    pg: 'kakaopay',
-  },
-  {
-    prompt_id: 3,
-    purchased_at: '2025-07-03T17:45:00.000Z',
-    title: '정부지원사업 무조건 선정되는 사업계획서 프롬프트',
-    price: 30000,
-    pg: 'kakaopay',
-  },
-  {
     prompt_id: 4,
     purchased_at: '2025-07-02T10:15:00.000Z',
     title: '프롬프트 구매',

@@ -293,7 +293,7 @@ const MyPromptPage = () => {
     // 3. 생성된 URL로 페이지를 이동시킵니다.
     navigate(targetUrl);
   };
-  const { mutate: unlikePromptMutation, isPending } = useUnlikePrompt();
+  const { mutate: unlikePromptMutation } = useUnlikePrompt();
 
   const DeleteLikedPrompt = (prompt_id: number) => {
     unlikePromptMutation(prompt_id);
@@ -312,7 +312,7 @@ const MyPromptPage = () => {
 
   const { ref, inView } = useInView({ threshold: 0 });
   useEffect(() => {
-    if (inView) {
+    if (inView && hasNextPageAuthoredPrompts && !isFetchingAuthoredPrompts && !isFetchingNextAuthoredPage) {
       fetchNextAuthoredPage();
       console.log('더 많은 프롬프트를 불러옵니다.');
     }

@@ -50,8 +50,8 @@ const PromptDetailPage = () => {
       downloads: Number.isFinite(data.downloads) ? Number(data.downloads) : 0,
       views: Number.isFinite(data.views) ? Number(data.views) : 0,
       likes: Number.isFinite(data.likes) ? Number(data.likes) : 0,
-      review_counts: Number.isFinite(data.review_counts) ? Number(data.review_counts) : 0,
-      rating_avg: Number.isFinite(data.rating_avg) ? Number(data.rating_avg) : 0,
+      review_count: Number.isFinite(data.review_count) ? Number(data.review_count) : 0,
+      review_rating_avg: Number.isFinite(data.review_rating_avg) ? Number(data.review_rating_avg) : 0,
       updated_at: data.updated_at ?? '',
       user: data.user,
       tags: (data.tags ?? [])
@@ -113,7 +113,7 @@ const PromptDetailPage = () => {
   }, [myFollowings, targetUserId]);
 
   useEffect(() => {
-    if (prompt) setReviewCount(prompt.review_counts);
+    if (prompt) setReviewCount(prompt.review_count);
   }, [prompt]);
 
   const {
@@ -123,7 +123,7 @@ const PromptDetailPage = () => {
   } = useGetAllPromptReviews(promptId, { enabled: showReviews, perPage: 50 });
 
   useEffect(() => {
-    if (prompt) setReviewCount(prompt.review_counts);
+    if (prompt) setReviewCount(prompt.review_count);
   }, [prompt]);
 
   useEffect(() => {
@@ -152,7 +152,9 @@ const PromptDetailPage = () => {
 
     try {
       const res = await fetchDownload(promptId);
-      setIsPaid(res.is_paid ?? false);
+      if (!prompt?.is_free) {
+        setIsPaid(res.is_paid ?? false);
+      }
       setDownloadData({
         title: res.title,
         content: res.content ?? '',
@@ -267,7 +269,7 @@ const PromptDetailPage = () => {
       </div>
       <div className="flex max-lg:flex-col max-lg:gap-[20px] max-w-7xl max-lg:px-[20px] max-lg:pt-0 max-lg:max-w-[320px] gap-10 p-10 mx-auto">
         {/* 왼쪽: 정보 */}
-        <div className="w-[711px] max-lg:max-w-[280px] max-lg:max-h-[544px] bg-[#FFFEFB] rounded-[16px] overflow-hidden">
+        <div className="w-[711px] max-lg:max-w-[280px] max-lg:h-[544px] bg-[#FFFEFB] rounded-[16px] flex flex-col h-[736px]">
           <PromptHeader
             title={prompt.title}
             views={prompt.views}
@@ -299,8 +301,8 @@ const PromptDetailPage = () => {
             price={prompt.price}
             isFree={prompt.is_free}
             downloads={prompt.downloads}
-            reviewCounts={prompt.review_counts}
-            rating={prompt.rating_avg}
+            review_count={prompt.review_count}
+            review_rating_avg={prompt.review_rating_avg}
             updatedAt={prompt.updated_at}
             tags={prompt.tags}
             onClickReview={() => setShowReviews(true)}
@@ -320,7 +322,9 @@ const PromptDetailPage = () => {
               className={`flex items-center ${isPaid ? 'gap-[10px]' : 'gap-[20px]'} h-[34px] ${
                 isPaid ? 'ml-[8%]' : 'ml-[28%]'
               }`}>
-              {isPaid && <span className="text-[16px] font-medium text-black whitespace-nowrap">구매 완료</span>}
+              {isPaid && !prompt.is_free && (
+                <span className="text-[16px] font-medium text-black whitespace-nowrap">구매 완료</span>
+              )}
 
               <span className="text-[16px] font-medium text-black">{prompt.price.toLocaleString()}원</span>
 

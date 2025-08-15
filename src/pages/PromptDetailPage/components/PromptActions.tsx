@@ -39,8 +39,8 @@ interface PromptActionsProps {
   price: number;
   isFree: boolean;
   downloads: number;
-  reviewCounts: number;
-  rating: number;
+  review_count: number;
+  review_rating_avg: number;
   updatedAt: string;
   user: PromptDetailDto['user'];
   tags: {
@@ -54,8 +54,8 @@ const PromptActions = ({
   title,
   price,
   isFree,
-  reviewCounts,
-  rating,
+  review_count,
+  review_rating_avg,
   user,
   onClickReview,
   tags,
@@ -121,7 +121,7 @@ const PromptActions = ({
   } | null>(null);
 
   const [reviews, setReviews] = useState<PromptReviewDto[]>([]);
-  const [reviewCount, setReviewCount] = useState(reviewCounts);
+  const [reviewCount, setReviewCount] = useState(review_count);
 
   const {
     data: fetchedReviews = [],
@@ -351,7 +351,7 @@ const PromptActions = ({
       <div className="h-[1px] bg-[#CCCCCC] w-full" />
 
       {/* 제목 */}
-      <div className="font-bold text-[24px] pt-[25px]">{truncateTitle(title)}</div>
+      <div className="font-bold text-[24px] pt-[25px]">[{truncateTitle(title)}]</div>
 
       {/* 가격 */}
       <div className="text-[24px] pt-[30px] font-bold">{isFree ? '무료' : `${price.toLocaleString()}원`}</div>
@@ -409,7 +409,7 @@ const PromptActions = ({
       {/* 별점 및 리뷰보기 */}
       <div>
         <div className="pt-[30px] flex justify-start gap-[30px]">
-          <Rating star={Number.isFinite(rating) ? Number(rating) : 0} />
+          <Rating star={Number.isFinite(review_rating_avg) ? Number(review_rating_avg) : 0} />
         </div>
         <div className="pt-[30px] text-[20px] flex items-center gap-[10px]">
           <button

@@ -42,8 +42,8 @@ export interface Prompt {
   downloads: number;
   views: number;
   likes: number;
-  review_counts: number;
-  rating_avg: number;
+  review_count: number;
+  review_rating_avg: number;
   created_at: string;
   updated_at: string;
   inactive_date: string | null;
