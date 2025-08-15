@@ -17,6 +17,7 @@ import ArchiveIcon from '@assets/icon-sidebar-archive.svg?react';
 import PrimaryButton from '@components/Button/PrimaryButton';
 import IconButton from '@components/Button/IconButton';
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
+import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
 
 interface SidebarProps {
   sidebarVisible: boolean;
@@ -27,6 +28,7 @@ interface SidebarProps {
 const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarProps) => {
   const { accessToken, user } = useAuth();
   const [loginModalShow, setLoginModalShow] = useState(false);
+   const { data: userData } = useGetMember({ member_id: user.user_id });
 
   const LINKS = [
     { to: '/mypage/prompt', label: '내 프롬프트', icon: <ArchiveIcon /> },
@@ -76,7 +78,7 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
                 <img src={UserProfileIcon || ProfileIcon} alt="프로필" className="w-full h-full object-contain" />
               </div>
 
-              <p className="text-text-on-white text-xl font-medium leading-[25px]">{user?.name}</p>
+              <p className="text-text-on-white text-xl font-medium leading-[25px]">{userData?.data.nickname}</p>
 
               <div
                 onClick={() => handleNavigate(`/profile/${user?.user_id}`)}
