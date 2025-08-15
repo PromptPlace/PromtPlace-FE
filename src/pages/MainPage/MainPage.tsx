@@ -17,7 +17,6 @@ import MobilePrompt from './components/MobilePrompt';
 import useGetPromptList from '@/hooks/queries/MainPage/useGetPromptList';
 import usePostSearchPromptList from '@/hooks/mutations/MainPage/usePostSearchPromptList';
 import type { Prompt, ResponsePromptDTO, SearchPromptDto } from '@/types/MainPage/prompt';
-import SearchPrompter from './components/SearchPrompter';
 
 const MainPage = () => {
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
@@ -142,7 +141,7 @@ const MainPage = () => {
       case '조회순':
         return b.views - a.views;
       case '별점순':
-        return b.rating_avg - a.rating_avg;
+        return b.review_rating_avg - a.review_rating_avg;
       case '다운로드순':
         return b.downloads - a.downloads;
       case '가격 낮은 순':
