@@ -39,8 +39,8 @@ interface PromptActionsProps {
   price: number;
   isFree: boolean;
   downloads: number;
-  reviewCounts: number;
-  rating: number;
+  review_count: number;
+  review_rating_avg: number;
   updatedAt: string;
   user: PromptDetailDto['user'];
   tags: {
@@ -54,8 +54,8 @@ const PromptActions = ({
   title,
   price,
   isFree,
-  reviewCounts,
-  rating,
+  review_count,
+  review_rating_avg,
   user,
   onClickReview,
   tags,
@@ -121,7 +121,7 @@ const PromptActions = ({
   } | null>(null);
 
   const [reviews, setReviews] = useState<PromptReviewDto[]>([]);
-  const [reviewCount, setReviewCount] = useState(reviewCounts);
+  const [reviewCount, setReviewCount] = useState(review_count);
 
   const {
     data: fetchedReviews = [],
@@ -376,8 +376,9 @@ const PromptActions = ({
             />
             {isPaymentModalOpen && ( //유료프롬프트 & 미결제 시 PaymentModal 열기
               <PaymentModal
-                prompt={{ user, title, price, isFree } as unknown as PromptDetailDto}
-                user={user}
+                promptId={Number(id)}
+                title={title}
+                price={price}
                 onClose={() => setIsPaymentModalOpen(false)}
                 onPaid={handlePaid}
               />
@@ -408,7 +409,7 @@ const PromptActions = ({
       {/* 별점 및 리뷰보기 */}
       <div>
         <div className="pt-[30px] flex justify-start gap-[30px]">
-          <Rating star={Number.isFinite(rating) ? Number(rating) : 0} />
+          <Rating star={Number.isFinite(review_rating_avg) ? Number(review_rating_avg) : 0} />
         </div>
         <div className="pt-[30px] text-[20px] flex items-center gap-[10px]">
           <button

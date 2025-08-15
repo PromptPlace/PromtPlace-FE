@@ -218,14 +218,14 @@ const ProfilePage = () => {
 
   // 이름 및 소개 수정
   const handleEditMember = () => {
-    setUserName(data?.data.name || '');
+    setUserName(data?.data.nickname || '');
     setUserDescription(data?.data.intros || '');
     setProfileEdit(true);
   };
 
   // 아룸 및 소개 수정 완료
-  const handleEditSubmit = ({ name }: RequestEditMemberDto, { intro }: RequestIntroDto) => {
-    mutate({ name });
+  const handleEditSubmit = ({ nickname }: RequestEditMemberDto, { intro }: RequestIntroDto) => {
+    mutate({ nickname });
     mutateIntro({ intro });
     setProfileEdit(false);
   };
@@ -378,7 +378,7 @@ const ProfilePage = () => {
               {!profileEdit && (
                 <div className="flex gap-[4px] max-lg:justify-center">
                   <p className="text-[32px] font-bold leading-[40px] max-lg:text-[16px] max-lg:font-medium max-lg:leading-[20px] ">
-                    {data?.data.name}
+                    {data?.data.nickname}
                   </p>
                   {!isMyProfile && (
                     <div
@@ -426,7 +426,7 @@ const ProfilePage = () => {
                       buttonType="edit"
                       size="md"
                       onClick={() => {
-                        handleEditSubmit({ name: userName }, { intro: userDescription });
+                        handleEditSubmit({ nickname: userName }, { intro: userDescription });
                       }}
                       isActive={profileEdit}
                     />
@@ -462,7 +462,7 @@ const ProfilePage = () => {
                     buttonType="squareMini"
                     text="완료"
                     onClick={() => {
-                      handleEditSubmit({ name: userName }, { intro: userDescription });
+                      handleEditSubmit({ nickname: userName }, { intro: userDescription });
                     }}
                   />
                 )}
@@ -531,7 +531,7 @@ const ProfilePage = () => {
               </div>
               {showFollower && (
                 <FollowCard
-                  title={`${data?.data.name}님의 팔로워 목록`}
+                  title={`${data?.data.nickname}님의 팔로워 목록`}
                   list={normalizedFollowerList}
                   setShow={setShowFollower}
                   member_id={member_id}
@@ -539,7 +539,7 @@ const ProfilePage = () => {
               )}
               {showFollowing && (
                 <FollowCard
-                  title={`${data?.data.name}님의 팔로잉 목록`}
+                  title={`${data?.data.nickname}님의 팔로잉 목록`}
                   list={normalizedFollowingList}
                   setShow={setShowFollowing}
                   member_id={member_id}
@@ -671,7 +671,7 @@ const ProfilePage = () => {
                       !isMyProfile && 'max-h-[368px]',
                       isMyProfile && 'max-h-[279px]',
                     )}>
-                    {historyData?.histories.map((history) => (
+                    {historyData?.data.map((history) => (
                       <RecordCard
                         key={history.history_id}
                         history_id={history.history_id}

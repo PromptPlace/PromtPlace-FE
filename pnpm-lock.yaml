@@ -32,6 +32,9 @@ importers:
       framer-motion:
         specifier: ^12.23.12
         version: 12.23.12(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      iamport-typings:
+        specifier: ^1.4.0
+        version: 1.4.0
       lexical:
         specifier: ^0.33.0
         version: 0.33.0
@@ -2367,6 +2370,9 @@ packages:
 
   html-url-attributes@3.0.1:
     resolution: {integrity: sha512-ol6UPyBWqsrO6EJySPz2O7ZSr856WDrEzM5zMqp+FJJLGMW35cLYmmZnl0vztAZxRUoNZJFTCohfjuIJ8I4QBQ==}
+
+  iamport-typings@1.4.0:
+    resolution: {integrity: sha512-7V+/qtyPb+JS7fxcZpWaLHGXqJA5rrmAqAjx+CaoveYntU4VIG4yW5X3Cmw69uByDahOQv6jzv2qYbi6gJKlwg==}
 
   idb@7.1.1:
     resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
@@ -6312,6 +6318,8 @@ snapshots:
   html-tags@3.3.1: {}
 
   html-url-attributes@3.0.1: {}
+
+  iamport-typings@1.4.0: {}
 
   idb@7.1.1: {}
 

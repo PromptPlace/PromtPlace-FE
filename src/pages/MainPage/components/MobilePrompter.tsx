@@ -7,6 +7,7 @@ import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 import useOptimisticFollow from '@/hooks/mutations/MainPage/useOptimisticFollow';
 import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
 import type { PromptWriter } from '@/types/MainPage/prompt';
+import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
 
 interface MobilePrompterProps {
   prompter: PromptWriter;
@@ -16,6 +17,7 @@ const MobilePrompter = ({ prompter }: MobilePrompterProps) => {
   const { accessToken, user } = useAuth();
   const [loginModalShow, setLoginModalShow] = useState(false);
   const navigate = useNavigate();
+  const { data } = useGetMember({ member_id: prompter.user_id });
 
   const { follow, unfollow } = useOptimisticFollow();
   const { data: myFollowingData } = useGetFollowing({ member_id: user.user_id });
@@ -46,7 +48,7 @@ const MobilePrompter = ({ prompter }: MobilePrompterProps) => {
           <img src={prompter.profile_img_url ?? userImage} alt="authorImage" className="w-full h-full rounded-full" />
         </div>
         <div className="max-w-44 text-black text-Black text-xs font-medium font-['Spoqa_Han_Sans_Neo'] uppercase leading-relaxed tracking-wide truncate ">
-          {prompter.nickname}
+          {data?.data.nickname || prompter.nickname}
         </div>
       </div>
       <FollowButton follow={isFollow} onClick={handleFollow} size="sm" type="button" />

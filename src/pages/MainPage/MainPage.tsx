@@ -13,7 +13,6 @@ import { useEffect, useState } from 'react';
 import PromptCard from './components/promptCard';
 import FilterBar from './components/filterBar';
 import PrompterBar from './components/prompterBar';
-import { dummyCreators } from './components/../dummyData';
 import GradientButton from '@/components/Button/GradientButton';
 import CoachMark from '@/components/CoachMark';
 import { useAuth } from '@/context/AuthContext';
@@ -22,7 +21,8 @@ import MobileFilter from './components/MobileFilter';
 import MobilePrompt from './components/MobilePrompt';
 import useGetPromptList from '@/hooks/queries/MainPage/useGetPromptList';
 import usePostSearchPromptList from '@/hooks/mutations/MainPage/usePostSearchPromptList';
-import type { Prompt } from '@/types/MainPage/prompt';
+import type { Prompt, ResponsePromptDTO, SearchPromptDto } from '@/types/MainPage/prompt';
+import SearchPrompter from './components/SearchPrompter';
 
 const MainPage = () => {
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
@@ -40,39 +40,64 @@ const MainPage = () => {
     setKeyword(search);
   }, [searchParams]);
 
-  console.log(keyword);
-
   // 검색 API 호출
   const searchPromptMutation = usePostSearchPromptList();
+  const [searchPromptData, setSearchPromptData] = useState<ResponsePromptDTO | null>(null);
 
-  // Use mutation only when needed, and store result in state
-  const [searchPromptData, setSearchPromptData] = useState<any>(null);
+  // 정렬 값 매핑 함수
+  const mapSortValue = (sort: string | null): 'recent' | 'popular' | 'download' | 'views' | 'rating_avg' => {
+    switch (sort) {
+      case '조회순':
+        return 'views';
+      case '별점순':
+        return 'rating_avg';
+      case '다운로드순':
+        return 'download';
+      case '인기순':
+        return 'popular';
+      default:
+        return 'recent';
+    }
+  };
+
+  console.log('검색 조건:', {
+    selectedModels,
+    selectedTags,
+    selectedSort: mapSortValue(selectedSort),
+    onlyFree,
+    keyword,
+  });
 
   useEffect(() => {
-    searchPromptMutation.mutate(
-      {
-        keyword: keyword,
-        model: selectedModels,
-        tag: selectedTags,
-        sort: selectedSort,
-        is_free: onlyFree,
-        page: 1,
-        size: 20,
+    const searchParams: SearchPromptDto = {
+      keyword: keyword || null,
+      model: selectedModels.length > 0 ? selectedModels : null, // 여러 개를 배열로 전달
+      tag: selectedTags.length > 0 ? selectedTags : null, // 여러 개 태그 그대로 전송
+      sort: mapSortValue(selectedSort) as SearchPromptDto['sort'],
+      is_free: onlyFree,
+      page: 1,
+      size: 20,
+    };
+
+    console.log('검색 API 호출 파라미터:', searchParams);
+
+    searchPromptMutation.mutate(searchParams, {
+      onSuccess: (data) => {
+        setSearchPromptData(data);
       },
-      {
-        onSuccess: (data) => {
-          setSearchPromptData(data);
-        },
-      },
-    );
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keyword, selectedModels, selectedTags, selectedSort, onlyFree]);
 
   const promptResult = useGetPromptList();
   const promptList =
     keyword || selectedModels.length > 0 || selectedTags.length > 0 || onlyFree || selectedSort !== 'recent'
-      ? (searchPromptData?.data ?? [])
-      : (promptResult.data?.data ?? []);
+      ? Array.isArray(searchPromptData?.data)
+        ? searchPromptData.data
+        : []
+      : Array.isArray(promptResult.data?.data)
+        ? promptResult.data.data
+        : [];
 
   // 코치마크 관련
   const { accessToken } = useAuth();
@@ -116,11 +141,19 @@ const MainPage = () => {
   return (
     <div className="flex gap-[59px] justify-center bg-[#F5F5F5] relative overflow-hidden">
       {showCoachMark && !accessToken && <CoachMark setShowCoachMark={setShowCoachMark} />}
+
       <div className="w-[858px] h-full max-h-[950px] min-h-[700px] mb-[42px] overflow-y-auto pb-32">
-        <div className="hidden lg:flex mt-[53px]">
+        {keyword && (
+          <div className="hidden lg:flex mt-[53px] px-5 justify-start text-black text-2xl font-bold font-['Spoqa_Han_Sans_Neo']">
+            '{keyword}' 검색결과
+          </div>
+        )}
+
+        <div className="hidden lg:flex flex-col mt-[53px]">
           <FilterBar
             onModelChange={(models: string[] | null) => setSelectedModels(models ?? [])}
             onSortChange={(sort: string | null) => setSelectedSort(sort ?? 'recent')}
+            onTagChange={(tags: string[] | null) => setSelectedTags(tags ?? [])}
             onlyFree={onlyFree}
             setOnlyFree={setOnlyFree}
           />
@@ -130,6 +163,7 @@ const MainPage = () => {
           <MobileFilter
             onModelChange={(models: string[] | null) => setSelectedModels(models ?? [])}
             onSortChange={(sort: string | null) => setSelectedSort(sort ?? 'recent')}
+            onTagChange={(tags: string[] | null) => setSelectedTags(tags ?? [])}
             onlyFree={onlyFree}
             setOnlyFree={setOnlyFree}
           />
@@ -150,6 +184,7 @@ const MainPage = () => {
 
       <div className="hidden lg:flex">
         <div className="flex flex-col gap-[14px]">
+          {/* {keyword ? <PrompterBar /> : <SearchPrompter creators={Prompter} />} */}
           <PrompterBar />
         </div>
       </div>

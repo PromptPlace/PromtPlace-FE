@@ -55,7 +55,7 @@ const MobilePrompt = ({ prompt }: Props) => {
           {/* 별점, 조회수, 다운로드 수 */}
           <div className="flex items-center gap-2 mt-[6px]">
             <div className="flex items-center h-3">
-              <Rating star={prompt.rating_avg} />
+              <Rating star={prompt.review_rating_avg} />
             </div>
             <div className="flex items-center gap-1.5">
               <div className="flex items-center gap-1 text-[8px] text-text-on-background">

@@ -13,6 +13,7 @@ const PromptInfo = ({ description: descProp, usageGuide: usageProp, isPaid = fal
   const { data, isLoading } = useGetPromptDetail(promptId, { enabled: Number.isFinite(promptId) });
 
   const isFree = data?.is_free ?? false;
+  const promptResult = data?.prompt_result ?? '';
 
   const description = descProp ?? data?.description ?? '';
   const usageGuide = usageProp ?? data?.usage_guide ?? '';
@@ -34,16 +35,23 @@ const PromptInfo = ({ description: descProp, usageGuide: usageProp, isPaid = fal
           프롬프트 결과 미리 보기
         </h4>
 
-        <div className="w-[447px] h-[174px] flex pt-[15px] gap-[10px] overflow-hidden opacity-100 max-lg:gap-[4px] max-lg:pt-[8px] max-lg:w-[256px] max-lg:h-[100px]">
-          {hasImages &&
-            images.map((url, i) => (
+        {/* 이미지가 있을 때만 렌더링 */}
+        {hasImages && (
+          <div className="w-[447px] h-[174px] flex pt-[15px] gap-[10px] overflow-hidden opacity-100 max-lg:gap-[4px] max-lg:pt-[8px] max-lg:w-[256px] flex max-lg:h-[85px]">
+            {images.map((url, i) => (
               <img
                 key={url + i}
                 src={url}
                 alt={`prompt-preview-${i + 1}`}
-                className="rounded w-[218.5px] h-[174px] object-cover max-lg:w-1/2 max-lg:h-[100px] max-lg:object-contain"
+                className="rounded w-[218.5px] h-[174px] object-cover max-lg:w-full max-lg:h-[84px] max-lg:object-contain"
               />
             ))}
+          </div>
+        )}
+
+        {/* 프롬프트 결과 텍스트 미리보기 */}
+        <div className="font-normal text-[16px] pt-[15px] leading-[22px] whitespace-pre-line max-lg:text-[10px] max-lg:pt-[12px] max-lg:leading-[16px]">
+          {isLoading ? '불러오는 중…' : promptResult}
         </div>
       </section>
 

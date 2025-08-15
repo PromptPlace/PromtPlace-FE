@@ -42,8 +42,8 @@ export interface Prompt {
   downloads: number;
   views: number;
   likes: number;
-  review_counts: number;
-  rating_avg: number;
+  review_count: number;
+  review_rating_avg: number;
   created_at: string;
   updated_at: string;
   inactive_date: string | null;
@@ -62,21 +62,31 @@ export interface searchPrompt {
   is_free: boolean;
   views: number;
   likes: number;
-  rating_avg: number;
+  review_rating_avg: number;
   created_at: string;
   updated_at: string;
   images: PromptImage[];
 }
 
 export type RequestSearchPrompt = {
-  model?: string[] | null;
-  tag?: string[] | null;
-  keyword: string;
-  page?: number;
-  size?: number;
-  sort?: string;
-  is_free?: boolean;
+  model: string[] | null;
+  tag: string[] | null;
+  keyword: string | null;
+  page: number;
+  size: number;
+  sort: 'recent' | 'popular' | 'download' | 'views' | 'rating_avg';
+  is_free: boolean;
 };
+
+export interface SearchPromptDto {
+  model: string[] | null;
+  tag: string[] | null;
+  keyword: string | null;
+  page: number;
+  size: number;
+  sort: 'recent' | 'popular' | 'download' | 'views' | 'rating_avg';
+  is_free: boolean;
+}
 
 export type Creator = {
   id: number;
@@ -84,7 +94,7 @@ export type Creator = {
   avatar: string | null;
   followers: number;
   followed: boolean;
-}
+};
 
 export type ResponsePromptDTO = CommonResponse<Prompt[]>;
 export type ResponseSearchPromptDTO = CommonResponse<searchPrompt[]>;

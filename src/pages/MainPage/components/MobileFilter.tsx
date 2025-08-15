@@ -7,11 +7,12 @@ type FilterTab = '모델' | '필터' | '태그' | null;
 type Props = {
   onModelChange: (models: string[] | null) => void;
   onSortChange: (sort: string | null) => void;
+  onTagChange: (tags: string[] | null) => void;
   onlyFree: boolean;
   setOnlyFree: (free: boolean) => void;
 };
 
-const MobileFilter = ({ onlyFree, setOnlyFree, onModelChange, onSortChange }: Props) => {
+const MobileFilter = ({ onlyFree, setOnlyFree, onModelChange, onSortChange, onTagChange }: Props) => {
   const [activeTab, setActiveTab] = useState<FilterTab>(null);
 
   const handleOnlyFreeToggle = () => setOnlyFree(!onlyFree);
@@ -22,6 +23,7 @@ const MobileFilter = ({ onlyFree, setOnlyFree, onModelChange, onSortChange }: Pr
   const handleApplyFilter = (data: { models: string[] | null; sort: string | null; tags: string[] }) => {
     onModelChange(data.models);
     onSortChange(data.sort);
+    onTagChange(data.tags.length > 0 ? data.tags : null);
     setActiveTab(null);
   };
 

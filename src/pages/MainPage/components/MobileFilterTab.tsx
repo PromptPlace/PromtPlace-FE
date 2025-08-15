@@ -6,7 +6,7 @@ type Props = {
   setSelectedSort: (sort: string) => void;
 };
 
-const sortOptions = ['조회수', '별점순', '다운로드순', '가격 높은 순', '가격 낮은 순'];
+const sortOptions = ['조회순', '별점순', '다운로드순', '가격 높은 순', '가격 낮은 순'];
 
 const MobileFilterTab = ({ selectedSort, setSelectedSort }: Props) => {
   return (

@@ -4,9 +4,10 @@ type TagFilterProps = {
   placeholder?: string;
   tags: string[];
   setTags: (tags: string[]) => void;
+  onComplete?: () => void;
 };
 
-export default function TagFilter({ placeholder = '태그를 입력해주세요.', tags, setTags }: TagFilterProps) {
+export default function TagFilter({ placeholder = '태그를 입력해주세요.', tags, setTags, onComplete }: TagFilterProps) {
   const [input, setInput] = useState('');
 
   const addTag = (tag: string) => {
@@ -24,6 +25,11 @@ export default function TagFilter({ placeholder = '태그를 입력해주세요.
       .filter(Boolean);
     splitTags.forEach(addTag);
     setInput('');
+  };
+
+  const handleComplete = () => {
+    handleAddTags();
+    onComplete?.();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -62,7 +68,7 @@ export default function TagFilter({ placeholder = '태그를 입력해주세요.
       />
 
       <button
-        onClick={handleAddTags}
+        onClick={handleComplete}
         className="h-8 rounded-lg border border-blue-500 bg-white px-4 text-sm font-medium text-blue-600 shadow-sm hover:bg-blue-50 transition">
         완료
       </button>
