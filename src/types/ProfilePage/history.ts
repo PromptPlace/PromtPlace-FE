@@ -8,7 +8,7 @@ export type History = {
 
 export type ResponseMemberHistoryDto = {
   message: string;
-  histories: History[];
+  data: History[];
   total_count: number;
   statusCode: number;
 };

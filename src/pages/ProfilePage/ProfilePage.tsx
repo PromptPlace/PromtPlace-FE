@@ -671,7 +671,7 @@ const ProfilePage = () => {
                       !isMyProfile && 'max-h-[368px]',
                       isMyProfile && 'max-h-[279px]',
                     )}>
-                    {historyData?.histories.map((history) => (
+                    {historyData?.data.map((history) => (
                       <RecordCard
                         key={history.history_id}
                         history_id={history.history_id}
