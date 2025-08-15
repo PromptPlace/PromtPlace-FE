@@ -85,12 +85,18 @@ const PromptCreatePage = () => {
         setModalText('프롬프트 제목을 입력해주세요.');
       } else if (content.trim() === '') {
         setModalText('프롬프트 내용을 입력해주세요.');
-      } else if (selectedModels.length <= 0) {
+      } else if (selectedModels.length === 0) {
         setModalText('모델을 설정해주세요.');
-      } else if (previewText.trim() !== '') {
+      } else if (!isValidCost || !priceType) {
+        setModalText('금액을 설정해주세요.');
+      } else if (previewText.trim() === '') {
         setModalText('프롬프트 미리보기를 입력해주세요.');
-      } else if (previewText.trim() !== '') {
+      } else if (discriptionText.trim() === '') {
         setModalText('프롬프트 설명을 입력해주세요.');
+      } else if (!isValidTags) {
+        setModalText('태그는 0~10개까지 설정 가능합니다.');
+      } else if (!isValidImg) {
+        setModalText('이미지는 0~3개까지 설정 가능합니다.');
       }
       setAlertModal(true);
     }
@@ -235,19 +241,19 @@ const PromptCreatePage = () => {
   return (
     <>
       <div className="hidden lg:block">
-        <div className="h-[calc(100vh-24px)] flex items-center justify-center bg-[var(--color-background)]">
+        <div className="h-[calc(100vh-24px)] flex items-center justify-center bg-[var(--color-background)] ">
           <div className="w-full max-w-[1236px] h-[745px] p-6 flex flex-col">
             {/**프롬프트 제목 */}
             <div className="max-w-[1236px] min-h-[120px] rounded-t-[16px] bg-[var(--color-white)] flex justify-center ">
               <div className="w-[1100px] max-h-[60px] mt-[35px] ">
-                <Editor placeholder={'프롬프트 제목을 입력하세요'} onChange={setTitle} />
+                <Editor placeholder={'프롬프트 제목을 입력하세요'} onChange={setTitle} maxHight="max-h-[40px]" />
                 <div className="border-b-[1px] border-[var(--color-text-on-background)] mt-[17px]"></div>
               </div>
             </div>
             {/**프롬프트 내용 */}
             <div className="max-w-[1236px] min-h-[465px] bg-[var(--color-white)] flex justify-center">
               <div className="w-[1100px] mt-[15px] ">
-                <Editor placeholder={'프롬프트를 입력하세요'} onChange={setContent} />
+                <Editor placeholder={'프롬프트를 입력하세요'} onChange={setContent} maxHight="max-h-[430px]" />
               </div>
             </div>
             {/**하단 */}
@@ -345,14 +351,18 @@ const PromptCreatePage = () => {
             <div className="w-full min-w-[250px] h-full min-h-[340px] flex flex-col justify-center bg-white">
               {/*제목 입력 */}
               <div className="w-full min-w-[280px] h-[63px] flex items-center justify-start border-b-[1px] border-white-stroke">
-                <div className="w-full min-w-[240px] h-[17px] ml-[10px]">
-                  <MobileEditor placeholder={'프롬프트 제목을 입력하세요'} onChange={setTitle} />
+                <div className="w-full min-w-[240px] h-[20px] mx-[10px]">
+                  <MobileEditor
+                    placeholder={'프롬프트 제목을 입력하세요'}
+                    onChange={setTitle}
+                    maxHight="max-h-[22px]"
+                  />
                 </div>
               </div>
               {/**프롬프트 내용 */}
               <div className="min-w-[280px] min-h-[278px] flex justify-center items-center p-[10px]">
                 <div className="w-full min-w-[260px] h-full min-h-[238px] ">
-                  <MobileEditor placeholder={'프롬프트를 입력하세요'} onChange={setContent} />
+                  <MobileEditor placeholder={'프롬프트를 입력하세요'} onChange={setContent} maxHight="" />
                 </div>
               </div>
             </div>
@@ -360,7 +370,7 @@ const PromptCreatePage = () => {
         </div>
         {/**하단 */}
         <div className="flex justify-center">
-          <div className="w-full max-w-[254px] h-[36px] mt-[20px]">
+          <div className="w-full max-w-[254px] h-[36px] mt-[20px] mb-[30px]">
             <div className="flex justify-between">
               <div className="w-[117px] text-[10px]">
                 <IconButton

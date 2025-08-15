@@ -128,10 +128,12 @@ export const MessageTableList = ({
 
 //  페이지네이션 컴포넌트
 export function MessagePagination({
+  data,
   currentPage,
   totalPages,
   onPageChange,
 }: {
+  data: MessageList[];
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
@@ -153,25 +155,31 @@ export function MessagePagination({
     );
   }
   return (
-    <div className="absolute top-[900px] ">
-      <nav className="flex items-center justify-center h-[50px] mx-[545px] mb-[60px]">
-        <button
-          className="w-[50px] h-[50px] px-[6px] py-[8px] rounded-[50px] flex items-center 
+    <>
+      {data.length === 0 ? (
+        <></>
+      ) : (
+        <div className="absolute top-[900px] ">
+          <nav className="flex items-center justify-center h-[50px] mx-[545px] mb-[60px]">
+            <button
+              className="w-[50px] h-[50px] px-[6px] py-[8px] rounded-[50px] flex items-center 
         justify-center hover:bg-secondary active:bg-primary-hover active:text-white"
-          onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
-          disabled={currentPage === 1}>
-          <LuChevronLeft />
-        </button>
-        {pageButtons}
-        <button
-          className="w-[50px] h-[50px] px-[6px] py-[8px] rounded-[50px] flex items-center 
+              onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
+              disabled={currentPage === 1}>
+              <LuChevronLeft />
+            </button>
+            {pageButtons}
+            <button
+              className="w-[50px] h-[50px] px-[6px] py-[8px] rounded-[50px] flex items-center 
         justify-center hover:bg-secondary active:bg-primary-hover active:text-white"
-          onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}>
-          <LuChevronRight />
-        </button>
-      </nav>
-    </div>
+              onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}>
+              <LuChevronRight />
+            </button>
+          </nav>
+        </div>
+      )}
+    </>
   );
 }
 
