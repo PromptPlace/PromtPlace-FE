@@ -25,6 +25,8 @@ export type Follow = {
   email: string;
   created_at: string;
   updated_at: string;
+  following_cnt: number;
+  follower_cnt: number;
 };
 
 export type ResponseFollowDto = CommonResponse<Follow[]>;
