@@ -15,14 +15,14 @@ import StarEmpty from '@assets/icon-star-outline.svg';
  * **/
 
 interface RatingProps {
-  star: number;
+  star?: number; // optional로 변경
 }
 
-const Rating = ({ star }: RatingProps) => {
+const Rating = ({ star = 0 }: RatingProps) => {
   const stars = [];
-  const fullStars = Math.floor(star); // 별점 정수 부분
-  const halfStar = star - fullStars >= 0.5; // 0.5 이상인 경우 반쪽 별 표시
-  const emptyStar = 5 - fullStars - (halfStar ? 1 : 0); // 빈 별 표시
+  const fullStars = Math.floor(star);
+  const halfStar = star - fullStars >= 0.5;
+  const emptyStar = 5 - fullStars - (halfStar ? 1 : 0);
 
   for (let i = 0; i < fullStars; i++) {
     stars.push(
