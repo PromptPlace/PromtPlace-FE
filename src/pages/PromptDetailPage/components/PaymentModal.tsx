@@ -38,27 +38,10 @@ const PaymentModal = ({
     const paymentData: RequestPaymentDTO = {
       prompt_id: prompt.prompt_id,
       pg: selected,
-      merchant_uid: `order_${Date.now()}`,
+      merchant_uid: "store-ac1c069c-7294-44cc-a81b-1ec7558c55d2",
       amount: prompt.price,
-      buyer: {
-        name: user.nickname,
-        email: user.email ?? null,
-        tel: user.tel ?? null,
-      },
+      buyer_name: user.nickname,
       redirect_url: `${window.location.origin}/prompt/${prompt.prompt_id}/`,
-      products: [
-        {
-          categoryType: '기타',
-          categoryId: '0',
-          uid: `product_${prompt.prompt_id}`,
-          name: prompt.title,
-          count: prompt.downloads,
-          sellerId: prompt.user?.nickname ?? '', // 안전하게 처리
-        },
-      ],
-      custom_data: {
-        user_id: user.user_id,
-      },
     };
 
     requestPayment(paymentData, {
@@ -87,7 +70,7 @@ const PaymentModal = ({
         </div>
         <div className="lg:w-full lg:text-xl sm:w-full font-bold">{prompt.title}</div>
         <div className="w-full h-px bg-gray-200" />
-        <div className="text-xl font-medium">{prompt.price}원</div>
+        <div className="text-xl font-medium">{prompt.price.toLocaleString()}원</div>
         <div className="flex items-center gap-6">
           {/* 카카오페이 버튼 */}
           <div
@@ -110,13 +93,10 @@ const PaymentModal = ({
         </div>
         <div className="w-full flex flex-col items-end gap-2.5">
           <button
-            className={`px-10 py-4 rounded-[10px] shadow-lg flex items-center gap-3.5 ${selected === 'kakaopay' || selected === 'tosspay' ? `bg-gradient-to-bl from-blue-500 to-blue-400` : `bg-white outline-gray-400 text-gray-500`}`}
+            className={`px-10 py-4 rounded-[10px] shadow-lg flex items-center gap-3.5 ${selected ? `bg-gradient-to-bl from-blue-500 to-blue-400` : `bg-white-stroke`}`}
             disabled={!selected || loading}
             onClick={paymentHandler}>
-            <span
-              className={`text-2xl font-bold ${selected === 'kakaopay' || selected === 'tosspay' ? 'text-white' : 'text-gray-500'}`}>
-              결제하기
-            </span>
+            <span className="text-2xl font-bold">결제하기</span>
           </button>
         </div>
       </div>

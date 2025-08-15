@@ -4,12 +4,15 @@ import useGetPromptDetail from '@/hooks/queries/PromptDetailPage/useGetPromptDet
 interface Props {
   description?: string;
   usageGuide?: string;
+  isPaid?: boolean;
 }
 
-const PromptInfo = ({ description: descProp, usageGuide: usageProp }: Props) => {
+const PromptInfo = ({ description: descProp, usageGuide: usageProp, isPaid = false }: Props) => {
   const { id } = useParams<{ id: string }>();
   const promptId = Number(id);
   const { data, isLoading } = useGetPromptDetail(promptId, { enabled: Number.isFinite(promptId) });
+
+  const isFree = data?.is_free ?? false;
 
   const description = descProp ?? data?.description ?? '';
   const usageGuide = usageProp ?? data?.usage_guide ?? '';
@@ -62,9 +65,13 @@ const PromptInfo = ({ description: descProp, usageGuide: usageProp }: Props) => 
         <div className="font-normal pt-[15px] text-[16px] max-lg:text-[10px] max-lg:pt-[8px] whitespace-pre-line line-clamp-4">
           {isLoading ? '불러오는 중…' : usageGuide}
         </div>
-        <p className="text-[16px] font-medium pt-[10px] max-lg:font-normal pb-[20px] text-primary underline max-lg:text-[10px] max-lg:pt-[8px]  max-lg:pb-[8px] cursor-pointer">
-          해당 프롬프트를 구매하고 마저 확인하세요
-        </p>
+
+        {/* 무료도 아니고, 결제도 안 했을 때만 표시 */}
+        {!isFree && !isPaid && (
+          <p className="text-[16px] font-medium pt-[10px] max-lg:font-normal pb-[20px] text-primary underline max-lg:text-[10px] max-lg:pt-[8px]  max-lg:pb-[8px] cursor-pointer">
+            해당 프롬프트를 구매하고 마저 확인하세요
+          </p>
+        )}
       </section>
     </div>
   );

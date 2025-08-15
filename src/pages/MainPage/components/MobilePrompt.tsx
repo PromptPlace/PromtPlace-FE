@@ -27,7 +27,7 @@ const MobilePrompt = ({ prompt }: Props) => {
   return (
     <div className="w-full  flex flex-col gap-1.5 mb-[6px] px-4">
       {/* 프로필 */}
-      <MobilePrompter key={prompt.user.user_id} user={prompt.user} />
+      <MobilePrompter key={prompt.user.user_id} prompter={prompt.user} />
 
       {/* 카드 본문 */}
       <div className="relative bg-white rounded-2xl p-3 flex flex-col gap-2">

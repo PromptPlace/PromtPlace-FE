@@ -135,3 +135,14 @@ export type ResponsePostImg = {
   message: string;
   statusCode: number;
 };
+
+// 프롬프터 알림 등록 & 취소
+export type RequestNotificationsDto = {
+  prompter_id: number;
+};
+
+export type ResponseNotificationsDto = CommonResponse<{
+  subscribed: boolean;
+  user_id: number;
+  prompter_id: number;
+}>;

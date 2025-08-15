@@ -14,6 +14,8 @@ import type {
   ResponseDeleteFollow,
   RequestPostImg,
   ResponsePostImg,
+  RequestNotificationsDto,
+  ResponseNotificationsDto,
 } from '@/types/ProfilePage/profile';
 import { axiosInstance } from '../axios';
 
@@ -105,6 +107,15 @@ export const postImg = async ({ profile_image }: RequestPostImg): Promise<Respon
       'Content-Type': 'multipart/form-data',
     },
   });
+
+  return data;
+};
+
+// 프롬프터 알림 등록 & 취소
+export const postNotifications = async ({
+  prompter_id,
+}: RequestNotificationsDto): Promise<ResponseNotificationsDto> => {
+  const { data } = await axiosInstance.post(`/api/notifications/${prompter_id}`);
 
   return data;
 };

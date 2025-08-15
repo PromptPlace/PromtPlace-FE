@@ -55,7 +55,7 @@ const Navbar = () => {
   return (
     <>
       <nav className="flex justify-between items-center gap-[2.6vw] py-[7.5px] pl-[61.25px] pr-[36px] max-lg:py-[8px] max-lg:px-[20px]">
-        <div onClick={() => handleNavigate('/')} className="cursor-pointer w-[227px] shrink-0 max-lg:hidden">
+        <div onClick={() => (window.location.href = '/')} className="cursor-pointer w-[227px] shrink-0 max-lg:hidden">
           <img src={LogoIcon} alt="로고" className="w-full h-full object-cover" />
         </div>
 

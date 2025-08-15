@@ -1,31 +1,41 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import likeIcon from '@/assets/icon-heart-blue-big.svg';
 import unLikeIcon from '@/assets/icon-heart-none-big.svg';
 import usePromptLike from '@/hooks/mutations/PromptDetailPage/usePromptLike';
 import usePromptUnlike from '@/hooks/mutations/PromptDetailPage/usePromptUnlike';
-import type { Prompt } from '@/types/MainPage/prompt';
+import useMyLikedPrompts, { likedKeys } from '@/hooks/queries/PromptDetailPage/useMyLikedPrompts';
 import { useQueryClient } from '@tanstack/react-query';
-import { likedKeys } from '@/hooks/queries/PromptDetailPage/useMyLikedPrompts';
 import { isAxiosError } from 'axios';
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
+import { useAuth } from '@/context/AuthContext';
+import SocialLoginModal from '@/components/Modal/SocialLoginModal';
+import type { Prompt } from '@/types/MainPage/prompt';
 
-interface LikesProps {
-  prompt_id: number;
-}
+const Likes: React.FC<Prompt> = ({ prompt_id }) => {
+  const { accessToken } = useAuth();
+  const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
+  const qc = useQueryClient();
 
-const Likes: React.FC<LikesProps> = ({ prompt_id }) => {
-  const [Liked, setLiked] = useState(false);
+  // 내 찜한 프롬프트 Set 쿼리
+  const { data: likedSet } = useMyLikedPrompts(true); // true: 활성화(혹은 조건에 맞게)
+  const [liked, setLiked] = useState(false);
+
+  // 쿼리 데이터와 동기화
+  useEffect(() => {
+    if (likedSet && Number.isFinite(prompt_id)) {
+      setLiked(likedSet.has(prompt_id));
+    }
+  }, [likedSet, prompt_id]);
+
   const likeMut = usePromptLike();
   const unlikeMut = usePromptUnlike();
   const isLiking = likeMut.isPending || unlikeMut.isPending;
-  const qc = useQueryClient();
-  const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
 
   const handleToggleLike = async () => {
     if (!Number.isFinite(prompt_id) || isLiking) return;
 
-    const prev = Liked;
-    setLiked(!prev);
+    const prev = liked;
+    setLiked(!prev); // Optimistic update
 
     try {
       if (!prev) {
@@ -35,7 +45,7 @@ const Likes: React.FC<LikesProps> = ({ prompt_id }) => {
       }
       await qc.invalidateQueries({ queryKey: likedKeys.all });
     } catch (e) {
-      setLiked(prev);
+      setLiked(prev); // rollback
       if (isAxiosError(e) && (e.response?.status ?? 0) === 401) {
         handleShowLoginModal(handleToggleLike);
         return;
@@ -45,9 +55,25 @@ const Likes: React.FC<LikesProps> = ({ prompt_id }) => {
   };
 
   return (
-    <button onClick={handleToggleLike} className="absolute right-6 bottom-6 z-10">
-      <img src={Liked ? likeIcon : unLikeIcon} className="w-5 h-5" />
-    </button>
+    <>
+      {loginModalShow && (
+        <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
+      )}
+
+      <button
+        onClick={() => {
+          if (!accessToken) {
+            alert('로그인이 필요합니다.');
+            setLoginModalShow(true);
+            return;
+          }
+          handleToggleLike();
+        }}
+        className="absolute right-6 bottom-6 z-10"
+      >
+        <img src={liked ? likeIcon : unLikeIcon} className="w-5 h-5 sm:w-4 sm:h-4" />
+      </button>
+    </>
   );
 };
 

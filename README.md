@@ -1,12 +1,23 @@
-> 추후 수정 예정
-
 <div align="center">
 
-# PromtPlace FE
-
-**UMC 8th**
+<img src="https://capsule-render.vercel.app/api?type=transparent&fontColor=2979FF&section=header&height=90&text=Prompt%20Place%20FE&fontSize=60" />
+<img src="https://capsule-render.vercel.app/api?type=transparent&fontColor=0D47A1&section=header&height=80&text=UMC%208th&fontSize=20" />
 
 </div>
+<br>
+
+## 🔹 서비스 소개
+<img width="4768" height="412" alt="image" src="https://github.com/user-attachments/assets/6d2e0581-1199-4f97-a30c-9daf4033915a" />
+
+<h3>프롬프트 플레이스는 프롬프트를 공유하고 거래하는 마켓플레이스 서비스입니다.</h3>
+
+1. **프롬프트 다운로드** 다른 사용자가 업로드한 프롬프트를 구매하거나, 무료로 다운받을 수 있습니다.
+    
+2. **프롬프트 리뷰** 해당 프롬프트 구매자의 리뷰와 평점을 확인할 수 있습니다.
+3. **프롬프트 업로드** 내가 작성한 프롬프트를 공유하거나 판매할 수 있습니다.
+4. **프롬프터 프로필** 프롬프트 작성자에 대한 정보를 알 수 있습니다.
+5. **프롬프트 작성 가이드 및 가이드라인 제공** 분야별 프롬프트 작성 가이드를 제공하고 프롬프트 작성 시 유의사항(저작권 등)을 공지합니다.
+
 <br>
 
 ## 💻 기술 스택
@@ -145,14 +156,75 @@ develop ← 작업 브랜치
 
 ## 📂 프로젝트 구조
 
+```
+📦PROMPTPLACE_FE
+ ┣ 📂.github
+ ┃ ┣ 📂ISSUE_TEMPLATE
+ ┃ ┗ 📜pull_request_template.md
+ ┣ 📂public
+ ┃ ┣ 📂favicons
+ ┃ ┗ 📂fonts
+ ┣ 📂src
+ ┃ ┣ 📂apis
+ ┃ ┣ 📂assets
+ ┃ ┣ 📂components
+ ┃ ┣ 📂constants
+ ┃ ┣ 📂context
+ ┃ ┣ 📂data
+ ┃ ┣ 📂enums
+ ┃ ┣ 📂hooks
+ ┃ ┃ ┣ 📂mutations
+ ┃ ┃ ┣ 📂queries
+ ┃ ┣ 📂layouts
+ ┃ ┣ 📂pages
+ ┃ ┃ ┣ 📂callback
+ ┃ ┃ ┣ 📂MainPage
+ ┃ ┃ ┣ 📂MyPage
+ ┃ ┃ ┣ 📂NotFoundPage
+ ┃ ┃ ┣ 📂ProfilePage
+ ┃ ┃ ┣ 📂PromptCreatePage
+ ┃ ┃ ┣ 📂PromptDetailPage
+ ┃ ┃ ┣ 📂PromptEdit
+ ┃ ┃ ┗ 📂PromptGuidePage
+ ┃ ┣ 📂routes
+ ┃ ┣ 📂types
+ ┃ ┣ 📂utils
+ ┃ ┣ 📜App.tsx
+ ┃ ┗ 📜main.jsx
+ ┣ 📜.env
+ ┣ 📜.gitignore
+ ┣ 📜.prettierrc
+ ┣ 📜.stylelintrc
+ ┣ 📜eslint.config.js
+ ┣ 📜index.html
+ ┣ 📜package.json
+ ┣ 📜pnpm-lock.yaml
+ ┣ 📜README.md
+ ┣ 📜tsconfig.app.json
+ ┣ 📜tsconfig.json
+ ┣ 📜tsconfig.node.json
+ ┣ 📜vercel.json
+ ┗ 📜vite.config.ts
+```
+
 - public
   - favicons - 파비콘
   - fonts - 폰트
 - src
+  - apis - 서버와 통신하는 API 함수 모음
   - assets - 사용되는 모든 에셋
   - components - 공용 컴포넌트 및 스타일
   - data - json 데이터
   - hooks - 전역으로 사용되는 훅
+    - mutaions - React Query의 useMutation 훅 관련 로직
+    - queries - React Query의 useQuery / useInfiniteQuery 관련 로직
+  - layouts - 페이지의 공통 레이아웃 컴포넌트
+  - pages - 실제 라우팅되는 페이지 컴포넌트
   - routes - 도메인 별 라우팅 페이지와 컴포넌트 및 스타일 등
-  - styles - 글로벌 스타일
+  - types - TypeScript 타입 정의 모음
   - utils - 전역으로 사용되는 함수
+
+<details>
+  <summary> <h3>🔍 개발 중 어려움과 해결 과정</h3></summary>
+  <a href="https://www.notion.so/24f87a06720780958686fb8cf470032a"> 🔗 노션 링크</link>
+</details>

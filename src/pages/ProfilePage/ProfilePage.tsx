@@ -66,6 +66,9 @@ import usePatchReadInquiries from '@/hooks/mutations/ProfilePage/usePatchReadInq
 import usePostInquiries from '@/hooks/mutations/ProfilePage/usePostInquiries';
 import usePostImg from '@/hooks/mutations/ProfilePage/usePostImg';
 import { useAuth } from '@/context/AuthContext';
+import usePostNotifications from '@/hooks/mutations/ProfilePage/usePostNotifications';
+import axios from 'axios';
+import TextModal from '@/components/Modal/TextModal';
 
 type Inquiry = {
   inquiry_id: number;
@@ -91,6 +94,9 @@ const ProfilePage = () => {
     state: false,
     icon: AlarmOffIcon,
   });
+
+  // 알림 등록 & 취소
+  const { mutate: mutateNotification } = usePostNotifications({ member_id });
 
   const [isBuyer, setIsBuyer] = useState(true);
   const [isArrowClicked, setIsArrowClicked] = useState(false);
@@ -155,6 +161,7 @@ const ProfilePage = () => {
 
   // 프롬프트 삭제
   const { mutate: mutateDeletePrompts } = usePatchDeletePrompts({ member_id });
+  const [delModal, setDelModal] = useState(false);
 
   // 회원 이력 조회
   const { data: historyData } = useGetHistories({ member_id });
@@ -237,7 +244,21 @@ const ProfilePage = () => {
 
   // 프롬프트 삭제
   const handleDeletePrompts = ({ prompt_id }: RequestDeletePromptDto) => {
-    mutateDeletePrompts({ prompt_id });
+    mutateDeletePrompts(
+      { prompt_id },
+      {
+        onError: (error) => {
+          if (axios.isAxiosError(error)) {
+            const status = error.response?.status;
+
+            // 구매 이력 있는 경우
+            if (status === 400) {
+              setDelModal((prev) => !prev);
+            }
+          }
+        },
+      },
+    );
   };
 
   // 회원 이력 작성
@@ -277,421 +298,480 @@ const ProfilePage = () => {
   }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   return (
-    <div className="flex flex-col pt-[120px] max-lg:pt-[12px]">
-      <div
-        className={clsx(
-          'p-[10px] pl-[220px] flex items-center max-lg:flex-col max-lg:justify-center max-lg:p-0 relative',
-          !isMyProfile && 'gap-[60px] max-lg:gap-[8px]',
-          isMyProfile && 'gap-[7vw] max-lg:gap-[8px]',
-        )}>
-        {profileEdit && (
-          <div className="lg:hidden max-lg:absolute max-lg:bottom-0 max-lg:right-0 z-20 max-lg:top-[33px] max-lg:left-1/2 max-lg:translate-x-1/20">
-            <img onClick={() => setShowImgModal(true)} src={EditPhoto} alt="사진 수정하기" />
-            {showImgModal && (
-              <div className="absolute top-[20px] flex flex-col shadow-button-hover">
-                <div
-                  onClick={() => {
-                    imageRef.current?.click();
-                    setShowImgModal(false);
-                  }}
-                  className="rounded-t-[4px] border-b border-b-white-stroke bg-secondary py-[4px] px-[12px] text-text-on-background text-[10px] font-normal leading-[13px]">
-                  가져오기
-                </div>
-                <div
-                  onClick={() => {
-                    setSelectedImg(null);
-                    setShowImgModal(false);
-                  }}
-                  className="cursor-pointer rounded-b-[4px] border-b border-b-white-stroke bg-secondary py-[4px] px-[12px] text-text-on-background text-[10px] font-normal leading-[13px]">
-                  삭제하기
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+    <div className="flex flex-col justify-center pt-[120px] max-lg:pt-[12px] items-center lg:max-w-[1440px] lg:w-full lg:m-auto">
+      <div className="lg:px-[102px] w-full flex flex-col justify-center">
         <div
           className={clsx(
-            'flex gap-[28px] max-lg:gap-[8px] items-center max-lg:flex-col',
-            profileEdit && 'items-center',
+            'p-[10px] flex items-center max-lg:flex-col max-lg:justify-center max-lg:p-0 relative',
+            !isMyProfile && 'gap-[60px] max-lg:gap-[8px]',
+            isMyProfile && 'gap-[7vw] max-lg:gap-[8px]',
           )}>
-          <div className="flex flex-col items-center w-full">
-            <div className="w-[80px] h-[80px] rounded-full overflow-hidden max-lg:w-[48px] max-lg:h-[48px] max-lg:relative max-lg:10">
-              {isMyProfile && (
-                <>
-                  <img
-                    src={selectedImg?.thumbnail || ProfileIcon}
-                    alt="프로필 이미지"
-                    className="w-full h-full object-cover"
-                  />
-                </>
+          {profileEdit && (
+            <div className="lg:hidden max-lg:absolute max-lg:bottom-0 max-lg:right-0 z-20 max-lg:top-[33px] max-lg:left-1/2 max-lg:translate-x-1/20">
+              <img onClick={() => setShowImgModal(true)} src={EditPhoto} alt="사진 수정하기" />
+              {showImgModal && (
+                <div className="absolute top-[20px] flex flex-col shadow-button-hover">
+                  <div
+                    onClick={() => {
+                      imageRef.current?.click();
+                      setShowImgModal(false);
+                    }}
+                    className="rounded-t-[4px] border-b border-b-white-stroke bg-secondary py-[4px] px-[12px] text-text-on-background text-[10px] font-normal leading-[13px]">
+                    가져오기
+                  </div>
+                  <div
+                    onClick={() => {
+                      setSelectedImg(null);
+                      setShowImgModal(false);
+                    }}
+                    className="cursor-pointer rounded-b-[4px] border-b border-b-white-stroke bg-secondary py-[4px] px-[12px] text-text-on-background text-[10px] font-normal leading-[13px]">
+                    삭제하기
+                  </div>
+                </div>
               )}
-              {!isMyProfile && <img src={ProfileIcon} alt="프로필 이미지" className="w-full h-full object-contain" />}
-              {profileEdit && <img src={selectedImg?.thumbnail} alt="프로필 이미지" />}
             </div>
-            {profileEdit && (
-              <div className="mt-[10px] max-lg:hidden">
-                <PrimaryButton
-                  buttonType="change"
-                  text="사진 변경하기"
-                  onClick={() => {
-                    imageRef.current?.click();
-                  }}
-                />
-                <input
-                  type="file"
-                  accept="image/*"
-                  ref={imageRef}
-                  onChange={handleUpload}
-                  style={{ display: 'none' }}
-                />
-              </div>
-            )}
-          </div>
-
+          )}
           <div
             className={clsx(
-              profileEdit && 'gap-[15px]',
-              'flex flex-col gap-[5px] max-lg:gap-[4px] text-text-on-white shrink-0 max-lg:items-center',
+              'flex gap-[28px] max-lg:gap-[8px] items-center max-lg:flex-col',
+              profileEdit && 'items-center',
             )}>
-            {!profileEdit && (
-              <div className="flex gap-[4px] max-lg:justify-center">
-                <p className="text-[32px] font-bold leading-[40px] max-lg:text-[16px] max-lg:font-medium max-lg:leading-[20px] ">
-                  {data?.data.name}
-                </p>
-                {!isMyProfile && (
-                  <div
-                    onClick={() =>
-                      setIsAlarmOn((prev) => ({ state: !prev.state, icon: prev.state ? AlarmOffIcon : AlarmOnIcon }))
-                    }
-                    className={clsx(
-                      'lg:hidden w-[20px] h-[20px] bg-white rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out p-[3px]',
-                      !isAlarmOn.state && 'border border-text-on-background',
-                      isAlarmOn.state && 'border border-primary bg-red-500',
-                    )}>
-                    <img src={isAlarmOn.icon} alt="알림" className="w-full h-full object-contain" />
-                  </div>
-                )}
+            <div className="flex flex-col items-center w-full">
+              <div className="w-[80px] h-[80px] rounded-full overflow-hidden max-lg:w-[48px] max-lg:h-[48px] max-lg:relative max-lg:10">
                 {isMyProfile && (
-                  <div className="lg:hidden">
+                  <>
+                    <img
+                      src={selectedImg?.thumbnail || ProfileIcon}
+                      alt="프로필 이미지"
+                      className="w-full h-full object-cover"
+                    />
+                  </>
+                )}
+                {!isMyProfile && <img src={ProfileIcon} alt="프로필 이미지" className="w-full h-full object-contain" />}
+                {profileEdit && <img src={selectedImg?.thumbnail} alt="프로필 이미지" />}
+              </div>
+              {profileEdit && (
+                <div className="mt-[10px] max-lg:hidden">
+                  <PrimaryButton
+                    buttonType="change"
+                    text="사진 변경하기"
+                    onClick={() => {
+                      imageRef.current?.click();
+                    }}
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={imageRef}
+                    onChange={handleUpload}
+                    style={{ display: 'none' }}
+                  />
+                </div>
+              )}
+            </div>
+
+            <div
+              className={clsx(
+                profileEdit && 'gap-[15px]',
+                'flex flex-col gap-[5px] max-lg:gap-[4px] text-text-on-white shrink-0 max-lg:items-center',
+              )}>
+              {!profileEdit && (
+                <div className="flex gap-[4px] max-lg:justify-center">
+                  <p className="text-[32px] font-bold leading-[40px] max-lg:text-[16px] max-lg:font-medium max-lg:leading-[20px] ">
+                    {data?.data.name}
+                  </p>
+                  {!isMyProfile && (
+                    <div
+                      onClick={() => {
+                        if (isFollow) {
+                          mutateNotification({ prompter_id: member_id });
+                          setIsAlarmOn((prev) => ({
+                            state: !prev.state,
+                            icon: prev.state ? AlarmOffIcon : AlarmOnIcon,
+                          }));
+                        }
+                      }}
+                      className={clsx(
+                        'lg:hidden w-[20px] h-[20px] bg-white rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out p-[3px]',
+                        !isAlarmOn.state && 'border border-text-on-background',
+                        isAlarmOn.state && 'border border-primary bg-red-500',
+                      )}>
+                      <img src={isAlarmOn.icon} alt="알림" className="w-full h-full object-contain" />
+                    </div>
+                  )}
+                  {isMyProfile && (
+                    <div className="lg:hidden">
+                      <CircleButton
+                        buttonType="edit"
+                        size="md"
+                        onClick={() => {
+                          handleEditMember();
+                        }}
+                        isActive={profileEdit}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+              {profileEdit && (
+                <div className="max-lg:flex max-lg:gap-[4px]">
+                  <input
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                    className="text-[32px] font-bold leading-[40px] outline-none text-primary placeholder:text-primary w-[175px] border-b border-primary max-lg:text-[16px] max-lg:leading-[20px] max-lg:font-medium max-lg:border-b max-lg:w-max max-lg:max-w-[45px]"
+                    placeholder={userName}
+                  />
+                  <div className={clsx('lg:hidden max-lg:relative', showImgModal && 'z-10', !showImgModal && 'z-30')}>
                     <CircleButton
                       buttonType="edit"
                       size="md"
                       onClick={() => {
-                        handleEditMember();
+                        handleEditSubmit({ name: userName }, { intro: userDescription });
                       }}
                       isActive={profileEdit}
                     />
                   </div>
-                )}
-              </div>
-            )}
-            {profileEdit && (
-              <div className="max-lg:flex max-lg:gap-[4px]">
-                <input
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
-                  className="text-[32px] font-bold leading-[40px] outline-none text-primary placeholder:text-primary w-[175px] border-b border-primary max-lg:text-[16px] max-lg:leading-[20px] max-lg:font-medium max-lg:border-b max-lg:w-max max-lg:max-w-[45px]"
-                  placeholder={userName}
-                />
-                <div className={clsx('lg:hidden max-lg:relative', showImgModal && 'z-10', !showImgModal && 'z-30')}>
-                  <CircleButton
-                    buttonType="edit"
-                    size="md"
-                    onClick={() => {
-                      handleEditSubmit({ name: userName }, { intro: userDescription });
-                    }}
-                    isActive={profileEdit}
-                  />
                 </div>
-              </div>
-            )}
-            {!profileEdit && (
-              <p className="text-[20px] font-medium leading-[25px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px]">
-                {data?.data.intros}
-              </p>
-            )}
-            {profileEdit && (
-              <input
-                value={userDescription}
-                onChange={(e) => setUserDescription(e.target.value)}
-                placeholder={userDescription}
-                className="text-[20px] font-medium leading-[25px] placeholder:text-primary outline-none text-primary lg:w-[219px] max-lg:w-[79px] border-b border-primary max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px] max-lg:border-b max-lg:relative max-lg:z-300"
-              />
-            )}
-          </div>
-          {isMyProfile && (
-            <div className="shrink-0 flex flex-col gap-[13px] items-center max-lg:hidden">
-              <CircleButton
-                buttonType="edit"
-                size="md"
-                onClick={() => {
-                  handleEditMember();
-                }}
-                isActive={profileEdit}
-              />
+              )}
+              {!profileEdit && (
+                <p className="text-[20px] font-medium leading-[25px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px]">
+                  {data?.data.intros}
+                </p>
+              )}
               {profileEdit && (
-                <PrimaryButton
-                  buttonType="squareMini"
-                  text="완료"
-                  onClick={() => {
-                    handleEditSubmit({ name: userName }, { intro: userDescription });
-                  }}
+                <input
+                  value={userDescription}
+                  onChange={(e) => setUserDescription(e.target.value)}
+                  placeholder={userDescription}
+                  className="text-[20px] font-medium leading-[25px] placeholder:text-primary outline-none text-primary lg:w-[219px] max-lg:w-[79px] border-b border-primary max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px] max-lg:border-b max-lg:relative max-lg:z-300"
                 />
               )}
             </div>
-          )}
-        </div>
-
-        {!isMyProfile && (
-          <>
-            <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
-              <p className="text-primary-hover text-[18px] font-normal leading-[23px] max-lg:text-[10px] max-lg:leading-[13px]">
-                팔로워
-              </p>
-              <div className="px-[10px] max-lg:px-[6px] py-[5px] max-lg:py-[2px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center max-lg:text-[12px] max-lg:leading-[15px]">
-                {followerData?.data.length}
+            {isMyProfile && (
+              <div className="shrink-0 flex flex-col gap-[13px] items-center max-lg:hidden">
+                <CircleButton
+                  buttonType="edit"
+                  size="md"
+                  onClick={() => {
+                    handleEditMember();
+                  }}
+                  isActive={profileEdit}
+                />
+                {profileEdit && (
+                  <PrimaryButton
+                    buttonType="squareMini"
+                    text="완료"
+                    onClick={() => {
+                      handleEditSubmit({ name: userName }, { intro: userDescription });
+                    }}
+                  />
+                )}
               </div>
+            )}
+          </div>
 
-              <div className="lg:hidden max-lg:ml-[3px]">
-                <FollowButton follow={isFollow} onClick={handleFollow} size="sm" />
-              </div>
-            </div>
-
-            <div className="flex gap-[24px] items-center max-lg:hidden">
-              <div className="max-lg:hidden">
-                <FollowButton follow={isFollow} onClick={handleFollow} size="lg" />
-              </div>
-
-              <div
-                onClick={() =>
-                  setIsAlarmOn((prev) => ({ state: !prev.state, icon: prev.state ? AlarmOffIcon : AlarmOnIcon }))
-                }
-                className={clsx(
-                  'max-lg:hidden w-[48px] h-[48px] bg-white rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out',
-                  !isAlarmOn.state && 'border border-text-on-background',
-                  isAlarmOn.state && 'border border-primary bg-red-500',
-                )}>
-                <img src={isAlarmOn.icon} alt="알림" />
-              </div>
-            </div>
-          </>
-        )}
-
-        {isMyProfile && (
-          <>
-            <div className="flex gap-[28px] max-lg:gap-[16px]">
+          {!isMyProfile && (
+            <>
               <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
                 <p className="text-primary-hover text-[18px] font-normal leading-[23px] max-lg:text-[10px] max-lg:leading-[13px]">
                   팔로워
                 </p>
-                <div
-                  onClick={() => setShowFollower(true)}
-                  className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center max-lg:py-[2px] max-lg:px-[6px] max-lg:text-[12px] max-lg:leading-[15px]">
+                <div className="px-[10px] max-lg:px-[6px] py-[5px] max-lg:py-[2px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center max-lg:text-[12px] max-lg:leading-[15px]">
                   {followerData?.data.length}
                 </div>
-              </div>
-              <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
-                <p className="text-primary-hover text-[18px] font-normal leading-[23px] max-lg:text-[10px] max-lg:leading-[13px]">
-                  팔로잉
-                </p>
-                <div
-                  onClick={() => setShowFollowing(true)}
-                  className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center  max-lg:py-[2px] max-lg:px-[6px] max-lg:text-[12px] max-lg:leading-[15px]">
-                  {followingData?.data.length}
+
+                <div className="lg:hidden max-lg:ml-[3px]">
+                  <FollowButton follow={isFollow} onClick={handleFollow} size="sm" />
                 </div>
               </div>
-            </div>
-            {showFollower && (
-              <FollowCard
-                title={`${data?.data.name}님의 팔로워 목록`}
-                list={normalizedFollowerList}
-                setShow={setShowFollower}
-                member_id={member_id}
-              />
-            )}
-            {showFollowing && (
-              <FollowCard
-                title={`${data?.data.name}님의 팔로잉 목록`}
-                list={normalizedFollowingList}
-                setShow={setShowFollowing}
-                member_id={member_id}
-              />
-            )}
-          </>
-        )}
-      </div>
 
-      <div className="px-[20px] flex lg:hidden max-lg:mt-[12px]">
-        {menuId !== 2 && <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />}
-        {menuId === 2 && isMyProfile && (
-          <div className="flex items-start justify-between w-full">
-            <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />
-            <div className="flex mt-[6px]">
-              <div
-                onClick={() => {
-                  setIsBuyer(true);
-                  setType({ type: 'buyer' });
-                }}
-                className={clsx(
-                  'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
-                  isBuyer && 'bg-primary-hover text-white',
-                  !isBuyer && 'bg-white text-text-on-white',
-                )}>
-                구매자 문의
-              </div>
-              <div
-                onClick={() => {
-                  setIsBuyer(false);
-                  setType({ type: 'non_buyer' });
-                }}
-                className={clsx(
-                  'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
-                  !isBuyer && 'bg-primary-hover text-white',
-                  isBuyer && 'bg-white text-text-on-white',
-                )}>
-                비구매자 문의
-              </div>
-            </div>
-          </div>
-        )}
-        {menuId === 2 && !isMyProfile && (
-          <div className="flex items-start justify-between w-full">
-            <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />
-            <div className="flex mt-[6px]">
-              <div
-                onClick={() => setType({ type: 'buyer' })}
-                className={clsx(
-                  'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
-                  type.type === 'buyer' && 'bg-primary-hover text-white',
-                  type.type === 'non_buyer' && 'bg-white text-text-on-white',
-                )}>
-                구매자 문의
-              </div>
-              <div
-                onClick={() => setType({ type: 'non_buyer' })}
-                className={clsx(
-                  'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
-                  type.type === 'non_buyer' && 'bg-primary-hover text-white',
-                  type.type === 'buyer' && 'bg-white text-text-on-white',
-                )}>
-                비구매자 문의
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+              <div className="flex gap-[24px] items-center max-lg:hidden">
+                <div className="max-lg:hidden">
+                  <FollowButton follow={isFollow} onClick={handleFollow} size="lg" />
+                </div>
 
-      <div className="flex flex-col items-center justify-center px-[102px] max-lg:pl-[20px] max-lg:pr-[20px] mt-[40px] max-lg:mt-[42px]">
-        <div className="w-full">
-          <div className="max-lg:hidden flex w-full justify-between border-b border-text-on-background">
-            {menuList.map((menu) => (
-              <div
-                key={menu.id}
-                onClick={() => setMenuId(menu.id)}
-                className={clsx(
-                  'max-w-[309px] w-full px-[10px] py-[20px] cursor-pointer text-[24px] font-bold leading-[30px] text-center',
-                  menuId === menu.id && 'border-b-[3px] border-b-primary text-primary-hover ',
-                  menuId !== menu.id && 'text-text-on-background',
-                )}>
-                {menu.label}
-              </div>
-            ))}
-          </div>
-
-          {menuId === 0 && (
-            <div className="pr-[8px] bg-white max-lg:bg-transparent max-lg:p-0">
-              <div className="w-full max-h-[368px] overflow-y-auto">
-                {promptsData?.pages.map((page, pageIdx) =>
-                  page.data.prompts.map((prompt, idx) => {
-                    const last = pageIdx === promptsData.pages.length - 1 && idx === page.data.prompts.length - 1;
-                    return (
-                      <div ref={last ? ref : undefined} key={prompt.prompt_id}>
-                        <PromptCard
-                          key={prompt.prompt_id}
-                          id={prompt.prompt_id}
-                          title={prompt.title}
-                          model={prompt.models}
-                          tags={prompt.tags}
-                          isMyProfile={isMyProfile}
-                          handleDeletePrompts={() => {
-                            handleDeletePrompts({ prompt_id: prompt.prompt_id });
-                          }}
-                        />
-                      </div>
-                    );
-                  }),
-                )}
-              </div>
-            </div>
-          )}
-
-          {menuId === 1 && (
-            <>
-              <div className="flex flex-col items-center pr-[8px] bg-white h-full max-lg:bg-transparent max-lg:p-0">
                 <div
+                  onClick={() =>
+                    setIsAlarmOn((prev) => ({ state: !prev.state, icon: prev.state ? AlarmOffIcon : AlarmOnIcon }))
+                  }
                   className={clsx(
-                    'w-full overflow-y-auto bg-white',
-                    !isMyProfile && 'max-h-[368px]',
-                    isMyProfile && 'max-h-[279px]',
+                    'max-lg:hidden w-[48px] h-[48px] bg-white rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out',
+                    !isAlarmOn.state && 'border border-text-on-background',
+                    isAlarmOn.state && 'border border-primary bg-red-500',
                   )}>
-                  {historyData?.histories.map((history) => (
-                    <RecordCard
-                      key={history.history_id}
-                      history_id={history.history_id}
-                      description={history.history}
-                      isMyProfile={isMyProfile}
-                      handleDelete={handleDeleteDescription}
-                      setDescriptions={handleUpdateDescription}
-                    />
-                  ))}
+                  <img src={isAlarmOn.icon} alt="알림" />
                 </div>
               </div>
-              {isMyProfile && (
-                <div className="mt-[50px] max-lg:mt-[12px] w-full flex justify-center">
-                  <PrimaryButton buttonType="plus" text="+" onClick={() => handleAddNewDescription({ history: ' ' })} />
-                </div>
-              )}
             </>
           )}
 
-          {menuId === 2 && !isMyProfile && (
-            <AskCard
-              prompts={promptsData}
-              isMyProfile={isMyProfile}
-              type={type}
-              setType={setType}
-              member_id={member_id}
-              mutatePostInquiries={mutatePostInquiries}
-            />
-          )}
-
-          {menuId === 2 && isMyProfile && (
+          {isMyProfile && (
             <>
-              <div className="relative text-text-on-white text-[20px] font-bold leading-[30px] flex gap-[10px] p-[10px] items-center py-[30px] px-[80px] bg-white max-lg:hidden">
-                {isBuyer && <p>구매자 문의</p>}
-                {!isBuyer && <p>비구매자 문의</p>}
-                <div
-                  onClick={() => setIsArrowClicked(true)}
-                  className="w-[24px] h-[24px] py-[8px] px-[6px] rounded-full cursor-pointer hover:bg-primary-hover hover:text-white hover:shadow-gradient active:bg-primary-pressed active:shadow-gradient active:text-white">
-                  <Arrow />
-                </div>
-                {isArrowClicked && (
+              <div className="flex gap-[28px] max-lg:gap-[16px]">
+                <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
+                  <p className="text-primary-hover text-[18px] font-normal leading-[23px] max-lg:text-[10px] max-lg:leading-[13px]">
+                    팔로워
+                  </p>
                   <div
-                    onClick={() => {
-                      setType((prev) => (prev.type === 'buyer' ? { type: 'non_buyer' } : { type: 'buyer' }));
-                      setIsBuyer((prev) => !prev);
-                      setIsArrowClicked(false);
-                      setShowInquiryDetail(null);
-                    }}
-                    className="absolute top-[64.5px] left-[110px] cursor-pointer rounded-[8px] border border-white-stroke bg-white shadow-button-hover py-[10px] px-[20px] text-text-on-background text-[18px] font-normal leading-[23px] hover:bg-secondary active:bg-secondary-pressed active:text-text-on-white">
-                    {isBuyer ? '비구매자 문의' : '구매자 문의'}
+                    onClick={() => setShowFollower(true)}
+                    className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center max-lg:py-[2px] max-lg:px-[6px] max-lg:text-[12px] max-lg:leading-[15px]">
+                    {followerData?.data.length}
+                  </div>
+                </div>
+                <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
+                  <p className="text-primary-hover text-[18px] font-normal leading-[23px] max-lg:text-[10px] max-lg:leading-[13px]">
+                    팔로잉
+                  </p>
+                  <div
+                    onClick={() => setShowFollowing(true)}
+                    className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center  max-lg:py-[2px] max-lg:px-[6px] max-lg:text-[12px] max-lg:leading-[15px]">
+                    {followingData?.data.length}
+                  </div>
+                </div>
+              </div>
+              {showFollower && (
+                <FollowCard
+                  title={`${data?.data.name}님의 팔로워 목록`}
+                  list={normalizedFollowerList}
+                  setShow={setShowFollower}
+                  member_id={member_id}
+                />
+              )}
+              {showFollowing && (
+                <FollowCard
+                  title={`${data?.data.name}님의 팔로잉 목록`}
+                  list={normalizedFollowingList}
+                  setShow={setShowFollowing}
+                  member_id={member_id}
+                />
+              )}
+            </>
+          )}
+        </div>
+
+        <div className="px-[20px] flex lg:hidden max-lg:mt-[12px]">
+          {menuId !== 2 && <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />}
+          {menuId === 2 && isMyProfile && (
+            <div className="flex items-start justify-between w-full">
+              <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />
+              <div className="flex mt-[6px]">
+                <div
+                  onClick={() => {
+                    setIsBuyer(true);
+                    setType({ type: 'buyer' });
+                  }}
+                  className={clsx(
+                    'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
+                    isBuyer && 'bg-primary-hover text-white',
+                    !isBuyer && 'bg-white text-text-on-white',
+                  )}>
+                  구매자 문의
+                </div>
+                <div
+                  onClick={() => {
+                    setIsBuyer(false);
+                    setType({ type: 'non_buyer' });
+                  }}
+                  className={clsx(
+                    'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
+                    !isBuyer && 'bg-primary-hover text-white',
+                    isBuyer && 'bg-white text-text-on-white',
+                  )}>
+                  비구매자 문의
+                </div>
+              </div>
+            </div>
+          )}
+          {menuId === 2 && !isMyProfile && (
+            <div className="flex items-start justify-between w-full">
+              <Select menuList={menuList} menuId={menuId} setMenuId={setMenuId} />
+              <div className="flex mt-[6px]">
+                <div
+                  onClick={() => setType({ type: 'buyer' })}
+                  className={clsx(
+                    'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
+                    type.type === 'buyer' && 'bg-primary-hover text-white',
+                    type.type === 'non_buyer' && 'bg-white text-text-on-white',
+                  )}>
+                  구매자 문의
+                </div>
+                <div
+                  onClick={() => setType({ type: 'non_buyer' })}
+                  className={clsx(
+                    'cursor-pointer rounded-[4px] py-[6px] w-[90px] text-[10px] font-normal leading-[13px] flex justify-center',
+                    type.type === 'non_buyer' && 'bg-primary-hover text-white',
+                    type.type === 'buyer' && 'bg-white text-text-on-white',
+                  )}>
+                  비구매자 문의
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col items-center justify-center max-lg:pl-[20px] max-lg:pr-[20px] mt-[40px] max-lg:mt-[42px]">
+          <div className="w-full">
+            <div className="max-lg:hidden flex w-full justify-between border-b border-text-on-background">
+              {menuList.map((menu) => (
+                <div
+                  key={menu.id}
+                  onClick={() => setMenuId(menu.id)}
+                  className={clsx(
+                    'max-w-[309px] w-full px-[10px] py-[20px] cursor-pointer text-[24px] font-bold leading-[30px] text-center',
+                    menuId === menu.id && 'border-b-[3px] border-b-primary text-primary-hover ',
+                    menuId !== menu.id && 'text-text-on-background',
+                  )}>
+                  {menu.label}
+                </div>
+              ))}
+            </div>
+
+            {menuId === 0 && (
+              <>
+                {delModal && (
+                  <TextModal
+                    text="판매된 프롬프트는 삭제할 수 없습니다."
+                    onClick={() => setDelModal(false)}
+                    size="lg"
+                  />
+                )}
+                <div className="pr-[8px] bg-white max-lg:bg-transparent max-lg:p-0">
+                  <div className="w-full max-h-[368px] overflow-y-auto">
+                    {promptsData?.pages.map((page, pageIdx) =>
+                      page.data.prompts.map((prompt, idx) => {
+                        const last = pageIdx === promptsData.pages.length - 1 && idx === page.data.prompts.length - 1;
+                        return (
+                          <div ref={last ? ref : undefined} key={prompt.prompt_id}>
+                            <PromptCard
+                              key={prompt.prompt_id}
+                              id={prompt.prompt_id}
+                              title={prompt.title}
+                              model={prompt.models}
+                              tags={prompt.tags}
+                              isMyProfile={isMyProfile}
+                              handleDeletePrompts={() => {
+                                handleDeletePrompts({ prompt_id: prompt.prompt_id });
+                              }}
+                            />
+                          </div>
+                        );
+                      }),
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
+
+            {menuId === 1 && (
+              <>
+                <div className="flex flex-col items-center pr-[8px] bg-white h-full max-lg:bg-transparent max-lg:p-0">
+                  <div
+                    className={clsx(
+                      'w-full overflow-y-auto bg-white',
+                      !isMyProfile && 'max-h-[368px]',
+                      isMyProfile && 'max-h-[279px]',
+                    )}>
+                    {historyData?.histories.map((history) => (
+                      <RecordCard
+                        key={history.history_id}
+                        history_id={history.history_id}
+                        description={history.history}
+                        isMyProfile={isMyProfile}
+                        handleDelete={handleDeleteDescription}
+                        setDescriptions={handleUpdateDescription}
+                      />
+                    ))}
+                  </div>
+                </div>
+                {isMyProfile && (
+                  <div className="mt-[50px] max-lg:mt-[12px] w-full flex justify-center">
+                    <PrimaryButton
+                      buttonType="plus"
+                      text="+"
+                      onClick={() => handleAddNewDescription({ history: ' ' })}
+                    />
                   </div>
                 )}
-              </div>
-              <div className="pr-[8px] bg-white max-lg:hidden">
-                <div className="max-h-[316px] overflow-auto">
-                  {showInquiryDetail === null &&
-                    inquiryData?.data
+              </>
+            )}
+
+            {menuId === 2 && !isMyProfile && (
+              <AskCard
+                prompts={promptsData}
+                isMyProfile={isMyProfile}
+                type={type}
+                setType={setType}
+                member_id={member_id}
+                mutatePostInquiries={mutatePostInquiries}
+              />
+            )}
+
+            {menuId === 2 && isMyProfile && (
+              <>
+                <div className="relative text-text-on-white text-[20px] font-bold leading-[30px] flex gap-[10px] p-[10px] items-center py-[30px] px-[80px] bg-white max-lg:hidden">
+                  {isBuyer && <p>구매자 문의</p>}
+                  {!isBuyer && <p>비구매자 문의</p>}
+                  <div
+                    onClick={() => setIsArrowClicked(true)}
+                    className="w-[24px] h-[24px] py-[8px] px-[6px] rounded-full cursor-pointer hover:bg-primary-hover hover:text-white hover:shadow-gradient active:bg-primary-pressed active:shadow-gradient active:text-white">
+                    <Arrow />
+                  </div>
+                  {isArrowClicked && (
+                    <div
+                      onClick={() => {
+                        setType((prev) => (prev.type === 'buyer' ? { type: 'non_buyer' } : { type: 'buyer' }));
+                        setIsBuyer((prev) => !prev);
+                        setIsArrowClicked(false);
+                        setShowInquiryDetail(null);
+                      }}
+                      className="absolute top-[64.5px] left-[110px] cursor-pointer rounded-[8px] border border-white-stroke bg-white shadow-button-hover py-[10px] px-[20px] text-text-on-background text-[18px] font-normal leading-[23px] hover:bg-secondary active:bg-secondary-pressed active:text-text-on-white">
+                      {isBuyer ? '비구매자 문의' : '구매자 문의'}
+                    </div>
+                  )}
+                </div>
+                <div className="pr-[8px] bg-white max-lg:hidden">
+                  <div className="max-h-[316px] overflow-auto">
+                    {showInquiryDetail === null &&
+                      inquiryData?.data
+                        .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non_buyer'))
+                        .map((i) => (
+                          <InquiryCard
+                            key={i.inquiry_id}
+                            inquiry_id={i.inquiry_id}
+                            created_at={i.created_at}
+                            status={i.status}
+                            sender_nickname={i.sender_nickname}
+                            onClick={() => {
+                              setSelectedInquiryId(i.inquiry_id);
+                              setShowInquiryDetail(i);
+                            }}
+                            onRead={(id) => {
+                              mutateReadInquiries({ inquiry_id: id });
+                            }}
+                            onDelete={() => {}}
+                          />
+                        ))}
+                  </div>
+                </div>
+
+                <div className="max-lg:hidden">
+                  {showInquiryDetail !== null && inquiryDetailData && (
+                    <InquiryDetailCard
+                      inquiry={inquiryDetailData!}
+                      onClick={() => {
+                        setShowInquiryDetail(null);
+                      }}
+                      setShowMsgMoldal={setShowMsgModal}
+                      mutatePostReplyInquiries={mutatePostReplyInquiries}
+                      mutateReadInquiries={mutateReadInquiries}
+                      setShowInquiryDetail={setShowInquiryDetail}
+                    />
+                  )}
+                </div>
+
+                <div className="pr-[8px] bg-transparent lg:hidden max-lg:mt-[-30px]">
+                  <div className="max-h-[316px] overflow-auto">
+                    {inquiryData?.data
                       .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non_buyer'))
                       .map((i) => (
                         <InquiryCard
@@ -703,6 +783,7 @@ const ProfilePage = () => {
                           onClick={() => {
                             setSelectedInquiryId(i.inquiry_id);
                             setShowInquiryDetail(i);
+                            setShowMsgModal(true);
                           }}
                           onRead={(id) => {
                             mutateReadInquiries({ inquiry_id: id });
@@ -710,96 +791,58 @@ const ProfilePage = () => {
                           onDelete={() => {}}
                         />
                       ))}
+                  </div>
                 </div>
-              </div>
 
-              <div className="max-lg:hidden">
-                {showInquiryDetail !== null && inquiryDetailData && (
-                  <InquiryDetailCard
-                    inquiry={inquiryDetailData!}
-                    onClick={() => {
-                      setShowInquiryDetail(null);
-                    }}
-                    setShowMsgMoldal={setShowMsgModal}
-                    mutatePostReplyInquiries={mutatePostReplyInquiries}
-                    mutateReadInquiries={mutateReadInquiries}
-                    setShowInquiryDetail={setShowInquiryDetail}
-                  />
+                <div className="lg:hidden">
+                  {showInquiryDetail !== null && showMsgModal === true && inquiryDetailData && (
+                    <InquiryDetailCard
+                      inquiry={inquiryDetailData!}
+                      onClick={() => {
+                        setShowMsgModal(false);
+                      }}
+                      setShowMsgMoldal={setShowMsgModal}
+                      mutatePostReplyInquiries={mutatePostReplyInquiries}
+                      mutateReadInquiries={mutateReadInquiries}
+                      setShowInquiryDetail={setShowInquiryDetail}
+                    />
+                  )}
+                </div>
+              </>
+            )}
+
+            {menuId === 3 && (
+              <div className="flex flex-col items-center">
+                <div className="w-full max-h-[368px] overflow-y-auto">
+                  {snsData?.data.map((sns) => (
+                    <SnsCard
+                      key={sns.sns_id}
+                      sns_id={sns.sns_id}
+                      description={sns.description}
+                      url={sns.url}
+                      isMyProfile={isMyProfile}
+                      handleDeleteSns={handleDeleteSns}
+                      handleUpdateSns={handleUpdateSns}
+                    />
+                  ))}
+                </div>
+                {isMyProfile && (
+                  <div className="mt-[50px] max-lg:mt-[12px]">
+                    <PrimaryButton
+                      buttonType="plus"
+                      text="+"
+                      onClick={() => {
+                        handleAddSns({ url: 'https://example.com', description: ' ' });
+                      }}
+                    />
+                  </div>
                 )}
               </div>
-
-              <div className="pr-[8px] bg-transparent lg:hidden max-lg:mt-[-30px]">
-                <div className="max-h-[316px] overflow-auto">
-                  {inquiryData?.data
-                    .filter((i) => (isBuyer ? i.type === 'buyer' : i.type === 'non_buyer'))
-                    .map((i) => (
-                      <InquiryCard
-                        key={i.inquiry_id}
-                        inquiry_id={i.inquiry_id}
-                        created_at={i.created_at}
-                        status={i.status}
-                        sender_nickname={i.sender_nickname}
-                        onClick={() => {
-                          setSelectedInquiryId(i.inquiry_id);
-                          setShowInquiryDetail(i);
-                          setShowMsgModal(true);
-                        }}
-                        onRead={(id) => {
-                          mutateReadInquiries({ inquiry_id: id });
-                        }}
-                        onDelete={() => {}}
-                      />
-                    ))}
-                </div>
-              </div>
-
-              <div className="lg:hidden">
-                {showInquiryDetail !== null && showMsgModal === true && inquiryDetailData && (
-                  <InquiryDetailCard
-                    inquiry={inquiryDetailData!}
-                    onClick={() => {
-                      setShowMsgModal(false);
-                    }}
-                    setShowMsgMoldal={setShowMsgModal}
-                    mutatePostReplyInquiries={mutatePostReplyInquiries}
-                    mutateReadInquiries={mutateReadInquiries}
-                    setShowInquiryDetail={setShowInquiryDetail}
-                  />
-                )}
-              </div>
-            </>
-          )}
-
-          {menuId === 3 && (
-            <div className="flex flex-col items-center">
-              <div className="w-full max-h-[368px] overflow-y-auto">
-                {snsData?.data.map((sns) => (
-                  <SnsCard
-                    key={sns.sns_id}
-                    sns_id={sns.sns_id}
-                    description={sns.description}
-                    url={sns.url}
-                    isMyProfile={isMyProfile}
-                    handleDeleteSns={handleDeleteSns}
-                    handleUpdateSns={handleUpdateSns}
-                  />
-                ))}
-              </div>
-              {isMyProfile && (
-                <div className="mt-[50px] max-lg:mt-[12px]">
-                  <PrimaryButton
-                    buttonType="plus"
-                    text="+"
-                    onClick={() => {
-                      handleAddSns({ url: 'https://example.com', description: ' ' });
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
+
       {loginModalShow && (
         <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
       )}

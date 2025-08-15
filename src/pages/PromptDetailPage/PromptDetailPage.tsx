@@ -17,6 +17,10 @@ import useGetAllPromptReviews from '@/hooks/queries/PromptDetailPage/useGetAllPr
 import usePromptDownload from '@/hooks/mutations/PromptDetailPage/usePromptDownload';
 import type { Review as UIReview } from './components/ReviewList';
 import { isAxiosError } from 'axios';
+import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
+import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
+import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
+import { useQueryClient } from '@tanstack/react-query';
 
 const PromptDetailPage = () => {
   const navigate = useNavigate();
@@ -28,29 +32,6 @@ const PromptDetailPage = () => {
   }, [id]);
 
   const { data, isLoading, isError } = useGetPromptDetail(promptId);
-
-  const { mutateAsync: fetchDownload, isPending: isDownloading } = usePromptDownload();
-
-  const isAdmin = localStorage.getItem('isAdmin') === 'true';
-
-  const [showReviews, setShowReviews] = useState(false);
-  const [follow, setFollow] = useState(false);
-
-  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const handleOpenReportModal = () => setIsReportModalOpen(true);
-  const handleCloseReportModal = () => setIsReportModalOpen(false);
-
-  const [reviews, setReviews] = useState<UIReview[]>([]);
-  const [reviewCount, setReviewCount] = useState<number>(0);
-
-  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
-  const [downloadData, setDownloadData] = useState<{
-    title: string;
-    content: string;
-  } | null>(null);
-
-  const [isPaid, setIsPaid] = useState(false);
-  const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
 
   const prompt = useMemo(() => {
     if (!data) return null;
@@ -85,6 +66,49 @@ const PromptDetailPage = () => {
           : '',
     };
   }, [data]);
+
+  const { mutateAsync: fetchDownload, isPending: isDownloading } = usePromptDownload();
+
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+
+  const qc = useQueryClient();
+
+  const storedUser = localStorage.getItem('user');
+  const currentUserId = storedUser ? JSON.parse(storedUser).user_id : null;
+
+  const targetUserId = prompt?.user?.user_id ?? -1;
+
+  const followMut = usePatchFollow({ member_id: targetUserId });
+  const unfollowMut = useDeleteFollow({ member_id: targetUserId });
+
+  const { data: myFollowings } = useGetFollowing({
+    member_id: Number.isFinite(currentUserId) ? Number(currentUserId) : -1,
+  });
+
+  const [showReviews, setShowReviews] = useState(false);
+  const [follow, setFollow] = useState(false);
+
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const handleOpenReportModal = () => setIsReportModalOpen(true);
+  const handleCloseReportModal = () => setIsReportModalOpen(false);
+
+  const [reviews, setReviews] = useState<UIReview[]>([]);
+  const [reviewCount, setReviewCount] = useState<number>(0);
+
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+  const [downloadData, setDownloadData] = useState<{
+    title: string;
+    content: string;
+  } | null>(null);
+
+  const [isPaid, setIsPaid] = useState(false);
+  const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
+
+  useEffect(() => {
+    if (!Array.isArray(myFollowings) || !Number.isFinite(targetUserId)) return;
+    const isFollowing = myFollowings.some((f: { member_id: number }) => f.member_id === targetUserId);
+    setFollow(isFollowing);
+  }, [myFollowings, targetUserId]);
 
   useEffect(() => {
     if (prompt) setReviewCount(prompt.review_counts);
@@ -141,6 +165,36 @@ const PromptDetailPage = () => {
     }
   };
 
+  const handleToggleFollow = async () => {
+    if (!Number.isFinite(targetUserId)) return;
+
+    const prev = follow;
+    setFollow(!prev);
+
+    try {
+      if (!prev) {
+        await followMut.mutateAsync({ member_id: targetUserId });
+      } else {
+        await unfollowMut.mutateAsync({ member_id: targetUserId });
+      }
+
+      const tasks: Promise<unknown>[] = [];
+      if (Number.isFinite(currentUserId)) {
+        tasks.push(qc.invalidateQueries({ queryKey: ['member-following', Number(currentUserId)] }));
+      }
+      tasks.push(qc.invalidateQueries({ queryKey: ['member-follower', targetUserId] }));
+
+      await Promise.all(tasks);
+    } catch (e) {
+      setFollow(prev);
+      if (isAxiosError(e) && (e.response?.status ?? 0) === 401) {
+        handleShowLoginModal(handleToggleFollow);
+        return;
+      }
+      alert('팔로우 처리에 실패했습니다.');
+    }
+  };
+
   if (!Number.isFinite(promptId)) return <div>잘못된 접근입니다. (유효하지 않은 ID)</div>;
   if (isLoading) return <div>로딩 중…</div>;
   if (isError || !prompt) return <div>프롬프트를 불러오지 못했습니다.</div>;
@@ -157,7 +211,7 @@ const PromptDetailPage = () => {
         setReviewCount={setReviewCount}
         title={prompt.title}
         onClose={() => setShowReviews(false)}
-        currentUserId={1}
+        currentUserId={currentUserId}
       />
     );
   }
@@ -187,7 +241,7 @@ const PromptDetailPage = () => {
           {/* 닉네임 + 팔로우 */}
           <div className="flex items-center w-[214px]">
             <p className="font-medium text-[12px] mr-[10px]">{prompt.user?.nickname ?? '작성자'}</p>
-            <FollowButton follow={follow} onClick={() => setFollow(!follow)} />
+            {currentUserId !== prompt.user.user_id && <FollowButton follow={follow} onClick={handleToggleFollow} />}
           </div>
         </div>
       </div>
@@ -205,7 +259,7 @@ const PromptDetailPage = () => {
             tags={prompt.tags.map((tag) => tag.name)}
           />
 
-          <PromptInfo description={prompt.description} usageGuide={prompt.usage_guide} />
+          <PromptInfo description={prompt.description} usageGuide={prompt.usage_guide} isPaid={isPaid} />
         </div>
 
         <div className="lg:hidden flex justify-end">

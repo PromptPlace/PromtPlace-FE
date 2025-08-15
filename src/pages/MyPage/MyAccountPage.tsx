@@ -67,11 +67,11 @@ const MyAccountPage = () => {
           <div className="text-[32px] text-primary-hover font-bold">회원정보</div>
         </div>
 
-        <div className="flex items-center h-[90px] max-lg:h-auto border-b-[1px] max-lg:border-b-[0px] border-primary-hover">
-          <div className="flex items-center max-lg:justify-center gap-[10px] max-lg:gap-[70px] h-[50px] max-lg:h-auto ">
+        <div className="relative flex items-center justify-center h-[90px] max-lg:h-auto border-b-[1px] max-lg:border-b-[0px] border-primary-hover">
+          <div className="flex justify-center max-lg:justify-center gap-[10px] h-[50px] max-lg:h-auto max-lg:w-full">
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center justify-center  w-[24px] max-lg:w-[20px] h-[24px] max-lg:h-[20px]">
+              className="absolute left-[0px] flex items-center justify-center  w-[24px] max-lg:w-[20px] h-[24px] max-lg:h-[20px] max-lg:mr-[66px]">
               <img src={bluearrowIcon} alt="뒤로가기" className="max-lg:hidden" />
               <img src={blackarrowIcon} alt="뒤로가기" className="lg:hidden" />
             </button>
