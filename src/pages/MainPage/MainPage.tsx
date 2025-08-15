@@ -16,13 +16,21 @@ import MobileFilter from './components/MobileFilter';
 import MobilePrompt from './components/MobilePrompt';
 import useGetPromptList from '@/hooks/queries/MainPage/useGetPromptList';
 import usePostSearchPromptList from '@/hooks/mutations/MainPage/usePostSearchPromptList';
-import type { Prompt, ResponsePromptDTO, SearchPromptDto } from '@/types/MainPage/prompt';
+import type {
+  Prompt,
+  ResponsePromptDTO,
+  SearchPromptDto,
+  ResponseSearchPromptDTO,
+  searchPrompt,
+} from '@/types/MainPage/prompt';
+import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 
 const MainPage = () => {
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedSort, setSelectedSort] = useState<string>('recent');
   const [onlyFree, setOnlyFree] = useState<boolean>(false);
+  const [loginModalShow, setLoginModalShow] = useState<boolean>(false);
   const navigate = useNavigate();
 
   // 검색 파라미터 상태
@@ -36,15 +44,15 @@ const MainPage = () => {
 
   // 검색 API 호출
   const searchPromptMutation = usePostSearchPromptList();
-  const [searchPromptData, setSearchPromptData] = useState<ResponsePromptDTO | null>(null);
+  const [searchPromptData, setSearchPromptData] = useState<ResponseSearchPromptDTO | null>(null);
 
-  // 정렬 값 매핑 함수
+  // 정렬 값 매핑 함수 - 백엔드 API 스펙에 맞게 수정
   const mapSortValue = (sort: string | null): 'recent' | 'popular' | 'download' | 'views' | 'rating_avg' => {
     switch (sort) {
       case '조회순':
         return 'views';
       case '별점순':
-        return 'rating_avg';
+        return 'rating_avg'; // 백엔드에서는 rating_avg 사용
       case '다운로드순':
         return 'download';
       case '인기순':
@@ -84,12 +92,34 @@ const MainPage = () => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyword, selectedTags]); // 검색어와 태그만 dependency로 설정
+  }, [keyword, selectedTags, selectedSort]); // 정렬 조건도 dependency에 추가
+
+  console.log(searchPromptData?.data.map);
 
   const promptResult = useGetPromptList();
 
-  const basePromptList: Prompt[] =
-    keyword || selectedTags.length > 0 ? searchPromptData?.data || [] : promptResult.data?.data || [];
+  // searchPrompt 타입을 Prompt 타입으로 변환하는 함수
+  const convertSearchPromptToPrompt = (searchPrompt: searchPrompt): Prompt => {
+    return {
+      ...searchPrompt,
+      download_url: '', // searchPrompt에는 없지만 Prompt에는 있는 필드
+    };
+  };
+
+  // 백엔드 검색 결과와 기본 프롬프트 리스트를 안전하게 처리
+  const basePromptList: Prompt[] = (() => {
+    if (keyword || selectedTags.length > 0) {
+      // 검색 API 응답 구조: data.prompts 배열 사용
+      console.log('searchPromptData structure:', searchPromptData);
+      if (Array.isArray(searchPromptData?.data?.prompts)) {
+        return searchPromptData.data.prompts.map(convertSearchPromptToPrompt);
+      }
+      return [];
+    } else {
+      // 기본 프롬프트 리스트 사용
+      return Array.isArray(promptResult.data?.data) ? promptResult.data.data : [];
+    }
+  })();
 
   // const promptList =
   //   keyword || selectedModels.length > 0 || selectedTags.length > 0 || onlyFree || selectedSort !== 'recent'
@@ -102,6 +132,8 @@ const MainPage = () => {
 
   console.log('promptResult:', promptResult);
   console.log('searchPromptData:', searchPromptData);
+  console.log('basePromptList:', basePromptList);
+  console.log('basePromptList type:', typeof basePromptList, Array.isArray(basePromptList));
 
   // 코치마크 관련
   const { accessToken } = useAuth();
@@ -117,15 +149,17 @@ const MainPage = () => {
   }, [showCoachMark]);
 
   // 프론트엔드에서 모델 필터링 및 정렬 처리 (검색어/태그는 백엔드에서 처리됨)
-  const filterPromptsByModel = basePromptList.filter((prompt: Prompt) => {
-    const modelsArray = Array.isArray(prompt.models) ? prompt.models : [];
-    const matchModel =
-      selectedModels.length > 0 ? modelsArray.some((m) => selectedModels.includes(m.model.name)) : true;
+  const filterPromptsByModel = Array.isArray(basePromptList)
+    ? basePromptList.filter((prompt: Prompt) => {
+        const modelsArray = Array.isArray(prompt.models) ? prompt.models : [];
+        const matchModel =
+          selectedModels.length > 0 ? modelsArray.some((m) => selectedModels.includes(m.model.name)) : true;
 
-    const matchFree = onlyFree ? prompt.price === 0 : true;
+        const matchFree = onlyFree ? prompt.price === 0 : true;
 
-    return matchModel && matchFree;
-  });
+        return matchModel && matchFree;
+      })
+    : [];
 
   // 태그와 키워드 필터링은 제거 (백엔드에서 처리)
   // const matchTag =
@@ -137,6 +171,12 @@ const MainPage = () => {
   // }) || [];
 
   const sortPromptByFilter = [...filterPromptsByModel].sort((a, b) => {
+    // 검색어나 태그가 있을 때는 백엔드에서 이미 정렬된 결과이므로 추가 정렬 안함
+    if (keyword || selectedTags.length > 0) {
+      return 0; // 순서 유지
+    }
+
+    // 기본 프롬프트 리스트에 대해서만 프론트엔드 정렬 적용
     switch (selectedSort) {
       case '조회순':
         return b.views - a.views;
@@ -152,12 +192,16 @@ const MainPage = () => {
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime(); // 기본 정렬
     }
   });
- 
+
   const promptList = sortPromptByFilter;
 
   return (
     <div className="flex gap-[59px] justify-center bg-[#F5F5F5] relative overflow-hidden">
       {showCoachMark && !accessToken && <CoachMark setShowCoachMark={setShowCoachMark} />}
+      {/* 미로그인 시 로그인 모달 연결 */}
+      {loginModalShow && (
+        <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
+      )}
 
       <div className="w-[858px] h-full max-h-[950px] min-h-[700px] mb-[42px] overflow-y-auto pb-32">
         {keyword && (
@@ -212,6 +256,11 @@ const MainPage = () => {
             buttonType="imgButton"
             text="프롬프트 작성하기"
             onClick={() => {
+              if (!accessToken) {
+                alert('로그인이 필요합니다.');
+                setLoginModalShow(true);
+                return;
+              }
               navigate('/create');
             }}
           />
