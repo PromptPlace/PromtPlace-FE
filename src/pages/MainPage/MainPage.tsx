@@ -40,10 +40,6 @@ const MainPage = () => {
     setKeyword(search);
   }, [searchParams]);
 
-  // console.log(keyword);
-  // console.log(searchParams);
-  console.log('검색 조건:', { selectedModels, selectedTags, selectedSort, onlyFree, keyword });
-
   // 검색 API 호출
   const searchPromptMutation = usePostSearchPromptList();
   const [searchPromptData, setSearchPromptData] = useState<ResponsePromptDTO | null>(null);
@@ -63,6 +59,14 @@ const MainPage = () => {
         return 'recent';
     }
   };
+
+  console.log('검색 조건:', {
+    selectedModels,
+    selectedTags,
+    selectedSort: mapSortValue(selectedSort),
+    onlyFree,
+    keyword,
+  });
 
   useEffect(() => {
     const searchParams: SearchPromptDto = {
