@@ -80,7 +80,7 @@ export interface searchPrompt {
   updated_at: string;
   inactive_date: string | null;
   user: SearchPromptWriter;
-  models: PromptModel[];
+  models: PromptModel[];  
   tags: PromptTag[];
   images: PromptImage[];
   review_count: number;
