@@ -18,7 +18,7 @@ import { motion, useDragControls } from 'framer-motion';
 const BANKS = [
   { name: '토스뱅크', code: '092', fileName: 'Toss.svg' },
   { name: '카카오뱅크', code: '090', fileName: 'Kakao.svg' },
-  { name: '하나은행', code: '005', fileName: 'Hana.svg' },
+  { name: '하나은행', code: '081', fileName: 'Hana.svg' },
   { name: '우리은행', code: '020', fileName: 'Woori.svg' },
   { name: '신한', code: '088', fileName: 'Shinhan.svg' },
   { name: 'KB국민', code: '004', fileName: 'KB.svg' },

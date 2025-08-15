@@ -67,6 +67,8 @@ import usePostInquiries from '@/hooks/mutations/ProfilePage/usePostInquiries';
 import usePostImg from '@/hooks/mutations/ProfilePage/usePostImg';
 import { useAuth } from '@/context/AuthContext';
 import usePostNotifications from '@/hooks/mutations/ProfilePage/usePostNotifications';
+import axios from 'axios';
+import TextModal from '@/components/Modal/TextModal';
 
 type Inquiry = {
   inquiry_id: number;
@@ -159,6 +161,7 @@ const ProfilePage = () => {
 
   // 프롬프트 삭제
   const { mutate: mutateDeletePrompts } = usePatchDeletePrompts({ member_id });
+  const [delModal, setDelModal] = useState(false);
 
   // 회원 이력 조회
   const { data: historyData } = useGetHistories({ member_id });
@@ -241,7 +244,21 @@ const ProfilePage = () => {
 
   // 프롬프트 삭제
   const handleDeletePrompts = ({ prompt_id }: RequestDeletePromptDto) => {
-    mutateDeletePrompts({ prompt_id });
+    mutateDeletePrompts(
+      { prompt_id },
+      {
+        onError: (error) => {
+          if (axios.isAxiosError(error)) {
+            const status = error.response?.status;
+
+            // 구매 이력 있는 경우
+            if (status === 400) {
+              setDelModal((prev) => !prev);
+            }
+          }
+        },
+      },
+    );
   };
 
   // 회원 이력 작성
@@ -281,8 +298,8 @@ const ProfilePage = () => {
   }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   return (
-    <div className="flex flex-col justify-center pt-[120px] max-lg:pt-[12px] items-center max-w-[1440px] w-full m-auto">
-      <div className="px-[102px] w-full flex flex-col justify-center">
+    <div className="flex flex-col justify-center pt-[120px] max-lg:pt-[12px] items-center lg:max-w-[1440px] lg:w-full lg:m-auto">
+      <div className="lg:px-[102px] w-full flex flex-col justify-center">
         <div
           className={clsx(
             'p-[10px] flex items-center max-lg:flex-col max-lg:justify-center max-lg:p-0 relative',
@@ -610,30 +627,39 @@ const ProfilePage = () => {
             </div>
 
             {menuId === 0 && (
-              <div className="pr-[8px] bg-white max-lg:bg-transparent max-lg:p-0">
-                <div className="w-full max-h-[368px] overflow-y-auto">
-                  {promptsData?.pages.map((page, pageIdx) =>
-                    page.data.prompts.map((prompt, idx) => {
-                      const last = pageIdx === promptsData.pages.length - 1 && idx === page.data.prompts.length - 1;
-                      return (
-                        <div ref={last ? ref : undefined} key={prompt.prompt_id}>
-                          <PromptCard
-                            key={prompt.prompt_id}
-                            id={prompt.prompt_id}
-                            title={prompt.title}
-                            model={prompt.models}
-                            tags={prompt.tags}
-                            isMyProfile={isMyProfile}
-                            handleDeletePrompts={() => {
-                              handleDeletePrompts({ prompt_id: prompt.prompt_id });
-                            }}
-                          />
-                        </div>
-                      );
-                    }),
-                  )}
+              <>
+                {delModal && (
+                  <TextModal
+                    text="판매된 프롬프트는 삭제할 수 없습니다."
+                    onClick={() => setDelModal(false)}
+                    size="lg"
+                  />
+                )}
+                <div className="pr-[8px] bg-white max-lg:bg-transparent max-lg:p-0">
+                  <div className="w-full max-h-[368px] overflow-y-auto">
+                    {promptsData?.pages.map((page, pageIdx) =>
+                      page.data.prompts.map((prompt, idx) => {
+                        const last = pageIdx === promptsData.pages.length - 1 && idx === page.data.prompts.length - 1;
+                        return (
+                          <div ref={last ? ref : undefined} key={prompt.prompt_id}>
+                            <PromptCard
+                              key={prompt.prompt_id}
+                              id={prompt.prompt_id}
+                              title={prompt.title}
+                              model={prompt.models}
+                              tags={prompt.tags}
+                              isMyProfile={isMyProfile}
+                              handleDeletePrompts={() => {
+                                handleDeletePrompts({ prompt_id: prompt.prompt_id });
+                              }}
+                            />
+                          </div>
+                        );
+                      }),
+                    )}
+                  </div>
                 </div>
-              </div>
+              </>
             )}
 
             {menuId === 1 && (

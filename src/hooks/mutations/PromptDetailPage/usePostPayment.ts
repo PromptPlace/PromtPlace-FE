@@ -13,7 +13,7 @@ export function usePostPayment() {
           statusCode: 401,
         };
       }
-      return postPayment(paymentData, accessToken);
+      return postPayment(paymentData);
     },
   });
 }
