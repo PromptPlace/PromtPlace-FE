@@ -85,12 +85,18 @@ const PromptCreatePage = () => {
         setModalText('프롬프트 제목을 입력해주세요.');
       } else if (content.trim() === '') {
         setModalText('프롬프트 내용을 입력해주세요.');
-      } else if (selectedModels.length <= 0) {
+      } else if (selectedModels.length === 0) {
         setModalText('모델을 설정해주세요.');
-      } else if (previewText.trim() !== '') {
+      } else if (!isValidCost || !priceType) {
+        setModalText('금액을 설정해주세요.');
+      } else if (previewText.trim() === '') {
         setModalText('프롬프트 미리보기를 입력해주세요.');
-      } else if (discriptionText.trim() !== '') {
+      } else if (discriptionText.trim() === '') {
         setModalText('프롬프트 설명을 입력해주세요.');
+      } else if (!isValidTags) {
+        setModalText('태그는 0~10개까지 설정 가능합니다.');
+      } else if (!isValidImg) {
+        setModalText('이미지는 0~3개까지 설정 가능합니다.');
       }
       setAlertModal(true);
     }
