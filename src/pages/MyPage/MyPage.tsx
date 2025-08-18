@@ -67,7 +67,7 @@ const MyPage = () => {
                 <img src={ProfileIcon} alt="프로필" className="w-full h-full object-contain" />
               </div>
 
-              <p className="text-text-on-white text-[14px] font-medium leading-[18px]">{data?.data.name}</p>
+              <p className="text-text-on-white text-[14px] font-medium leading-[18px]">{data?.data.nickname}</p>
 
               <div
                 onClick={() => handleNavigate(`/profile/${user.user_id}`)}
