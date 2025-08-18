@@ -69,6 +69,7 @@ import { useAuth } from '@/context/AuthContext';
 import usePostNotifications from '@/hooks/mutations/ProfilePage/usePostNotifications';
 import axios from 'axios';
 import TextModal from '@/components/Modal/TextModal';
+import useGetNofify from '@/hooks/queries/ProfilePage/useGetNofify';
 
 type Inquiry = {
   inquiry_id: number;
@@ -90,13 +91,14 @@ const ProfilePage = () => {
 
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
 
-  const [isAlarmOn, setIsAlarmOn] = useState<{ state: boolean; icon: string }>({
-    state: false,
-    icon: AlarmOffIcon,
-  });
-
   // 알림 등록 & 취소
   const { mutate: mutateNotification } = usePostNotifications({ member_id });
+  const { data: notifyData } = useGetNofify({ member_id });
+
+  const [isAlarmOn, setIsAlarmOn] = useState<{ state: boolean; icon: string }>({
+    state: !!notifyData?.data.subscribed,
+    icon: !notifyData?.data.subscribed ? AlarmOffIcon : AlarmOnIcon,
+  });
 
   const [isBuyer, setIsBuyer] = useState(true);
   const [isArrowClicked, setIsArrowClicked] = useState(false);
@@ -393,8 +395,8 @@ const ProfilePage = () => {
                       }}
                       className={clsx(
                         'lg:hidden w-[20px] h-[20px] bg-white rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out p-[3px]',
-                        !isAlarmOn.state && 'border border-text-on-background',
-                        isAlarmOn.state && 'border border-primary bg-red-500',
+                        !notifyData?.data.subscribed && 'border border-text-on-background',
+                        notifyData?.data.subscribed && 'border border-primary',
                       )}>
                       <img src={isAlarmOn.icon} alt="알림" className="w-full h-full object-contain" />
                     </div>
@@ -491,13 +493,17 @@ const ProfilePage = () => {
                 </div>
 
                 <div
-                  onClick={() =>
-                    setIsAlarmOn((prev) => ({ state: !prev.state, icon: prev.state ? AlarmOffIcon : AlarmOnIcon }))
-                  }
+                  onClick={() => {
+                    mutateNotification({ prompter_id: member_id });
+                    setIsAlarmOn((prev) => ({
+                      state: !prev.state,
+                      icon: prev.state ? AlarmOffIcon : AlarmOnIcon,
+                    }));
+                  }}
                   className={clsx(
                     'max-lg:hidden w-[48px] h-[48px] bg-white rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out',
-                    !isAlarmOn.state && 'border border-text-on-background',
-                    isAlarmOn.state && 'border border-primary bg-red-500',
+                    !notifyData?.data.subscribed && 'border border-text-on-background',
+                    notifyData?.data.subscribed && 'border border-primary',
                   )}>
                   <img src={isAlarmOn.icon} alt="알림" />
                 </div>

@@ -148,3 +148,10 @@ export type ResponseNotificationsDto = CommonResponse<{
   user_id: number;
   prompter_id: number;
 }>;
+
+// 프롬프터 구독 여부 조회
+export type ResponseIsNotifyDto = CommonResponse<{
+  user_id: number;
+  prompter_id: number;
+  subscribed: boolean;
+}>;
