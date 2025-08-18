@@ -12,7 +12,15 @@ function onError(error: any) {
   console.error(error);
 }
 
-export const Editor = ({ placeholder, onChange }: { placeholder: string; onChange: (value: string) => void }) => {
+export const Editor = ({
+  placeholder,
+  onChange,
+  maxHight,
+}: {
+  placeholder: string;
+  onChange: (value: string) => void;
+  maxHight: string;
+}) => {
   const initialConfig = {
     namespace: 'MyEditor',
     theme,
@@ -30,12 +38,12 @@ export const Editor = ({ placeholder, onChange }: { placeholder: string; onChang
   return (
     <div
       className={`w-full mx-auto mt-5 rounded text-black relative leading-[36px] font-normal text-left rounded-tl-[10px] rounded-tr-[10px]`}>
-      <div className="bg-white relative">
+      <div className={`bg-white relative overflow-y-auto ${maxHight} overflow-x-hidden`}>
         <LexicalComposer initialConfig={initialConfig}>
           <RichTextPlugin
             contentEditable={
               <ContentEditable
-                className={`w-full h-[40px] resize-none text-[25px] caret-[#444] relative [tab-size:1] outline-none px-[10px] `}
+                className={`w-full min-h-[40px] ${maxHight} resize-none text-[25px] caret-[#444] relative [tab-size:1] outline-none px-[10px] `}
                 aria-placeholder={placeholder}
                 placeholder={
                   <div
@@ -55,7 +63,15 @@ export const Editor = ({ placeholder, onChange }: { placeholder: string; onChang
 };
 
 //모바일 전용
-export const MobileEditor = ({ placeholder, onChange }: { placeholder: string; onChange: (value: string) => void }) => {
+export const MobileEditor = ({
+  placeholder,
+  onChange,
+  maxHight,
+}: {
+  placeholder: string;
+  onChange: (value: string) => void;
+  maxHight: string;
+}) => {
   const initialConfig = {
     namespace: 'MyEditor',
     theme,
@@ -70,19 +86,20 @@ export const MobileEditor = ({ placeholder, onChange }: { placeholder: string; o
       onChange(text); // 텍스트 저장
     });
   }
+
   return (
     <div
       className={`w-full mx-auto rounded text-black relative leading-[17px] font-normal text-left rounded-tl-[10px] rounded-tr-[10px]`}>
-      <div className="bg-white relative">
+      <div className={`bg-white relative overflow-y-auto ${maxHight} overflow-x-hidden`}>
         <LexicalComposer initialConfig={initialConfig}>
           <RichTextPlugin
             contentEditable={
               <ContentEditable
-                className={`w-full h-full resize-none text-[12px] caret-[#444] relative [tab-size:1] outline-none px-[10px] `}
+                className={`w-full min-h-[13px] resize-none text-[12px] caret-[#444] relative [tab-size:1] outline-none px-[10px] py-[2px] box-border`}
                 aria-placeholder={placeholder}
                 placeholder={
                   <div
-                    className={`absolute top-[3px] left-[10px] h-[15px] w-full flex items-center text-[12px] text-[#999] select-none pointer-events-none`}>
+                    className={`absolute top-[2px] left-[10px] text-[12px] text-[#999] select-none pointer-events-none`}>
                     {placeholder}
                   </div>
                 }

@@ -7,7 +7,8 @@ interface TagInputProps {
   setTags: (tags: string[]) => void;
 }
 
-const PAGE_MAX_LEN = 10;
+const PAGE_MAX_LEN = 15; // 최대 글자 수
+const PAGE_MAX_TAGS = 4; // 최대 태그 개수
 
 function splitTags(input: string) {
   return input
@@ -16,12 +17,12 @@ function splitTags(input: string) {
     .filter((tag) => tag.length > 0);
 }
 
-function getPageTags(tags: string[], page: number, maxLen = PAGE_MAX_LEN) {
+function getPageTags(tags: string[], page: number, maxLen = PAGE_MAX_LEN, maxTags = PAGE_MAX_TAGS) {
   let pages: string[][] = [];
   let curr: string[] = [];
   let sum = 0;
   tags.forEach((tag) => {
-    if (sum + tag.length > maxLen) {
+    if (sum + tag.length > maxLen || curr.length >= maxTags) {
       pages.push(curr);
       curr = [];
       sum = 0;
@@ -44,7 +45,10 @@ function getPageTags(tags: string[], page: number, maxLen = PAGE_MAX_LEN) {
     ).idxs,
   };
 }
-
+// 태그 텍스트를 10자까지만 표시하고 초과시 ... 처리하는 함수
+function getTruncatedTag(tag: string) {
+  return tag.length > 10 ? tag.slice(0, 10) + '...' : tag;
+}
 const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
   const [input, setInput] = useState('');
   const [isEdit, setIsEdit] = useState(true);
@@ -95,12 +99,12 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
     if (isEdit) inputRef.current?.focus();
   }, [isEdit]);
 
-  // 추가: 서버에서 tags가 채워져 들어오면, 최초에는 읽기모드로 자동 전환
+  // 서버에서 tags가 채워져 들어오면, 최초에는 읽기모드로 자동 전환
   useEffect(() => {
     // 입력 중인 상태가 아니고(=input이 비어 있고), 외부에서 태그가 주입되었으면 읽기모드로
     if (tags.length > 0 && isEdit && input === '') {
       setIsEdit(false); // 추가
-      setPage(0); // 추가: 첫 페이지로 정렬
+      setPage(0); // 첫 페이지로 정렬
     }
   }, [tags]); // 추가
 
@@ -133,7 +137,7 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
   // 태그가 1개일때
   if (!isEdit && tags.length === 1) {
     const onlyTag = tags[0];
-    const displayTag = onlyTag.length > 45 ? onlyTag.slice(0, 35) + '...' : onlyTag; //35자까지만 보이게
+    const displayTag = getTruncatedTag(onlyTag);
 
     return (
       <div
@@ -146,6 +150,15 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
           style={{ boxShadow: '0px 4px 8px 0px rgba(0,0,0,0.12)' }}
           onClick={(e) => e.stopPropagation()}>
           #{displayTag}
+          <button
+            type="button"
+            className="ml-4 text-text-on-background focus:outline-none font-normal z-2"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteTag(0);
+            }}>
+            <img className="w-[12px] h-[12px] object-cover" src={xbtn} alt="delete btn" />
+          </button>
         </span>
       </div>
     );
@@ -180,7 +193,7 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
             className="flex items-center rounded-[50px] px-4 py-1 border border-text-on-background mr-2 text-[14px] font-normal text-text-on-background"
             style={{ boxShadow: '0px 4px 8px 0px rgba(0,0,0,0.12)' }}
             onClick={(e) => e.stopPropagation()}>
-            #{tag}
+            #{getTruncatedTag(tag)}
             <button
               type="button"
               className="ml-2 text-text-on-background focus:outline-none font-normal"

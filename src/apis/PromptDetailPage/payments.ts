@@ -1,7 +1,12 @@
 import type { RequestPaymentDTO, ResponsePaymentDTO } from '@/types/PromptDetailPage/payments';
-import axios from 'axios';
+import { axiosInstance } from '@/apis/axios';
 
 export const postPayment = async(data:RequestPaymentDTO): Promise<ResponsePaymentDTO> => {
-  const res = await axios.post(`${import.meta.env.VITE_SERVER_API_URL}/api/prompts/purchases/requests`, data);
+  console.log('결제 API 호출:', {
+    url: `/api/prompts/purchases/requests`,
+    data
+  });
+
+  const res = await axiosInstance.post(`/api/prompts/purchases/requests`, data);
   return res.data;
 };

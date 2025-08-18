@@ -7,7 +7,8 @@ interface TagInputProps {
   setTags: (tags: string[]) => void;
 }
 
-const PAGE_MAX_LEN = 17;
+const PAGE_MAX_LEN = 15; // 최대 글자 수
+const PAGE_MAX_TAGS = 4; // 최대 태그 개수
 
 function splitTags(input: string) {
   return input
@@ -16,7 +17,7 @@ function splitTags(input: string) {
     .filter((tag) => tag.length > 0);
 }
 
-function getPageTags(tags: string[], page: number, maxLen = PAGE_MAX_LEN) {
+function getPageTags(tags: string[], page: number, maxLen = PAGE_MAX_LEN, maxTags = PAGE_MAX_TAGS) {
   // 태그를 길이 오름차순으로 정렬 (같은 길이면 알파벳 순)
   const sortedTags = [...tags].sort((a, b) => {
     if (a.length !== b.length) {
@@ -30,7 +31,7 @@ function getPageTags(tags: string[], page: number, maxLen = PAGE_MAX_LEN) {
   let sum = 0;
   sortedTags.forEach((tag) => {
     // 현재 태그를 추가했을 때 최대 길이를 초과하는지 확인
-    if (sum + tag.length > maxLen) {
+    if (sum + tag.length > maxLen || curr.length >= maxTags) {
       pages.push(curr);
       curr = [];
       sum = 0;
@@ -63,9 +64,15 @@ function getTruncatedTag(tag: string) {
 
 const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
   const [input, setInput] = useState('');
-  const [isEdit, setIsEdit] = useState(true);
+  const [isEdit, setIsEdit] = useState(tags.length === 0);
   const [page, setPage] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  //tags가 변경될 때 isEdit 상태를 업데이트
+  useEffect(() => {
+    // 태그가 있으면 읽기 모드, 없으면 입력 모드
+    setIsEdit(tags.length === 0);
+  }, [tags.length]);
 
   // 입력모드 → 완료 버튼 클릭
   const handleComplete = () => {
@@ -82,7 +89,7 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
     setIsEdit(false);
   };
 
-  // 읽기모드에서 배경 클릭시  입력모드 진입, 기존 태그들 input 값으로 전환
+  // 읽기모드에서 배경 클릭시 입력모드 진입, 기존 태그들 input 값으로 전환
   const handleAreaClick = () => {
     setInput(tags.map((tag) => `#${tag}`).join(' '));
     setTags([]);
@@ -155,7 +162,16 @@ const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
           className="flex items-center rounded-[50px] px-4 py-1 border border-text-on-background text-[14px] font-normal text-text-on-background"
           style={{ boxShadow: '0px 4px 8px 0px rgba(0,0,0,0.12)' }}
           onClick={(e) => e.stopPropagation()}>
-          #{displayTag}
+          #{String(displayTag)}
+          <button
+            type="button"
+            className="ml-2 text-text-on-background focus:outline-none font-normal"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteTag(0);
+            }}>
+            <img className="w-[12px] h-[12px] object-cover" src={xbtn} alt="delete btn" />
+          </button>
         </span>
       </div>
     );

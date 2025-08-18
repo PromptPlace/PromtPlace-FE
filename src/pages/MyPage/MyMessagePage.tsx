@@ -230,6 +230,7 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
                   onRead={handleRead}
                 />
                 <MessagePagination
+                  data={pageMessageData}
                   currentPage={currentPage}
                   totalPages={TOTAL_MESSAGE_PAGES}
                   onPageChange={handlePageChange}
@@ -239,6 +240,7 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
               <>
                 <NotificationTableList data={pageNotificationData} handleNoticeRowClick={handleNoticeRowClick} />
                 <NotificationPagination
+                  data={pageNotificationData}
                   currentPage={currentPage}
                   totalPages={TOTAL_Notification_PAGES}
                   onPageChange={handlePageChange}
@@ -250,51 +252,57 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
       </div>
       {/*모바일 화면 */}
       <div className="lg:hidden block">
-        <div>
-          <p className="ml-[20px] mt-[12px] text-primary-hover text-[20px] font-bold">메시지함</p>
+        <div className="w-full flex justify-center">
+          <div className="w-full max-w-[280px] flex justify-start">
+            <p className="pt-[12px] text-primary-hover text-[20px] font-bold">메시지함</p>
+          </div>
         </div>
-        <div className="relative inline-block w-full max-w-[108px] h-[31px] mt-[20px] ml-[20px]" ref={ref}>
-          <button
-            type="button"
-            className="flex items-center justify-center gap-[8px] w-full px-[12px] py-[8px] rounded-[8px] bg-white"
-            style={{ boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)' }}
-            onClick={() => setOpenType((prev) => !prev)}>
-            <span className="text-[12px] text-text-on-white font-medium">
-              {type === 'message' ? '메시지함' : '알림함'}
-            </span>
-            <LuChevronDown size={10} />
-          </button>
-          {/*드롭다운 */}
-          {openType && (
-            <ul
-              className="absolute left-0 z-10 w-[111px] h-[66px] mt-[6px] flex flex-col justify-center items-center
+        <div className="w-full flex justify-center">
+          <div className="w-full max-w-[280px] flex justify-start">
+            <div className="relative inline-block w-full max-w-[108px] h-[31px] mt-[20px]" ref={ref}>
+              <button
+                type="button"
+                className="flex items-center justify-center gap-[8px] w-full px-[12px] py-[8px] rounded-[8px] bg-white"
+                style={{ boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)' }}
+                onClick={() => setOpenType((prev) => !prev)}>
+                <span className="text-[12px] text-text-on-white font-medium">
+                  {type === 'message' ? '메시지함' : '알림함'}
+                </span>
+                <LuChevronDown size={10} />
+              </button>
+              {/*드롭다운 */}
+              {openType && (
+                <ul
+                  className="absolute left-0 z-10 w-[111px] h-[66px] mt-[6px] flex flex-col justify-center items-center
                bg-white border-[0.5px] border-white-stroke rounded-[8px]"
-              style={{ boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)' }}>
-              <li
-                className="w-[87px] h-[27px] flex justify-center items-center border-b-[0.5px] border-white-stroke"
-                onClick={() => {
-                  navigate(`/mypage/message/message`);
+                  style={{ boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)' }}>
+                  <li
+                    className="w-[87px] h-[27px] flex justify-center items-center border-b-[0.5px] border-white-stroke"
+                    onClick={() => {
+                      navigate(`/mypage/message/message`);
 
-                  setOpenType(false);
-                }}>
-                <p
-                  className={`text-[12px] font-normal ${type === 'message' ? 'text-text-on-white' : 'text-text-on-background'}`}>
-                  메시지함
-                </p>
-              </li>
-              <li
-                className="w-[87px] h-[27px] flex justify-center items-center "
-                onClick={() => {
-                  navigate(`/mypage/message/notification`);
-                  setOpenType(false);
-                }}>
-                <p
-                  className={`text-[12px] font-normal ${type === 'notification' ? 'text-text-on-white' : 'text-text-on-background'}`}>
-                  알림함
-                </p>
-              </li>
-            </ul>
-          )}
+                      setOpenType(false);
+                    }}>
+                    <p
+                      className={`text-[12px] font-normal ${type === 'message' ? 'text-text-on-white' : 'text-text-on-background'}`}>
+                      메시지함
+                    </p>
+                  </li>
+                  <li
+                    className="w-[87px] h-[27px] flex justify-center items-center "
+                    onClick={() => {
+                      navigate(`/mypage/message/notification`);
+                      setOpenType(false);
+                    }}>
+                    <p
+                      className={`text-[12px] font-normal ${type === 'notification' ? 'text-text-on-white' : 'text-text-on-background'}`}>
+                      알림함
+                    </p>
+                  </li>
+                </ul>
+              )}
+            </div>
+          </div>
         </div>
 
         <div className="flex justify-center">

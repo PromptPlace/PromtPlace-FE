@@ -7,6 +7,7 @@ export type RequestPaymentDTO = {
   amount: number;
   buyer_name: string;
   redirect_url: string;
+  imp_uid?: string; // 포트원 거래 고유번호 (선택적)
 };
 
 export type ResponsePaymentDTO = {
