@@ -10,6 +10,9 @@ function useDeleteFollow({ member_id }: RequestMemberDto) {
       queryClient.invalidateQueries({
         queryKey: ['member-following', member_id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ['member-follower', member_id],
+      });
     },
   });
 }
