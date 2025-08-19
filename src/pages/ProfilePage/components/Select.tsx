@@ -1,6 +1,6 @@
 import ArrowUp from '@assets/mobile/icon-mobile-arrow-up.svg';
 import ArrowDown from '@assets/mobile/icon-mobile-arrow-down.svg';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface SelectProps {
   menuList: { id: number; label: string }[];
@@ -10,14 +10,26 @@ interface SelectProps {
 
 const Select = ({ menuList, menuId, setMenuId }: SelectProps) => {
   const [show, setShow] = useState<boolean>(false);
+  const selectRef = useRef<HTMLDivElement | null>(null);
 
   const handleSelect = (id: number) => {
     setMenuId(id);
     setShow(false);
   };
 
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (selectRef.current && !selectRef.current?.contains(e.target as Node)) {
+        setShow(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
   return (
-    <div className="relative shrink-0">
+    <div className="relative shrink-0" ref={selectRef}>
       <div className="absolute z-10 whitespace-nowrap">
         <button
           onClick={() => setShow((prev) => !prev)}
