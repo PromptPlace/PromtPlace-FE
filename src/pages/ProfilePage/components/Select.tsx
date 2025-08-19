@@ -29,7 +29,7 @@ const Select = ({ menuList, menuId, setMenuId }: SelectProps) => {
           </div>
         </button>
         {show && (
-          <ul className="rounded-[8px] border border-[0.5px] border-white-stroke bg-white shadow-button-hover py-[6px] px-[12px] w-max text-text-on-background text-center flex flex-col divide-y-[0.5px] text-[12px] font-normal leading-[15px] whitespace-nowrap">
+          <ul className="rounded-[8px] border border-[0.5px] border-white-stroke bg-white shadow-button-hover py-[6px] px-[12px] w-max text-text-on-background text-center flex flex-col divide-y-[0.5px] text-[12px] font-normal leading-[15px] whitespace-nowrap mt-[6px]">
             {menuList.map((menu) => (
               <li
                 key={menu.id}
