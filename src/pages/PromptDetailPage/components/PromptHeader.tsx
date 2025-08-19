@@ -8,6 +8,7 @@ import Rating from '@components/Rating';
 import heartNone from '../../../assets/icon-heart-none-big.svg';
 import heartOnClick from '../../../assets/icon-heart-blue-big.svg';
 import rightArrow from '../assets/keyboard_arrow_down.svg';
+import Back from '../assets/back.svg';
 
 interface Props {
   title: string;
@@ -54,14 +55,9 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview, model, 
         </div>
 
         <div className="flex items-center justify-between w-full">
-          <div className="flex items-center gap-[15px]">
-            <button
-              onClick={onClose}
-              className="text-2xl pb-[10px] font-bold leading-none hover:opacity-70"
-              aria-label="뒤로가기">
-              &lt;
-            </button>
-            <h2 className="font-bold text-[32px] pb-[10px]">{truncateTitle(title)}</h2>
+          <div className="flex items-center">
+            <img src={Back} alt="뒤로가기" className="w-[33px] h-[33px] cursor-pointer mr-[10px]" onClick={onClose} />
+            <h2 className="font-bold text-[32px] leading-tight">{truncateTitle(title)}</h2>
           </div>
 
           <div className="flex gap-8">
