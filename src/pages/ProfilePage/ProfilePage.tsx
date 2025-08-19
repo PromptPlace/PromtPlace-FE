@@ -70,6 +70,7 @@ import usePostNotifications from '@/hooks/mutations/ProfilePage/usePostNotificat
 import axios from 'axios';
 import TextModal from '@/components/Modal/TextModal';
 import useGetNofify from '@/hooks/queries/ProfilePage/useGetNofify';
+import useDeleteInquiries from '@/hooks/mutations/ProfilePage/useDeleteInquiries';
 
 type Inquiry = {
   inquiry_id: number;
@@ -195,6 +196,9 @@ const ProfilePage = () => {
   // 문의 상세 정보
   const [selectedInquiryId, setSelectedInquiryId] = useState<number | null>(null);
   const { data: inquiryDetailData } = useGetDetailInquiries({ member_id }, { inquiry_id: selectedInquiryId });
+
+  // 문의 삭제
+  const { mutate: mutateDeleteInquiry } = useDeleteInquiries({ member_id });
 
   // 문의 답변하기
   const { mutate: mutatePostReplyInquiries } = usePostReplyInquiries({ member_id });
@@ -754,7 +758,9 @@ const ProfilePage = () => {
                             onRead={(id) => {
                               mutateReadInquiries({ inquiry_id: id });
                             }}
-                            onDelete={() => {}}
+                            onDelete={(id) => {
+                              mutateDeleteInquiry({ inquiry_id: id });
+                            }}
                           />
                         ))}
                   </div>
@@ -794,7 +800,9 @@ const ProfilePage = () => {
                           onRead={(id) => {
                             mutateReadInquiries({ inquiry_id: id });
                           }}
-                          onDelete={() => {}}
+                          onDelete={(id) => {
+                            mutateDeleteInquiry({ inquiry_id: id });
+                          }}
                         />
                       ))}
                   </div>
