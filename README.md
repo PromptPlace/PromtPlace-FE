@@ -226,5 +226,38 @@ develop ← 작업 브랜치
 
 <details>
   <summary> <h3>🔍 개발 중 어려움과 해결 과정</h3></summary>
-  <a href="https://www.notion.so/24f87a06720780958686fb8cf470032a"> 🔗 노션 링크</link>
+  <h3><a href="https://www.notion.so/24f87a06720780958686fb8cf470032a"> 🔗 노션 링크</a></h3>
+
+  <br/>
+
+  | ✔️ 서비스 워커 캐시 문제로 배포가 반영되지 않는 문제 | |
+  | ----- | ----- | 
+  | <img width="1532" height="806" alt="image" src="https://github.com/user-attachments/assets/f3a6cb6b-0b47-4a00-b452-b0a4561453ee" /> | <img width="766" height="859" alt="스크린샷 2025-08-16 오전 9 00 09" src="https://github.com/user-attachments/assets/0f8c05b7-bdf2-4b51-af55-420dd97e7af6" /> | 
+
+  | ✔️ tanstack query key 사용으로 즉각적인 데이터 변화 반영이 되지 않는 문제 |
+  | ----- |
+  | <img width="1532" height="1446" alt="image" src="https://github.com/user-attachments/assets/61fabfa8-7307-4142-a1eb-4c22f8733699" /> |
+
+  | ✔️ 메인페이지 팔로우/언팔로우 문제 | 1. 메인페이지 팔로우/언팔로우 초기값 문제 |
+  | ----- | ----- |
+  | <img width="1532" height="1638" alt="image" src="https://github.com/user-attachments/assets/b251d384-a0b8-4b0d-9e00-65fdfa6e883d" /> | <img width="1532" height="342" alt="image" src="https://github.com/user-attachments/assets/7084e82f-3837-4baf-a196-cc609115cbcb" /> |
+  
+⬇️ 로그인 후 메인페이지에 초기 접속 시 팔로우 / 언팔로우 상태 반영이 제대로 되지 않는다.
+
+https://github.com/user-attachments/assets/6a5b0182-1564-4cfd-903d-2405e92d862c
+
+
+  | 2. 팔로우/언팔로우 상태 변화 미반영 문제 | 3. Optimistic Update를 활용한 문제 해결 |
+  | ----- | ----- |
+  | <img width="1532" height="1566" alt="image" src="https://github.com/user-attachments/assets/01800a50-fd10-4373-bddd-3ff42ce8d4f8" /> | <img width="1532" height="1566" alt="image" src="https://github.com/user-attachments/assets/3be43cfe-4d15-4601-80c8-14ac15fdb6fe" /> |
+
+⬇️ 팔로우 버튼을 사용자가 클릭한 후 화면이 리랜더링 되어야만 isFollow 상태가 반영된다.
+
+https://github.com/user-attachments/assets/c6342975-184a-4ecf-823e-de3ee54e933f
+
+⬇️ Optimistic Update를 활용해 UI 변경이 안되는 문제와 useState문제를 동시에 해결해보고자 하였다. 
+
+https://github.com/user-attachments/assets/d0e4c89b-07c6-466c-bde7-5021988ddb98
+
+  
 </details>

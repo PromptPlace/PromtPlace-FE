@@ -20,7 +20,7 @@ export const defaultUser: User = {
   nickname: '게스트',
   email: '',
   social_type: 'NAVER',
-  status: 'INACTIVE',
+  status: true, // 'ACTIVE' or 'INACTIVE'로 변경 필요
   role: 'USER',
   create_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
@@ -61,6 +61,24 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [accessToken, setAccessToken] = useState<string | null>(getAccessTokenFromStorage());
   const [refreshToken, setRefreshToken] = useState<string | null>(getRefreshTokenFromStorage());
 
+  const logout = async () => {
+    try {
+      await axiosInstance.get('/api/auth/logout');
+      console.log('서버 로그아웃 성공');
+    } catch (error) {
+      console.error('서버 로그아웃 요청 실패:', error);
+    } finally {
+      removeAccessTokenFromStorage();
+      removeRefreshTokenFromStorage();
+      removeUserFromStorage();
+      setAccessToken(null);
+      setRefreshToken(null);
+      setUser(defaultUser);
+    }
+
+    window.location.href = '/'; // 로그아웃 후 메인 페이지로 이동
+  };
+
   const login = async (provider: 'google' | 'kakao' | 'naver', authCode: string) => {
     try {
       const response = await (async () => {
@@ -90,27 +108,22 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         console.log(`[${provider}] 로그인 성공!`);
         console.log('user 정보:', user);
       }
+
+      console.log('사용자 status:', response.data.user.status);
+      if (response.data.user.status === false) {
+        console.log('dl 계정은 비활성화된 계정입니다.');
+        console.warn('비활성화된 계정입니다. 관리자에게 문의하세요.');
+        alert('비활성화된 계정입니다. 관리자에게 문의하세요.');
+        logout(); // 비활성화된 계정은 로그아웃 처리
+        return;
+      }
+
+      if (response.data.user.status === true) {
+        console.log('dl 계정은 활성화된 계정입니다.');
+      }
     } catch (error) {
       console.error(`[${provider}] 백엔드 인증 과정 실패`, error);
     }
-  };
-
-  const logout = async () => {
-    try {
-      await axiosInstance.get('/api/auth/logout');
-      console.log('서버 로그아웃 성공');
-    } catch (error) {
-      console.error('서버 로그아웃 요청 실패:', error);
-    } finally {
-      removeAccessTokenFromStorage();
-      removeRefreshTokenFromStorage();
-      removeUserFromStorage();
-      setAccessToken(null);
-      setRefreshToken(null);
-      setUser(defaultUser);
-    }
-
-    window.location.href = '/'; // 로그아웃 후 메인 페이지로 이동
   };
 
   const switchAccount = async () => {

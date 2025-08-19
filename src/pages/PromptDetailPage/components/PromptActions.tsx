@@ -43,10 +43,7 @@ interface PromptActionsProps {
   review_rating_avg: number;
   updatedAt: string;
   user: PromptDetailDto['user'];
-  tags: {
-    tag_id: number;
-    name: string;
-  }[];
+  tags: { tag_id: number; name: string }[];
   onClickReview: () => void;
 }
 
@@ -429,7 +426,7 @@ const PromptActions = ({
       <div
         className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-[30px] ${isAdmin ? 'mb-[25px]' : 'mb-[30px]'}`}>
         {tags.map((tag) => (
-          <TagButton key={tag.tag_id} hasDelete={false} text={tag.name} onClick={() => {}} />
+          <TagButton key={tag.tag_id} hasDelete={false} text={`#${tag.name}`} onClick={() => {}} />
         ))}
       </div>
 
