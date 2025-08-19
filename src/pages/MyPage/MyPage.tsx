@@ -104,7 +104,7 @@ const MyPage = () => {
             <button
               onClick={logout}
               className="py-[4px] px-[8px] gap-[8px] rounded-[4px] border-[0.5px] border-text-on-background bg-white shadow-button text-text-on-background text-[10px] font-normal leading-[13px] tracking-[0.46px] flex absolute top-[427px] right-[20px]">
-              <LogOutIcon className="text-white-stroke w-[12px] h-[12px]" />
+              <LogOutIcon className="text-text-on-background w-[12px] h-[12px]" />
               로그아웃
             </button>
           </>
