@@ -40,14 +40,12 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
   return (
     <div className="bg-white border-b border-b-white-stroke py-[10px] max-lg:p-[12px] flex justify-between items-center max-lg:items-start cursor-pointer max-lg:flex-col max-lg:gap-[6px] max-lg:mr-[4px]">
       <div className="lg:hidden gap-[10px] flex">
-        {model.map((model, idx) => (
-          <div className="lg:hidden" key={idx}>
-            <ModelButton text={model.model.name} />
-          </div>
-        ))}
+        <div className="lg:hidden">
+          <ModelButton text={model[0]?.model.name} />
+        </div>
 
         <div className="lg:hidden flex gap-[5px]">
-          {tags.map((tag) => (
+          {tags.slice(0, 3).map((tag) => (
             <div key={tag.tag.name} className="text-text-on-background text-[20px] font-medium leading-[25px]">
               <TagButton key={String(tag.tag.name)} hasDelete={false} text={`# ${tag.tag.name}`}></TagButton>
             </div>
@@ -58,22 +56,18 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
       <div className="flex w-full lg:justify-between">
         <div
           onClick={() => handleNavigate(id)}
-          className="text-text-on-white text-[22px] font-bold leading-[28px] py-[20px] px-[51px] max-lg:p-0 truncate max-w-[606px] w-full truncate max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px]">
+          className="text-text-on-white text-[22px] font-bold leading-[28px] py-[20px] px-[51px] max-lg:p-0 truncate max-w-[606px] lg:min-w-[280px] w-full truncate max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px]">
           {title}
         </div>
-        {model.map((model, idx) => (
-          <div
-            key={idx}
-            className="max-lg:hidden text-text-on-background text-[20px] font-medium leading-[25px] py-[20px] px-[10px] max-w-[223px] w-full text-center">
-            {model.model.name}
-          </div>
-        ))}
+        <div className="max-lg:hidden text-text-on-background text-[20px] font-medium leading-[25px] py-[20px] px-[10px] max-w-[223px] text-center w-full whitespace-nowrap">
+          {model[0]?.model.name}
+        </div>
 
-        <div className="max-lg:hidden flex gap-[1px] py-[20px] px-[10px] max-w-[263px] w-full text-center truncate">
-          {tags.map((tag) => (
-            <div key={String(tag.tag.name)} className="text-text-on-background text-[20px] font-medium leading-[25px]">
+        <div className="max-lg:hidden py-[20px] px-[10px] max-w-[263px] w-full whitespace-nowrap">
+          {tags.slice(0, 3).map((tag) => (
+            <span key={String(tag.tag.name)} className="text-text-on-background text-[20px] font-medium leading-[25px]">
               #{tag.tag.name}
-            </div>
+            </span>
           ))}
         </div>
 
