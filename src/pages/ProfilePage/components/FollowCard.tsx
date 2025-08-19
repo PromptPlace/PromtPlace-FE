@@ -76,7 +76,7 @@ const FollowCard = ({ title, list, setShow, member_id }: FollowCardProps) => {
 
   return (
     <>
-      <div className="fixed inset-0 bg-overlay flex justify-center items-center max-lg:hidden">
+      <div className="fixed inset-0 bg-overlay flex justify-center items-center max-lg:hidden z-100">
         <div className="bg-white pt-[30px] px-[20px] max-w-[416px] w-full rounded-[16px]">
           <div className="flex items-center justify-start p-[10px] gap-[10px]">
             <ArrowIcon onClick={() => setShow(false)} className="cursor-pointer" />
