@@ -19,8 +19,6 @@ interface FollowCardProps {
 }
 
 const FollowCard = ({ title, list, setShow, member_id }: FollowCardProps) => {
-  console.log(list);
-
   const normalizedList: FollowWithTargetID[] =
     list?.map((f) => ({
       ...f,
@@ -117,7 +115,7 @@ const FollowCard = ({ title, list, setShow, member_id }: FollowCardProps) => {
       <div className="lg:hidden fixed left-0 right-0 bottom-0 z-200 max-w-[425px] w-full mx-auto">
         <motion.div
           drag="y"
-          dragConstraints={{ top: 0, bottom: 320 }}
+          dragConstraints={{ top: 10, bottom: 320 }}
           dragElastic={false}
           initial={{ y: '100%' }}
           animate={{ y: 0 }}
@@ -128,44 +126,47 @@ const FollowCard = ({ title, list, setShow, member_id }: FollowCardProps) => {
             stiffness: 300,
           }}
           onDragEnd={(_, info) => {
+            const content = document.querySelector('.scroll-area');
+            if (content && content.scrollTop > 0) return;
+
             if (info.point.y > window.innerHeight - 310) {
               setShow(false);
             }
           }}
           className="lg:hidden fixed left-0 h-[320px] right-0 bottom-0 z-200 max-w-[425px] w-full mx-auto max-lg:pr-[15px] bg-white rounded-t-[24px]">
-          <div className="flex flex-col">
-            <div className="pt-[14px] pb-[10px] rounded-t-[24px] bg-white cursor-grab flex flex-col items-center">
-              <div className="w-[40px] h-[4px] rounded-[50px] bg-white-stroke"></div>
-              <p className="px-[20px] mt-[20px] text-primary text-[10px] font-medium leading-[13px] flex justify-start w-full">
-                {title.slice(0, -2)}
-              </p>
-            </div>
-
-            <div className="bg-white overflow-y-auto pb-[env(safe-area-inset-bottom)] max-h-[50vh] h-full">
-              {normalizedList?.map((f) => (
-                <div key={f.follow_id} className="flex justify-between items-center pl-[50px] pr-[31px]">
-                  <div className="flex items-center gap-[10px] max-lg:gap-[5px]">
-                    <ProfileIcon className="max-lg:w-[36px] max-lg:h-[36px]" />
-                    <div className="flex flex-col items-start py-[12px]">
-                      <p className="text-text-on-white text-[18px] font-normal leading-[26px] trackint-[0.46px] max-lg:text-[9px] max-lg:leading-[13px] max-lg:tracking-[0.23px]">
-                        {f.nickname}
-                      </p>
-                      <p className="text-text-on-white text-[14px] font-normal leading-[26px] tracking-[0.46px] max-lg:text-[8px] max-lg:leading-[13px] max-lg:tracking-[0.23px]">
-                        팔로워 {f.count}명
-                      </p>
-                    </div>
-                  </div>
-
-                  <FollowButton
-                    follow={following[f.targetId]}
-                    onClick={() => {
-                      toggleFollowing(f.targetId);
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
+          {/* <div className="flex flex-col"> */}
+          <div className="pt-[14px] pb-[10px] rounded-t-[24px] bg-white cursor-grab flex flex-col items-center">
+            <div className="w-[40px] h-[4px] rounded-[50px] bg-white-stroke"></div>
+            <p className="px-[20px] mt-[20px] text-primary text-[10px] font-medium leading-[13px] flex justify-start w-full">
+              {title.slice(0, -2)}
+            </p>
           </div>
+
+          <div className="scroll-area bg-white overflow-y-auto max-h-[239px]">
+            {normalizedList?.map((f) => (
+              <div key={f.follow_id} className="flex justify-between items-center pl-[50px] pr-[31px]">
+                <div className="flex items-center gap-[10px] max-lg:gap-[5px]">
+                  <ProfileIcon className="max-lg:w-[36px] max-lg:h-[36px]" />
+                  <div className="flex flex-col items-start py-[12px]">
+                    <p className="text-text-on-white text-[18px] font-normal leading-[26px] trackint-[0.46px] max-lg:text-[9px] max-lg:leading-[13px] max-lg:tracking-[0.23px]">
+                      {f.nickname}
+                    </p>
+                    <p className="text-text-on-white text-[14px] font-normal leading-[26px] tracking-[0.46px] max-lg:text-[8px] max-lg:leading-[13px] max-lg:tracking-[0.23px]">
+                      팔로워 {f.count}명
+                    </p>
+                  </div>
+                </div>
+
+                <FollowButton
+                  follow={following[f.targetId]}
+                  onClick={() => {
+                    toggleFollowing(f.targetId);
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+          {/* </div> */}
         </motion.div>
       </div>
     </>

@@ -231,7 +231,7 @@ const ProfilePage = () => {
     setProfileEdit(true);
   };
 
-  // 아룸 및 소개 수정 완료
+  // 이름 및 소개 수정 완료
   const handleEditSubmit = ({ nickname }: RequestEditMemberDto, { intro }: RequestIntroDto) => {
     mutate({ nickname });
 
