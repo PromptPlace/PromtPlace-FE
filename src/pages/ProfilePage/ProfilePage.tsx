@@ -71,6 +71,7 @@ import axios from 'axios';
 import TextModal from '@/components/Modal/TextModal';
 import useGetNofify from '@/hooks/queries/ProfilePage/useGetNofify';
 import useDeleteInquiries from '@/hooks/mutations/ProfilePage/useDeleteInquiries';
+import usePatchEditIntro from '@/hooks/mutations/ProfilePage/usePatchEditIntro';
 
 type Inquiry = {
   inquiry_id: number;
@@ -155,6 +156,7 @@ const ProfilePage = () => {
 
   // 회원 한줄 소개 작성 및 수정
   const { mutate: mutateIntro } = usePostEditIntro({ member_id });
+  const { mutate: mutatePatchIntro } = usePatchEditIntro({ member_id });
   const [userDescription, setUserDescription] = useState('');
 
   // 작성한 프롬프트 목록
@@ -232,7 +234,12 @@ const ProfilePage = () => {
   // 아룸 및 소개 수정 완료
   const handleEditSubmit = ({ nickname }: RequestEditMemberDto, { intro }: RequestIntroDto) => {
     mutate({ nickname });
-    mutateIntro({ intro });
+
+    if (!data?.data.intros) {
+      mutateIntro({ intro });
+    } else {
+      mutatePatchIntro({ intro });
+    }
     setProfileEdit(false);
   };
 

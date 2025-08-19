@@ -65,6 +65,15 @@ export const postIntro = async ({ intro }: RequestIntroDto): Promise<ResponseInt
   return data;
 };
 
+// 회원 한줄 소개 수정
+export const patchIntro = async ({ intro }: RequestIntroDto): Promise<ResponseIntroDto> => {
+  const { data } = await axiosInstance.patch('/api/members/intros', {
+    intro,
+  });
+
+  return data;
+};
+
 // 작성한 프롬프트 목록
 export const getPrompts = async (
   { member_id }: RequestMemberDto,
