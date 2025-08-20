@@ -66,7 +66,6 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
     }
   }, [isDropdownOpen]);
 
-
   useEffect(() => {
     const handleResize = () => {
       setIsDropdownOpen(false);
@@ -89,22 +88,24 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
   };
 
   return (
-    <div className="flex lg:items-center max-lg:flex-col max-lg:gap-[6px]  border-b-[1px] max-lg:border-b-[0.5px] border-b-white-stroke w-full  py-[10px] max-lg:p-[12px] h-[92px] max-lg:h-auto bg-white">
-      <Link to={`/prompt/${promptData.prompt_id}`} className="flex flex-row">
-        <div className="max-lg:hidden flex items-center  text-text-on-white text-[22px] max-lg:text-[12px] pl-[80px] max-lg:pl-[0px] font-bold max-lg:font-medium w-[635px] max-lg:w-[231px]">
+    <div className="flex justify-between max-lg:flex-col max-lg:gap-[6px]  border-b-[1px] max-lg:border-b-[0.5px] border-b-white-stroke w-full  py-[10px] max-lg:p-[12px] h-[92px] max-lg:h-auto bg-white">
+      <Link to={`/prompt/${promptData.prompt_id}`} className="flex w-full justify-between ">
+        <div className="max-lg:hidden min-w-0 flex items-center  text-text-on-white text-[22px] max-lg:text-[12px] pl-[80px] max-lg:pl-[0px] font-bold max-lg:font-medium truncate max-w-[606px] max-lg:w-[231px]">
           {promptData.title}
         </div>
-        <div className="flex items-center justify-center max-lg:bg-primary text-text-on-background max-lg:text-white text-[20px] max-lg:text-[8px] font-medium  w-[223px] max-lg:w-auto max-lg:rounded-[50px] max-lg:px-[6px] max-lg:py-[5px]">
-          {promptData.models[0] ?? ''}
-        </div>
 
-        <div
-          className={`${type === 'downloaded' ? 'lg:hidden' : ''} flex items-center justify-center  text-text-on-background text-[20px] max-lg:text-[8px] font-medium py-[23.5px] max-lg:py-[0px] max-lg:pl-[10px] w-[263px] max-lg:w-auto`}>
-          {promptData.tags?.map((tag) => (
-            <div className="max-lg:px-[6px] max-lg:py-[5px] max-lg:gap-[5px] max-lg:rounded-[50px] max-lg:shadow-[0_1px_3px_0_rgba(0,0,0,0.08)] ">
-              #{tag}
-            </div>
-          ))}
+        <div className="flex max-w-[606px]">
+          <div className="flex items-center justify-center max-lg:bg-primary text-text-on-background max-lg:text-white text-[20px] max-lg:text-[8px] font-medium  w-full max-w-[223px] max-lg:w-auto max-lg:rounded-[50px] max-lg:px-[6px] max-lg:py-[5px]">
+            {promptData.models[0] ?? ''}
+          </div>
+          <div
+            className={`${type === 'downloaded' ? 'lg:hidden' : ''} flex items-center justify-center  text-text-on-background text-[20px] max-lg:text-[8px] font-medium py-[23.5px] max-lg:py-[0px] max-lg:pl-[10px] max-w-[263px] w-full max-lg:w-auto`}>
+            {promptData.tags?.slice(0, 3).map((tag) => (
+              <div className="max-lg:px-[6px] max-lg:py-[5px] max-lg:gap-[5px] max-lg:rounded-[50px] max-lg:shadow-[0_1px_3px_0_rgba(0,0,0,0.08)] ">
+                #{tag}
+              </div>
+            ))}
+          </div>
         </div>
       </Link>
 

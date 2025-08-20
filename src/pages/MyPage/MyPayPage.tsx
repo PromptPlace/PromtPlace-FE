@@ -45,7 +45,7 @@ const MyPayPage = () => {
   const [showModal, setShowModal] = useState<'noMoney' | 'noAccount' | 'yesAccount' | 'complete' | null>(null);
   const { mutate: requestWithdrawalMutation } = useRequestWithdrawal();
   const { data: amount } = useGetWithdrawableAmount();
-  const { data: Account, error: getAccountError, isError: isGetAccountError } = useGetAccountInfo();
+  const { data: Account, error: getAccountError, isError: isGetAccountError, isLoading: isGetAccountLoading } = useGetAccountInfo();
   const { user } = useAuth();
   const { data: userData } = useGetMember({ member_id: user.user_id });
   console.log('출금가능 금액:', amount);
@@ -53,6 +53,10 @@ const MyPayPage = () => {
 
   const CheckWithdraw = () => {
     console.log('출금하기 모달을 엽니다.');
+    if(isGetAccountLoading) {
+      console.log('계좌 정보를 불러오는 중입니다');
+      return;
+    }
 
     if (isGetAccountError && axios.isAxiosError(getAccountError) && getAccountError.response?.status === 404) {
       setShowModal('noAccount');
@@ -73,6 +77,7 @@ const MyPayPage = () => {
   };
 
   return (
+    console.log('showModal:', showModal),
     <div className="flex justify-center h-screen bg-background ">
       <div className="flex flex-col pt-[92px] w-full max-w-[1236px] h-full max-lg:pt-[12px]">
         <div className="shrink-0 max-lg:mx-[20px]">
@@ -123,7 +128,7 @@ const MyPayPage = () => {
 
           <div
             className={clsx(
-              'relative w-full py-[51.5px] max-lg:py-[20px] bg-white rounded-[16px] max-lg:rounded-[8px] shadow-gradient z-10  flex items-center justify-center max-w-[940px]',
+              'relative w-full max-lg:w-[280px] py-[51.5px] max-lg:py-[20px] bg-white rounded-[16px] max-lg:rounded-[8px] shadow-gradient z-10  flex items-center justify-center max-w-[940px]',
             )}>
             <div className="flex flex-col items-center gap-[20px] max-lg:gap-[12px]">
               <p className="text-[32px] max-lg:text-[12px] font-bold leading-[40px] max-lg:leading-[15px] text-text-on-white">

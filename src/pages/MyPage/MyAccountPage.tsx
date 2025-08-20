@@ -9,6 +9,7 @@ import { useGetAccountInfo } from '@/hooks/queries/MyPage/useGetAccount';
 import { useRegisterAccount, useUpdateAccount } from '@/hooks/mutations/MyPage/account';
 import type { RegisterInfo, UpdateAccountInfo } from '@/types/MyPage/account';
 import axios from 'axios';
+import testicon from '@assets/testblueicon.svg';
 
 interface accountInfo {
   account_id?: number;
@@ -75,11 +76,11 @@ const MyAccountPage = () => {
           <div className="text-[32px] text-primary-hover font-bold">회원정보</div>
         </div>
 
-        <div className="relative flex items-center justify-center h-[90px] max-lg:h-auto border-b-[1px] max-lg:border-b-[0px] border-primary-hover">
+        <div className="relative flex items-center  h-[90px] max-lg:h-auto border-b-[1px] max-lg:border-b-[0px] border-primary-hover">
           <div className="flex justify-center max-lg:justify-center gap-[10px] h-[50px] max-lg:h-auto max-lg:w-full">
             <button
               onClick={() => navigate(-1)}
-              className="absolute left-[0px] flex items-center justify-center  w-[24px] max-lg:w-[20px] h-[24px] max-lg:h-[20px] max-lg:mr-[66px]">
+              className=" flex  justify-center   w-[24px] max-lg:w-[20px] h-[24px] max-lg:h-[20px] max-lg:mr-[66px]">
               <img src={bluearrowIcon} alt="뒤로가기" className="max-lg:hidden" />
               <img src={blackarrowIcon} alt="뒤로가기" className="lg:hidden" />
             </button>
