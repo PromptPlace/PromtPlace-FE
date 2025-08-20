@@ -303,20 +303,25 @@ const MyReviewPage = () => {
             />
           </div>
         </div>
-
-        <div className="flex-grow min-h-0 p-[8px] max-lg:p-[0px]  bg-white">
-          <div className="overflow-y-auto h-full">
-            {reviewsToDisplay.map((review) => (
-              <ReviewCard
-                key={review.review_id}
-                type={activeTab}
-                reviewData={review}
-                onDelete={() => confirmDelete(review.review_id)}
-              />
-            ))}
-            <div ref={ref} />
+        {reviewsToDisplay.length > 0 ? (
+          <div className="flex-grow min-h-0 p-[8px] max-lg:p-[0px]">
+            <div className="overflow-y-auto h-full bg-white">
+              {reviewsToDisplay.map((review) => (
+                <ReviewCard
+                  key={review.review_id}
+                  type={activeTab}
+                  reviewData={review}
+                  onDelete={() => confirmDelete(review.review_id)}
+                />
+              ))}
+              <div ref={ref} />
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex mt-[10px] justify-center h-full text-text-on-white text-[20px] font-medium">
+            {activeTab === 'written' ? '작성한 리뷰가 없습니다.' : '받은 리뷰가 없습니다.'}
+          </div>
+        )}
       </div>
 
       {deleteStep === 'confirm' && (
