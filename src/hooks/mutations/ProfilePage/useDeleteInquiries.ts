@@ -9,7 +9,7 @@ function useDeleteInquiries({ member_id }: RequestMemberDto) {
     mutationFn: ({ inquiry_id }: RequestGetDetailInquiriesDto) => deleteInquiries({ inquiry_id }),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['member_inquiry', member_id],
+        queryKey: ['member-inquiry', member_id],
       });
     },
   });
