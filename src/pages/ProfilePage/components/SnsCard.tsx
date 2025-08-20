@@ -71,7 +71,7 @@ const SnsCard = ({
         const rect = clickPosition.current.getBoundingClientRect();
 
         setModalPosition({
-          top: rect.top + 32,
+          top: rect.top + window.scrollY + 32,
           left: rect.left + window.scrollX - 500,
         });
       }
@@ -123,7 +123,7 @@ const SnsCard = ({
             {edit && (
               <>
                 <div
-                  className="max-lg:hidden fixed w-[500px] h-[346px] shadow-gradient bg-white rounded-[8px] py-[20px] px-[30px] flex flex-col gap-[20px]"
+                  className="max-lg:hidden absolute w-[500px] h-[346px] shadow-gradient bg-white rounded-[8px] py-[20px] px-[30px] flex flex-col gap-[20px]"
                   style={{ top: modalPosition.top, left: modalPosition.left }}>
                   <div className="flex flex-col gap-[10px] text-text-on-white text-[20px] font-medium leading-[25px]">
                     <p>SNS URL</p>
