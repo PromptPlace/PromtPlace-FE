@@ -8,6 +8,7 @@
 import { axiosInstance } from '@/apis/axios';
 import { useEffect, useState } from 'react';
 import { LuChevronLeft } from 'react-icons/lu';
+import ReactMarkdown from 'react-markdown';
 import { useNavigate, useParams } from 'react-router-dom';
 
 interface MyMessageDetailPageProps {
@@ -85,9 +86,8 @@ const MyMessageDetailPage = ({ type }: MyMessageDetailPageProps) => {
 
             <div className="w-[994px] h-[485px] flex justify-center overflow-y-auto prose prose-neutral max-w-none text-base">
               <div className="w-[864px] border-b-[1px] border-white-stroke font-medium text-[20px] text-text-on-white py-[30px]">
-                {message.content}
+                <ReactMarkdown>{message.content}</ReactMarkdown>
               </div>
-              {/**추후 다시 markdown 적용해보기... */}
             </div>
 
             {/**하단 */}

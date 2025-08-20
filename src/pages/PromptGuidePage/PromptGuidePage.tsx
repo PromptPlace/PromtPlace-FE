@@ -60,7 +60,7 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
             post_id: item.tip_id,
             writer_id: item.writer_id,
             title: item.title,
-            created_at: item.created_at.slice(0, 10),
+            created_at: item.created_at.slice(0, 10).replace(/-/g, '.'),
             file_url: item.file_url,
           }));
 
@@ -80,7 +80,7 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
             post_id: item.announcement_id,
             writer_id: item.writer_id,
             title: item.title,
-            created_at: item.created_at.slice(0, 10),
+            created_at: item.created_at.slice(0, 10).replace(/-/g, '.'),
             file_url: item.file_url,
           }));
 
