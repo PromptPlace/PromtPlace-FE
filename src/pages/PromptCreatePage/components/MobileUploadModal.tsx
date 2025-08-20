@@ -387,7 +387,7 @@ const MobileUploadModal = ({
           {selectedTab === '미리보기' && (
             <>
               <div className="flex flex-col items-center">
-                <div className="w-full max-w-[80%] h-[24px] flex justify-between items-center mb-[10px] mx-[20px] ">
+                <div className="w-full max-w-[90%] h-[24px] flex justify-between items-center mb-[10px] mx-[20px] ">
                   <label className="flex items-center">
                     <p className="text-[10px] text-primary font-medium"> 이미지 업로드</p>
                     <input
@@ -425,7 +425,7 @@ const MobileUploadModal = ({
                     disabled={!withImage}
                   />
                 </div>
-                <div className="w-full max-w-[80%] flex flex-col mx-[20px]">
+                <div className="w-full max-w-[90%] flex flex-col mx-[20px]">
                   <p className="text-primary text-[10px] font-medium">프롬프트 결과 미리 보기</p>
                   <div className="w-full min-w-[280px] h-[125px]  mt-[8px] py-[6px] px-[6px] bg-background rounded-[2px] flex flex-col gap-2">
                     {/* 이미지 체크+리스트 있을 때만 이미지 리스트 표시 */}
