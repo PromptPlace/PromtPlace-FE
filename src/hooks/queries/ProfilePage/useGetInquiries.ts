@@ -7,7 +7,6 @@ function useGetInquiries({ member_id }: RequestMemberDto, { type }: RequestGetIn
   return useQuery({
     queryKey: ['member-inquiry', member_id, type],
     queryFn: () => getInquiries({ type }),
-    staleTime: Infinity,
   });
 }
 

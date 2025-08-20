@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import CheckIcon from '@assets/icon-check-circle.svg';
 import DotsIcon from '@assets/icon-dot.svg';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface InquiryCardProps {
   inquiry_id: number;
@@ -24,6 +24,31 @@ const InquiryCard = ({
   onDelete,
 }: InquiryCardProps) => {
   const [isDotsClicked, setIsDotsClicked] = useState(false);
+
+  const clickPosition = useRef<HTMLDivElement | null>(null);
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+
+  useEffect(() => {
+    const updateModalPosition = () => {
+      if (clickPosition.current) {
+        const rect = clickPosition.current.getBoundingClientRect();
+
+        setModalPosition({
+          top: rect.top + window.scrollY + 40,
+          left: rect.left + window.scrollX - 65,
+        });
+      }
+    };
+
+    if (isDotsClicked) {
+      updateModalPosition();
+      window.addEventListener('scroll', updateModalPosition);
+    }
+
+    return () => {
+      window.removeEventListener('scroll', updateModalPosition);
+    };
+  }, [isDotsClicked]);
 
   return (
     <div className="flex justify-between items-center pl-[80px] py-[20px] max-lg:p-[12px] max-lg:mr-[4px] bg-white border-b border-b-white-stroke">
@@ -75,28 +100,51 @@ const InquiryCard = ({
         </div>
       </div>
 
-      <div className="relative cursor-pointer max-w-[115px] max-lg:max-w-none w-full max-lg:w-auto flex items-center justify-center">
+      <div className="cursor-pointer max-w-[115px] max-lg:max-w-none w-full max-lg:w-auto flex items-center justify-center">
         <div
+          ref={clickPosition}
           onClick={() => setIsDotsClicked((prev) => !prev)}
-          className="w-[28px] h-[28px] hover:bg-secondary-pressed flex items-center justify-center rounded-full">
+          className="w-[28px] h-[28px] max-lg:w-[16px] max-lg:h-[16px] hover:bg-secondary-pressed flex items-center justify-center rounded-full">
           <img src={DotsIcon} alt="선택" />
 
           {isDotsClicked && (
-            <div className="absolute z-10 bottom-[-83.5px] right-[44px] max-lg:top-[22px] max-lg:right-[0px] flex flex-col whitespace-nowrap">
-              <button
-                onClick={() => onDelete(inquiry_id)}
-                className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-t-[4px] border-b border-b-white-stroke text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white">
-                삭제하기
-              </button>
-              <button
-                onClick={() => {
-                  onRead(inquiry_id);
-                  setTimeout(() => setIsDotsClicked(false), 0);
-                }}
-                className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-b-[4px] text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white">
-                읽음표시
-              </button>
-            </div>
+            <>
+              <div
+                style={{ top: modalPosition.top, left: modalPosition.left }}
+                className="max-lg:hidden absolute flex flex-col whitespace-nowrap">
+                <button
+                  onClick={() => onDelete(inquiry_id)}
+                  className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-t-[4px] border-b border-b-white-stroke text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white">
+                  삭제하기
+                </button>
+                <button
+                  onClick={() => {
+                    onRead(inquiry_id);
+                    setTimeout(() => setIsDotsClicked(false), 0);
+                  }}
+                  className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-b-[4px] text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white">
+                  읽음표시
+                </button>
+              </div>
+
+              <div
+                style={{ top: modalPosition.top - 18, left: modalPosition.left + 20 }}
+                className="lg:hidden absolute flex flex-col whitespace-nowrap">
+                <button
+                  onClick={() => onDelete(inquiry_id)}
+                  className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-t-[4px] border-b border-b-white-stroke text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white">
+                  삭제하기
+                </button>
+                <button
+                  onClick={() => {
+                    onRead(inquiry_id);
+                    setTimeout(() => setIsDotsClicked(false), 0);
+                  }}
+                  className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-b-[4px] text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white">
+                  읽음표시
+                </button>
+              </div>
+            </>
           )}
         </div>
       </div>

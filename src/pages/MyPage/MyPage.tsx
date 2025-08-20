@@ -22,7 +22,6 @@ const MyPage = () => {
 
   // 회원 정보 불러오기
   const { data } = useGetMember({ member_id: user.user_id });
-  console.log(data);
 
   const LINKS = [
     { to: '/mypage/prompt', label: '내 프롬프트', icon: <ArchiveIcon className="w-[16px] h-[16px]" /> },
@@ -45,7 +44,11 @@ const MyPage = () => {
           <>
             <div className="flex flex-col gap-[8px] items-center">
               <div className="w-[48px] h-[48px]">
-                <img src={ProfileIcon} alt="프로필" className="w-full h-full object-contain" />
+                <img
+                  src={data?.data.profile_image || ProfileIcon}
+                  alt="프로필"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <p className="text-text-on-white text-[14px] font-medium leading-[18px]">로그인 하세요</p>
             </div>
@@ -64,10 +67,14 @@ const MyPage = () => {
           <>
             <div className="flex flex-col gap-[8px] items-center w-full">
               <div className="w-[48px] h-[48px] rounded-full overflow-hidden">
-                <img src={ProfileIcon} alt="프로필" className="w-full h-full object-contain" />
+                <img
+                  src={data?.data.profile_image || ProfileIcon}
+                  alt="프로필"
+                  className="w-full h-full object-contain"
+                />
               </div>
 
-              <p className="text-text-on-white text-[14px] font-medium leading-[18px]">{data?.data.name}</p>
+              <p className="text-text-on-white text-[14px] font-medium leading-[18px]">{data?.data.nickname}</p>
 
               <div
                 onClick={() => handleNavigate(`/profile/${user.user_id}`)}
@@ -104,7 +111,7 @@ const MyPage = () => {
             <button
               onClick={logout}
               className="py-[4px] px-[8px] gap-[8px] rounded-[4px] border-[0.5px] border-text-on-background bg-white shadow-button text-text-on-background text-[10px] font-normal leading-[13px] tracking-[0.46px] flex absolute top-[427px] right-[20px]">
-              <LogOutIcon className="text-white-stroke w-[12px] h-[12px]" />
+              <LogOutIcon className="text-text-on-background w-[12px] h-[12px]" />
               로그아웃
             </button>
           </>
