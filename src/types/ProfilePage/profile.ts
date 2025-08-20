@@ -11,9 +11,11 @@ export type ResponseMemberDto = CommonResponse<{
   name: string;
   nickname: string;
   intros: string;
+  profile_image: null | string;
   created_at: string;
   updated_at: string;
   status: number;
+  role: string;
 }>;
 
 // 회원 팔로워, 팔로잉 목록

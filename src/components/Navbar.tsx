@@ -12,15 +12,18 @@ import PrimaryButton from '@components/Button/PrimaryButton';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import Sidebar from '@components/Sidebar';
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
+import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
 
 const Navbar = () => {
   const [search, setSearch] = useState<string>('');
   const navigate = useNavigate();
-  const { accessToken } = useAuth();
+  const { accessToken, user } = useAuth();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [loginModalShow, setLoginModalShow] = useState(false);
+
+  const { data } = useGetMember({ member_id: user.user_id });
 
   const handleNavigate = (url: string) => {
     navigate(url);
@@ -116,7 +119,7 @@ const Navbar = () => {
           )}
           {accessToken && (
             <img
-              src={UserProfileIcon}
+              src={data?.data.profile_image || UserProfileIcon}
               alt="로그인된 사용자 이미지"
               onClick={handleSidebarClick}
               className="w-full h-full object-cover cursor-pointer"
