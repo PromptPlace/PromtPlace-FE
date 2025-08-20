@@ -100,7 +100,7 @@ const MyPayPage = () => {
             </div>
             <PossiblepayAmount nickname={userData?.data.nickname} balance={amount} onWithdraw={CheckWithdraw} />
 
-            <div className="text-[24px] text-primary-hover font-bold pl-[40px] py-[20px] border-b-[1px] border-primary-hover max-lg:text-[14px] max-lg:text-primary max-lg:pl-[12px] max-lg:py-[12px] max-lg:border-b-[0.5px] max-lg:border-primary">
+            <div className="text-[24px] text-primary-hover font-bold pl-[40px] py-[20px] border-b-[1px] max-lg:border-b-[0px] border-primary-hover max-lg:text-[14px] max-lg:text-primary max-lg:pl-[12px] max-lg:py-[12px] max-lg:border-b-[0.5px] max-lg:border-primary">
               <span className="max-lg:hidden">판매 내역</span>
               <span className="hidden max-lg:inline">판매내역</span>
             </div>
@@ -116,7 +116,7 @@ const MyPayPage = () => {
 
           <div className="lg:hidden flex-1 min-h-0 overflow-y-auto max-h-[312px] ml-[20px] mr-[12px] ">
             <div className="bg-white  mr-[4px]">
-              <div className="lg:hidden flex justify-between h-[39px] border-b-[0.5px] border-text-on-white py-[12px] px-[12px] font-bold text-text-on-white text-[12px]">
+              <div className="lg:hidden flex justify-between h-[39px] border-b-[0.5px] border-b-text-on-white border-t-[0.5px] border-t-primary-hover py-[12px] px-[12px] font-bold text-text-on-white text-[12px]">
                 <span className="flex justify-center w-[155px] "> 프롬프트</span>
                 <span className="mx-[12px] w-[23px]">가격</span>
                 <span className="w-[34px]">구매자</span>
