@@ -46,8 +46,6 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
       if (clickPosition.current) {
         const rect = clickPosition.current.getBoundingClientRect();
 
-        console.log(rect);
-
         setModalPosition({
           top: rect.top + window.scrollY + 40,
           left: rect.left + window.scrollX - 65,
@@ -116,7 +114,7 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
         {isMyProfile && (
           <div
             onClick={() => setIsDotsClickes((prev) => !prev)}
-            className=" py-[22px] px-[44px] max-lg:p-0 cursor-pointer max-w-[115px] max-lg:max-w-[16px] w-full h-[72px] max-lg:h-auto flex items-center justify-center">
+            className="py-[22px] px-[44px] max-lg:p-0 cursor-pointer max-w-[115px] max-lg:max-w-[16px] w-full h-[72px] max-lg:h-auto flex items-center justify-center">
             <div
               ref={clickPosition}
               className="w-[28px] h-[28px] max-lg:w-[16px] max-lg:h-[16px] max-lg:py-[2px] max-lg:px-[6px] hover:bg-secondary-pressed flex items-center justify-center rounded-full">
