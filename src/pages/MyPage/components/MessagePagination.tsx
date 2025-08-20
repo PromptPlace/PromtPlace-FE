@@ -256,15 +256,14 @@ export const MobileMessage = ({
             </div>
             <div className="flex justify-center">
               <div
-                className="w-full max-w-[256px] h-[16px] flex justify-start items-center mt-[6px]"
+                className={`w-full max-w-[256px] h-[16px] flex justify-start items-center mt-[6px] ${message.is_read ? 'text-text-on-background' : 'text-text-on-white'}`}
                 onClick={() => handleMessageRowClick(message.message_id)}>
                 {message.is_read ? (
                   <img className="w-[16px] h-[16px]" src={read} alt="읽음" />
                 ) : (
-                  <img className="w-[16px] h-[16px]" src={notread} alt="안 읽음" />
+                  <img className="w-[16px] h-[16px] " src={notread} alt="안 읽음" />
                 )}
-                <p
-                  className={`text-[12px] ${message.is_read ? 'text-text-on-background' : 'text-text-on-white'} font-medium ml-[6px]`}>
+                <p className={`text-[12px] font-medium ml-[6px]`}>
                   {/*20자까지만 표시 */}
                   {message.title.length > 20 ? message.title.slice(0, 20) + '...' : message.title}
                 </p>
