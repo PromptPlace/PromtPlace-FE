@@ -354,13 +354,19 @@ const ProfilePage = () => {
                 {isMyProfile && (
                   <>
                     <img
-                      src={selectedImg?.thumbnail || ProfileIcon}
+                      src={data?.data.profile_image || ProfileIcon}
                       alt="프로필 이미지"
                       className="w-full h-full object-cover"
                     />
                   </>
                 )}
-                {!isMyProfile && <img src={ProfileIcon} alt="프로필 이미지" className="w-full h-full object-contain" />}
+                {!isMyProfile && (
+                  <img
+                    src={data?.data.profile_image || ProfileIcon}
+                    alt="프로필 이미지"
+                    className="w-full h-full object-contain"
+                  />
+                )}
                 {profileEdit && <img src={selectedImg?.thumbnail} alt="프로필 이미지" />}
               </div>
               {profileEdit && (
