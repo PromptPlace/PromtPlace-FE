@@ -8,7 +8,7 @@ function usePostNotifications({ member_id }: RequestMemberDto) {
     mutationFn: ({ prompter_id }: RequestNotificationsDto) => postNotifications({ prompter_id }),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['member', member_id],
+        queryKey: ['member-notification', member_id],
       });
     },
   });
