@@ -55,7 +55,7 @@ export const MessageTableList = ({
           data.map((message) => (
             <tr
               key={message.message_id}
-              className="h-[65px] py-[10px] border-b-[1px]  border-white-stroke bg-white cursor-pointer">
+              className={`h-[65px] py-[10px] border-b-[1px]  border-white-stroke bg-white cursor-pointer ${message.is_read ? 'text-text-on-white' : 'text-text-on-background'}`}>
               <td className="w-[72px] h-[65px] flex justify-center items-center pt-[13px]">
                 {message.is_read ? (
                   <img className="w-[32px] h-[32px]" src={read} alt="읽음" />
@@ -64,19 +64,17 @@ export const MessageTableList = ({
                 )}
               </td>
               <td
-                className="w-[563px] h-[65px] text-left font-medium text-[20px] text-text-on-white py-[20px]"
+                className="w-[563px] h-[65px] text-left font-medium text-[20px]  py-[20px]"
                 onClick={() => handleMessageRowClick(message.message_id)}>
                 <p className="h-[25px]">{message.title}</p>
               </td>
               <td
                 className=" w-[223px] h-[65px] px-[10px] py-[20px]"
                 onClick={() => handleMessageRowClick(message.message_id)}>
-                <p className="flex justify-center items-center font-medium text-[20px] text-text-on-white">
-                  {message.sender}
-                </p>
+                <p className="flex justify-center items-center font-medium text-[20px] ">{message.sender}</p>
               </td>
               <td
-                className="w-[263px] h-[65px] text-center font-medium text-[20px] text-text-on-white py-[20px]"
+                className="w-[263px] h-[65px] text-center font-medium text-[20px]  py-[20px]"
                 onClick={() => handleMessageRowClick(message.message_id)}>
                 {message.created_at}
               </td>

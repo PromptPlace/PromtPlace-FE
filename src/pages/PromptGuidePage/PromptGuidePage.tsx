@@ -128,16 +128,23 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  // 바깥 클릭시 닫히게
-  // useEffect(() => {
-  //   function handleClickOutside(event: MouseEvent) {
-  //     if (ref.current && !ref.current.contains(event.target as Node)) {
-  //       setOpen(false);
-  //     }
-  //   }
-  //   document.addEventListener('mousedown', handleClickOutside);
-  //   return () => document.removeEventListener('mousedown', handleClickOutside);
-  // }, []);
+  // 바깥 누르면 드롭다운 닫히게
+  useEffect(() => {
+    if (!open) return;
+
+    function handleClickOutside(event: MouseEvent) {
+      const target = event.target as Node;
+      if (ref.current && !ref.current.contains(target)) {
+        setOpen(false);
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [open]);
 
   return (
     <>
