@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import sendIcon from '../assets/BiSend.png';
+import sendIcon from '@assets/icon-send-primary.svg';
+import sendIconPressed from '@assets/icon-send-primary-pressed.svg';
+import sendIconHover from '@assets/icon-send-primary-hover.svg';
 import BiRadioCircle from '../assets/BiRadioCircle.png';
 import BiRadioCircleMarked from '../assets/BiRadioCircleMarked.png';
 import { isAxiosError } from 'axios';
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import useReportPrompt, { type ReportType } from '@/hooks/mutations/PromptDetailPage/useReportPrompt';
+import Back from '../assets/back.svg';
 
 interface ReportModalProps {
   isOpen: boolean;
@@ -19,6 +22,9 @@ const ReportModal = ({ isOpen, onClose, promptId }: ReportModalProps) => {
 
   const { mutateAsync: report, isPending } = useReportPrompt();
   const { handleShowLoginModal } = useShowLoginModal();
+
+  const [isHover, setIsHover] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
 
   if (!isOpen) return null;
 
@@ -49,11 +55,13 @@ const ReportModal = ({ isOpen, onClose, promptId }: ReportModalProps) => {
       <div className="relative flex flex-col bg-white rounded-[16px] shadow-lg px-[42px] py-[45px] w-[758px] h-[635px] max-lg:w-[280px] max-lg:h-[350px] max-lg:pt-0 max-lg:pb-0 max-lg:px-0 text-[#121212]">
         {/* 제목 */}
         <div className="flex items-center mb-[40px] max-lg:m-0 max-lg:pl-[8px] max-lg:h-[40px] max-lg:pt-[20px] max-lg:pr-[20px]">
-          <button
+          <img
+            src={Back}
+            alt="뒤로가기"
+            className="text-2xl font-bold leading-none hover:opacity-70 max-lg:w-[16px] max-lg:h-[16px] max-lg:text-[16px] max-lg:leading-[16px]"
             onClick={onClose}
-            className="text-2xl font-bold leading-none hover:opacity-70 max-lg:w-[16px] max-lg:h-[16px] max-lg:text-[16px] max-lg:leading-[16px]">
-            &lt;
-          </button>
+          />
+
           <h2 className="text-[24px] font-bold ml-[10px] max-lg:text-[16px] max-lg:ml-[10px] max-lg:leading-[16px]">
             프롬프트 신고하기
           </h2>
@@ -98,8 +106,19 @@ const ReportModal = ({ isOpen, onClose, promptId }: ReportModalProps) => {
                       <button
                         onClick={handleSubmit}
                         disabled={!description.trim() || !selectedOption || isPending}
-                        className="absolute bottom-[12px] right-[12px] text-black opacity-100 transition-opacity">
-                        <img src={sendIcon} alt="send" className="w-[20px] h-[20px] max-lg:w-[16px] max-lg:h-[16px]" />
+                        className="absolute bottom-[12px] right-[12px] text-black opacity-100 transition-opacity"
+                        onMouseEnter={() => setIsHover(true)}
+                        onMouseLeave={() => {
+                          setIsHover(false);
+                          setIsPressed(false);
+                        }}
+                        onMouseDown={() => setIsPressed(true)}
+                        onMouseUp={() => setIsPressed(false)}>
+                        <img
+                          src={isPressed ? sendIconPressed : isHover ? sendIconHover : sendIcon}
+                          alt="send"
+                          className="w-[20px] h-[20px] max-lg:w-[16px] max-lg:h-[16px]"
+                        />
                       </button>
                     </div>
                   )}
