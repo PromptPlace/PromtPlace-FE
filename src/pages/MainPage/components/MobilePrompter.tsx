@@ -51,7 +51,9 @@ const MobilePrompter = ({ prompter }: MobilePrompterProps) => {
           {data?.data.nickname || prompter.nickname}
         </div>
       </div>
-      <FollowButton follow={isFollow} onClick={handleFollow} size="sm" type="button" />
+      {prompter.user_id !== user.user_id && (
+        <FollowButton follow={isFollow} onClick={handleFollow} size="sm" type="button" />
+      )}
     </div>
   );
 };

@@ -6,6 +6,7 @@ export interface member {
   created_at: string;
   updated_at: string;
   follower_cnt: number;
+  profile_img_url?: string | null;
 }
 
 export interface Prompter {

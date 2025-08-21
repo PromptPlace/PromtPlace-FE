@@ -1,6 +1,5 @@
 /**
- * Todo(07/18):
- * 1. 프롬프트 카드 찜 기능 구현 -> 서버 연동 필요
+  *Author: @곽도윤
  */
 
 import React, { useState } from 'react';
@@ -53,10 +52,10 @@ const PromptCard = ({ prompt }: promptCardProps) => {
         <div
           className="flex justify-between items-center mb-3 cursor-pointer"
           onClick={() => navigate(`/prompt/${prompt.prompt_id}`)}>
-          <span className="text-xl font-medium text-gray-900">{prompt.title}</span>
+          <span className="text-xl font-medium text-gray-900 max-w-[400px] truncate">{prompt.title}</span>
           <div className="flex items-center gap-4 text-sm text-gray-600">
             <div className="flex items-center gap-1 text-lg">
-              {prompt.is_free ? '무료' : `${prompt.price.toLocaleString()}원`}
+              {prompt.is_free || prompt.price === 0 ? '무료' : `${prompt.price.toLocaleString()}원`}
             </div>
             <div>
               <Rating star={prompt.review_rating_avg} />
@@ -71,10 +70,21 @@ const PromptCard = ({ prompt }: promptCardProps) => {
         </div>
 
         {/* 설명 */}
+        <div className="flex items-center gap-4 mt-[20px] overflow-x-auto mb-[25px]">
+          {prompt.images?.map((image, index) => (
+            <img
+              key={index}
+              src={image.image_url || ''}
+              alt={`Prompt Example Image ${index + 1}`}
+              className="object-cover h-[174px] flex-shrink-0"
+            />
+          ))}
+        </div>
+
         <p
-          className="text-base text-gray-800 whitespace-pre-line cursor-pointer"
+          className="text-base text-gray-800 whitespace-pre-line cursor-pointer max-w-[700px] truncate"
           onClick={() => navigate(`/prompt/${prompt.prompt_id}`)}>
-          {prompt.description}
+          {prompt.prompt_result}
         </p>
 
         {/* 찜 아이콘 */}
