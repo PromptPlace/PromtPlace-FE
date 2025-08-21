@@ -397,21 +397,31 @@ const MyPromptPage = () => {
             onSelect={(value) => setActiveTab(value as 'authored' | 'downloaded' | 'liked')}
           />
         </div>
-        <div className=" bg-white">
-          <div className="mr-[8px] overflow-y-auto overflow-x-hidden max-h-[368px]">
-            {promptsToDisplay.map((prompt) => (
-              <PromptCard
-                key={prompt.prompt_id}
-                type={activeTab}
-                promptData={prompt}
-                DeletePrompt={() => handleDeleteAuthoredPrompts({ prompt_id: prompt.prompt_id })}
-                EditPrompt={() => EditAuthoredPrompt(prompt.prompt_id)}
-                DeleteLike={() => DeleteLikedPrompt(prompt.prompt_id)}
-              />
-            ))}
-            <div ref={ref} />
+        {promptsToDisplay.length > 0 ? (
+          <div className=" bg-white">
+            <div className="mr-[8px] overflow-y-auto overflow-x-hidden max-h-[368px]">
+              {promptsToDisplay.map((prompt) => (
+                <PromptCard
+                  key={prompt.prompt_id}
+                  type={activeTab}
+                  promptData={prompt}
+                  DeletePrompt={() => handleDeleteAuthoredPrompts({ prompt_id: prompt.prompt_id })}
+                  EditPrompt={() => EditAuthoredPrompt(prompt.prompt_id)}
+                  DeleteLike={() => DeleteLikedPrompt(prompt.prompt_id)}
+                />
+              ))}
+              <div ref={ref} />
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex mt-[96px] max-lg:mt-[114px] justify-center text-text-on-background text-[24px] max-lg:text-[12px] font-medium">
+            {activeTab === 'authored'
+              ? '작성한 프롬프트가 없습니다.'
+              : activeTab === 'downloaded'
+                ? '다운받은 프롬프트가 없습니다.'
+                : '찜한 프롬프트가 없습니다.'}
+          </div>
+        )}
       </div>
     </div>
   );

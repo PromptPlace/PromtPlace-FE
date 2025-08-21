@@ -113,19 +113,24 @@ const MyPayPage = () => {
               ))}
             </div>
           </div>
-
-          <div className="lg:hidden flex-1 min-h-0 overflow-y-auto max-h-[312px] ml-[20px] mr-[12px] ">
-            <div className="bg-white  mr-[4px]">
-              <div className="lg:hidden flex justify-between h-[39px] border-b-[0.5px] border-b-text-on-white border-t-[0.5px] border-t-primary-hover py-[12px] px-[12px] font-bold text-text-on-white text-[12px]">
-                <span className="flex justify-center w-[155px] "> 프롬프트</span>
-                <span className="mx-[12px] w-[23px]">가격</span>
-                <span className="w-[34px]">구매자</span>
+          {(salesResponse?.sales?.length ?? 0 > 0) ? (
+            <div className="lg:hidden flex-1 min-h-0 overflow-y-auto max-h-[312px] ml-[20px] mr-[12px] ">
+              <div className="bg-white  mr-[4px]">
+                <div className="lg:hidden flex justify-between h-[39px] border-b-[0.5px] border-b-text-on-white border-t-[0.5px] border-t-primary-hover py-[12px] px-[12px] font-bold text-text-on-white text-[12px]">
+                  <span className="flex justify-center w-[155px] "> 프롬프트</span>
+                  <span className="mx-[12px] w-[23px]">가격</span>
+                  <span className="w-[34px]">구매자</span>
+                </div>
+                {salesResponse?.sales.map((sale) => (
+                  <SalesHistoryCard key={sale.prompt_id} sale={sale} />
+                ))}
               </div>
-              {salesResponse?.sales.map((sale) => (
-                <SalesHistoryCard key={sale.prompt_id} sale={sale} />
-              ))}
             </div>
-          </div>
+          ) : (
+            <div className="flex mt-[96px] max-lg:mt-[48px] justify-center text-text-on-background text-[24px] max-lg:text-[12px] font-medium">
+              판매 내역이 없습니다.
+            </div>
+          )}
         </div>
 
         {showModal === 'noAccount' && (

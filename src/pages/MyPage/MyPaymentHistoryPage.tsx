@@ -75,14 +75,20 @@ const PaymentHistoryPage = () => {
           </div>
         </div>
 
-        <div className="flex-grow min-h-0 p-[8px] max-lg:p-[0px] bg-white">
-          <div className="overflow-y-auto h-full">
-            {/* api 적용할때 purchasesResponse.purchases로 변경 */}
-            {purchasesResponse?.purchases.map((item) => (
-              <PaymentHistoryRow key={item.prompt_id} transaction={item} />
-            ))}
+        {(purchasesResponse?.purchases?.length ?? 0 > 0) ? (
+          <div className="flex-grow min-h-0 p-[8px] max-lg:p-[0px] bg-white">
+            <div className="overflow-y-auto h-full">
+              {/* api 적용할때 purchasesResponse.purchases로 변경 */}
+              {purchasesResponse?.purchases.map((item) => (
+                <PaymentHistoryRow key={item.prompt_id} transaction={item} />
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex lg:mt-[96px] max-lg:mt-[176px] justify-center text-text-on-background text-[24px] max-lg:text-[12px] font-medium">
+            결제 내역이 없습니다.
+          </div>
+        )}
       </div>
     </div>
   );

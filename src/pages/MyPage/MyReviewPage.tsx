@@ -318,7 +318,7 @@ const MyReviewPage = () => {
             </div>
           </div>
         ) : (
-          <div className="flex mt-[10px] justify-center h-full text-text-on-white text-[20px] font-medium">
+          <div className="flex mt-[96px] justify-center max-lg:items-center  text-text-on-background text-[24px] max-lg:text-[12px] font-medium">
             {activeTab === 'written' ? '작성한 리뷰가 없습니다.' : '받은 리뷰가 없습니다.'}
           </div>
         )}
