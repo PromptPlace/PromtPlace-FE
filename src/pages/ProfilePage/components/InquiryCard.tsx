@@ -28,6 +28,8 @@ const InquiryCard = ({
   const clickPosition = useRef<HTMLDivElement | null>(null);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     const updateModalPosition = () => {
       if (clickPosition.current) {
@@ -49,6 +51,22 @@ const InquiryCard = ({
       window.removeEventListener('scroll', updateModalPosition);
     };
   }, [isDotsClicked]);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (
+        menuRef.current &&
+        !menuRef.current?.contains(e.target as Node) &&
+        clickPosition.current &&
+        !clickPosition.current?.contains(e.target as Node)
+      ) {
+        setIsDotsClicked(false);
+      }
+    };
+
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, []);
 
   return (
     <div className="flex justify-between items-center pl-[80px] py-[20px] max-lg:p-[12px] max-lg:mr-[4px] bg-white border-b border-b-white-stroke">
@@ -103,13 +121,14 @@ const InquiryCard = ({
       <div className="cursor-pointer max-w-[115px] max-lg:max-w-none w-full max-lg:w-auto flex items-center justify-center">
         <div
           ref={clickPosition}
-          onClick={() => setIsDotsClicked((prev) => !prev)}
+          onClick={() => setIsDotsClicked(true)}
           className="w-[28px] h-[28px] max-lg:w-[16px] max-lg:h-[16px] hover:bg-secondary-pressed flex items-center justify-center rounded-full">
           <img src={DotsIcon} alt="선택" />
 
           {isDotsClicked && (
             <>
               <div
+                ref={menuRef}
                 style={{ top: modalPosition.top, left: modalPosition.left }}
                 className="max-lg:hidden absolute flex flex-col whitespace-nowrap">
                 <button
@@ -128,6 +147,7 @@ const InquiryCard = ({
               </div>
 
               <div
+                ref={menuRef}
                 style={{ top: modalPosition.top - 18, left: modalPosition.left + 20 }}
                 className="lg:hidden absolute flex flex-col whitespace-nowrap">
                 <button
