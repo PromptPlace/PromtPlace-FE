@@ -72,7 +72,7 @@ const ReportModal = ({ isOpen, onClose, promptId }: ReportModalProps) => {
             <div className="flex flex-col gap-[24px] max-lg:gap-[12px]">
               {OPTIONS.map((item) => (
                 <label key={item.value} className="flex flex-col gap-[6px] max-lg:gap-[2px] cursor-pointer">
-                  <div className="flex items-start max-lg:gap-[12px] max-lg:text-[#000000]">
+                  <div className="flex items-start max-lg:gap-[12px] gap-[16px] max-lg:text-[#000000]">
                     <input
                       type="radio"
                       name="reportOption"
@@ -96,12 +96,12 @@ const ReportModal = ({ isOpen, onClose, promptId }: ReportModalProps) => {
                   </div>
 
                   {selectedOption === item.value && (
-                    <div className="relative mt-[12px] max-lg:pl-[28px] max-lg:m-0 max-lg:h-[68px]">
+                    <div className="relative mt-[12px] ml-[36px] max-lg:pl-[28px] max-lg:m-0 max-lg:h-[68px]">
                       <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         placeholder="신고 내용을 입력하세요(구체적으로 작성)"
-                        className="w-full h-[96px] bg-[#F5F5F5] border border-gray-300 rounded-[8px] p-4 resize-none focus:outline-none focus:ring-0 transition text-[14px] max-lg:p-[8px] max-lg:text-[10px] max-lg:w-[212px] max-lg:h-[68px]"
+                        className="w-full h-[96px] bg-[#F5F5F5] border-none rounded-[8px] p-4 resize-none focus:outline-none focus:ring-0 transition text-[14px] max-lg:p-[8px] max-lg:text-[10px] max-lg:w-[212px] max-lg:h-[68px]"
                       />
                       <button
                         onClick={handleSubmit}
