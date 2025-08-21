@@ -70,7 +70,9 @@ export const Editor = ({
   return (
     <div
       className={`w-full mx-auto mt-5 rounded text-black relative leading-[36px] font-normal text-left rounded-tl-[10px] rounded-tr-[10px]`}>
-      <div className={`bg-white relative overflow-y-auto ${maxHight} overflow-x-hidden`}>
+      <div
+        className={`bg-white relative overflow-y-auto ${maxHight} overflow-x-hidden`}
+        style={{ fontFamily: 'SpoqaHanSansNeo' }}>
         <LexicalComposer initialConfig={initialConfig}>
           <SyncValue value={value} />
           <RichTextPlugin
@@ -80,7 +82,8 @@ export const Editor = ({
                 aria-placeholder={placeholder}
                 placeholder={
                   <div
-                    className={`absolute -top-2 left-[10px] h-full w-full flex items-center text-[25px] text-[#999] select-none pointer-events-none`}>
+                    className={`absolute -top-2 left-[10px] h-full w-full flex items-center text-[25px] text-text-on-background select-none pointer-events-none`}
+                    style={{ fontFamily: 'SpoqaHanSansNeo' }}>
                     {placeholder}
                   </div>
                 }

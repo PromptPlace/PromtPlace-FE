@@ -88,7 +88,7 @@ const PromptCreatePage = () => {
       } else if (selectedModels.length === 0) {
         setModalText('모델을 설정해주세요.');
       } else if (!isValidCost || !priceType) {
-        setModalText('금액을 설정해주세요.');
+        setModalText('가격을 설정해주세요.');
       } else if (previewText.trim() === '') {
         setModalText('프롬프트 미리보기를 입력해주세요.');
       } else if (discriptionText.trim() === '') {

@@ -190,6 +190,24 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
     }
   };
 
+  // 바깥 누르면 닫히게
+  useEffect(() => {
+    if (!openType) return;
+
+    function handleClickOutside(event: MouseEvent) {
+      const target = event.target as Node;
+      if (ref.current && !ref.current.contains(target)) {
+        setOpenType(false);
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [openType]);
+
   return (
     <>
       <div className="hidden lg:block">

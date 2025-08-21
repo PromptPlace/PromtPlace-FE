@@ -90,7 +90,9 @@ export const MobileEditor = ({
   return (
     <div
       className={`w-full mx-auto rounded text-black relative leading-[17px] font-normal text-left rounded-tl-[10px] rounded-tr-[10px]`}>
-      <div className={`bg-white relative overflow-y-auto ${maxHight} overflow-x-hidden`}>
+      <div
+        className={`bg-white relative overflow-y-auto ${maxHight} overflow-x-hidden`}
+        style={{ fontFamily: 'SpoqaHanSansNeo' }}>
         <LexicalComposer initialConfig={initialConfig}>
           <RichTextPlugin
             contentEditable={
@@ -99,7 +101,8 @@ export const MobileEditor = ({
                 aria-placeholder={placeholder}
                 placeholder={
                   <div
-                    className={`absolute top-[2px] left-[10px] text-[12px] text-[#999] select-none pointer-events-none`}>
+                    className={`absolute top-[2px] left-[10px] text-[12px] text-text-on-background select-none pointer-events-none`}
+                    style={{ fontFamily: 'SpoqaHanSansNeo' }}>
                     {placeholder}
                   </div>
                 }
