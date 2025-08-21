@@ -71,6 +71,7 @@ const PaymentModal = ({
       buyer_tel: phoneNumber || '010-0000-0000',
       buyer_addr: '',
       buyer_postcode: '',
+      m_redirect_url: window.location.origin + `/prompt/${promptId}`,
     };
 
     window.IMP.request_pay(paymentData, (response: any) => {
@@ -84,7 +85,7 @@ const PaymentModal = ({
           merchant_uid: merchantUid,
           amount: price,
           buyer_name: user.nickname,
-          redirect_url: `${window.location.origin}/prompt/${promptId}`,
+          redirect_url: window.location.origin + `/prompt/${promptId}`,
           imp_uid: response.imp_uid, // 포트원 거래 고유번호
         };
 
