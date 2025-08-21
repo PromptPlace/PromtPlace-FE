@@ -87,7 +87,7 @@ const MyPayPage = () => {
       <div className="flex justify-center h-screen bg-background ">
         <div className="flex flex-col pt-[92px] w-full max-w-[1236px] h-full max-lg:pt-[12px]">
           <div className="shrink-0 max-lg:mx-[20px]">
-            <div className="flex items-center gap-[4px] mb-[23px] py-[10px] max-lg:gap-[2.5px] max-lg:mb-[20px] max-lg:py-[0px]">
+            <div className="flex items-center gap-[10px] mb-[23px] py-[10px] max-lg:gap-[2.5px] max-lg:mb-[20px] max-lg:py-[0px]">
               <img
                 src={iconReceipt}
                 alt="receipt"

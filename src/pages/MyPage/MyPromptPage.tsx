@@ -383,7 +383,7 @@ const MyPromptPage = () => {
           <img
             src={BlueArchiveIcon}
             alt="BlueArchiveIcon"
-            className="w-[24px] max-lg:w-[20px] h-[24px] max-lg:h-[20px]"
+            className="w-[30px] max-lg:w-[18px] h-[30px] max-lg:h-[18px]"
           />
           <h1 className="text-[32px] max-lg:text-[20px] text-primary-hover font-bold">내 프롬프트</h1>
         </div>
