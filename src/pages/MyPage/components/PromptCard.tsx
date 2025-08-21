@@ -33,53 +33,62 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
 
   const buttonRef = useRef<HTMLButtonElement>(null); // 버튼의 위치를 얻기 위한 ref
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
 
+  const lgQuery = '(min-width: 1024px)';
+
+  const getIsDesktop = () => window.matchMedia(lgQuery).matches;
+
   useEffect(() => {
-    // 이벤트 핸들러 함수
-    const handleClickOutside = (event: MouseEvent) => {
-      // ref가 있고, 클릭된 곳이 ref가 감싼 영역의 바깥쪽일 때
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false); // 드롭다운 닫기
+    if (!isDropdownOpen) return;
+
+    const updatePosition = () => {
+      if (buttonRef.current) {
+        const rect = buttonRef.current.getBoundingClientRect();
+        const isDesktop = getIsDesktop();
+
+        const dropdownWidth = isDesktop ? 90 : 70;
+        const verticalOffset = isDesktop ? 2 : 0;
+
+        setMenuPosition({
+          top: rect.bottom + verticalOffset,
+          left: rect.right - dropdownWidth,
+        });
       }
     };
 
-    if (isDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
+    updatePosition();
+
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
+    };
+  }, [isDropdownOpen]); // isDropdownOpen이 바뀔 때만 이 로직을 실행
+
+  useEffect(() => {
+    if (!isDropdownOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      // 케밥 버튼(buttonRef)과 드롭다운 메뉴(dropdownRef) 바깥을 클릭했는지 확인
+      if (
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node) &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isDropdownOpen]);
-
-  // 드롭다운 메뉴 위치 설정
-  useEffect(() => {
-    // 버튼 ref를 기준으로 좌표를 계산
-    if (isDropdownOpen && buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      const dropdownWidth = 91; // w-[91px] 클래스에 해당하는 너비
-
-      setMenuPosition({
-        top: rect.bottom + window.scrollY + 8, // 버튼 바로 아래 + 8px 간격
-        left: rect.right + window.scrollX - dropdownWidth, // 버튼의 오른쪽 끝에서 드롭다운 너비만큼 왼쪽으로 이동
-      });
-    }
-  }, [isDropdownOpen]);
-
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsDropdownOpen(false);
-    };
-
-    // resize 이벤트가 발생할 때 handleResize 함수를 호출합니다.
-    window.addEventListener('resize', handleResize);
-
-    // 컴포넌트가 언마운트될 때(사라질 때) 이벤트 리스너를 꼭 제거해줍니다. (메모리 누수 방지)
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   //리뷰 작성하기 버튼 클릭 시 상세페이지 이동 함수
   const handleWriteReviewClick = (prompt_id: number) => {
@@ -89,22 +98,24 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
   };
 
   return (
-    <div className="flex lg:items-center max-lg:flex-col max-lg:gap-[6px]  border-b-[1px] max-lg:border-b-[0.5px] border-b-white-stroke w-full  py-[10px] max-lg:p-[12px] h-[92px] max-lg:h-auto bg-white">
-      <Link to={`/prompt/${promptData.prompt_id}`} className="flex flex-row">
-        <div className="max-lg:hidden flex items-center  text-text-on-white text-[22px] max-lg:text-[12px] pl-[80px] max-lg:pl-[0px] font-bold max-lg:font-medium w-[635px] max-lg:w-[231px]">
-          {promptData.title}
-        </div>
-        <div className="flex items-center justify-center max-lg:bg-primary text-text-on-background max-lg:text-white text-[20px] max-lg:text-[8px] font-medium  w-[223px] max-lg:w-auto max-lg:rounded-[50px] max-lg:px-[6px] max-lg:py-[5px]">
-          {promptData.models[0] ?? ''}
+    <div className="flex justify-between max-lg:flex-col max-lg:gap-[6px]  border-b-[1px] max-lg:border-b-[0.5px] border-b-white-stroke w-full  py-[10px] max-lg:p-[12px] h-[92px] max-lg:h-auto bg-white">
+      <Link to={`/prompt/${promptData.prompt_id}`} className="flex w-full justify-between min-w-0 ">
+        <div className="max-lg:hidden min-w-0 flex flex-1 items-center  text-text-on-white text-[22px] max-lg:text-[12px] pl-[80px] max-lg:pl-[0px] font-bold max-lg:font-medium truncate  max-lg:w-[231px]">
+          <span className="block truncate">{promptData.title}</span>
         </div>
 
-        <div
-          className={`${type === 'downloaded' ? 'lg:hidden' : ''} flex items-center justify-center  text-text-on-background text-[20px] max-lg:text-[8px] font-medium py-[23.5px] max-lg:py-[0px] max-lg:pl-[10px] w-[263px] max-lg:w-auto`}>
-          {promptData.tags?.map((tag) => (
-            <div className="max-lg:px-[6px] max-lg:py-[5px] max-lg:gap-[5px] max-lg:rounded-[50px] max-lg:shadow-[0_1px_3px_0_rgba(0,0,0,0.08)] ">
-              #{tag}
-            </div>
-          ))}
+        <div className="flex shrink-0 max-w-[606px]">
+          <div className="flex shrink-0 items-center justify-center max-lg:bg-primary text-text-on-background max-lg:text-white text-[20px] max-lg:text-[8px] font-medium  w-[223px] max-w-[223px] max-lg:w-auto max-lg:rounded-[50px] max-lg:px-[6px] max-lg:py-[5px]">
+            {promptData.models[0] ?? ''}
+          </div>
+          <div
+            className={`${type === 'downloaded' ? 'lg:invisible' : ''} flex shrink-0 items-center justify-center  text-text-on-background text-[20px] max-lg:text-[8px] font-medium py-[23.5px] max-lg:py-[0px] max-lg:pl-[10px] w-[310px] max-lg:w-auto`}>
+            {promptData.tags?.slice(0, 3).map((tag) => (
+              <div className="max-lg:px-[6px] max-lg:py-[5px] max-lg:gap-[5px] max-lg:rounded-[50px] max-lg:shadow-[0_1px_3px_0_rgba(0,0,0,0.08)] ">
+                #{tag}
+              </div>
+            ))}
+          </div>
         </div>
       </Link>
 
@@ -113,8 +124,8 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
           <div className="truncate  text-text-on-white text-[12px] font-medium  w-full ">{promptData.title}</div>
         </Link>
         {type === 'authored' && (
-          <div className="flex items-center justify-center h-[72px] max-lg:h-auto  w-[115px] max-lg:w-auto py-[10px] max-lg:py-[0px]  ">
-            <div className="relative" ref={dropdownRef}>
+          <div className="flex items-center justify-center h-[72px] max-lg:h-auto shrink-0 w-[115px] max-lg:w-auto py-[10px] max-lg:py-[0px]  ">
+            <div className="relative" ref={anchorRef}>
               <button
                 ref={buttonRef}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -152,7 +163,7 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
 
         {type === 'downloaded' && (
           <>
-            <div className="max-lg:hidden flex items-center justify-center h-[72px]  w-[198px]">
+            <div className="max-lg:hidden shrink-0 flex items-center justify-center h-[72px]  w-[198px]">
               <PrimaryButton
                 buttonType="review"
                 text="리뷰 작성하기"
@@ -169,13 +180,13 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
           </>
         )}
         {type === 'downloaded' && (
-          <div className="max-lg:hidden flex items-center justify-center text-text-on-white text-[20px] font-medium py-[23.5px] w-[180px] px-[44px]">
+          <div className="max-lg:hidden shrink-0 flex items-center justify-center text-text-on-white text-[20px] font-medium py-[23.5px] w-[180px] px-[44px]">
             {promptData.author_nickname}
           </div>
         )}
 
         {type === 'liked' && (
-          <button onClick={() => DeleteLike(promptData.prompt_id)}>
+          <button onClick={() => DeleteLike(promptData.prompt_id)} className="shrink-0 ">
             <img
               src={BigBlueHeart}
               alt="좋아요 큰하트"

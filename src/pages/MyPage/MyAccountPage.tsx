@@ -1,14 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import iconPerson from '@assets/icon-person-blue.svg';
-import bluearrowIcon from '@assets/icon-arrow-left-blue.svg'; //추후 디자인 규격에 맞게 수정 필요
-import blackarrowIcon from '@/assets/icon-arrow-left-black.svg';
+import bluearrowIcon from '@assets/icon_arrow_blue.svg'; //추후 디자인 규격에 맞게 수정 필요
+import blackarrowIcon from '@/assets/keyboard_arrow_down.svg';
 import AccountDisplay from './components/AccountDisplay';
 import AccountEditForm from './components/AccountEditForm';
 import { useGetAccountInfo } from '@/hooks/queries/MyPage/useGetAccount';
 import { useRegisterAccount, useUpdateAccount } from '@/hooks/mutations/MyPage/account';
 import type { RegisterInfo, UpdateAccountInfo } from '@/types/MyPage/account';
 import axios from 'axios';
+
 
 interface accountInfo {
   account_id?: number;
@@ -70,20 +71,20 @@ const MyAccountPage = () => {
   return (
     <div className="flex justify-center h-screen bg-background ">
       <div className="flex flex-col w-full max-w-[1236px] pt-[92px] max-lg:pt-[12px] max-lg:px-[12px] h-full">
-        <div className="flex items-center gap-[10px] mb-[27px] max-lg:hidden">
+        <div className="flex items-center gap-[10px]  max-lg:hidden">
           <img src={iconPerson} alt="person icon" className="w-[32px] h-[32px]" />
           <div className="text-[32px] text-primary-hover font-bold">회원정보</div>
         </div>
 
-        <div className="relative flex items-center justify-center h-[90px] max-lg:h-auto border-b-[1px] max-lg:border-b-[0px] border-primary-hover">
-          <div className="flex justify-center max-lg:justify-center gap-[10px] h-[50px] max-lg:h-auto max-lg:w-full">
+        <div className="relative flex items-center  h-[90px] max-lg:h-auto border-b-[1px] max-lg:border-b-[0px] border-primary-hover">
+          <div className="flex justify-center lg:items-center  gap-[10px] h-[50px] max-lg:h-auto max-lg:w-full">
             <button
               onClick={() => navigate(-1)}
-              className="absolute left-[0px] flex items-center justify-center  w-[24px] max-lg:w-[20px] h-[24px] max-lg:h-[20px] max-lg:mr-[66px]">
-              <img src={bluearrowIcon} alt="뒤로가기" className="max-lg:hidden" />
+              className="max-lg:absolute max-lg:left-0 flex  justify-center   w-[24px] max-lg:w-[20px] h-[24px] max-lg:h-[20px] max-lg:mr-[66px]">
+              <img src={bluearrowIcon} alt="뒤로가기" className="max-lg:hidden w-[24px] h-[24px]" />
               <img src={blackarrowIcon} alt="뒤로가기" className="lg:hidden" />
             </button>
-            <span className="text-[24px] max-lg:text-[16px] text-primary-hover max-lg:text-[#2A2A2A] font-bold max-lg:font-medium">
+            <span className="text-[24px] max-lg:text-[16px] text-primary-hover max-lg:text-[#2A2A2A] font-bold  max-lg:font-medium">
               계좌 정보 등록
             </span>
           </div>
