@@ -73,8 +73,8 @@ const PromptCard = ({ prompt }: promptCardProps) => {
         <div className="flex items-center gap-4 mt-[20px] overflow-x-auto mb-[25px]">
           {prompt.images?.map((image, index) => (
             <img
-              key={image.image_id || index}
-              src={image.image_url}
+              key={index}
+              src={image.image_url || ''}
               alt={`Prompt Example Image ${index + 1}`}
               className="object-cover h-[174px] flex-shrink-0"
             />

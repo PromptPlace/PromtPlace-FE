@@ -5,9 +5,10 @@ import deleteButton from '@assets/icon-delete-Xbutton.svg';
 import TagButton from '@/components/Button/TagButton';
 
 type TagFilterProps = {
-  placeholder?: string;
   tags: string[];
-  setTags: (tags: string[]) => void;
+  setTags: (newTags: string[]) => void;
+  placeholder?: string;
+  onComplete?: () => void;
 };
 
 export default function TagFilter({ placeholder = '태그를 입력해주세요.', tags, setTags }: TagFilterProps) {
