@@ -47,7 +47,7 @@ const MyPage = () => {
                 <img
                   src={data?.data.profile_image || ProfileIcon}
                   alt="프로필"
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <p className="text-text-on-white text-[14px] font-medium leading-[18px]">로그인 하세요</p>
@@ -70,7 +70,7 @@ const MyPage = () => {
                 <img
                   src={data?.data.profile_image || ProfileIcon}
                   alt="프로필"
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-cover"
                 />
               </div>
 

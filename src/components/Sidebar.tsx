@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import ProfileIcon from '@assets/icon-profile-blue-big.svg';
+import UserDefaultIcon from '@assets/icon-profile-gray.svg';
 import GradientIcon from '@assets/icon-profile-blue-small.svg';
 
 import MailIcon from '@assets/icon-sidebar-mail.svg?react';
@@ -76,9 +76,9 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
             <div className="flex-1 mt-[93px] flex flex-col gap-[17px] items-center w-full">
               <div className="w-[80px] h-[80px] rounded-full overflow-hidden">
                 <img
-                  src={data?.data.profile_image || ProfileIcon}
+                  src={data?.data.profile_image || UserDefaultIcon}
                   alt="프로필"
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-cover"
                 />
               </div>
 
