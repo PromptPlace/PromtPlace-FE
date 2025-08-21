@@ -33,52 +33,62 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
 
   const buttonRef = useRef<HTMLButtonElement>(null); // 버튼의 위치를 얻기 위한 ref
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
 
+  const lgQuery = '(min-width: 1024px)';
+
+  const getIsDesktop = () => window.matchMedia(lgQuery).matches;
+
   useEffect(() => {
-    // 이벤트 핸들러 함수
-    const handleClickOutside = (event: MouseEvent) => {
-      // ref가 있고, 클릭된 곳이 ref가 감싼 영역의 바깥쪽일 때
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false); // 드롭다운 닫기
+    if (!isDropdownOpen) return;
+
+    const updatePosition = () => {
+      if (buttonRef.current) {
+        const rect = buttonRef.current.getBoundingClientRect();
+        const isDesktop = getIsDesktop();
+
+        const dropdownWidth = isDesktop ? 90 : 70;
+        const verticalOffset = isDesktop ? 2 : 0;
+
+        setMenuPosition({
+          top: rect.bottom + verticalOffset,
+          left: rect.right - dropdownWidth,
+        });
       }
     };
 
-    if (isDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
+    updatePosition();
+
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
+    };
+  }, [isDropdownOpen]); // isDropdownOpen이 바뀔 때만 이 로직을 실행
+
+  useEffect(() => {
+    if (!isDropdownOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      // 케밥 버튼(buttonRef)과 드롭다운 메뉴(dropdownRef) 바깥을 클릭했는지 확인
+      if (
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node) &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isDropdownOpen]);
-
-  // 드롭다운 메뉴 위치 설정
-  useEffect(() => {
-    // 버튼 ref를 기준으로 좌표를 계산
-    if (isDropdownOpen && buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      const dropdownWidth = 91; // w-[91px] 클래스에 해당하는 너비
-
-      setMenuPosition({
-        top: rect.bottom + window.scrollY + 8, // 버튼 바로 아래 + 8px 간격
-        left: rect.right + window.scrollX - dropdownWidth, // 버튼의 오른쪽 끝에서 드롭다운 너비만큼 왼쪽으로 이동
-      });
-    }
-  }, [isDropdownOpen]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsDropdownOpen(false);
-    };
-
-    // resize 이벤트가 발생할 때 handleResize 함수를 호출합니다.
-    window.addEventListener('resize', handleResize);
-
-    // 컴포넌트가 언마운트될 때(사라질 때) 이벤트 리스너를 꼭 제거해줍니다. (메모리 누수 방지)
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   //리뷰 작성하기 버튼 클릭 시 상세페이지 이동 함수
   const handleWriteReviewClick = (prompt_id: number) => {
@@ -115,7 +125,7 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
         </Link>
         {type === 'authored' && (
           <div className="flex items-center justify-center h-[72px] max-lg:h-auto shrink-0 w-[115px] max-lg:w-auto py-[10px] max-lg:py-[0px]  ">
-            <div className="relative" ref={dropdownRef}>
+            <div className="relative" ref={anchorRef}>
               <button
                 ref={buttonRef}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
