@@ -100,7 +100,7 @@ const PaymentHistoryPage = () => {
           </div>
         ) : (
           <div className="flex lg:mt-[96px] max-lg:mt-[176px] justify-center text-text-on-background text-[24px] max-lg:text-[12px] font-medium">
-            결제 내역이 없습니다.
+            결제 내역이 없습니다
           </div>
         )}
       </div>
