@@ -416,10 +416,10 @@ const MyPromptPage = () => {
         ) : (
           <div className="flex mt-[96px] max-lg:mt-[114px] justify-center text-text-on-background text-[24px] max-lg:text-[12px] font-medium">
             {activeTab === 'authored'
-              ? '작성한 프롬프트가 없습니다.'
+              ? '작성한 프롬프트가 없습니다'
               : activeTab === 'downloaded'
-                ? '다운받은 프롬프트가 없습니다.'
-                : '찜한 프롬프트가 없습니다.'}
+                ? '다운받은 프롬프트가 없습니다'
+                : '찜한 프롬프트가 없습니다'}
           </div>
         )}
       </div>
