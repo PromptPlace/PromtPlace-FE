@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import iconPerson from '@assets/icon-person-blue.svg';
 import bluearrowIcon from '@assets/icon-arrow-left-blue.svg'; //추후 디자인 규격에 맞게 수정 필요
-import blackarrowIcon from '@/assets/icon-arrow-black-thin.svg';
+import blackarrowIcon from '@/assets/keyboard_arrow_down.svg';
 import AccountDisplay from './components/AccountDisplay';
 import AccountEditForm from './components/AccountEditForm';
 import { useGetAccountInfo } from '@/hooks/queries/MyPage/useGetAccount';
@@ -82,9 +82,9 @@ const MyAccountPage = () => {
               onClick={() => navigate(-1)}
               className="absolute left-0 flex  justify-center   w-[24px] max-lg:w-[20px] h-[24px] max-lg:h-[20px] max-lg:mr-[66px]">
               <img src={bluearrowIcon} alt="뒤로가기" className="max-lg:hidden" />
-              <img src={blackarrowIcon} alt="뒤로가기" className="lg:hidden w-[10px]" />
+              <img src={blackarrowIcon} alt="뒤로가기" className="lg:hidden" />
             </button>
-            <span className="text-[24px] max-lg:text-[16px] text-primary-hover max-lg:text-[#2A2A2A] font-bold max-lg:font-medium">
+            <span className="text-[24px] max-lg:text-[16px] text-primary-hover max-lg:text-[#2A2A2A] font-bold  max-lg:font-medium">
               계좌 정보 등록
             </span>
           </div>
