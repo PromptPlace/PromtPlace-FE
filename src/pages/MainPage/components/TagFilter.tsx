@@ -1,77 +1,105 @@
-import { useState } from 'react';
+import React from 'react';
+import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
+import { useTagInput, getTruncatedTag } from '@hooks/queries/MainPage/useTagInput';
+import deleteButton from '@assets/icon-delete-Xbutton.svg';
+import TagButton from '@/components/Button/TagButton';
 
 type TagFilterProps = {
   placeholder?: string;
   tags: string[];
   setTags: (tags: string[]) => void;
-  onComplete?: () => void;
 };
 
-export default function TagFilter({ placeholder = '태그를 입력해주세요.', tags, setTags, onComplete }: TagFilterProps) {
-  const [input, setInput] = useState('');
+export default function TagFilter({ placeholder = '태그를 입력해주세요.', tags, setTags }: TagFilterProps) {
+  const {
+    input,
+    setInput,
+    isEdit,
+    page,
+    setPage,
+    inputRef,
+    handleComplete,
+    handleAreaClick,
+    handleDeleteTag,
+    pageTags,
+    totalPages,
+    pageTagGlobalIdxs,
+  } = useTagInput(tags, setTags);
 
-  const addTag = (tag: string) => {
-    const cleaned = tag.trim().replace(/^#/, '');
-    if (cleaned && !tags.includes(cleaned)) {
-      setTags([...tags, cleaned]);
-    }
-  };
+  // 편집 모드 UI
+  if (isEdit) {
+    return (
+      <div className="w-[490px] min-h-[58px] flex flex-wrap items-center gap-2 rounded-lg border border-blue-500 bg-white px-4 py-3 shadow-md">
+        <input
+          ref={inputRef}
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handleComplete();
+            }
+          }}
+          placeholder={placeholder}
+          className="flex-grow min-w-[100px] border-none text-sm text-gray-800 focus:outline-none"
+        />
+        <button
+          onClick={handleComplete}
+          className="h-8 rounded-lg border border-blue-500 bg-white px-4 text-sm font-medium text-blue-600 shadow-sm hover:bg-blue-50 transition">
+          완료
+        </button>
+      </div>
+    );
+  }
 
-  const handleAddTags = () => {
-    if (tags.length >= 10) return;
-    const splitTags = input
-      .split(/[\s,]+/)
-      .map((t) => t.trim().replace(/^#/, ''))
-      .filter(Boolean);
-    splitTags.forEach(addTag);
-    setInput('');
-  };
-
-  const handleComplete = () => {
-    handleAddTags();
-    onComplete?.();
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (['Enter', ' ', ','].includes(e.key)) {
-      e.preventDefault();
-      handleAddTags();
-    }
-  };
-
-  const handleDelete = (tag: string) => {
-    setTags(tags.filter((t) => t !== tag));
-  };
-
+  // 읽기 모드 UI
   return (
-    <div className="w-[490px] flex flex-wrap items-center gap-2 rounded-lg border border-blue-500 bg-white px-4 py-3 shadow-md">
-      {tags.map((tag, i) => (
-        <div
-          key={i}
-          className="flex items-center gap-1 rounded-full border border-gray-800 bg-white px-3 py-1 shadow-sm">
-          <span className="text-sm text-gray-800">#{tag}</span>
-          <button
-            onClick={() => handleDelete(tag)}
-            className="text-gray-500 hover:text-gray-700 focus:outline-none text-xs">
-            ✕
-          </button>
-        </div>
-      ))}
+    <div
+      className="w-[490px] min-h-[58px] flex items-center gap-2 rounded-lg border border-blue-500 bg-white px-4 py-3 shadow-md cursor-text"
+      onClick={handleAreaClick}
+      tabIndex={0}>
+      {totalPages > 1 && page > 0 ? (
+        <button
+          type="button"
+          className="text-gray-500 hover:text-gray-700"
+          onClick={(e) => {
+            e.stopPropagation();
+            setPage(page - 1);
+          }}
+          aria-label="이전 태그">
+          <LuChevronLeft size={20} />
+        </button>
+      ) : (
+        totalPages > 1 && <div className="w-[20px]" />
+      )}
 
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-        className="flex-grow min-w-[100px] border-none text-sm text-gray-800 focus:outline-none"
-      />
+      <div className="flex-1 flex items-center gap-2 overflow-hidden">
+        {pageTags.map((tag, i) => (
+          <div key={i} onClick={(e) => e.stopPropagation()}>
+            <TagButton
+              hasDelete={true}
+              text={`#${getTruncatedTag(tag)}`}
+              onClick={() => handleDeleteTag(pageTagGlobalIdxs[i])}
+            />
+          </div>
+        ))}
+      </div>
 
-      <button
-        onClick={handleComplete}
-        className="h-8 rounded-lg border border-blue-500 bg-white px-4 text-sm font-medium text-blue-600 shadow-sm hover:bg-blue-50 transition">
-        완료
-      </button>
+      {totalPages > 1 && page < totalPages - 1 ? (
+        <button
+          type="button"
+          className="text-gray-500 hover:text-gray-700"
+          onClick={(e) => {
+            e.stopPropagation();
+            setPage(page + 1);
+          }}
+          aria-label="다음 태그">
+          <LuChevronRight size={20} />
+        </button>
+      ) : (
+        totalPages > 1 && <div className="w-[20px]" />
+      )}
     </div>
   );
 }

@@ -4,19 +4,15 @@
  **/
 
 import React, { useMemo, useState } from 'react';
-import type { Creator } from '@/types/MainPage/prompt';
 import FollowButton from '@/components/Button/FollowButton';
 import profileImage from '@/assets/icon-profile-gray.svg';
 import allowRight from '@/assets/icon-arrow-right-blue.svg';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
-import usePatchFollow from '@/hooks/mutations/MainPage/usePatchFollow';
 import useGetPrompterList from '@/hooks/queries/MainPage/useGetPrompterList';
-import type { Prompter } from '@/types/MainPage/prompter';
-import useGetFollower from '@/hooks/queries/ProfilePage/useGetFollower';
 import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
-import useDeleteFollow from '@/hooks/mutations/MainPage/useDeleteFollow';
+import useOptimisticFollow from '@/hooks/mutations/MainPage/useOptimisticFollow';
 
 const PrompterBar = () => {
   const { accessToken, user } = useAuth();
@@ -24,28 +20,32 @@ const PrompterBar = () => {
   const navigate = useNavigate();
 
   const { data: promptersData } = useGetPrompterList();
-  const oneWeekAgo = new Date();
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-  // allPromptersData: Prompter[]
-  const allPrompters = promptersData?.data?.members ?? [];
-  const newPrompters = allPrompters.filter((m) => new Date(m.created_at) >= oneWeekAgo);
+  // ✨ useMemo를 사용하여 promptersData가 변경될 때만 목록을 다시 계산하도록 수정
+  const allPrompters = useMemo(() => promptersData?.data?.members ?? [], [promptersData]);
 
-  // 정렬
-  const topPrompters = [...allPrompters].sort((a, b) => b.follower_cnt - a.follower_cnt).slice(0, 4);
-  const topNewPrompters = [...newPrompters].sort((a, b) => b.follower_cnt - a.follower_cnt).slice(0, 2);
+  const topPrompters = useMemo(
+    () => [...allPrompters].sort((a, b) => b.follower_cnt - a.follower_cnt).slice(0, 4),
+    [allPrompters],
+  );
+
+  const topNewPrompters = useMemo(() => {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const newPrompters = allPrompters.filter((m) => new Date(m.created_at) >= oneWeekAgo);
+    return [...newPrompters].sort((a, b) => b.follower_cnt - a.follower_cnt).slice(0, 2);
+  }, [allPrompters]);
 
   const { data: myFollowingData } = useGetFollowing({ member_id: user.user_id });
   const myFollowingSet = useMemo(() => new Set(myFollowingData?.data.map((f) => f.following_id)), [myFollowingData]);
 
-  const followMutate = usePatchFollow();
-  const unfollowMutate = useDeleteFollow();
+  const { follow, unfollow } = useOptimisticFollow();
 
   const handleFollow = (targetId: number, isFollowed: boolean) => {
     if (isFollowed) {
-      unfollowMutate.mutate({ member_id: targetId });
+      unfollow(targetId);
     } else {
-      followMutate.mutate({ member_id: targetId });
+      follow(targetId);
     }
   };
 
@@ -69,7 +69,7 @@ const PrompterBar = () => {
                   className="flex items-center gap-[10px] mt-[12px] cursor-pointer"
                   onClick={() => navigate(`/profile/${p.user_id}`)}>
                   <img
-                    src={profileImage} // 추후 이미지 포함 변경 예쩡
+                    src={p.profile_img_url || profileImage} // API에 이미지 있으면 표시
                     alt={p.nickname}
                     className="w-11 h-11 rounded-full object-cover mr-[10px]"
                   />
@@ -85,9 +85,8 @@ const PrompterBar = () => {
                       alert('로그인이 필요합니다.');
                       setLoginModalShow(true);
                       return;
-                    } else {
-                      handleFollow(p.user_id, isFollowed);
                     }
+                    handleFollow(p.user_id, isFollowed);
                   }}
                 />
               </li>
@@ -110,7 +109,7 @@ const PrompterBar = () => {
                   className="flex items-center gap-[10px] mt-[12px] cursor-pointer"
                   onClick={() => navigate(`/profile/${p.user_id}`)}>
                   <img
-                    src={profileImage} //API 응답 추가 후 수정 필요
+                    src={p.profile_img_url || profileImage} // API에 이미지 있으면 표시
                     alt={p.nickname}
                     className="w-11 h-11 rounded-full object-cover mr-[10px]"
                   />

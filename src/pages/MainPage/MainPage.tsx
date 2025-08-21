@@ -99,10 +99,21 @@ const MainPage = () => {
   // 백엔드 검색 결과와 기본 프롬프트 리스트를 안전하게 처리
   const basePromptList: Prompt[] = (() => {
     if (keyword || selectedTags.length > 0) {
-      // 검색 API 응답: data가 이미 Prompt[]
-      return Array.isArray(searchPromptData?.data) ? searchPromptData.data : [];
+      const responseData = searchPromptData?.data;
+
+      if (
+        responseData &&
+        typeof responseData === 'object' &&
+        !Array.isArray(responseData) &&
+        'prompts' in responseData &&
+        Array.isArray((responseData as { prompts?: unknown }).prompts)
+      ) {
+        return (responseData as { prompts: Prompt[] }).prompts;
+      }
+
+      return [];
     } else {
-      // 기본 프롬프트 리스트
+      // 기본 프롬프트 리스트 (기존 코드와 동일)
       return Array.isArray(promptResult.data?.data) ? promptResult.data.data : [];
     }
   })();

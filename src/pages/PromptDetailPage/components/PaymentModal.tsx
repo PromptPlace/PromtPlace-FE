@@ -178,14 +178,14 @@ const PaymentModal = ({
         <div className="self-stretch justify-start text-text-on-white text-base font-bold font-['Spoqa_Han_Sans_Neo']">
           {title}
         </div>
-        <div className="self-stretch h-0 outline outline-[0.50px] outline-offset-[-0.25px] outline-white-stroke"></div>
+        <div className="self-stretch h-0 outline-[0.50px] outline-offset-[-0.25px] outline-white-stroke"></div>
         <div className="justify-start text-text-on-white text-base font-medium font-['Spoqa_Han_Sans_Neo']">
           {price.toLocaleString()} 원
         </div>
         <div className="self-stretch py-3 flex flex-col justify-center items-center gap-5">
           {/* 카카오페이 버튼 */}
           <div
-            className={`w-52 h-9 px-4 py-2 bg-white rounded-[50px] shadow-[0px_0.5988024473190308px_1.7964073419570923px_0px_rgba(0,0,0,0.08)] outline outline-[0.50px] outline-offset-[-0.50px] ${
+            className={`w-52 h-9 px-4 py-2 bg-white rounded-[50px] shadow-[0px_0.5988024473190308px_1.7964073419570923px_0px_rgba(0,0,0,0.08)] outline-[0.50px] outline-offset-[-0.50px] ${
               selected === 'kakaopay' ? 'outline-primary' : 'outline-white-stroke'
             } inline-flex justify-start items-center gap-2 cursor-pointer`}
             onClick={() => setSelected('kakaopay')}>
@@ -196,7 +196,7 @@ const PaymentModal = ({
           </div>
           {/* 토스페이 버튼 */}
           <div
-            className={`w-52 h-9 px-4 py-2 bg-white rounded-[50px] shadow-[0px_0.5988024473190308px_1.7964073419570923px_0px_rgba(0,0,0,0.08)] outline outline-[0.50px] outline-offset-[-0.50px] ${
+            className={`w-52 h-9 px-4 py-2 bg-white rounded-[50px] shadow-[0px_0.5988024473190308px_1.7964073419570923px_0px_rgba(0,0,0,0.08)] outline-[0.50px] outline-offset-[-0.50px] ${
               selected === 'tosspay' ? 'outline-primary' : 'outline-white-stroke'
             } inline-flex justify-start items-center gap-2 cursor-pointer`}
             onClick={() => setSelected('tosspay')}>
