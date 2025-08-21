@@ -30,10 +30,12 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
   const { data: likedList } = useGetLikedPrompts();
   const isLike = likedList?.data.some((data) => data.prompt_id === id);
 
-  const [isDotsClicked, setIsDotsClickes] = useState(false);
+  const [isDotsClicked, setIsDotsClicked] = useState(false);
 
   const clickPosition = useRef<HTMLDivElement | null>(null);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   const navigate = useNavigate();
 
@@ -62,6 +64,22 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
       window.removeEventListener('scroll', updateModalPosition);
     };
   }, [isDotsClicked]);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (
+        menuRef.current &&
+        !menuRef.current?.contains(e.target as Node) &&
+        clickPosition.current &&
+        !clickPosition.current?.contains(e.target as Node)
+      ) {
+        setIsDotsClicked(false);
+      }
+    };
+
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, []);
 
   return (
     <div className="bg-white border-b border-b-white-stroke py-[10px] max-lg:p-[12px] flex justify-between items-center max-lg:items-start cursor-pointer max-lg:flex-col max-lg:gap-[6px] max-lg:mr-[4px]">
@@ -113,7 +131,7 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
 
         {isMyProfile && (
           <div
-            onClick={() => setIsDotsClickes((prev) => !prev)}
+            onClick={() => setIsDotsClicked(true)}
             className="py-[22px] px-[44px] max-lg:p-0 cursor-pointer max-w-[115px] max-lg:max-w-[16px] w-full h-[72px] max-lg:h-auto flex items-center justify-center">
             <div
               ref={clickPosition}
@@ -123,30 +141,32 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
             {isDotsClicked && (
               <>
                 <div
+                  ref={menuRef}
                   style={{ top: modalPosition.top, left: modalPosition.left }}
                   className="max-lg:hidden absolute flex flex-col whitespace-nowrap">
                   <button
                     onClick={() => handleDeletePrompts(id)}
-                    className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-t-[4px] border-b border-b-white-stroke text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white hover:bg-secondary-pressed hover:text-text-on-white">
+                    className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-t-[4px] border-b border-b-white-stroke text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white">
                     삭제하기
                   </button>
                   <button
                     onClick={() => navigate(`/mypage/edit/${id}`)}
-                    className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-b-[4px] text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white hover:bg-secondary-pressed hover:text-text-on-white">
+                    className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-b-[4px] text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white">
                     수정하기
                   </button>
                 </div>
                 <div
+                  ref={menuRef}
                   style={{ top: modalPosition.top - 18, left: modalPosition.left + 20 }}
                   className="lg:hidden absolute flex flex-col whitespace-nowrap">
                   <button
                     onClick={() => handleDeletePrompts(id)}
-                    className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-t-[4px] border-b border-b-white-stroke text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white hover:bg-secondary-pressed hover:text-text-on-white">
+                    className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-t-[4px] border-b border-b-white-stroke text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white">
                     삭제하기
                   </button>
                   <button
                     onClick={() => navigate(`/mypage/edit/${id}`)}
-                    className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-b-[4px] text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white hover:bg-secondary-pressed hover:text-text-on-white">
+                    className="py-[8px] px-[16px] max-lg:py-[4px] max-lg:px-[12px] bg-secondary rounded-b-[4px] text-text-on-background text-[16px] font-normal leading-[20px] max-lg:text-[10px] max-lg:leading-[13px] active:bg-secondary-pressed active:text-text-on-white">
                     수정하기
                   </button>
                 </div>

@@ -77,6 +77,19 @@ const UploadModal = ({
     setFiles((prev) => prev.filter((_, i) => i !== idx));
   };
 
+  // 화면 조절
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  useEffect(() => {
+    const checkScreenHeight = () => {
+      setIsSmallScreen(window.innerHeight < 700);
+    };
+
+    checkScreenHeight();
+    window.addEventListener('resize', checkScreenHeight);
+
+    return () => window.removeEventListener('resize', checkScreenHeight);
+  }, []);
+
   return (
     <div className="fixed inset-0 flex justify-center items-center z-50">
       <div className="absolute inset-0 bg-overlay" onClick={() => setuploadModal(false)} />
@@ -112,75 +125,78 @@ const UploadModal = ({
             />
             <TagInput tags={tags} setTags={setTags} />
           </div>
-          {/*프롬프트 결과 미리보기*/}
-          <div>
-            <div className="w-full max-w-[845px] h-full max-h-[200px] mt-[20px]">
-              <div className="flex items-center gap-2 font-bold text-[24px]">
-                프롬프트 결과 미리 보기 <span className="text-alert">*</span>
-                <label className="flex items-center ml-4 font-normal cursor-pointer gap-[10px]">
-                  <p className="text-[18px]"> 이미지</p>
-                  <input
-                    type="checkbox"
-                    className="mr-1 mt-[1px] accent-primary-pressed hidden"
-                    checked={withImage}
-                    onChange={(e) => {
-                      setWithImage(e.target.checked);
-                      if (!e.target.checked) {
-                        setFiles([]); // 체크 해제 시 이미지 리스트 비움
-                      }
-                    }}
-                  />
-                  {withImage ? (
-                    <img className="w-[24px] h-[24px]" src={checkbox} alt="박스임" />
-                  ) : (
-                    <img className="w-[24px] h-[24px]" src={box} alt="박스임" />
-                  )}
-                </label>
-              </div>
-              <div className="mt-[16px] pt-[20px] px-[24px] pb-[11px] bg-gray-100 rounded-lg w-full max-w-[845px] h-[150px] overflow-y-auto">
-                {withImage && (
-                  <div className="mb-2">
-                    <IconButton
-                      buttonType="squareMini"
-                      style="fill"
-                      imgType="upload"
-                      text="이미지 업로드"
-                      onClick={() => inputImgRef.current?.click()}
-                    />
+
+          <div className={isSmallScreen ? 'overflow-y-auto h-[350px]' : ''}>
+            {/*프롬프트 결과 미리보기*/}
+            <div>
+              <div className="w-full max-w-[845px] h-full max-h-[200px] mt-[20px]">
+                <div className="flex items-center gap-2 font-bold text-[24px]">
+                  프롬프트 결과 미리 보기 <span className="text-alert">*</span>
+                  <label className="flex items-center ml-4 font-normal cursor-pointer gap-[10px]">
+                    <p className="text-[18px]"> 이미지</p>
                     <input
-                      type="file"
-                      ref={inputImgRef}
-                      className="hidden"
-                      multiple
-                      accept="image/*"
-                      onChange={handleFileChange}
+                      type="checkbox"
+                      className="mr-1 mt-[1px] accent-primary-pressed hidden"
+                      checked={withImage}
+                      onChange={(e) => {
+                        setWithImage(e.target.checked);
+                        if (!e.target.checked) {
+                          setFiles([]); // 체크 해제 시 이미지 리스트 비움
+                        }
+                      }}
                     />
-                    <ImageList files={files} onRemove={handleRemove} />
-                  </div>
-                )}
+                    {withImage ? (
+                      <img className="w-[24px] h-[24px]" src={checkbox} alt="박스임" />
+                    ) : (
+                      <img className="w-[24px] h-[24px]" src={box} alt="박스임" />
+                    )}
+                  </label>
+                </div>
+                <div className="mt-[16px] pt-[20px] px-[24px] pb-[11px] bg-background rounded-lg w-full max-w-[845px] h-[150px] flex flex-col">
+                  {withImage && (
+                    <div className="mb-2 flex-shrink-0 max-h-[48px] overflow-y-auto">
+                      <IconButton
+                        buttonType="squareMini"
+                        style="fill"
+                        imgType="upload"
+                        text="이미지 업로드"
+                        onClick={() => inputImgRef.current?.click()}
+                      />
+                      <input
+                        type="file"
+                        ref={inputImgRef}
+                        className="hidden"
+                        multiple
+                        accept="image/*"
+                        onChange={handleFileChange}
+                      />
+                      <ImageList files={files} onRemove={handleRemove} />
+                    </div>
+                  )}
+                  <textarea
+                    value={previewText}
+                    onChange={(e) => setPreviewText(e.target.value)}
+                    placeholder="미리 공개할 프롬프트 결과 일부를 입력해 주세요"
+                    className="w-full flex-1 bg-transparent outline-none resize-none text-[18px] 
+                    placeholder:text-text-on-background placeholder:text-[18px] placeholder:font-normal overflow-y-auto"
+                  />
+                </div>
+              </div>
+            </div>
+            {/*프롬프트 설명*/}
+            <div className="mt-[28px]">
+              <div className="flex items-center gap-2 font-bold text-[24px]">
+                프롬프트 설명 <span className="text-alert">*</span>
+              </div>
+              <div className="mt-[16px] pt-[24px] px-[24px] pb-[11px] bg-background rounded-[8px] h-[150px]">
                 <textarea
-                  value={previewText}
-                  onChange={(e) => setPreviewText(e.target.value)}
-                  placeholder="미리 공개할 프롬프트 결과 일부를 입력해 주세요"
-                  className="w-full h-full max-h-[110px] bg-transparent outline-none resize-none  text-[18px] 
-                  placeholder:text-text-on-background  placeholder:text-[18px] placeholder:font-normal mt-[4px] overflow-scroll"
+                  value={discriptionText}
+                  onChange={(e) => setDescriptionText(e.target.value)}
+                  placeholder="프롬프트에 대한 설명을 적어주세요"
+                  className="w-full h-full bg-transparent outline-none resize-none text-[18px] 
+                 placeholder:text-text-on-background placeholder:font-normal placeholder:text-[18px] mt-1"
                 />
               </div>
-            </div>
-          </div>
-          {/*프롬프트 설명*/}
-          <div className="mt-[28px]">
-            <div className="flex items-center gap-2 font-bold text-[24px]">
-              프롬프트 설명 <span className="text-alert">*</span>
-            </div>
-            <div className="mt-[16px] pt-[24px] px-[24px] pb-[11px] bg-background rounded-[8px] h-[150px]">
-              <textarea
-                value={discriptionText}
-                onChange={(e) => setDescriptionText(e.target.value)}
-                placeholder="프롬프트에 대한 설명을 적어주세요"
-                className="w-full h-full bg-transparent outline-none resize-none text-[18px] 
-                 placeholder:text-text-on-background placeholder:font-normal placeholder:text-[18px] mt-1"
-              />
             </div>
             {/*프롬프트 활용법*/}
             <div className="mt-[28px]">

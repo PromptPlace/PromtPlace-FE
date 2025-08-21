@@ -108,7 +108,7 @@ const Navbar = () => {
           <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
         )}
 
-        <div className="cursor-pointer w-[60px] rounded-full overflow-hidden shrink-0 max-lg:hidden">
+        <div className="cursor-pointer w-[60px] h-[60px] rounded-full overflow-hidden shrink-0 max-lg:hidden">
           {!accessToken && (
             <img
               src={ProfileIcon}
@@ -122,7 +122,7 @@ const Navbar = () => {
               src={data?.data.profile_image || UserProfileIcon}
               alt="로그인된 사용자 이미지"
               onClick={handleSidebarClick}
-              className="w-full h-full object-cover cursor-pointer"
+              className="w-full h-full object-cover cursor-pointer shrink-0"
             />
           )}
         </div>
