@@ -18,8 +18,9 @@ const CardHeader: React.FC<ContentHeaderProps> = ({
   showDateOnMobile,
 }) => {
   // 날짜 포맷 변경 로직
-  const [displayDate, timePart] = date.split('T');
+  const [Date, timePart] = date.split('T');
   const displayTime = timePart ? timePart.substring(0, 5) : '';
+  const displayDate = Date.replaceAll('-', '.');
 
   return (
     <div className="flex flex-col w-full gap-[10px] max-lg:gap-[6px]">
