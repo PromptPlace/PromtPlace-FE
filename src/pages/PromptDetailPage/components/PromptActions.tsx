@@ -189,11 +189,6 @@ const PromptActions = ({
       return;
     }
 
-    if (!isFree && !isPaid) {
-      setIsPaymentModalOpen(true);
-      return;
-    }
-
     try {
       const res = await fetchDownload(promptId);
       await qc.invalidateQueries({ queryKey: ['prompt-detail', promptId] });
