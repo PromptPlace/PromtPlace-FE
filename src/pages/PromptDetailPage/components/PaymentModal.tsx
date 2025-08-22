@@ -72,6 +72,9 @@ const PaymentModal = ({
       buyer_addr: '',
       buyer_postcode: '',
       m_redirect_url: window.location.origin + `/prompt/${promptId}`,
+      custom_data: {
+        promptId: { promptId }
+      }
     };
 
     window.IMP.request_pay(paymentData, (response: any) => {
@@ -87,6 +90,9 @@ const PaymentModal = ({
           buyer_name: user.nickname,
           redirect_url: window.location.origin + `/prompt/${promptId}`,
           imp_uid: response.imp_uid, // 포트원 거래 고유번호
+          custom_data: {
+            promptId: { promptId }
+          }
         };
 
         requestPayment(backendPaymentData, {
@@ -145,7 +151,7 @@ const PaymentModal = ({
           </div>
           <div className="w-full">
             <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1">
-              전화번호
+              전화번호 
             </label>
             <input
               id="phoneNumber"

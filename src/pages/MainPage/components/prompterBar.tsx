@@ -20,8 +20,9 @@ const PrompterBar = () => {
   const navigate = useNavigate();
 
   const { data: promptersData } = useGetPrompterList();
+  console.log(promptersData?.data.members)
 
-  // ✨ useMemo를 사용하여 promptersData가 변경될 때만 목록을 다시 계산하도록 수정
+  // useMemo를 사용하여 promptersData가 변경될 때만 목록을 다시 계산하도록 수정
   const allPrompters = useMemo(() => promptersData?.data?.members ?? [], [promptersData]);
 
   const topPrompters = useMemo(
@@ -30,9 +31,9 @@ const PrompterBar = () => {
   );
 
   const topNewPrompters = useMemo(() => {
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-    const newPrompters = allPrompters.filter((m) => new Date(m.created_at) >= oneWeekAgo);
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    const newPrompters = allPrompters.filter((m) => new Date(m.created_at) >= oneMonthAgo);
     return [...newPrompters].sort((a, b) => b.follower_cnt - a.follower_cnt).slice(0, 2);
   }, [allPrompters]);
 
@@ -69,7 +70,7 @@ const PrompterBar = () => {
                   className="flex items-center gap-[10px] mt-[12px] cursor-pointer"
                   onClick={() => navigate(`/profile/${p.user_id}`)}>
                   <img
-                    src={p.profile_img_url || profileImage} // API에 이미지 있으면 표시
+                    src={p.profile_img_url ? p.profile_img_url : profileImage} // API에 이미지 있으면 표시
                     alt={p.nickname}
                     className="w-11 h-11 rounded-full object-cover mr-[10px]"
                   />
@@ -97,7 +98,7 @@ const PrompterBar = () => {
 
       {/* ⭐ 신규 인기 프롬프터 */}
       <section className="w-[313px] h-[246px] rounded-2xl p-4 shadow-sm bg-white">
-        <h4 className="pb-2 font-bold text-lg flex items-center gap-1">
+        <h4 className="pb-2 font-bold text-xl flex items-center gap-1">
           신규 인기 프롬프터 <span>⭐</span>
         </h4>
         <ul className="mt-4 space-y-4">

@@ -8,6 +8,9 @@ export type RequestPaymentDTO = {
   buyer_name: string;
   redirect_url: string;
   imp_uid?: string; // 포트원 거래 고유번호 (선택적)
+  custom_data: {
+    promptId: { promptId: number };
+  };
 };
 
 export type ResponsePaymentDTO = {
@@ -16,6 +19,9 @@ export type ResponsePaymentDTO = {
   merchant_uid: string;
   redirect_url: string;
   statusCode: number;
+  custom_data: {
+    promptId: { promptId: number };
+  };
 };
 
 export type ResponseError = {
