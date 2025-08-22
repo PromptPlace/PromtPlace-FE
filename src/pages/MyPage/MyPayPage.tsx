@@ -58,10 +58,6 @@ const MyPayPage = () => {
 
   const CheckWithdraw = () => {
     console.log('출금하기 모달을 엽니다.');
-    if (isGetAccountLoading) {
-      console.log('계좌 정보를 불러오는 중입니다');
-      return;
-    }
 
     if (isGetAccountError && axios.isAxiosError(getAccountError) && getAccountError.response?.status === 404) {
       setShowModal('noAccount');

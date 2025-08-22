@@ -327,6 +327,7 @@ const MyPromptPage = () => {
   const { data: downloadedPromptsData } = useGetDownloadedPrompts({
     enabled: activeTab === 'downloaded',
   });
+  console.log('다운로드한 프롬프트 데이터:', downloadedPromptsData);
 
   const { data: likedPromptsData } = useGetLikedPrompts({
     enabled: activeTab === 'liked',
