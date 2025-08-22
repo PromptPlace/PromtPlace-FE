@@ -11,7 +11,7 @@ export interface Prompt {
   title: string;
   models: string[];
   tags?: string[];
-  author_nickname?: string;
+  nickname?: string;
   has_recent_review?: boolean;
   is_recent_review?: boolean;
 }
@@ -104,12 +104,12 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
           <span className="block truncate">{promptData.title}</span>
         </div>
 
-        <div className="flex shrink-0 max-w-[606px]">
+        <div className="flex shrink-0">
           <div className="flex shrink-0 items-center justify-center max-lg:bg-primary text-text-on-background max-lg:text-white text-[20px] max-lg:text-[8px] font-medium  w-[223px] max-w-[223px] max-lg:w-auto max-lg:rounded-[50px] max-lg:px-[6px] max-lg:py-[5px]">
             {promptData.models[0] ?? ''}
           </div>
           <div
-            className={`${type === 'downloaded' ? 'lg:invisible' : ''} flex shrink-0 items-center justify-center  text-text-on-background text-[20px] max-lg:text-[8px] font-medium py-[23.5px] max-lg:py-[0px] max-lg:pl-[10px] w-[310px] max-lg:w-auto`}>
+            className={`${type === 'downloaded' ? 'lg:hidden' : ''} flex shrink-0 items-center justify-center  text-text-on-background text-[20px] max-lg:text-[8px] font-medium py-[23.5px] max-lg:py-[0px] max-lg:pl-[10px] w-[310px] max-lg:w-auto`}>
             {promptData.tags?.slice(0, 3).map((tag) => (
               <div className="max-lg:px-[6px] max-lg:py-[5px] max-lg:gap-[5px] max-lg:rounded-[50px] max-lg:shadow-[0_1px_3px_0_rgba(0,0,0,0.08)] ">
                 #{tag}
@@ -181,7 +181,7 @@ export const PromptCard = ({ type, promptData, DeletePrompt, EditPrompt, DeleteL
         )}
         {type === 'downloaded' && (
           <div className="max-lg:hidden shrink-0 flex items-center justify-center text-text-on-white text-[20px] font-medium py-[23.5px] w-[180px] px-[44px]">
-            {promptData.author_nickname}
+            {promptData.nickname}
           </div>
         )}
 

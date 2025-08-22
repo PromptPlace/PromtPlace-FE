@@ -10,7 +10,7 @@ export interface DownloadedPromptDTO {
   models: string[];
   has_review: boolean;
   is_recent_review: boolean;
-  author_nickname: string;
+  nickname: string;
   statusCode: number;
 }
 
