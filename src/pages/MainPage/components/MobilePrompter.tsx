@@ -47,7 +47,7 @@ const MobilePrompter = ({ prompter }: MobilePrompterProps) => {
         <div className="w-[36px] h-[36px] rounded-full bg-gray-200 flex justify-center items-center">
           <img src={prompter.profileimg?.url ?? userImage} alt="authorImage" className="w-full h-full rounded-full" />
         </div>
-        <div className="max-w-44 text-black text-Black text-xs font-medium font-['Spoqa_Han_Sans_Neo'] uppercase leading-relaxed tracking-wide truncate ">
+        <div className="max-w-44 text-black text-Black text-xs font-medium font-['Spoqa_Han_Sans_Neo'] leading-relaxed tracking-wide truncate ">
           {data?.data.nickname || prompter.nickname}
         </div>
       </div>
