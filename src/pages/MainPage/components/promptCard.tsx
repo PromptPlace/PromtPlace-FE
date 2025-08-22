@@ -1,5 +1,5 @@
 /**
-  *Author: @곽도윤
+ *Author: @곽도윤
  */
 
 import React, { useState } from 'react';
@@ -27,7 +27,7 @@ const PromptCard = ({ prompt }: promptCardProps) => {
         className="inline-flex justify-start items-center gap-3.5 cursor-pointer"
         onClick={() => navigate(`/profile/${prompt.user_id}`)}>
         <img
-          src={prompt.user.profile_img_url ? prompt.user.profile_img_url : profileImage}
+          src={prompt.user?.profileimg?.url || (prompt.user as any)?.profileImage?.url || profileImage}
           alt="authorImage"
           className="w-14 h-14 rounded-[100px] inline-flex flex-col justify-center items-center"
         />
@@ -50,7 +50,7 @@ const PromptCard = ({ prompt }: promptCardProps) => {
 
         {/* 제목 + 가격 + 통계 */}
         <div
-          className="flex justify-between items-center mb-3 cursor-pointer"
+          className="flex justify-between items-center cursor-pointer"
           onClick={() => navigate(`/prompt/${prompt.prompt_id}`)}>
           <span className="text-xl font-medium text-gray-900 max-w-[400px] truncate">{prompt.title}</span>
           <div className="flex items-center gap-4 text-sm text-gray-600">
@@ -70,7 +70,7 @@ const PromptCard = ({ prompt }: promptCardProps) => {
         </div>
 
         {/* 설명 */}
-        <div className="flex items-center gap-4 mt-[20px] overflow-x-auto mb-[25px]">
+        <div className="flex items-center gap-4 overflow-x-auto mb-[25px]">
           {prompt.images?.map((image, index) => (
             <img
               key={index}

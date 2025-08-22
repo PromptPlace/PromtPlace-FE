@@ -4,6 +4,10 @@ export interface PromptImage {
   image_url: string | null;
 }
 
+export interface ProfileImage {
+  url: string | null;
+}
+
 export interface Tag {
   name: string;
 }
@@ -15,7 +19,7 @@ export interface PromptTag {
 export interface PromptWriter {
   user_id: number;
   nickname: string;
-  profile_img_url: string | null;
+  profileimg: ProfileImage;
 }
 
 export interface PromptModel {

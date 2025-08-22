@@ -62,14 +62,6 @@ const MainPage = () => {
     }
   };
 
-  console.log('검색 조건:', {
-    selectedModels,
-    selectedTags,
-    selectedSort,
-    onlyFree,
-    keyword,
-  });
-
   // 검색어와 태그가 있을 때만 백엔드 API 호출
   useEffect(() => {
     if (keyword || selectedTags.length > 0) {
@@ -82,8 +74,6 @@ const MainPage = () => {
         page: 1,
         size: 20,
       };
-
-      console.log('검색 API 호출 파라미터:', searchParams);
 
       searchPromptMutation.mutate(searchParams, {
         onSuccess: (data) => {
@@ -126,11 +116,6 @@ const MainPage = () => {
   //     : Array.isArray(promptResult.data?.data)
   //       ? promptResult.data.data
   //       : [];
-
-  console.log('promptResult:', promptResult);
-  console.log('searchPromptData:', searchPromptData);
-  console.log('basePromptList:', basePromptList);
-  console.log('basePromptList type:', typeof basePromptList, Array.isArray(basePromptList));
 
   // 코치마크 관련
   const { accessToken } = useAuth();
