@@ -16,13 +16,13 @@ const GTMScript = () => {
         j.async = true;
         j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
         f.parentNode.insertBefore(j, f);
-      })(window, document, 'script', 'dataLayer', 'GTM-KZ4W43JD');
+      })(window, document, 'script', 'dataLayer', '${import.meta.env.VITE_GTM_ID}');
     `;
     document.head.appendChild(script);
 
     // Google Tag Manager (noscript)
     const noscript = document.createElement('noscript');
-    noscript.innerHTML = `<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KZ4W43JD" height="0" width="0" style="display:none;visibility:hidden"></iframe>`;
+    noscript.innerHTML = `<iframe src="https://www.googletagmanager.com/ns.html?id=${import.meta.env.VITE_GTM_ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`;
     document.body.appendChild(noscript);
 
     return () => {
