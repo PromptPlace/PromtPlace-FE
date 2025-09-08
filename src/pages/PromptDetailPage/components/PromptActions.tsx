@@ -87,6 +87,8 @@ const PromptActions = ({
   const [liked, setLiked] = useState(false);
   const [follow, setFollow] = useState(false);
 
+  const [isPaid, setIsPaid] = useState(false);
+
   useEffect(() => {
     if (!Array.isArray(myFollowings) || !Number.isFinite(targetUserId)) return;
     const isFollowing = myFollowings.some((f: { member_id: number }) => f.member_id === targetUserId);
@@ -136,7 +138,6 @@ const PromptActions = ({
     }
   }, [fetchedReviews, isReviewsLoading, isReviewsError]);
 
-  const [isPaid, setIsPaid] = useState(false);
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
 
   const { mutateAsync: fetchDownload, isPending: isDownloading } = usePromptDownload();
@@ -185,11 +186,6 @@ const PromptActions = ({
   const handleDownloadClick = async () => {
     if (!Number.isFinite(promptId)) {
       alert('잘못된 접근입니다.');
-      return;
-    }
-
-    if (!isFree && !isPaid) {
-      setIsPaymentModalOpen(true);
       return;
     }
 

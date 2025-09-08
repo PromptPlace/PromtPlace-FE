@@ -25,7 +25,7 @@ const MobilePrompt = ({ prompt }: Props) => {
   };
 
   return (
-    <div className="w-full  flex flex-col gap-1.5 mb-[6px] px-4">
+    <div className="w-full flex flex-col gap-1.5 mb-[6px] px-4">
       {/* 프로필 */}
       <MobilePrompter key={prompt.user.user_id} prompter={prompt.user} />
 
@@ -63,14 +63,14 @@ const MobilePrompt = ({ prompt }: Props) => {
                 {prompt.views}
               </div>
               <div className="flex items-center gap-1 text-[8px] text-text-on-background">
-                <img src={iconDownload} className="w-3 h-3" />
+                <img src={iconDownload} className="w-[12px] h-[12px]" />
                 {prompt.downloads}
               </div>
             </div>
           </div>
 
           {/* 설명 */}
-          <div className="max-h-24 overflow-hidden text-[8px] text-text-on-white whitespace-pre-line mt-[6px]">
+          <div className="max-h-24 max-w-[calc(100%-30px)] overflow-hidden text-[8px] text-text-on-white whitespace-pre-line mt-[6px]">
             {prompt.description}
           </div>
         </div>

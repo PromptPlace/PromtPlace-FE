@@ -30,7 +30,7 @@ const PromptInfo = ({ description: descProp, usageGuide: usageProp, isPaid = fal
   return (
     <div className="w-[711px] max-lg:overflow-y-auto max-lg:max-w-[280px] max-lg:max-h-[353px] bg-[#FFFEFB] px-8 max-h-[604px] overflow-y-auto rounded-[16px] max-lg:p-[12px]">
       {/* 결과 미리 보기 */}
-      <section className="shrink-0 max-lg:h-[123px]">
+      <section className="shrink-0 max-lg:overflow-y-auto">
         <h4 className="font-semibold text-[24px] pt-[15px] max-lg:text-[12px] max-lg:pt-[0px]">
           프롬프트 결과 미리 보기
         </h4>
@@ -58,19 +58,19 @@ const PromptInfo = ({ description: descProp, usageGuide: usageProp, isPaid = fal
       <div className="h-[1px] bg-[#CCCCCC] w-full my-[20px] max-lg:mt-[12px] max-lg:p-0 max-lg:mb-0" />
 
       {/* 프롬프트 설명 */}
-      <section className="max-lg:h-[61px]">
-        <h4 className="font-semibold text-[24px]  max-lg:text-[12px] max-lg:pt-[12px]">프롬프트 설명</h4>
-        <div className="font-normal text-[16px] pt-[15px] whitespace-pre-line  max-lg:text-[10px] max-lg:pt-[8px]">
+      <section>
+        <h4 className="font-semibold text-[24px] max-lg:text-[12px] max-lg:pt-[12px]">프롬프트 설명</h4>
+        <div className="font-normal text-[16px] pt-[15px] whitespace-pre-line max-lg:text-[10px] max-lg:pt-[8px]">
           {isLoading ? '불러오는 중…' : description}
         </div>
       </section>
 
-      <div className="h-[1px] bg-[#CCCCCC] w-full my-[20px]  max-lg:mt-[12px] max-lg:p-0 max-lg:mb-0" />
+      <div className="h-[1px] bg-[#CCCCCC] w-full my-[20px] max-lg:mt-[12px] max-lg:mb-0" />
 
       {/* 프롬프트 활용법 */}
-      <section className="max-lg:h-[133px] ">
+      <section>
         <h4 className="font-semibold text-[24px] max-lg:text-[12px] max-lg:pt-[12px]">프롬프트 활용법</h4>
-        <div className="font-normal pt-[15px] text-[16px] max-lg:text-[10px] max-lg:pt-[8px] whitespace-pre-line">
+        <div className="font-normal pt-[15px] text-[16px] whitespace-pre-line max-lg:text-[10px] max-lg:pt-[8px]">
           {isLoading ? '불러오는 중…' : usageGuide}
         </div>
 

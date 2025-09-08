@@ -12,15 +12,18 @@ import PrimaryButton from '@components/Button/PrimaryButton';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import Sidebar from '@components/Sidebar';
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
+import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
 
 const Navbar = () => {
   const [search, setSearch] = useState<string>('');
   const navigate = useNavigate();
-  const { accessToken } = useAuth();
+  const { accessToken, user } = useAuth();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [loginModalShow, setLoginModalShow] = useState(false);
+
+  const { data } = useGetMember({ member_id: user.user_id });
 
   const handleNavigate = (url: string) => {
     navigate(url);
@@ -54,7 +57,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="flex justify-between items-center gap-[2.6vw] py-[7.5px] pl-[61.25px] pr-[36px] max-lg:py-[8px] max-lg:px-[20px]">
+      <nav className="flex justify-between items-center gap-[2.6vw] py-[7.5px] pl-[61.25px] pr-[36px] max-lg:py-[8px] max-lg:px-[20px] bg-white">
         <div onClick={() => (window.location.href = '/')} className="cursor-pointer w-[227px] shrink-0 max-lg:hidden">
           <img src={LogoIcon} alt="로고" className="w-full h-full object-cover" />
         </div>
@@ -105,7 +108,7 @@ const Navbar = () => {
           <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
         )}
 
-        <div className="cursor-pointer w-[60px] rounded-full overflow-hidden shrink-0 max-lg:hidden">
+        <div className="cursor-pointer w-[60px] h-[60px] rounded-full overflow-hidden shrink-0 max-lg:hidden">
           {!accessToken && (
             <img
               src={ProfileIcon}
@@ -116,10 +119,10 @@ const Navbar = () => {
           )}
           {accessToken && (
             <img
-              src={UserProfileIcon}
+              src={data?.data.profile_image || UserProfileIcon}
               alt="로그인된 사용자 이미지"
               onClick={handleSidebarClick}
-              className="w-full h-full object-cover cursor-pointer"
+              className="w-full h-full object-cover cursor-pointer shrink-0"
             />
           )}
         </div>

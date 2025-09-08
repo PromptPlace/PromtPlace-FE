@@ -24,8 +24,8 @@ export function NotificationTableList({
       <tbody>
         {data.length === 0 ? (
           <tr>
-            <td colSpan={3} className="text-center py-4 text-text-on-background">
-              아무 알림이 없네요...(귀뚜라미 소리)
+            <td colSpan={3} className="text-center py-4 text-text-on-background pt-[96px]">
+              <p>알림이 없습니다</p>
             </td>
           </tr>
         ) : (
@@ -115,10 +115,10 @@ export function MobileNotification({
   handleNoticeRowClick: (noticelink: string | null) => void;
 }) {
   return (
-    <div className="w-full max-w-[280px] my-[12px] cursor-pointer flex flex-col justify-center">
+    <div className="w-full max-w-[280px] my-[12px] flex flex-col justify-center">
       {data.length === 0 ? (
-        <div>
-          <div className="text-center py-4 text-text-on-background">아무 알림이 없네요...(귀뚜라미 소리)</div>
+        <div className="w-full flex justify-center items-center h-[60vh]">
+          <div className="text-center text-text-on-background">알림이 없습니다</div>
         </div>
       ) : (
         data.map((Notification) => (

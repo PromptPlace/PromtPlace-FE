@@ -47,15 +47,15 @@ export const MessageTableList = ({
       <tbody>
         {data.length === 0 ? (
           <tr>
-            <td colSpan={3} className="text-center py-4 text-text-on-background">
-              아무 연락이 없네요...(귀뚜라미 소리)
+            <td colSpan={3} className="text-center py-4 text-text-on-background pt-[96px]">
+              <p>메시지가 없습니다</p>
             </td>
           </tr>
         ) : (
           data.map((message) => (
             <tr
               key={message.message_id}
-              className="h-[65px] py-[10px] border-b-[1px]  border-white-stroke bg-white cursor-pointer">
+              className={`h-[65px] py-[10px] border-b-[1px]  border-white-stroke bg-white cursor-pointer ${message.is_read ? 'text-text-on-white' : 'text-text-on-background'}`}>
               <td className="w-[72px] h-[65px] flex justify-center items-center pt-[13px]">
                 {message.is_read ? (
                   <img className="w-[32px] h-[32px]" src={read} alt="읽음" />
@@ -64,19 +64,17 @@ export const MessageTableList = ({
                 )}
               </td>
               <td
-                className="w-[563px] h-[65px] text-left font-medium text-[20px] text-text-on-white py-[20px]"
+                className="w-[563px] h-[65px] text-left font-medium text-[20px]  py-[20px]"
                 onClick={() => handleMessageRowClick(message.message_id)}>
                 <p className="h-[25px]">{message.title}</p>
               </td>
               <td
                 className=" w-[223px] h-[65px] px-[10px] py-[20px]"
                 onClick={() => handleMessageRowClick(message.message_id)}>
-                <p className="flex justify-center items-center font-medium text-[20px] text-text-on-white">
-                  {message.sender}
-                </p>
+                <p className="flex justify-center items-center font-medium text-[20px] ">{message.sender}</p>
               </td>
               <td
-                className="w-[263px] h-[65px] text-center font-medium text-[20px] text-text-on-white py-[20px]"
+                className="w-[263px] h-[65px] text-center font-medium text-[20px]  py-[20px]"
                 onClick={() => handleMessageRowClick(message.message_id)}>
                 {message.created_at}
               </td>
@@ -211,8 +209,8 @@ export const MobileMessage = ({
   return (
     <div className="w-full max-w-[280px] my-[12px] cursor-pointer flex flex-col justify-center">
       {data.length === 0 ? (
-        <div>
-          <div className="text-center py-4 text-text-on-background">아무 메시지가 없습니다.</div>
+        <div className="w-full flex justify-center items-center h-[60vh]">
+          <div className="text-center text-text-on-background">메시지가 없습니다</div>
         </div>
       ) : (
         data.map((message) => (
@@ -258,15 +256,14 @@ export const MobileMessage = ({
             </div>
             <div className="flex justify-center">
               <div
-                className="w-full max-w-[256px] h-[16px] flex justify-start items-center mt-[6px]"
+                className={`w-full max-w-[256px] h-[16px] flex justify-start items-center mt-[6px] ${message.is_read ? 'text-text-on-background' : 'text-text-on-white'}`}
                 onClick={() => handleMessageRowClick(message.message_id)}>
                 {message.is_read ? (
                   <img className="w-[16px] h-[16px]" src={read} alt="읽음" />
                 ) : (
-                  <img className="w-[16px] h-[16px]" src={notread} alt="안 읽음" />
+                  <img className="w-[16px] h-[16px] " src={notread} alt="안 읽음" />
                 )}
-                <p
-                  className={`text-[12px] ${message.is_read ? 'text-text-on-background' : 'text-text-on-white'} font-medium ml-[6px]`}>
+                <p className={`text-[12px] font-medium ml-[6px]`}>
                   {/*20자까지만 표시 */}
                   {message.title.length > 20 ? message.title.slice(0, 20) + '...' : message.title}
                 </p>

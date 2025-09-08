@@ -3,10 +3,8 @@ import { NavLink } from 'react-router-dom';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import ProfileIcon from '@assets/icon-profile-blue-big.svg';
+import UserDefaultIcon from '@assets/icon-profile-gray.svg';
 import GradientIcon from '@assets/icon-profile-blue-small.svg';
-
-import UserProfileIcon from '@assets/icon-profile-gray.svg';
 
 import MailIcon from '@assets/icon-sidebar-mail.svg?react';
 import PersonIcon from '@assets/icon-sidebar-person.svg?react';
@@ -28,7 +26,7 @@ interface SidebarProps {
 const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarProps) => {
   const { accessToken, user } = useAuth();
   const [loginModalShow, setLoginModalShow] = useState(false);
-   const { data: userData } = useGetMember({ member_id: user.user_id });
+  const { data: userData } = useGetMember({ member_id: user.user_id });
 
   const LINKS = [
     { to: '/mypage/prompt', label: '내 프롬프트', icon: <ArchiveIcon /> },
@@ -47,6 +45,8 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
   };
 
   const { logout } = useAuth();
+
+  const { data } = useGetMember({ member_id: user.user_id });
 
   return (
     <>
@@ -75,7 +75,11 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
           <>
             <div className="flex-1 mt-[93px] flex flex-col gap-[17px] items-center w-full">
               <div className="w-[80px] h-[80px] rounded-full overflow-hidden">
-                <img src={UserProfileIcon || ProfileIcon} alt="프로필" className="w-full h-full object-contain" />
+                <img
+                  src={data?.data.profile_image || UserDefaultIcon}
+                  alt="프로필"
+                  className="w-full h-full object-cover"
+                />
               </div>
 
               <p className="text-text-on-white text-xl font-medium leading-[25px]">{userData?.data.nickname}</p>
