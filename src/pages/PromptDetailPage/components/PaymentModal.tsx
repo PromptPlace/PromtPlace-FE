@@ -63,7 +63,7 @@ const PaymentModal = ({
     const paymentData = {
       pg: pgProvider, // 'kakaopay' 또는 'tosspay'
       pay_method: 'card', // 카드결제
-      merchant_uid: merchantUid,
+      merchant_uid: 'store-ac1c069c-7294-44cc-a81b-1ec7558c55d2',
       name: `${title} 구매`,
       amount: price,
       buyer_email: user.email || '',
