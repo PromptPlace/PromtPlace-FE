@@ -138,7 +138,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
                     <img
                       src={getBankLogoUrl(bank.fileName)}
                       alt={bank.name}
-                      className="w-[40px] max-lg:w-[30px] h-[40px] max-lg:h-[30px]"
+                      className="w-[30px] max-lg:w-[30px] h-[40px] max-lg:h-[30px]"
                     />
                     <span className="text-[14px] max-lg:text-[12px] text-text-on-white font-normal">{bank.name}</span>
                   </button>
