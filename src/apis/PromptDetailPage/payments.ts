@@ -10,3 +10,11 @@ export const postPayment = async(data:RequestPaymentDTO): Promise<ResponsePaymen
   const res = await axiosInstance.post(`/api/prompts/purchases/requests`, data);
   return res.data;
 };
+
+export const completePayment = async(imp_uid: string): Promise<void> => {
+  console.log('결제 완료 API 호출:', {
+    url: `/api/prompts/purchases/complete/${imp_uid}`
+  });
+
+  await axiosInstance.post(`/api/prompts/purchases/complete/${imp_uid}`);
+}
