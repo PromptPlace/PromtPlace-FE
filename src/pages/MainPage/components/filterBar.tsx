@@ -124,7 +124,7 @@ const FilterBar = ({ onModelChange, onSortChange, onTagChange, onlyFree, setOnly
                   setSelectedTags(newTags);
                   onTagChange(newTags.length > 0 ? newTags : null);
                 }}
-                placeholder="태그를 입력해주세요."
+                placeholder="태그를 입력해주세요.(최대 10개)"
                 onComplete={() => setSelectedFilter(null)}
               />
             </div>

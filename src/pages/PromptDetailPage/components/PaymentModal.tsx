@@ -3,15 +3,43 @@ import kakaopaylogo from '@/assets/img-kakao-payment.png';
 import tosspaylogo from '@/assets/img-toss-payment.png';
 import xButton from '@/assets/icon-x-button.svg';
 import type { RequestPaymentDTO } from '@/types/PromptDetailPage/payments';
-import { usePostPayment } from '@/hooks/mutations/PromptDetailPage/usePostPayment';
+import { usePostPayment, usePostPaymentCheck } from '@/hooks/mutations/PromptDetailPage/usePostPayment';
 import { useAuth } from '@/context/AuthContext';
+
+// 포트원 결제 요청 데이터 타입
+interface PortOnePaymentData {
+  pg: string;
+  pay_method: string;
+  merchant_uid: string;
+  name: string;
+  amount: number;
+  buyer_email: string;
+  buyer_name: string;
+  buyer_tel: string;
+  buyer_addr: string;
+  buyer_postcode: string;
+  m_redirect_url: string;
+  custom_data: {
+    promptId: number;
+  };
+}
+
+// 포트원 결제 응답 타입
+interface PortOneResponse {
+  success: boolean;
+  imp_uid?: string;
+  merchant_uid?: string;
+  error_msg?: string;
+  paid_amount?: number;
+  pay_method?: string;
+}
 
 // 포트원 v1 타입 정의
 declare global {
   interface Window {
     IMP: {
       init: (impCode: string) => void;
-      request_pay: (paymentData: any, callback: (response: any) => void) => void;
+      request_pay: (paymentData: PortOnePaymentData, callback: (response: PortOneResponse) => void) => void;
     };
   }
 }
@@ -35,6 +63,7 @@ const PaymentModal = ({
   const [phoneNumber, setPhoneNumber] = useState<string>('');
 
   const { mutate: requestPayment } = usePostPayment();
+  const { mutate: requestPaymentCheck } = usePostPaymentCheck();
 
   // 포트원 초기화
   useEffect(() => {
@@ -54,65 +83,78 @@ const PaymentModal = ({
     if (!selected || !window.IMP) return;
     setLoading(true);
 
-    // 고유한 주문번호 생성
-    const merchantUid = `prompt_${promptId}_${Date.now()}`;
-
-    // PG사별 설정
-    const pgProvider = selected === 'kakaopay' ? 'kakaopay' : 'tosspay';
-
-    const paymentData = {
-      pg: pgProvider, // 'kakaopay' 또는 'tosspay'
-      pay_method: 'card', // 카드결제
-      merchant_uid: 'store-ac1c069c-7294-44cc-a81b-1ec7558c55d2',
-      name: `${title} 구매`,
+    // 백엔드 결제 요청 데이터
+    const paymentRequestData = {
+      prompt_id: promptId,
+      pg: selected, // 'kakaopay' | 'tosspay'
+      merchant_uid: 'store-ac1c069c-7294-44cc-a81b-1ec7558c55d2', // 명세서에 정의된 고정값
       amount: price,
-      buyer_email: user.email || '',
-      buyer_name: user.nickname,
-      buyer_tel: phoneNumber || '010-0000-0000',
-      buyer_addr: '',
-      buyer_postcode: '',
-      m_redirect_url: window.location.origin + `/prompt/${promptId}`,
+      buyer_name: user.nickname || '구매자',
+      redirect_url: `${window.location.origin}/payment/result`,
       custom_data: {
-        promptId: { promptId }
-      }
+        promptId: { promptId: promptId },
+      },
     };
 
-    window.IMP.request_pay(paymentData, (response: any) => {
-      setLoading(false);
-
-      if (response.success) {
-        // 결제 성공 시 백엔드에 검증 요청
-        const backendPaymentData: RequestPaymentDTO = {
-          prompt_id: promptId,
-          pg: selected as string,
-          merchant_uid: merchantUid,
+    // 1단계: 백엔드에 결제 요청
+    requestPayment(paymentRequestData, {
+      onSuccess: (response) => {
+        console.log('백엔드 결제 요청 성공:', response);
+        
+        // 2단계: 포트원 결제 실행
+        const paymentData = {
+          pg: selected, // 'kakaopay' 또는 'tosspay'
+          pay_method: 'card',
+          merchant_uid: response.merchant_uid || paymentRequestData.merchant_uid,
+          name: `${title} 구매`,
           amount: price,
-          buyer_name: user.nickname,
-          redirect_url: window.location.origin + `/prompt/${promptId}`,
-          imp_uid: response.imp_uid, // 포트원 거래 고유번호
+          buyer_email: user.email || '',
+          buyer_name: user.nickname || '구매자',
+          buyer_tel: phoneNumber || '010-0000-0000',
+          buyer_addr: '',
+          buyer_postcode: '',
+          m_redirect_url: response.redirect_url || paymentRequestData.redirect_url,
           custom_data: {
-            promptId: { promptId }
-          }
+            promptId: promptId,
+          },
         };
 
-        requestPayment(backendPaymentData, {
-          onSuccess: (res) => {
-            console.log('결제 완료 처리 성공:', res);
-            alert('결제가 완료되었습니다!');
-            _onPaid(); // 결제 완료 콜백 호출
-            onClose(); // 모달 닫기
-          },
-          onError: (err: unknown) => {
-            console.error('결제 완료 처리 실패:', err);
-            alert('결제는 완료되었지만 처리 중 오류가 발생했습니다. 고객센터에 문의해주세요.');
-            onClose(); // 에러 발생 시에도 모달 닫기
-          },
+        window.IMP.request_pay(paymentData, (portoneResponse: PortOneResponse) => {
+          if (portoneResponse.success && portoneResponse.imp_uid && portoneResponse.merchant_uid) {
+            // 3단계: 결제 완료 후 백엔드 검증
+            const verificationData = {
+              imp_uid: portoneResponse.imp_uid,
+              merchant_uid: portoneResponse.merchant_uid,
+            };
+
+            requestPaymentCheck(verificationData, {
+              onSuccess: (verifyResponse) => {
+                console.log('결제 검증 완료:', verifyResponse);
+                setLoading(false);
+                alert('결제가 완료되었습니다!');
+                _onPaid(); // 결제 완료 콜백 호출
+                onClose(); // 모달 닫기
+              },
+              onError: (verifyError: unknown) => {
+                console.error('결제 검증 실패:', verifyError);
+                setLoading(false);
+                alert('결제는 완료되었지만 검증 중 오류가 발생했습니다. 고객센터에 문의해주세요.');
+                onClose();
+              },
+            });
+          } else {
+            // 결제 실패
+            setLoading(false);
+            alert(`결제 실패: ${portoneResponse.error_msg || '알 수 없는 오류가 발생했습니다.'}`);
+            onClose();
+          }
         });
-      } else {
-        // 결제 실패
-        alert(`결제 실패: ${response.error_msg}`);
-        onClose(); // 결제 실패 시에도 모달 닫기
-      }
+      },
+      onError: (error: unknown) => {
+        console.error('백엔드 결제 요청 실패:', error);
+        setLoading(false);
+        alert('결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.');
+      },
     });
   };
 
@@ -151,7 +193,7 @@ const PaymentModal = ({
           </div>
           <div className="w-full">
             <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1">
-              전화번호 
+              전화번호
             </label>
             <input
               id="phoneNumber"
