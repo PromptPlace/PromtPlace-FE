@@ -320,8 +320,8 @@ const PromptDetailPage = () => {
 
       {/* 모바일 하단 고정 영역 */}
       <div className="lg:hidden bottom-0 fixed left-1/2 -translate-x-1/2 z-[10]  max-w-[425px] h-[139px] w-full flex justify-center pointer-events-none">
-        <div className="bg-white max-w-[425px] rounded-t-[24px] shadow-[0_-4px_12px_rgba(0,0,0,0.1)] p-[20px] h-[139px] z-[10] w-full h-full pointer-events-auto">
-          <div className="flex justify-between w-full h-full pl-[45px]">
+        <div className="bg-white max-w-[425px] rounded-t-[24px] shadow-[0_-4px_12px_rgba(0,0,0,0.1)] px-[20px] pb-[20px] pt-[15px] h-[139px] z-[10] w-full h-full pointer-events-auto">
+          <div className="flex justify-end w-full h-full mr-[8%]">
             <div
               className={`flex items-center ${isPaid ? 'gap-[10px]' : 'gap-[20px]'} h-[34px] ${
                 isPaid ? 'ml-[8%]' : 'ml-[28%]'
