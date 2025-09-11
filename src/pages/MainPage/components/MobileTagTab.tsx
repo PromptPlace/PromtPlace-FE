@@ -19,7 +19,7 @@ const MobileTagTab = ({ tags, setTags }: Props) => {
   } = useTagInput(tags, setTags);
 
   return (
-    <div className="w-full flex flex-col gap-6 p-4">
+    <div className="w-full flex flex-col gap-6">
       {/* --- 태그 입력 섹션 --- */}
       <div className="flex flex-col gap-2">
         <span className="text-primary text-[10px]">태그 입력하기</span>

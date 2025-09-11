@@ -35,7 +35,7 @@ const PromptCard = ({ prompt }: promptCardProps) => {
       </div>
 
       {/* 카드 본문 */}
-      <div className="relative w-full max-w-[780px] max-h-[320px] bg-white rounded-2xl shadow-md px-5 py-6 overflow-hidden ml-auto">
+      <div className="relative w-full max-w-[780px] max-h-[320px] bg-white rounded-2xl shadow-md px-5 py-6 overflow-hidden top-[20px] ml-auto">
         {/* 모델 + 태그 */}
         <div className="flex flex-wrap items-center gap-2.5 mb-4">
           {prompt.models.map((modelObj, idx) => (
