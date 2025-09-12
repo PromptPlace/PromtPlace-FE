@@ -28,14 +28,23 @@ const MobileTagTab = ({ tags, setTags }: Props) => {
             ref={inputRef}
             type="text"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {
+              const newValue = e.target.value;
+              // 각 태그(#으로 구분)가 5글자를 초과하지 않도록 제한
+              const tags = newValue.split('#');
+              const limitedTags = tags.map((tag, index) => {
+                if (index === 0) return tag; // 첫 번째는 #이 없는 경우
+                return tag.length > 5 ? tag.slice(0, 5) : tag;
+              });
+              setInput(limitedTags.join('#'));
+            }}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 e.preventDefault();
                 handleAddTags();
               }
             }}
-            placeholder="태그를 입력해 주세요 (최대 10개)"
+            placeholder="태그를 입력해 주세요 (최대 10개, 태그당 5글자)"
             className="w-full h-full rounded-lg border border-gray-300 pl-4 pr-20 text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button

@@ -7,6 +7,7 @@ function splitTags(input: string) {
   return input
     .split('#')
     .map((tag) => tag.trim().replace(/\s+/g, '')) // 공백 제거
+    .map((tag) => tag.slice(0, 5)) // 각 태그를 최대 5글자로 제한
     .filter((tag) => tag.length > 0); // 빈 태그 제거
 }
 
