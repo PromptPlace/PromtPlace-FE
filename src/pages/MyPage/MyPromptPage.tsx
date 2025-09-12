@@ -400,7 +400,7 @@ const MyPromptPage = () => {
         </div>
         {promptsToDisplay.length > 0 ? (
           <div className=" bg-white">
-            <div className="mr-[8px] overflow-y-auto overflow-x-hidden max-h-[368px]">
+            <div className="mr-[8px] overflow-y-auto overflow-x-hidden max-h-[368px] min-w-[1080px]">
               {promptsToDisplay.map((prompt) => (
                 <PromptCard
                   key={prompt.prompt_id}

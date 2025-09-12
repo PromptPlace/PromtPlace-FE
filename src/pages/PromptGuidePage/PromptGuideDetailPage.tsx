@@ -89,8 +89,8 @@ const PromptGuideDetailPage = ({ type }: PromptGuideDetailPageProps) => {
             title: fetched_data.title,
             content: fetched_data.content,
 
-            create_at: fetched_data.created_at.slice(0, 10),
-            update_at: fetched_data.updated_at.slice(0, 10),
+            create_at: fetched_data.created_at.slice(0, 10).replace(/-/g, '.'),
+            update_at: fetched_data.updated_at.slice(0, 10).replace(/-/g, '.'),
             is_visible: fetched_data.is_visible,
             file_url: fetched_data.file_url,
           };
