@@ -35,7 +35,16 @@ export default function TagFilter({ placeholder = '태그를 입력해 주세요
           ref={inputRef}
           type="text"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => {
+            const newValue = e.target.value;
+            // 각 태그(#으로 구분)가 5글자를 초과하지 않도록 제한
+            const tags = newValue.split('#');
+            const limitedTags = tags.map((tag, index) => {
+              if (index === 0) return tag; // 첫 번째는 #이 없는 경우
+              return tag.length > 5 ? tag.slice(0, 5) : tag;
+            });
+            setInput(limitedTags.join('#'));
+          }}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               e.preventDefault();

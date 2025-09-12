@@ -69,7 +69,7 @@ const Likes: React.FC<Prompt> = ({ prompt_id }) => {
           }
           handleToggleLike();
         }}
-        className="absolute right-6 bottom-6 z-10"
+        className="absolute right-3 bottom-3 lg:right-6 lg:bottom-6 z-10"
       >
         <img src={liked ? likeIcon : unLikeIcon} className="w-[16px] h-[16px] lg:w-[24px] lg:h-[24px]" />
       </button>
