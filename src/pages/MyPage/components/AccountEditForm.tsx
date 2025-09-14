@@ -34,7 +34,7 @@ const BANKS = [
   { name: '제주', code: '035', fileName: 'Jeju.svg' },
   { name: '광주', code: '034', fileName: 'Gwangju.svg' },
   { name: '전북', code: '037', fileName: 'Jeonbuk.svg' },
-  { name: 'DGB대구', code: '031', fileName: 'Daegu.svg' },
+  { name: 'iM뱅크', code: '031', fileName: 'iM.svg' },
   { name: 'Sh수협', code: '007', fileName: 'Suhyup.svg' },
 ];
 const getBankLogoUrl = (fileName: string) => {
