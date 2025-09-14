@@ -134,7 +134,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
                   <button
                     key={bank.name}
                     onClick={() => handleBankSelect(bank)}
-                    className="flex flex-col items-center justify-center w-[96px] max-lg:w-[72px] h-[74px] max-lg:w-[48px] bg-white hover:bg-white-stroke hover:rounded-[4px]">
+                    className="flex flex-col items-center justify-center w-[96px] max-lg:w-[72px] h-[74px] max-lg:w-[48px] bg-white hover:bg-background hover:rounded-[4px]">
                     <img
                       src={getBankLogoUrl(bank.fileName)}
                       alt={bank.name}
