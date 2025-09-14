@@ -34,7 +34,7 @@ const BANKS = [
   { name: '제주', code: '035', fileName: 'Jeju.svg' },
   { name: '광주', code: '034', fileName: 'Gwangju.svg' },
   { name: '전북', code: '037', fileName: 'Jeonbuk.svg' },
-  { name: 'DGB대구', code: '031', fileName: 'Daegu.svg' },
+  { name: 'iM뱅크', code: '031', fileName: 'iM.svg' },
   { name: 'Sh수협', code: '007', fileName: 'Suhyup.svg' },
 ];
 const getBankLogoUrl = (fileName: string) => {
@@ -134,7 +134,7 @@ const AccountEditForm = ({ onSubmit }: AccountEditFormProps) => {
                   <button
                     key={bank.name}
                     onClick={() => handleBankSelect(bank)}
-                    className="flex flex-col items-center justify-center w-[96px] max-lg:w-[72px] h-[74px] max-lg:w-[48px] bg-white hover:bg-white-stroke hover:rounded-[4px]">
+                    className="flex flex-col items-center justify-center w-[96px] max-lg:w-[72px] h-[74px] max-lg:w-[48px] bg-white hover:bg-background hover:rounded-[4px]">
                     <img
                       src={getBankLogoUrl(bank.fileName)}
                       alt={bank.name}
