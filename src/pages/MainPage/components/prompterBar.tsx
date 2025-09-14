@@ -79,17 +79,19 @@ const PrompterBar = () => {
                     <p className="text-sm font-normal">팔로워 {p.follower_cnt}명</p>
                   </div>
                 </div>
-                <FollowButton
-                  follow={isFollowed}
-                  onClick={() => {
-                    if (!accessToken) {
-                      alert('로그인이 필요합니다.');
-                      setLoginModalShow(true);
-                      return;
-                    }
-                    handleFollow(p.user_id, isFollowed);
-                  }}
-                />
+                {p.user_id !== user.user_id ? (
+                  <FollowButton
+                    follow={isFollowed}
+                    onClick={() => {
+                      if (!accessToken) {
+                        alert('로그인이 필요합니다.');
+                        setLoginModalShow(true);
+                        return;
+                      }
+                      handleFollow(p.user_id, isFollowed);
+                    }}
+                  />
+                ) : null}
               </li>
             );
           })}
@@ -110,7 +112,7 @@ const PrompterBar = () => {
                   className="flex items-center gap-[10px] mt-[12px] cursor-pointer"
                   onClick={() => navigate(`/profile/${p.user_id}`)}>
                   <img
-                    src={p.profile_img_url || profileImage} // API에 이미지 있으면 표시
+                    src={p.profile_img_url ? p.profile_img_url : profileImage} // API에 이미지 있으면 표시
                     alt={p.nickname}
                     className="w-11 h-11 rounded-full object-cover mr-[10px]"
                   />
@@ -119,17 +121,19 @@ const PrompterBar = () => {
                     <p className="text-sm">팔로워 {p.follower_cnt}명</p>
                   </div>
                 </div>
-                <FollowButton
-                  follow={isFollowed}
-                  onClick={() => {
-                    if (!accessToken) {
-                      alert('로그인이 필요합니다.');
-                      setLoginModalShow(true);
-                      return;
-                    }
-                    handleFollow(p.user_id, isFollowed);
-                  }}
-                />
+                {p.user_id !== user.user_id ? (
+                  <FollowButton
+                    follow={isFollowed}
+                    onClick={() => {
+                      if (!accessToken) {
+                        alert('로그인이 필요합니다.');
+                        setLoginModalShow(true);
+                        return;
+                      }
+                      handleFollow(p.user_id, isFollowed);
+                    }}
+                  />
+                ) : null}
               </li>
             );
           })}

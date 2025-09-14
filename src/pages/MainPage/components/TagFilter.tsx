@@ -11,7 +11,7 @@ type TagFilterProps = {
   onComplete?: () => void;
 };
 
-export default function TagFilter({ placeholder = '태그를 입력해주세요.', tags, setTags }: TagFilterProps) {
+export default function TagFilter({ placeholder = '태그를 입력해 주세요(최대 10개)', tags, setTags }: TagFilterProps) {
   const {
     input,
     setInput,
@@ -35,7 +35,16 @@ export default function TagFilter({ placeholder = '태그를 입력해주세요.
           ref={inputRef}
           type="text"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => {
+            const newValue = e.target.value;
+            // 각 태그(#으로 구분)가 5글자를 초과하지 않도록 제한
+            const tags = newValue.split('#');
+            const limitedTags = tags.map((tag, index) => {
+              if (index === 0) return tag; // 첫 번째는 #이 없는 경우
+              return tag.length > 5 ? tag.slice(0, 5) : tag;
+            });
+            setInput(limitedTags.join('#'));
+          }}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               e.preventDefault();
@@ -43,7 +52,7 @@ export default function TagFilter({ placeholder = '태그를 입력해주세요.
             }
           }}
           placeholder={placeholder}
-          className="flex-grow min-w-[100px] border-none text-sm text-gray-800 focus:outline-none"
+          className="flex-grow min-w-[100px] border-none text-lg font-normal font-['Spoqa_Han_Sans_Neo'] text-gray-800 focus:outline-none placeholder:text-text-on-background placeholder:text-lg placeholder:font-normal placeholder:font-['Spoqa_Han_Sans_Neo']"
         />
         <button
           onClick={handleComplete}
