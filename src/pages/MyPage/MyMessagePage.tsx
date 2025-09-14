@@ -12,6 +12,7 @@ import { NotificationTableList, NotificationPagination, MobileNotification } fro
 
 import { LuChevronDown } from 'react-icons/lu';
 import { axiosInstance } from '@/apis/axios';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 interface MyMessagePageProps {
   type: 'message' | 'notification';
@@ -38,6 +39,8 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [notice, setNotice] = useState<Notification[]>([]);
   const navigate = useNavigate();
+
+  const { getItem } = useLocalStorage('user');
 
   const handleTypeChange = (nextType: 'message' | 'notification') => {
     if (nextType !== type) {
@@ -85,9 +88,10 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
 
             if (link) {
               if (link.includes('/inquires/') || link.includes('/inquiries/')) {
+                const User_data = getItem();
                 // 두 경우 모두 처리 (백엔드 수정 전까지 임시)
                 //inquiries가 맞음 (원래는)
-                link = '/mypage';
+                link = `/profile/${User_data.user_id}`;
               } else if (link.includes('/announcements/')) {
                 console.log(`${index}번째: announcements 변환`);
                 const segs = link.split('/').filter(Boolean);
@@ -268,6 +272,7 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
           </div>
         </div>
       </div>
+
       {/*모바일 화면 */}
       <div className="lg:hidden block">
         <div className="w-full flex justify-center">
