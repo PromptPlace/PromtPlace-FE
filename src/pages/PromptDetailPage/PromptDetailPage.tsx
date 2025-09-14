@@ -252,7 +252,7 @@ const PromptDetailPage = () => {
   console.log('prompt.tags', prompt?.tags);
 
   return (
-    <div className="bg-[#F5F5F5] min-h-screen max-lg:pb-[calc(139px+env(safe-area-inset-bottom)+16px)] max-lg:mx-[20px]">
+    <div className="bg-[#F5F5F5] min-h-screen max-lg:pb-[calc(139px+env(safe-area-inset-bottom)+16px)">
       {/* 모바일 유저 정보 섹션 */}
       <div className="lg:hidden max-w-[280px] max-h-[60px] pt-[12px] mx-auto">
         <div className="box-border flex items-center max-h-[48px] py-[6px]">

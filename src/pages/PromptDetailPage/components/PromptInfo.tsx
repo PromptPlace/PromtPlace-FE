@@ -70,7 +70,7 @@ const PromptInfo = ({ description: descProp, usageGuide: usageProp, isPaid = fal
       {/* 프롬프트 활용법 */}
       <section>
         <h4 className="font-semibold text-[24px] max-lg:text-[12px] max-lg:pt-[12px]">프롬프트 활용법</h4>
-        <div className="font-normal pt-[15px] text-[16px] whitespace-pre-line max-lg:text-[10px] max-lg:pt-[8px]">
+        <div className="font-normal pt-[15px] pb-[20px] text-[16px] whitespace-pre-line max-lg:text-[10px] max-lg:pt-[8px]">
           {isLoading ? '불러오는 중…' : usageGuide}
         </div>
 
