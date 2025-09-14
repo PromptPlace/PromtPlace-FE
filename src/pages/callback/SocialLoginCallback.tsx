@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext'; // 기존에 만들어둔 AuthContext
+import { SingleModal } from '../MyPage/components/MyPageModal';
 
 /**
  * 네이버, 카카오 등 리디렉션 방식의 소셜 로그인을 통합 처리하는 콜백 페이지입니다.
@@ -13,11 +14,18 @@ const SocialCallbackPage = () => {
   // 페이지 이동을 위한 훅
   const navigate = useNavigate();
   // 기존에 만들어둔 login 함수를 가져오기 위한 훅
-  const { login } = useAuth();
+  const { login, isSignUpAvailable } = useAuth();
+  const [showModal, setShowModal] = useState(false); //재가입 불가를 안내하는 모달 상태
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
   // 이 컴포넌트가 화면에 렌더링되면 단 한 번만 실행됩니다.
   useEffect(() => {
     const processLogin = async () => {
+      if (isSignUpAvailable === false) {
+        setShowModal(true);
+      }
       const provider = sessionStorage.getItem('login_provider') as 'google' | 'kakao' | 'naver';
       console.log('로그인 제공자:', provider);
       // 1. URL에서 'code' 라는 이름의 파라미터 값을 추출합니다.
@@ -53,7 +61,9 @@ const SocialCallbackPage = () => {
         }
 
         // 4. 로그인 성공 시, 메인 페이지로 이동시킵니다.
-        navigate('/');
+        if (isSignUpAvailable === true) {
+          navigate('/');
+        }
       } catch (error) {
         // 백엔드에서 에러가 발생한 경우
         console.error('로그인 처리 중 에러 발생:', error);
@@ -66,7 +76,19 @@ const SocialCallbackPage = () => {
   }, []); // 빈 배열을 전달하여 최초 렌더링 시에만 실행되도록 설정
 
   // 사용자에게는 이 메시지만 보입니다.
-  return <div></div>;
+  return (
+    <div>
+      {showModal && (
+        <SingleModal
+          text="현재 해당 계정으로 가입하실 수 없습니다."
+          onClick={() => {
+            navigate('/');
+            closeModal();
+          }}
+        />
+      )}
+    </div>
+  );
 };
 
 export default SocialCallbackPage;
