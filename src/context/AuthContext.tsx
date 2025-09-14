@@ -33,6 +33,7 @@ interface AuthContextType {
   login: (provider: 'google' | 'kakao' | 'naver', authCode: string) => Promise<void>;
   logout: () => Promise<void>;
   switchAccount: () => Promise<void>;
+  isSignUpAvailable: boolean; // 재가입 가능 여부 상태
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -60,6 +61,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   console.log('AuthProvider user:', user.user_id);
   const [accessToken, setAccessToken] = useState<string | null>(getAccessTokenFromStorage());
   const [refreshToken, setRefreshToken] = useState<string | null>(getRefreshTokenFromStorage());
+  const [isSignUpAvailable, setIsSignUpAvailable] = useState(true); // 재가입 가능 여부 상태를 알려주는 usestate
 
   const logout = async () => {
     try {
@@ -114,6 +116,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         console.log('dl 계정은 비활성화된 계정입니다.');
         console.warn('비활성화된 계정입니다. 관리자에게 문의하세요.');
         alert('비활성화된 계정입니다. 관리자에게 문의하세요.');
+        setIsSignUpAvailable(false); // 재가입 불가 상태로 설정
         logout(); // 비활성화된 계정은 로그아웃 처리
         return;
       }
@@ -143,7 +146,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, accessToken, refreshToken, login, logout, switchAccount }}>
+    <AuthContext.Provider value={{ user, accessToken, refreshToken, login, logout, switchAccount, isSignUpAvailable }}>
       {children}
     </AuthContext.Provider>
   );
