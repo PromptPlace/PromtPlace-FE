@@ -36,6 +36,19 @@ const PromptDetailPage = () => {
 
   const prompt = useMemo(() => {
     if (!data) return null;
+    const getModelNames = () => {
+      if (!Array.isArray(data?.models)) return [];
+      const names = data.models
+        .map((m: any) => {
+          if (typeof m === 'string') return m;
+          if (m?.name) return String(m.name);
+          if (m?.model?.name) return String(m.model.name);
+          return '';
+        })
+        .filter(Boolean);
+      // 중복 제거
+      return Array.from(new Set(names));
+    };
     const tags = (data.tags ?? []).filter((t) => t?.tag).map((t) => t.tag.name);
     console.log('parsed tags', tags);
     return {
@@ -63,10 +76,7 @@ const PromptDetailPage = () => {
           name: t.tag.name,
         })),
 
-      model:
-        Array.isArray(data.models) && data.models.length > 0 && data.models[0]?.model?.name
-          ? data.models[0].model.name
-          : '',
+      models: getModelNames(),
     };
   }, [data]);
 
@@ -242,7 +252,7 @@ const PromptDetailPage = () => {
   console.log('prompt.tags', prompt?.tags);
 
   return (
-    <div className="bg-[#F5F5F5] min-h-screen max-lg:pb-[calc(139px+env(safe-area-inset-bottom)+16px)] max-lg:mx-[20px]">
+    <div className="bg-[#F5F5F5] min-h-screen max-lg:pb-[calc(139px+env(safe-area-inset-bottom)+16px)">
       {/* 모바일 유저 정보 섹션 */}
       <div className="lg:hidden max-w-[280px] max-h-[60px] pt-[12px] mx-auto">
         <div className="box-border flex items-center max-h-[48px] py-[6px]">
@@ -279,7 +289,7 @@ const PromptDetailPage = () => {
             onClose={() => navigate(-1)}
             downloads={prompt.downloads}
             onClickReview={() => setShowReviews(true)}
-            model={prompt.model}
+            models={prompt.models}
             tags={prompt.tags.map((tag) => tag.name)}
           />
 

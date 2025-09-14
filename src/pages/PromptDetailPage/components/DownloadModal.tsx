@@ -72,7 +72,7 @@ const DownloadModal = ({ isOpen, onClose, title, content, price, isFree, isPaid,
     <div className="bg-overlay fixed inset-0 z-50 flex items-center justify-center bg-opacity-40">
       <div
         className={`
-          relative bg-white rounded-[16px] shadow-lg overflow-y-auto max-lg:overflow-hidden text-[#121212]
+          relative bg-white rounded-[16px] shadow-lg overflow-y-auto max-lg:overflow-y-auto text-[#121212]
           w-[1056px] h-[745px] px-[64px] py-[48px]  max-lg:px-[20px]  max-lg:py-[20px]
     max-lg:w-[280px] 
           ${step === 'paid' ? 'max-lg:h-[100px]' : 'max-lg:h-[334px]'}
