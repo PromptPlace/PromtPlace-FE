@@ -254,7 +254,7 @@ const PromptDetailPage = () => {
   return (
     <div className="bg-[#F5F5F5] min-h-screen max-lg:pb-[calc(139px+env(safe-area-inset-bottom)+16px)">
       {/* 모바일 유저 정보 섹션 */}
-      <div className="lg:hidden max-w-[280px] max-h-[60px] pt-[12px] mx-auto">
+      <div className="lg:hidden w-full max-h-[60px] pt-[12px] px-[20px] mx-auto">
         <div className="box-border flex items-center max-h-[48px] py-[6px]">
           {/* 아이콘 */}
           <img
@@ -280,9 +280,9 @@ const PromptDetailPage = () => {
           </div>
         </div>
       </div>
-      <div className="flex max-lg:flex-col max-lg:gap-[20px] max-w-7xl max-lg:px-[20px] max-lg:pt-0 max-lg:max-w-[320px] gap-10 p-10 mx-auto">
+      <div className="flex max-lg:flex-col max-lg:gap-[20px] max-w-7xl max-lg:px-[20px] max-lg:pt-0 max-lg:w-full gap-10 mx-auto">
         {/* 왼쪽: 정보 */}
-        <div className="w-[711px] max-lg:max-w-[280px] max-lg:h-[544px] bg-[#FFFEFB] rounded-[16px] flex flex-col h-[736px]">
+        <div className="w-[711px] max-lg:w-full max-lg:h-[544px] bg-[#FFFEFB] rounded-[16px] flex flex-col h-[736px]">
           <PromptHeader
             title={prompt.title}
             views={prompt.views}
