@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { withdrawUser } from '@/apis/MyPage/withdrawl';
 import { useAuth } from '@/context/AuthContext';
 import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
+import { ReportModal } from './components/MyPageModal';
 
 // 실제로는 API로 받아올 사용자 정보
 const userInfo: {
@@ -20,12 +21,16 @@ const userInfo: {
 };
 
 const MyPageInfo = () => {
-  const [deleteStep, setDeleteStep] = useState<'confirm' | 'warning' | 'complete' | null>(null);
+  const [deleteStep, setDeleteStep] = useState<'confirm' | 'warning' | 'search' | 'complete' | null>(null);
   const confirmDelete = () => setDeleteStep('confirm');
   const showWarning = () => setDeleteStep('warning');
 
   const { logout, user } = useAuth();
   const { data: userData } = useGetMember({ member_id: user.user_id });
+
+  const searchReport = () => {
+    setDeleteStep('search');
+  };
 
   const deleteAccount = () => {
     // 실제 API 호출 로직
@@ -99,10 +104,18 @@ const MyPageInfo = () => {
                   정말 탈퇴하시겠습니까?
                 </>
               }
-              onClickYes={deleteAccount}
+              onClickYes={searchReport}
               onClickNo={closeModal}
               colorYesText="white"
               colorNoText="blue"
+            />
+          )}
+          {deleteStep === 'search' && (
+            <ReportModal
+              isOpen={deleteStep === 'search'}
+              onClose={() => {
+                closeModal();
+              }}
             />
           )}
           {deleteStep === 'complete' && (
