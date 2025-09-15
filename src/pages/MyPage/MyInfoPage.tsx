@@ -21,7 +21,7 @@ const userInfo: {
 };
 
 const MyPageInfo = () => {
-  const [deleteStep, setDeleteStep] = useState<'confirm' | 'warning' | 'search' | 'complete' | null>(null);
+  const [deleteStep, setDeleteStep] = useState<'confirm' | 'warning' | 'search' | 'warning2' | 'complete' | null>(null);
   const confirmDelete = () => setDeleteStep('confirm');
   const showWarning = () => setDeleteStep('warning');
 
@@ -116,6 +116,24 @@ const MyPageInfo = () => {
               onClose={() => {
                 closeModal();
               }}
+              onNext={() => {
+                setDeleteStep('warning2');
+              }}
+            />
+          )}
+          {deleteStep === 'warning2' && (
+            <DualModal
+              text={
+                <>
+                  탈퇴 시 모든 데이터가 사라지며 30일동안 재가입이 불가능합니다.
+                  <br />
+                  정말 탈퇴하시겠습니까?
+                </>
+              }
+              onClickYes={deleteAccount}
+              onClickNo={closeModal}
+              colorYesText="white"
+              colorNoText="blue"
             />
           )}
           {deleteStep === 'complete' && (
