@@ -36,7 +36,7 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview, models,
   const safeTags = useMemo(() => (Array.isArray(tags) ? tags : []), [tags]);
 
   return (
-    <div className="w-[711px] max-lg:max-w-[280px] max-lg:max-h-[191px] bg-[#FFFEFB] px-8 max-lg:pt-[12px] max-lg:px-[12px] rounded-[16px]">
+    <div className="w-full lg:w-[711px] max-lg:max-h-[191px] bg-[#FFFEFB] px-8 max-lg:pt-[12px] max-lg:px-[12px] rounded-[16px]">
       {/* PC */}
       <div className="hidden lg:block h-[132px] box-border flex flex-col justify-between">
         <div className="flex items-center justify-between w-full pt-[30px] pb-[10px]">
@@ -75,7 +75,7 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview, models,
       <div className="lg:hidden max-lg:max-h-[167px]">
         {/* 모델 + 조회/다운로드 */}
         <div className="flex items-center gap-[8px]">
-          <div className="flex">
+          <div className="flex gap-[4px]">
             {safeModels.map((m, i) => (
               <div
                 key={`${m}-${i}`}
