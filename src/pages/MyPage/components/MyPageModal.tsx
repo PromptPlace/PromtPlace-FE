@@ -159,26 +159,9 @@ export const ReportModal = ({ isOpen, onClose, onNext }: ReportModalProps) => {
                       <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        placeholder="신고 내용을 입력하세요(구체적으로 작성)"
+                        placeholder="탈퇴 사유를 입력해 주세요"
                         className="w-full h-[96px] bg-[#F5F5F5] border-none rounded-[8px] p-4 resize-none focus:outline-none focus:ring-0 transition text-[14px] max-lg:p-[8px] max-lg:text-[10px] max-lg:w-[212px] max-lg:h-[68px]"
                       />
-                      <button
-                        onClick={handleSubmit}
-                        disabled={!description.trim() || !selectedOption}
-                        className="absolute bottom-[12px] right-[12px] text-black opacity-100 transition-opacity"
-                        onMouseEnter={() => setIsHover(true)}
-                        onMouseLeave={() => {
-                          setIsHover(false);
-                          setIsPressed(false);
-                        }}
-                        onMouseDown={() => setIsPressed(true)}
-                        onMouseUp={() => setIsPressed(false)}>
-                        <img
-                          src={isPressed ? sendIconPressed : isHover ? sendIconHover : sendIcon}
-                          alt="send"
-                          className="w-[20px] h-[20px] max-lg:w-[16px] max-lg:h-[16px]"
-                        />
-                      </button>
                     </div>
                   )}
                 </label>
