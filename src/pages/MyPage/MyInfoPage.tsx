@@ -21,6 +21,8 @@ const userInfo: {
 };
 
 const MyPageInfo = () => {
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]); //선택된 옵션 상태
+  const [description, setDescription] = useState(''); //설명 상태
   const [deleteStep, setDeleteStep] = useState<'confirm' | 'warning' | 'search' | 'warning2' | 'complete' | null>(null);
   const confirmDelete = () => setDeleteStep('confirm');
   const showWarning = () => setDeleteStep('warning');
@@ -31,6 +33,7 @@ const MyPageInfo = () => {
   const searchReport = () => {
     setDeleteStep('search');
   };
+
 
   const deleteAccount = () => {
     // 실제 API 호출 로직
@@ -119,6 +122,10 @@ const MyPageInfo = () => {
               onNext={() => {
                 setDeleteStep('warning2');
               }}
+              selectedOptions={selectedOptions}
+              description={description}
+              setSelectedOptions={setSelectedOptions}
+              setDescription={setDescription}
             />
           )}
           {deleteStep === 'warning2' && (
