@@ -55,7 +55,7 @@ export const MessageTableList = ({
           data.map((message) => (
             <tr
               key={message.message_id}
-              className={`h-[65px] py-[10px] border-b-[1px]  border-white-stroke bg-white cursor-pointer ${message.is_read ? 'text-text-on-white' : 'text-text-on-background'}`}>
+              className={`h-[65px] py-[10px] border-b-[1px]  border-white-stroke bg-white cursor-pointer ${message.is_read ? 'text-text-on-background' : 'text-text-on-white'}`}>
               <td className="w-[72px] h-[65px] flex justify-center items-center pt-[13px]">
                 {message.is_read ? (
                   <img className="w-[32px] h-[32px]" src={read} alt="읽음" />

@@ -71,7 +71,12 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
             is_read: item.is_read,
           }));
 
-          setMessages(mapped);
+          // 혹시 모를 message_id 중복을 방어하는 코드
+          const uniqueMessages = mapped.filter(
+            (message, index, self) => index === self.findIndex((m) => m.message_id === message.message_id),
+          );
+
+          setMessages(uniqueMessages);
         } else if (type === 'notification') {
           const base = import.meta.env.VITE_SERVER_API_URL;
           const res = await axiosInstance.get(`${base}/api/notifications/me`, {
@@ -245,6 +250,8 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
           <div className="flex flex-col justify-center items-center">
             {type === 'message' ? (
               <>
+                {console.log(messages)}
+
                 <MessageTableList
                   data={pageMessageData}
                   handleMessageRowClick={handleMessageRowClick}
