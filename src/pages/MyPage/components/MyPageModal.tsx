@@ -55,16 +55,33 @@ export const SingleModal = ({ text, onClick }: SingleModalProps) => {
 interface ReportModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onNext:()=>void;
+  onNext: () => void;
+  selectedOptions?: string[]; //선택된 옵션
+  description?: string; //설명
+  setSelectedOptions: (options: string[]) => void; //옵션 변경 핸들러
+  setDescription: (description: string) => void; //설명 변경 핸들러
 }
 
-export const ReportModal = ({ isOpen, onClose, onNext }: ReportModalProps) => {
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [description, setDescription] = useState('');
-  const [isSubmitted, setIsSubmitted] = useState(false);
+export const ReportModal = ({
+  isOpen,
+  onClose,
+  onNext,
+  selectedOptions = [],
+  description,
+  setSelectedOptions,
+  setDescription,
+}: ReportModalProps) => {
+  const [isSubmitted, setIsSubmitted] = useState(false); //제출 또한 다른 모달에서 관리하면 삭제 가능
 
   //const { mutateAsync: report, isPending } = useReportPrompt(); 탈퇴 사유 제출 api로 변경
   const { handleShowLoginModal } = useShowLoginModal();
+
+ const handleOptionToggle = (optionValue: string) => {
+    const newSelectedOptions = selectedOptions.includes(optionValue)
+      ? selectedOptions.filter((item) => item !== optionValue) // 이미 있으면 제거
+      : [...selectedOptions, optionValue]; // 없으면 추가
+    setSelectedOptions(newSelectedOptions);
+  };
 
   const [isHover, setIsHover] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
@@ -135,18 +152,10 @@ export const ReportModal = ({ isOpen, onClose, onNext }: ReportModalProps) => {
               {OPTIONS.map((item) => (
                 <label key={item.value} className="flex flex-col gap-[6px] max-lg:gap-[2px] cursor-pointer">
                   <div className="flex items-start max-lg:gap-[12px] gap-[16px] max-lg:text-[#000000]">
-                    <input
-                      type="radio"
-                      name="reportOption"
-                      value={item.value}
-                      checked={selectedOption === item.value}
-                      onChange={(e) => setSelectedOption(e.target.value as ReportType)}
-                      className="hidden"
-                    />
                     <img
-                      src={selectedOption === item.value ? checkBoxMarked : checkBox}
+                      src={selectedOptions.includes(item.value) ? checkBoxMarked : checkBox}
                       alt="radio"
-                      onClick={() => setSelectedOption(item.value)}
+                      onClick={() => handleOptionToggle(item.value)}
                       className="w-[20px] h-[20px] max-lg:w-[16px] max-lg:h-[16px] mt-[6px] max-lg:mt-[2px] cursor-pointer"
                     />
                     <div>
@@ -154,7 +163,7 @@ export const ReportModal = ({ isOpen, onClose, onNext }: ReportModalProps) => {
                     </div>
                   </div>
 
-                  {selectedOption === 'ETC' && item.value === 'ETC' && (
+                  {selectedOptions.includes('ETC') && item.value === 'ETC' && (
                     <div className="relative mt-[12px] ml-[36px] max-lg:pl-[28px] max-lg:m-0 max-lg:h-[68px]">
                       <textarea
                         value={description}
