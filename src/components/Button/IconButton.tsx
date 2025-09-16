@@ -83,6 +83,7 @@ const IconButton = ({ buttonType, style, imgType, textButton, text, onClick, typ
       className={clsx(
         `group flex justify-center items-center shadow-button hover:shadow-button-hover transition-all duration-300 ease-in-out ${iconButtonTheme.buttonType[buttonType]} ${iconButtonTheme.style[style]} ${textButton && iconButtonTheme.textButton[textButton]}`,
         buttonType === 'round' && style === 'fill' && imgType === 'upload' && 'max-lg:w-[117px]',
+        (imgType === 'settings' || imgType === 'upload') && '[border-width:0.5px] border border-solid',
       )}>
       {imgType === 'settings' && (
         <SettingsIcon className="w-[24px] h-[24px] max-lg:w-[12px] max-lg:h-[12px] text-primary group-hover:text-primary-hover group-active:text-primary-pressed" />
