@@ -157,7 +157,7 @@ export function MessagePagination({
       {data.length === 0 ? (
         <></>
       ) : (
-        <div className="absolute top-[900px] ">
+        <div className="absolute top-[1000px] ">
           <nav className="flex items-center justify-center h-[50px] mx-[545px] mb-[60px]">
             <button
               className="w-[50px] h-[50px] px-[6px] py-[8px] rounded-[50px] flex items-center 
