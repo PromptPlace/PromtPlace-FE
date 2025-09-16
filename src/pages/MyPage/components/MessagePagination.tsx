@@ -64,7 +64,7 @@ export const MessageTableList = ({
                 )}
               </td>
               <td
-                className="w-[563px] h-[65px] text-left font-medium text-[20px]  py-[20px]"
+                className="w-[563px] h-[65px] text-left font-medium text-[20px]  py-[10px]"
                 onClick={() => handleMessageRowClick(message.message_id)}>
                 <p className="h-[25px]">{message.title}</p>
               </td>
@@ -74,7 +74,7 @@ export const MessageTableList = ({
                 <p className="flex justify-center items-center font-medium text-[20px] ">{message.sender}</p>
               </td>
               <td
-                className="w-[263px] h-[65px] text-center font-medium text-[20px]  py-[20px]"
+                className="w-[263px] h-[65px] text-center font-medium text-[20px]  py-[10px]"
                 onClick={() => handleMessageRowClick(message.message_id)}>
                 {message.created_at}
               </td>
