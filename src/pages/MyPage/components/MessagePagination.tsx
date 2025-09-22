@@ -55,7 +55,7 @@ export const MessageTableList = ({
           data.map((message) => (
             <tr
               key={message.message_id}
-              className={`h-[65px] py-[10px] border-b-[1px]  border-white-stroke bg-white cursor-pointer ${message.is_read ? 'text-text-on-white' : 'text-text-on-background'}`}>
+              className={`h-[65px] py-[10px] border-b-[1px]  border-white-stroke bg-white cursor-pointer ${message.is_read ? 'text-text-on-background' : 'text-text-on-white'}`}>
               <td className="w-[72px] h-[65px] flex justify-center items-center pt-[13px]">
                 {message.is_read ? (
                   <img className="w-[32px] h-[32px]" src={read} alt="읽음" />
@@ -64,7 +64,7 @@ export const MessageTableList = ({
                 )}
               </td>
               <td
-                className="w-[563px] h-[65px] text-left font-medium text-[20px]  py-[20px]"
+                className="w-[563px] h-[65px] text-left font-medium text-[20px]  py-[10px]"
                 onClick={() => handleMessageRowClick(message.message_id)}>
                 <p className="h-[25px]">{message.title}</p>
               </td>
@@ -74,7 +74,7 @@ export const MessageTableList = ({
                 <p className="flex justify-center items-center font-medium text-[20px] ">{message.sender}</p>
               </td>
               <td
-                className="w-[263px] h-[65px] text-center font-medium text-[20px]  py-[20px]"
+                className="w-[263px] h-[65px] text-center font-medium text-[20px]  py-[10px]"
                 onClick={() => handleMessageRowClick(message.message_id)}>
                 {message.created_at}
               </td>
@@ -157,7 +157,7 @@ export function MessagePagination({
       {data.length === 0 ? (
         <></>
       ) : (
-        <div className="absolute top-[900px] ">
+        <div className="absolute top-[1000px] ">
           <nav className="flex items-center justify-center h-[50px] mx-[545px] mb-[60px]">
             <button
               className="w-[50px] h-[50px] px-[6px] py-[8px] rounded-[50px] flex items-center 
