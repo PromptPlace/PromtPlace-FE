@@ -55,6 +55,7 @@ export const adminRoutes: RouteObject[] = [
     element: <AdminLayout />,
     children: [
       //ex: { path: 'report', element: <lazyRoutes.AdminReportPage /> },
+      { path: 'complaint', element: <lazyRoutes.AdminComplaintPage /> },
     ],
   },
 ];
