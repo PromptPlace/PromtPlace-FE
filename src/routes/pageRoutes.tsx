@@ -2,6 +2,7 @@ import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 import { lazyRoutes } from './routes';
 import HomeLayout from '@/layouts/HomeLayout';
 import ProtectedLayout from '@/layouts/ProtectedLayout';
+import AdminLayout from '@/layouts/AdminLayout';
 import TestPage from '@/pages/TestPage';
 
 export const publicRoutes: RouteObject[] = [
@@ -48,4 +49,14 @@ export const protectedRoutes: RouteObject[] = [
   },
 ];
 
-export const router = createBrowserRouter([...publicRoutes, ...protectedRoutes]);
+export const adminRoutes: RouteObject[] = [
+  {
+    path: '/admin',
+    element: <AdminLayout />,
+    children: [
+      //ex: { path: 'report', element: <lazyRoutes.AdminReportPage /> },
+    ],
+  },
+];
+
+export const router = createBrowserRouter([...publicRoutes, ...protectedRoutes, ...adminRoutes]);
