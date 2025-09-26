@@ -30,6 +30,7 @@ interface PrimaryButtonProps {
   text: string;
   onClick: () => void;
   type?: 'button' | 'submit';
+  admin?: boolean;
 }
 
 const primaryButtonTheme = {
@@ -38,7 +39,7 @@ const primaryButtonTheme = {
       'rounded-[40px] max-lg:rounded-[4px] max-w-[171px] max-lg:max-w-[112px] w-full py-[9px] max-lg:py-[8px] max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px] max-lg:tracking-[0.46px] max-lg:border-[0.5px]',
     tip: 'rounded-[40px] max-w-[127px] w-full py-[9px]',
     square:
-      'rounded-[10px] max-w-[136px] w-full py-[9px] max-lg:max-w-[77px] max-lg:w-full max-lg:rounded-[4px] max-lg:border-[0.5px] max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px] max-lg:tracking-[0.46px] max-lg:py-[6.5px]',
+      'rounded-[10px] max-w-[136px] w-full py-[9px] max-lg:max-w-[77px] max-lg:w-full max-lg:rounded-[4px] max-lg:border-[0.5px] max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px] max-lg:tracking-[0.46px] max-lg:py-[6.5px] lg:text-base lg:leading-[26px]',
     squareMini:
       'rounded-[10px] max-lg:rounded-[4px] py-[2px] px-[14px] max-lg:px-[8px] max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px] max-lg:tracking-[0.46px]',
     review:
@@ -54,7 +55,7 @@ const primaryButtonTheme = {
 
 type ButtonType = keyof typeof primaryButtonTheme.buttonType;
 
-const PrimaryButton = ({ buttonType, text, onClick, type = 'button' }: PrimaryButtonProps) => {
+const PrimaryButton = ({ buttonType, text, onClick, type = 'button', admin }: PrimaryButtonProps) => {
   const isReviewDelete = buttonType === 'reviewDelete';
   const isAdmin = buttonType === 'admin';
 
@@ -62,7 +63,7 @@ const PrimaryButton = ({ buttonType, text, onClick, type = 'button' }: PrimaryBu
     <button
       onClick={onClick}
       type={type}
-      className={`border ${isReviewDelete || isAdmin ? 'border-alert text-alert ' : 'border-primary hover:border-primary-hover active:border-primary-pressed text-primary hover:text-primary-hover active:text-primary-pressed active:bg-secondary text-base leading-[26px]'} flex items-center justify-center shadow-button hover:shadow-button-hover bg-white transition-all ease-in-out duration-300 font-normal tracking-[0.46px] ${primaryButtonTheme.buttonType[buttonType]}`}>
+      className={`border ${isReviewDelete || isAdmin || admin ? 'border-alert text-alert ' : 'border-primary hover:border-primary-hover active:border-primary-pressed text-primary hover:text-primary-hover active:text-primary-pressed active:bg-secondary text-base leading-[26px]'} flex items-center justify-center shadow-button hover:shadow-button-hover bg-white transition-all ease-in-out duration-300 font-normal tracking-[0.46px] ${primaryButtonTheme.buttonType[buttonType]}`}>
       {text}
     </button>
   );
