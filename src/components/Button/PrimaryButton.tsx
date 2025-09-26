@@ -50,6 +50,8 @@ const primaryButtonTheme = {
     change: 'rounded-[50px] px-[10px] py-[5px] text-[14px] leading-[18px]',
     admin:
       'rounded-[40px] max-w-[169px] w-full px-[24px] py-[10px] border border-alert text-[16px] font-normal leading-[26px] tracking-[0.46px]',
+    squareAdmin:
+      'rounded-[10px] max-w-[198px] w-full bg-alert shadow-button px-[29px] py-[10px] text-white text-[24px] font-bold leading-[30px] whitespace-nowrap shrink-0',
   },
 };
 
@@ -63,7 +65,7 @@ const PrimaryButton = ({ buttonType, text, onClick, type = 'button', admin }: Pr
     <button
       onClick={onClick}
       type={type}
-      className={`border ${isReviewDelete || isAdmin || admin ? 'border-alert text-alert ' : 'border-primary hover:border-primary-hover active:border-primary-pressed text-primary hover:text-primary-hover active:text-primary-pressed active:bg-secondary text-base leading-[26px]'} flex items-center justify-center shadow-button hover:shadow-button-hover bg-white transition-all ease-in-out duration-300 font-normal tracking-[0.46px] ${primaryButtonTheme.buttonType[buttonType]}`}>
+      className={`border ${isReviewDelete || isAdmin || admin ? 'border-alert text-alert ' : 'border-primary hover:border-primary-hover active:border-primary-pressed text-primary hover:text-primary-hover active:text-primary-pressed active:bg-secondary text-base leading-[26px] bg-white'} flex items-center justify-center shadow-button hover:shadow-button-hover  transition-all ease-in-out duration-300 font-normal tracking-[0.46px] ${primaryButtonTheme.buttonType[buttonType]}`}>
       {text}
     </button>
   );

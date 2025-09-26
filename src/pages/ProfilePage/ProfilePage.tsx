@@ -394,10 +394,13 @@ const ProfilePage = () => {
                 profileEdit && 'gap-[15px]',
                 'flex flex-col gap-[5px] max-lg:gap-[4px] text-text-on-white shrink-0 max-lg:items-center',
               )}>
+              {user.role === 'ADMIN' && (
+                <p className="text-alert text-[20px] font-medium leading-[25px]">{data?.data.email}</p>
+              )}
               {!profileEdit && (
                 <div className="flex gap-[4px] max-lg:justify-center">
                   <p className="text-[32px] font-bold leading-[40px] max-lg:text-[16px] max-lg:font-medium max-lg:leading-[20px] ">
-                    {data?.data.nickname}
+                    {data?.data.nickname}123
                   </p>
                   {!isMyProfile && (
                     <div
@@ -489,7 +492,7 @@ const ProfilePage = () => {
             )}
           </div>
 
-          {!isMyProfile && (
+          {!isMyProfile && user.role !== 'ADMIN' && (
             <>
               <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
                 <p className="text-primary-hover text-[18px] font-normal leading-[23px] max-lg:text-[10px] max-lg:leading-[13px]">
@@ -528,7 +531,7 @@ const ProfilePage = () => {
             </>
           )}
 
-          {isMyProfile && (
+          {(isMyProfile || user.role === 'ADMIN') && (
             <>
               <div className="flex gap-[28px] max-lg:gap-[16px]">
                 <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
@@ -568,6 +571,14 @@ const ProfilePage = () => {
                   member_id={member_id}
                 />
               )}
+
+              <div className="flex flex-col gap-[20px]">
+                <PrimaryButton buttonType="squareAdmin" text="메시지 보내기" onClick={() => {}} admin={true} />
+                <div className="flex gap-[24px]">
+                  <PrimaryButton buttonType="squareAdmin" text="계정 정지" onClick={() => {}} admin={true} />
+                  <PrimaryButton buttonType="squareAdmin" text="계정 삭제" onClick={() => {}} admin={true} />
+                </div>
+              </div>
             </>
           )}
         </div>
