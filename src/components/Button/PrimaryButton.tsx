@@ -44,9 +44,11 @@ const primaryButtonTheme = {
     review:
       'rounded-[50px] h-[41px] py-[5px] max-w-[152px] w-full text-xl leading-[25px] max-lg:rounded-[24px] max-lg:border-[0.5px] max-lg:h-[17px] max-lg:py-[2px] max-lg:max-w-[58px] max-lg:w-full max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px] max-lg:px-[4.8px] ',
     reviewDelete:
-      'rounded-[50px] px-[9px] max-lg:px-[7px] py-[4px] hover:shadow-none max-lg:rounded-[24px] max-lg:border-[0.5px] max-lg:h-[17px] max-lg:py-[2px] max-lg:max-w-[58px] max-lg:w-full max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px]',
+      'rounded-[50px] px-[9px] max-lg:px-[7px] py-[4px] hover:shadow-none max-lg:rounded-[24px] max-lg:border-[0.5px] max-lg:h-[17px] max-lg:py-[2px] max-lg:max-w-[58px] max-lg:w-full max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px] text-sm leading-[18px]',
     plus: 'rounded-[50px] px-[53px] max-lg:px-[20px] text-[32px] max-lg:text-[16px] font-bold leading-[40px] max-lg:leading-[18px]',
     change: 'rounded-[50px] px-[10px] py-[5px] text-[14px] leading-[18px]',
+    admin:
+      'rounded-[40px] max-w-[169px] w-full px-[24px] py-[10px] border border-alert text-[16px] font-normal leading-[26px] tracking-[0.46px]',
   },
 };
 
@@ -54,11 +56,13 @@ type ButtonType = keyof typeof primaryButtonTheme.buttonType;
 
 const PrimaryButton = ({ buttonType, text, onClick, type = 'button' }: PrimaryButtonProps) => {
   const isReviewDelete = buttonType === 'reviewDelete';
+  const isAdmin = buttonType === 'admin';
+
   return (
     <button
       onClick={onClick}
       type={type}
-      className={`border ${isReviewDelete ? 'border-alert text-alert text-sm leading-[18px]' : 'border-primary hover:border-primary-hover active:border-primary-pressed text-primary hover:text-primary-hover active:text-primary-pressed active:bg-secondary text-base leading-[26px]'} flex items-center justify-center shadow-button hover:shadow-button-hover bg-white transition-all ease-in-out duration-300 font-normal tracking-[0.46px] ${primaryButtonTheme.buttonType[buttonType]}`}>
+      className={`border ${isReviewDelete || isAdmin ? 'border-alert text-alert ' : 'border-primary hover:border-primary-hover active:border-primary-pressed text-primary hover:text-primary-hover active:text-primary-pressed active:bg-secondary text-base leading-[26px]'} flex items-center justify-center shadow-button hover:shadow-button-hover bg-white transition-all ease-in-out duration-300 font-normal tracking-[0.46px] ${primaryButtonTheme.buttonType[buttonType]}`}>
       {text}
     </button>
   );

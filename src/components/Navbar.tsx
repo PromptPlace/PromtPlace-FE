@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import LogoIcon from '@assets/icon-header-logo.svg';
 import ProfileIcon from '@assets/icon-profile-blue-small.svg';
 import UserProfileIcon from '@assets/icon-profile-gray.svg';
+import AdminProfileIcon from '@assets/icon-profile-admin.svg';
 
 import TipIcon from '@assets/mobile/icon-mobile-tip.png';
 
@@ -104,6 +105,12 @@ const Navbar = () => {
           </div>
         )}
 
+        {user.role === 'ADMIN' && (
+          <div className="w-[169px] shrink-0 max-lg:hidden">
+            <PrimaryButton buttonType="admin" text="접근상태: 운영자" onClick={() => {}} />
+          </div>
+        )}
+
         {loginModalShow && (
           <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
         )}
@@ -117,12 +124,20 @@ const Navbar = () => {
               className="w-full h-full object-cover cursor-pointer"
             />
           )}
-          {accessToken && (
+          {accessToken && user.role !== 'ADMIN' && (
             <img
               src={data?.data.profile_image || UserProfileIcon}
               alt="로그인된 사용자 이미지"
               onClick={handleSidebarClick}
               className="w-full h-full object-cover cursor-pointer shrink-0"
+            />
+          )}
+          {user.role === 'ADMIN' && (
+            <img
+              src={AdminProfileIcon}
+              alt="관리자 이미지"
+              onClick={handleSidebarClick}
+              className="w-full h-full object-cover cursor-pointer"
             />
           )}
         </div>
