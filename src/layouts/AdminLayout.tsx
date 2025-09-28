@@ -8,7 +8,7 @@ import TabBar from '@components/TabBar';
 const AdminLayout = () => {
   const { user } = useAuth();
 
-  if (user.role !== 'ADMIN') {
+  if (user.role !== 'USER') {
     return <Navigate to={'/'} replace />;
   }
   return (
