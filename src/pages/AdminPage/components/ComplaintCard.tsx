@@ -1,6 +1,6 @@
 import unread from 'assets/icons-unread.svg';
 
-interface ComplaintCardProps {
+interface Complaint {
   report_id: number;
   prompt_id: number;
   prompt_title: string;
@@ -10,13 +10,17 @@ interface ComplaintCardProps {
   is_read: 'true' | 'false';
 }
 
-const ComplaintCard = (props: ComplaintCardProps) => {
+interface ComplaintCardProps {
+  complaint: Complaint;
+}
+
+const ComplaintCard = ({ complaint }: ComplaintCardProps) => {
   return (
     <div className=" w-full bg-white border-b-[1px] border-white-stroke">
-      <div className="w-[72px]">{props.is_read === 'true' ? <img src={unread} alt="unread" /> : null}</div>
-      <div className="max-w-[678px]">{props.prompt_title}</div>
-      <div className="w-[223px] flex justify-center items-center">{props.reporter_nickname}</div>
-      <div className="w-[263px] flex justify-center items-center">{props.created_at}</div>
+      <div className="w-[72px]">{complaint.is_read === 'true' ? <img src={unread} alt="unread" /> : null}</div>
+      <div className="max-w-[678px]">{complaint.prompt_title}</div>
+      <div className="w-[223px] flex justify-center items-center">{complaint.reporter_nickname}</div>
+      <div className="w-[263px] flex justify-center items-center">{complaint.created_at}</div>
     </div>
   );
 };
