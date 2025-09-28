@@ -1,3 +1,6 @@
+import ComplaintCard from "./components/ComplaintCard";
+
+
 /**
  * TODO:
  *
@@ -13,6 +16,7 @@ const AdminComplaintPage = () => {
   return (
     <div className=" max-w-[1236px] px-[102px] mx-auto pt-[102px]">
       <div className="text-[32px] font-bold text-alert mb-[72px]">신고함</div>
+      <ComplaintCard />
     </div>
   );
 };
