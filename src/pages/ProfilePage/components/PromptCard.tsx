@@ -13,6 +13,8 @@ import usePromptLike from '@/hooks/mutations/PromptDetailPage/usePromptLike';
 import usePromptUnlike from '@/hooks/mutations/PromptDetailPage/usePromptUnlike';
 import { useGetLikedPrompts } from '@/hooks/queries/MyPage/useGetPrompts';
 import { useAuth } from '@/context/AuthContext';
+import DualModal from '@/components/Modal/DualModal';
+import TextModal from '@/components/Modal/TextModal';
 
 interface PrompCardProps {
   id: number;
@@ -37,6 +39,9 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
 
   const clickPosition = useRef<HTMLDivElement | null>(null);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+
+  const [showAdminModal, setShowAdminModal] = useState(false);
+  const [showAdminConfirmModal, setShowAdminConfirmModal] = useState(false);
 
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -130,7 +135,7 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
               }
             }}
             className="py-[25px] px-[45px] max-lg:p-0 cursor-pointer lg:w-[115px] lg:h-[72px] max-lg:w-[16px] max-lg:h-[16px] flex items-center justify-center shrink-0">
-            {user.role === 'ADMIN' && <img src={AdminCancleIcon} alt="삭제" />}
+            {user.role === 'ADMIN' && <img src={AdminCancleIcon} alt="삭제" onClick={() => setShowAdminModal(true)} />}
             {user.role === 'USER' && (
               <img src={isLike ? HeartBlue : HeartEmpty} alt="좋아요" className="w-full h-full object-contain" />
             )}
@@ -183,6 +188,23 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
           </div>
         )}
       </div>
+
+      {showAdminModal && (
+        <DualModal
+          text="해당 프롬프트를 삭제 조치 하시겠습니까?"
+          onClickYes={() => {
+            setShowAdminModal(false);
+            setShowAdminConfirmModal(true);
+          }}
+          onClickNo={() => {
+            setShowAdminModal(false);
+          }}
+        />
+      )}
+
+      {showAdminConfirmModal && (
+        <TextModal text="프롬프트 삭제가 완료되었습니다." onClick={() => setShowAdminConfirmModal(false)} size="lg" />
+      )}
     </div>
   );
 };
