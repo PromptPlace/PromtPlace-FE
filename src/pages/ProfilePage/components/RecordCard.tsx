@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 
 import CircleButton from '@components/Button/CircleButton';
 import CloseIcon from '@assets/icon-close.svg';
+import AdminCancleIcon from '@assets/icon-cancle-admin.svg';
+import { useAuth } from '@/context/AuthContext';
 
 interface RecordCardProps {
   history_id: number;
@@ -23,6 +25,8 @@ const RecordCard = ({
   const [input, setInput] = useState(description);
   const [edit, setEdit] = useState(isEditing);
 
+  const { user } = useAuth();
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && input.trim()) {
       setEdit(false);
@@ -40,8 +44,10 @@ const RecordCard = ({
   return (
     <>
       {!isMyProfile && (
-        <div className="bg-white border-b border-b-white-stroke py-[30px] max-lg:p-[12px] pl-[80px] text-text-on-white text-[20px] font-medium leading-[25px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px]">
+        <div className="bg-white border-b border-b-white-stroke py-[30px] max-lg:p-[12px] pl-[80px] text-text-on-white text-[20px] font-medium leading-[25px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px] flex justify-between pr-[43px]">
           {description}
+
+          {user.role === 'ADMIN' && <img src={AdminCancleIcon} alt="이력 삭제" className="cursor-pointer" />}
         </div>
       )}
 

@@ -9,11 +9,13 @@ import XIcon from '@assets/icon-x-logo.svg';
 import GoogleIcon from '@assets/icon-google-logo.svg';
 import NaverIcon from '@assets/icon-naver-logo.svg';
 import CloseIcon from '@assets/icon-close.svg';
+import AdminCancleIcon from '@assets/icon-cancle-admin.svg';
 
 import CircleButton from '@/components/Button/CircleButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import MobileButton from '@/components/Button/MobileButton';
 import type { RequestPatchSNSDto } from '@/types/ProfilePage/sns';
+import { useAuth } from '@/context/AuthContext';
 
 interface SnsCardProps {
   sns_id: number;
@@ -52,6 +54,8 @@ const SnsCard = ({
   const [editDescription, setEditDescription] = useState(description);
   const snsType = getSnsType(editUrl);
   const y = useMotionValue(1000);
+
+  const { user } = useAuth();
 
   useEffect(() => {
     animate(y, 308, {
@@ -102,6 +106,8 @@ const SnsCard = ({
       </a>
 
       <div className="flex-1 truncate">{editDescription}</div>
+
+      {user.role === 'ADMIN' && <img src={AdminCancleIcon} alt="SNS 삭제" className="mr-[18px] cursor-pointer" />}
 
       {isMyProfile && (
         <div className="flex items-center text-text-on-white text-[20px] font-medium leading-[25px]">

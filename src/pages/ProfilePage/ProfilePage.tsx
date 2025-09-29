@@ -646,18 +646,20 @@ const ProfilePage = () => {
         <div className="flex flex-col items-center justify-center max-lg:pl-[20px] max-lg:pr-[20px] mt-[40px] max-lg:mt-[42px]">
           <div className="w-full">
             <div className="max-lg:hidden flex w-full justify-between border-b border-text-on-background">
-              {menuList.map((menu) => (
-                <div
-                  key={menu.id}
-                  onClick={() => setMenuId(menu.id)}
-                  className={clsx(
-                    'max-w-[309px] w-full px-[10px] py-[20px] cursor-pointer text-[24px] font-bold leading-[30px] text-center',
-                    menuId === menu.id && 'border-b-[3px] border-b-primary text-primary-hover ',
-                    menuId !== menu.id && 'text-text-on-background',
-                  )}>
-                  {menu.label}
-                </div>
-              ))}
+              {menuList
+                .filter((menu) => user.role !== 'ADMIN' || menu.id !== 2)
+                .map((menu) => (
+                  <div
+                    key={menu.id}
+                    onClick={() => setMenuId(menu.id)}
+                    className={clsx(
+                      'max-w-[309px] w-full px-[10px] py-[20px] cursor-pointer text-[24px] font-bold leading-[30px] text-center',
+                      menuId === menu.id && 'border-b-[3px] border-b-primary text-primary-hover ',
+                      menuId !== menu.id && 'text-text-on-background',
+                    )}>
+                    {menu.label}
+                  </div>
+                ))}
             </div>
 
             {menuId === 0 && (

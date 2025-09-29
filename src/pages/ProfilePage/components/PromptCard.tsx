@@ -4,12 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import HeartEmpty from '@assets/icon-heart-none-small.svg';
 import HeartBlue from '@assets/icon-heart-blue-small.svg';
 import Dots from '@assets/icon-dot.svg';
+import AdminCancleIcon from '@assets/icon-cancle-admin.svg';
+
 import ModelButton from '@/components/Button/ModelButton';
 import TagButton from '@/components/Button/TagButton';
 import type { Model, Tag } from '@/types/ProfilePage/profile';
 import usePromptLike from '@/hooks/mutations/PromptDetailPage/usePromptLike';
 import usePromptUnlike from '@/hooks/mutations/PromptDetailPage/usePromptUnlike';
 import { useGetLikedPrompts } from '@/hooks/queries/MyPage/useGetPrompts';
+import { useAuth } from '@/context/AuthContext';
 
 interface PrompCardProps {
   id: number;
@@ -36,6 +39,8 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
   const menuRef = useRef<HTMLDivElement | null>(null);
+
+  const { user } = useAuth();
 
   const navigate = useNavigate();
 
@@ -125,7 +130,10 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
               }
             }}
             className="py-[25px] px-[45px] max-lg:p-0 cursor-pointer lg:w-[115px] lg:h-[72px] max-lg:w-[16px] max-lg:h-[16px] flex items-center justify-center shrink-0">
-            <img src={isLike ? HeartBlue : HeartEmpty} alt="좋아요" className="w-full h-full object-contain" />
+            {user.role === 'ADMIN' && <img src={AdminCancleIcon} alt="삭제" />}
+            {user.role === 'USER' && (
+              <img src={isLike ? HeartBlue : HeartEmpty} alt="좋아요" className="w-full h-full object-contain" />
+            )}
           </div>
         )}
 
