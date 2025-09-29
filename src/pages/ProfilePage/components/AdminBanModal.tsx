@@ -1,8 +1,10 @@
+import { useState } from 'react';
+
 import ArrowIcon from '@assets/icon-arrow-left-black.svg';
 import RadioIcon from '@assets/icon-radio-circle.svg';
 import RadioMarkedIcon from '@assets/icon-radio-circle-marked.svg';
-import { useState } from 'react';
-import PrimaryButton from '@/components/Button/PrimaryButton';
+
+import PrimaryButton from '@components/Button/PrimaryButton';
 
 interface AdminBanModalProps {
   setShowAdminBanModal: React.Dispatch<React.SetStateAction<boolean>>;

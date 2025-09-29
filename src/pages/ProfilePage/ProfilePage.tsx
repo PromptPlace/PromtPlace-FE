@@ -73,6 +73,7 @@ import useGetNofify from '@/hooks/queries/ProfilePage/useGetNofify';
 import useDeleteInquiries from '@/hooks/mutations/ProfilePage/useDeleteInquiries';
 import usePatchEditIntro from '@/hooks/mutations/ProfilePage/usePatchEditIntro';
 import AdminBanModal from './components/AdminBanModal';
+import AdminMessageModal from './components/AdminMessageModal';
 
 type Inquiry = {
   inquiry_id: number;
@@ -124,6 +125,7 @@ const ProfilePage = () => {
   const [type, setType] = useState<RequestGetInquiriesDto>({ type: 'buyer' });
 
   const [showAdminBanModal, setShowAdminBanModal] = useState(false); // 관리자 - 계정 정지
+  const [showAdminMessageModal, setShowAdminMessageModal] = useState(false); // 관리자 - 메시지 보내기
 
   // 회원 정보 불러오기
   const { data } = useGetMember({ member_id });
@@ -403,7 +405,7 @@ const ProfilePage = () => {
               {!profileEdit && (
                 <div className="flex gap-[4px] max-lg:justify-center">
                   <p className="text-[32px] font-bold leading-[40px] max-lg:text-[16px] max-lg:font-medium max-lg:leading-[20px] ">
-                    {data?.data.nickname}123
+                    {data?.data.nickname}
                   </p>
                   {!isMyProfile && (
                     <div
@@ -576,7 +578,14 @@ const ProfilePage = () => {
               )}
 
               <div className="flex flex-col gap-[20px]">
-                <PrimaryButton buttonType="squareAdmin" text="메시지 보내기" onClick={() => {}} admin={true} />
+                <PrimaryButton
+                  buttonType="squareAdmin"
+                  text="메시지 보내기"
+                  onClick={() => {
+                    setShowAdminMessageModal(true);
+                  }}
+                  admin={true}
+                />
                 <div className="flex gap-[24px]">
                   <PrimaryButton
                     buttonType="squareAdmin"
@@ -590,6 +599,13 @@ const ProfilePage = () => {
                 </div>
               </div>
 
+              {showAdminMessageModal && (
+                <AdminMessageModal
+                  data={data}
+                  follower={followerData?.data.length}
+                  setShowAdminMessageModal={setShowAdminMessageModal}
+                />
+              )}
               {showAdminBanModal && <AdminBanModal setShowAdminBanModal={setShowAdminBanModal} />}
             </>
           )}
