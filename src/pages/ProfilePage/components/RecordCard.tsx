@@ -4,6 +4,8 @@ import CircleButton from '@components/Button/CircleButton';
 import CloseIcon from '@assets/icon-close.svg';
 import AdminCancleIcon from '@assets/icon-cancle-admin.svg';
 import { useAuth } from '@/context/AuthContext';
+import DualModal from '@/components/Modal/DualModal';
+import TextModal from '@/components/Modal/TextModal';
 
 interface RecordCardProps {
   history_id: number;
@@ -24,6 +26,9 @@ const RecordCard = ({
 }: RecordCardProps) => {
   const [input, setInput] = useState(description);
   const [edit, setEdit] = useState(isEditing);
+
+  const [showAdminModal, setShowAdminModal] = useState(false);
+  const [showAdminConfirmModal, setShowAdminConfirmModal] = useState(false);
 
   const { user } = useAuth();
 
@@ -47,7 +52,14 @@ const RecordCard = ({
         <div className="bg-white border-b border-b-white-stroke py-[30px] max-lg:p-[12px] pl-[80px] text-text-on-white text-[20px] font-medium leading-[25px] max-lg:text-[12px] max-lg:font-medium max-lg:leading-[15px] flex justify-between pr-[43px]">
           {description}
 
-          {user.role === 'ADMIN' && <img src={AdminCancleIcon} alt="이력 삭제" className="cursor-pointer" />}
+          {user.role === 'ADMIN' && (
+            <img
+              src={AdminCancleIcon}
+              alt="이력 삭제"
+              className="cursor-pointer"
+              onClick={() => setShowAdminModal(true)}
+            />
+          )}
         </div>
       )}
 
@@ -80,6 +92,23 @@ const RecordCard = ({
             </div>
           </div>
         </div>
+      )}
+
+      {showAdminModal && (
+        <DualModal
+          text="해당 프롬프트를 삭제 조치 하시겠습니까?"
+          onClickYes={() => {
+            setShowAdminModal(false);
+            setShowAdminConfirmModal(true);
+          }}
+          onClickNo={() => {
+            setShowAdminModal(false);
+          }}
+        />
+      )}
+
+      {showAdminConfirmModal && (
+        <TextModal text="프롬프트 삭제가 완료되었습니다." onClick={() => setShowAdminConfirmModal(false)} size="lg" />
       )}
     </>
   );
