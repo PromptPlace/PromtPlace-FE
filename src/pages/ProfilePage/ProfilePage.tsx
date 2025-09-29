@@ -72,6 +72,7 @@ import TextModal from '@/components/Modal/TextModal';
 import useGetNofify from '@/hooks/queries/ProfilePage/useGetNofify';
 import useDeleteInquiries from '@/hooks/mutations/ProfilePage/useDeleteInquiries';
 import usePatchEditIntro from '@/hooks/mutations/ProfilePage/usePatchEditIntro';
+import AdminBanModal from './components/AdminBanModal';
 
 type Inquiry = {
   inquiry_id: number;
@@ -121,6 +122,8 @@ const ProfilePage = () => {
   const [showMsgModal, setShowMsgModal] = useState(false);
 
   const [type, setType] = useState<RequestGetInquiriesDto>({ type: 'buyer' });
+
+  const [showAdminBanModal, setShowAdminBanModal] = useState(false); // 관리자 - 계정 정지
 
   // 회원 정보 불러오기
   const { data } = useGetMember({ member_id });
@@ -575,10 +578,19 @@ const ProfilePage = () => {
               <div className="flex flex-col gap-[20px]">
                 <PrimaryButton buttonType="squareAdmin" text="메시지 보내기" onClick={() => {}} admin={true} />
                 <div className="flex gap-[24px]">
-                  <PrimaryButton buttonType="squareAdmin" text="계정 정지" onClick={() => {}} admin={true} />
+                  <PrimaryButton
+                    buttonType="squareAdmin"
+                    text="계정 정지"
+                    onClick={() => {
+                      setShowAdminBanModal(true);
+                    }}
+                    admin={true}
+                  />
                   <PrimaryButton buttonType="squareAdmin" text="계정 삭제" onClick={() => {}} admin={true} />
                 </div>
               </div>
+
+              {showAdminBanModal && <AdminBanModal setShowAdminBanModal={setShowAdminBanModal} />}
             </>
           )}
         </div>
