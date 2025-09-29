@@ -96,7 +96,7 @@ const RecordCard = ({
 
       {showAdminModal && (
         <DualModal
-          text="해당 프롬프트를 삭제 조치 하시겠습니까?"
+          text="해당 이력을 삭제 조치 하시겠습니까?"
           onClickYes={() => {
             setShowAdminModal(false);
             setShowAdminConfirmModal(true);
@@ -108,7 +108,7 @@ const RecordCard = ({
       )}
 
       {showAdminConfirmModal && (
-        <TextModal text="프롬프트 삭제가 완료되었습니다." onClick={() => setShowAdminConfirmModal(false)} size="lg" />
+        <TextModal text="이력 삭제가 완료되었습니다." onClick={() => setShowAdminConfirmModal(false)} size="lg" />
       )}
     </>
   );
