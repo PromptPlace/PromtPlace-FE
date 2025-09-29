@@ -74,6 +74,7 @@ import useDeleteInquiries from '@/hooks/mutations/ProfilePage/useDeleteInquiries
 import usePatchEditIntro from '@/hooks/mutations/ProfilePage/usePatchEditIntro';
 import AdminBanModal from './components/AdminBanModal';
 import AdminMessageModal from './components/AdminMessageModal';
+import DualModal from '@/components/Modal/DualModal';
 
 type Inquiry = {
   inquiry_id: number;
@@ -126,6 +127,8 @@ const ProfilePage = () => {
 
   const [showAdminBanModal, setShowAdminBanModal] = useState(false); // 관리자 - 계정 정지
   const [showAdminMessageModal, setShowAdminMessageModal] = useState(false); // 관리자 - 메시지 보내기
+  const [showAdminDeleteModal, setShowAdminDeleteModal] = useState(false); // 관지라 - 계정 삭제
+  const [showAdminDeleteConfirmModal, setShowAdminDeleteConfirmModal] = useState(false);
 
   // 회원 정보 불러오기
   const { data } = useGetMember({ member_id });
@@ -595,7 +598,14 @@ const ProfilePage = () => {
                     }}
                     admin={true}
                   />
-                  <PrimaryButton buttonType="squareAdmin" text="계정 삭제" onClick={() => {}} admin={true} />
+                  <PrimaryButton
+                    buttonType="squareAdmin"
+                    text="계정 삭제"
+                    onClick={() => {
+                      setShowAdminDeleteModal(true);
+                    }}
+                    admin={true}
+                  />
                 </div>
               </div>
 
@@ -607,6 +617,27 @@ const ProfilePage = () => {
                 />
               )}
               {showAdminBanModal && <AdminBanModal setShowAdminBanModal={setShowAdminBanModal} />}
+              {showAdminDeleteModal && (
+                <DualModal
+                  text="해당 계정을 삭제 조치 하시겠습니까?"
+                  onClickYes={() => {
+                    setShowAdminDeleteModal(false);
+                    setShowAdminDeleteConfirmModal(true);
+                  }}
+                  onClickNo={() => {
+                    setShowAdminDeleteModal(false);
+                  }}
+                />
+              )}
+              {showAdminDeleteConfirmModal && (
+                <TextModal
+                  text="계정 삭제가 완료되었습니다."
+                  onClick={() => {
+                    setShowAdminDeleteConfirmModal(false);
+                  }}
+                  size="lg"
+                />
+              )}
             </>
           )}
         </div>
