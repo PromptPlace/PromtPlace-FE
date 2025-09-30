@@ -30,20 +30,21 @@ const AdminComplaintDetailPage = ({complaintDetail}: ComplaintDetailPageProps) =
       </div>
 
       <main className="px-[65px]">
-        <section className="">
-          <h1>프롬프트 제목</h1>
-          <div>
-            날짜 신고자 신고사유를 담는 태그
+        <section className="py-[30px] border-b-[1px] border-white-stroke">
+          <h1 className="text-[32px] font-bold">프롬프트 제목</h1>
+          <div className="flex flex-col text-[20px] font-medium text-text-on-background gap-[19px]">
+            <div className="flex gap-[94px] py-[9px]">
             <p>date</p>
-            <p>reporter</p>
-            <p>reason</p>
+            <p>신고자:</p>
+            </div>
+            <p>사유:</p>
           </div>
         </section>
-        <section>description</section>
+        <section className="py-[30px] border-b-[1px] border-white-stroke  h-[425px] overflow-y-auto">description</section>
       </main>
 
-      <footer>
-        <button>해당 프롬프트 상세페이지로 이동 버튼</button>
+      <footer className="py-[40px] pl-[65px]">
+        <button className="px-[20px] py-[10px] border-[1px] border-alert rounded-[10px] text-[20px] font-medium text-alert ">이동</button>
       </footer>
     </div>
   );
