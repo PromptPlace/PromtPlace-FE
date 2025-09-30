@@ -21,7 +21,7 @@ interface ComplaintDetailPageProps {
 //더미데이터
 const complaintDetail: ComplaintDetail = {
   report_id: 56,
-  prompt_id: 2069,
+  prompt_id: 2065,
   prompt_title: '프롬프트 제목프롬프트 제목프프롬프트 제목',
   reporter_id: 12,
   reporter_nickname: '신고자 닉네임1',
@@ -61,7 +61,9 @@ const AdminComplaintDetailPage = ({ report_id }: ComplaintDetailPageProps) => {
       </main>
 
       <footer className="py-[40px] pl-[65px]">
-        <button className="px-[20px] py-[10px] border-[1px] border-alert rounded-[10px] text-[20px] font-medium text-alert ">
+        <button
+          className="px-[20px] py-[10px] border-[1px] border-alert rounded-[10px] text-[20px] font-medium text-alert"
+          onClick={() => navigate('/prompt/' + complaintDetail.prompt_id)}>
           이동
         </button>
       </footer>
