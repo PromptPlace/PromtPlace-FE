@@ -23,7 +23,7 @@ const ComplaintCard = ({ complaint }: ComplaintCardProps) => {
       <div className="flex justify-center w-[72px]">
         {complaint.is_read === 'true' ? <img src={unread} alt="unread" className="w-[20px] h-[20px]" /> : null}
       </div>
-      <Link to={`/complaint/${complaint.report_id}`} className="flex items-center w-[678px] min-w-0">
+      <Link to={`/admin/complaint/${complaint.report_id}`} className="flex items-center w-[678px] min-w-0">
         <div className=" block truncate">{complaint.prompt_title}</div>
       </Link>
       <div className="w-[223px] flex justify-center items-center">{complaint.reporter_nickname}</div>
