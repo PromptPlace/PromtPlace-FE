@@ -18,7 +18,7 @@ interface ComplaintDetailPageProps {
   complaintDetail: ComplaintDetail;
 }
 
-const AdminComplaintDetailPage = ([complaintDetail]: ComplaintDetailPageProps) => {
+const AdminComplaintDetailPage = ({complaintDetail}: ComplaintDetailPageProps) => {
   const navigate = useNavigate();
   return (
     <div className="w-[994px]  mx-auto mt-[39px] bg-white ">
