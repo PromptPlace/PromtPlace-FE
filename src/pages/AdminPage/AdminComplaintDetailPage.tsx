@@ -29,10 +29,10 @@ const AdminComplaintDetailPage = ({complaintDetail}: ComplaintDetailPageProps) =
         <div className="text-[24px] font-bold text-text-on-white">신고함</div>
       </div>
 
-      <main className="px-[65px]">
+      <main>
         <section className="py-[30px] border-b-[1px] border-white-stroke">
-          <h1 className="text-[32px] font-bold">프롬프트 제목</h1>
-          <div className="flex flex-col text-[20px] font-medium text-text-on-background gap-[19px]">
+          <h1 className="text-[32px] font-bold px-[65px]">프롬프트 제목</h1>
+          <div className="flex flex-col text-[20px] font-medium text-text-on-background gap-[19px] px-[65px]">
             <div className="flex gap-[94px] py-[9px]">
             <p>date</p>
             <p>신고자:</p>
@@ -40,7 +40,7 @@ const AdminComplaintDetailPage = ({complaintDetail}: ComplaintDetailPageProps) =
             <p>사유:</p>
           </div>
         </section>
-        <section className="py-[30px] border-b-[1px] border-white-stroke  h-[425px] overflow-y-auto">description</section>
+        <section className="py-[30px] border-b-[1px] border-white-stroke  h-[425px] overflow-y-auto px-[65px]">description</section>
       </main>
 
       <footer className="py-[40px] pl-[65px]">
