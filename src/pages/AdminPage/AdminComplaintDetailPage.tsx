@@ -33,7 +33,7 @@ const complaintDetail: ComplaintDetail = {
   isRead: false,
 };
 
-const AdminComplaintDetailPage = ({ report_id }: ComplaintDetailPageProps) => {
+const AdminComplaintDetailPage = () => {
   const navigate = useNavigate();
   return (
     <div className="w-[994px]  mx-auto mt-[39px] bg-white ">
