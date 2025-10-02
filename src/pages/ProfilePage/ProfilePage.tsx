@@ -532,7 +532,50 @@ const ProfilePage = () => {
             </>
           )}
 
-          {(isMyProfile || user.role === 'ADMIN') && (
+          {isMyProfile && user.role === 'USER' && (
+            <>
+              <div className="flex gap-[28px] max-lg:gap-[16px]">
+                <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
+                  <p className="text-primary-hover text-[18px] font-normal leading-[23px] max-lg:text-[10px] max-lg:leading-[13px]">
+                    팔로워
+                  </p>
+                  <div
+                    onClick={() => setShowFollower(true)}
+                    className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center max-lg:py-[2px] max-lg:px-[6px] max-lg:text-[12px] max-lg:leading-[15px]">
+                    {followerData?.data.length}
+                  </div>
+                </div>
+                <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
+                  <p className="text-primary-hover text-[18px] font-normal leading-[23px] max-lg:text-[10px] max-lg:leading-[13px]">
+                    팔로잉
+                  </p>
+                  <div
+                    onClick={() => setShowFollowing(true)}
+                    className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center  max-lg:py-[2px] max-lg:px-[6px] max-lg:text-[12px] max-lg:leading-[15px]">
+                    {followingData?.data.length}
+                  </div>
+                </div>
+              </div>
+              {showFollower && (
+                <FollowCard
+                  title={`${data?.data.nickname}님의 팔로워 목록`}
+                  list={normalizedFollowerList}
+                  setShow={setShowFollower}
+                  member_id={member_id}
+                />
+              )}
+              {showFollowing && (
+                <FollowCard
+                  title={`${data?.data.nickname}님의 팔로잉 목록`}
+                  list={normalizedFollowingList}
+                  setShow={setShowFollowing}
+                  member_id={member_id}
+                />
+              )}
+            </>
+          )}
+
+          {user.role === 'ADMIN' && (
             <>
               <div className="flex gap-[28px] max-lg:gap-[16px]">
                 <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
