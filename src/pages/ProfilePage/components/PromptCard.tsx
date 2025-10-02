@@ -15,6 +15,7 @@ import { useGetLikedPrompts } from '@/hooks/queries/MyPage/useGetPrompts';
 import { useAuth } from '@/context/AuthContext';
 import DualModal from '@/components/Modal/DualModal';
 import TextModal from '@/components/Modal/TextModal';
+import useDeletePromptAdmin from '@/hooks/mutations/ProfilePage/useDeletePromptAdmin';
 
 interface PrompCardProps {
   id: number;
@@ -26,6 +27,8 @@ interface PrompCardProps {
 }
 
 const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }: PrompCardProps) => {
+  const { user } = useAuth();
+
   // 프롬프트 찜하기
   const { mutate: mutatePromptLike } = usePromptLike();
   // 프롬프트 찜 취소하기
@@ -34,6 +37,9 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
   // 찜한 프롬프트 목록
   const { data: likedList } = useGetLikedPrompts();
   const isLike = likedList?.data.some((data) => data.prompt_id === id);
+
+  // 프롬프트 삭제 (관리자)
+  const { mutate: mutateDeletePromptAdmin } = useDeletePromptAdmin({ member_id: user.user_id });
 
   const [isDotsClicked, setIsDotsClicked] = useState(false);
 
@@ -45,12 +51,16 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
 
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  const { user } = useAuth();
-
   const navigate = useNavigate();
 
   const handleNavigate = (id: number) => {
     navigate(`/prompt/${id}`);
+  };
+
+  // 프롬프트 삭제
+  const handleDeletePromptAdmin = ({ prompt_id }: { prompt_id: number }) => {
+    setShowAdminModal(true);
+    mutateDeletePromptAdmin({ prompt_id });
   };
 
   useEffect(() => {
@@ -149,7 +159,10 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
             <div
               ref={clickPosition}
               className="w-[28px] h-[28px] max-lg:w-[16px] max-lg:h-[16px] max-lg:py-[2px] max-lg:px-[6px] hover:bg-secondary-pressed flex items-center justify-center rounded-full">
-              <img src={Dots} alt="메뉴" />
+              {user.role === 'ADMIN' && (
+                <img src={AdminCancleIcon} alt="삭제" onClick={() => handleDeletePromptAdmin({ prompt_id: id })} />
+              )}
+              {user.role === 'USER' && <img src={Dots} alt="메뉴" />}
             </div>
             {isDotsClicked && (
               <>
@@ -195,6 +208,7 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
           onClickYes={() => {
             setShowAdminModal(false);
             setShowAdminConfirmModal(true);
+            handleDeletePromptAdmin({ prompt_id: id });
           }}
           onClickNo={() => {
             setShowAdminModal(false);
