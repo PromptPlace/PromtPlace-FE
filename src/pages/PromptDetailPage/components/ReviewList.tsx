@@ -133,7 +133,7 @@ const ReviewList = ({
 
   return (
     <>
-      <div className="hidden lg:flex w-[459px] bg-[#FFFEFB] h-[654px] px-8 py-6 flex-col">
+      <div className="hidden lg:flex w-[459px] bg-[#FFFEFB] h-[654px] px-8 py-6 flex-col max-lg:mx-[20px]">
         {/* 상단 */}
         <div className="flex items-center mb-4">
           <button onClick={onClose} className="text-2xl font-bold leading-none hover:opacity-70" aria-label="뒤로가기">
@@ -220,7 +220,7 @@ const ReviewList = ({
       </div>
 
       {/* ✅ 모바일 전용 리뷰 UI */}
-      <div className="lg:hidden w-full min-h-screen px-[20px] pt-[12px] pb-[20px] bg-[#F5F5F5]">
+      <div className="lg:hidden w-full min-h-screen max-w-[calc(100%-40px)] mx-auto pt-[12px] pb-[20px] bg-[#F5F5F5]">
         {/* 상단 헤더 */}
         <div className="flex items-center justify-between mb-[20px] relative">
           {/* 뒤로가기 아이콘 */}

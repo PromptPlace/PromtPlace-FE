@@ -8,7 +8,7 @@ type TabType = 'authored' | 'downloaded' | 'liked';
 
 const MyPromptsTabs = ({ activeTab, setActiveTab }: { activeTab: string; setActiveTab: (tab: TabType) => void }) => {
   return (
-    <div className="flex justify-center border-b w-full  ">
+    <div className="flex justify-center border-b w-full min-w-[1080px]">
       {TABS.map((tab) => (
         <button
           key={tab.id}

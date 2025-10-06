@@ -36,6 +36,19 @@ const PromptDetailPage = () => {
 
   const prompt = useMemo(() => {
     if (!data) return null;
+    const getModelNames = () => {
+      if (!Array.isArray(data?.models)) return [];
+      const names = data.models
+        .map((m: any) => {
+          if (typeof m === 'string') return m;
+          if (m?.name) return String(m.name);
+          if (m?.model?.name) return String(m.model.name);
+          return '';
+        })
+        .filter(Boolean);
+      // 중복 제거
+      return Array.from(new Set(names));
+    };
     const tags = (data.tags ?? []).filter((t) => t?.tag).map((t) => t.tag.name);
     console.log('parsed tags', tags);
     return {
@@ -63,10 +76,7 @@ const PromptDetailPage = () => {
           name: t.tag.name,
         })),
 
-      model:
-        Array.isArray(data.models) && data.models.length > 0 && data.models[0]?.model?.name
-          ? data.models[0].model.name
-          : '',
+      models: getModelNames(),
     };
   }, [data]);
 
@@ -242,9 +252,9 @@ const PromptDetailPage = () => {
   console.log('prompt.tags', prompt?.tags);
 
   return (
-    <div className="bg-[#F5F5F5]">
+    <div className="bg-[#F5F5F5] min-h-screen max-lg:pb-[calc(139px+env(safe-area-inset-bottom)+16px)">
       {/* 모바일 유저 정보 섹션 */}
-      <div className="lg:hidden max-w-[280px] max-h-[60px] pt-[12px] mx-auto">
+      <div className="lg:hidden w-full max-h-[60px] pt-[12px] px-[20px] mx-auto">
         <div className="box-border flex items-center max-h-[48px] py-[6px]">
           {/* 아이콘 */}
           <img
@@ -270,16 +280,16 @@ const PromptDetailPage = () => {
           </div>
         </div>
       </div>
-      <div className="flex max-lg:flex-col max-lg:gap-[20px] max-w-7xl max-lg:px-[20px] max-lg:pt-0 max-lg:max-w-[320px] gap-10 p-10 mx-auto">
+      <div className="flex max-lg:flex-col max-lg:gap-[20px] max-w-7xl max-lg:px-[20px] max-lg:pt-0 max-lg:w-full gap-10 mx-auto">
         {/* 왼쪽: 정보 */}
-        <div className="w-[711px] max-lg:max-w-[280px] max-lg:h-[544px] bg-[#FFFEFB] rounded-[16px] flex flex-col h-[736px]">
+        <div className="w-[711px] max-lg:w-full max-lg:h-[544px] bg-[#FFFEFB] rounded-[16px] flex flex-col h-[736px]">
           <PromptHeader
             title={prompt.title}
             views={prompt.views}
             onClose={() => navigate(-1)}
             downloads={prompt.downloads}
             onClickReview={() => setShowReviews(true)}
-            model={prompt.model}
+            models={prompt.models}
             tags={prompt.tags.map((tag) => tag.name)}
           />
 
@@ -317,10 +327,11 @@ const PromptDetailPage = () => {
           />
         </div>
       </div>
+
       {/* 모바일 하단 고정 영역 */}
       <div className="lg:hidden bottom-0 fixed left-1/2 -translate-x-1/2 z-[10]  max-w-[425px] h-[139px] w-full flex justify-center pointer-events-none">
-        <div className="bg-white max-w-[425px] rounded-t-[24px] shadow-[0_-4px_12px_rgba(0,0,0,0.1)] p-[20px] h-[139px] z-[10] w-full h-full pointer-events-auto">
-          <div className="flex justify-between w-full h-full">
+        <div className="bg-white max-w-[425px] rounded-t-[24px] shadow-[0_-4px_12px_rgba(0,0,0,0.1)] px-[20px] pb-[20px] pt-[15px] h-[139px] z-[10] w-full h-full pointer-events-auto">
+          <div className="flex justify-end w-full h-full mr-[8%]">
             <div
               className={`flex items-center ${isPaid ? 'gap-[10px]' : 'gap-[20px]'} h-[34px] ${
                 isPaid ? 'ml-[8%]' : 'ml-[28%]'

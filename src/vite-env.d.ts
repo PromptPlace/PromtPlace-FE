@@ -4,6 +4,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_SERVER_API_URL: string;
+  readonly VITE_GTM_ID: string;
 }
 
 interface ImportMeta {

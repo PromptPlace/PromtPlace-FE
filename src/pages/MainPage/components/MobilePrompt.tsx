@@ -25,18 +25,20 @@ const MobilePrompt = ({ prompt }: Props) => {
   };
 
   return (
-    <div className="w-full  flex flex-col gap-1.5 mb-[6px] px-4">
+    <div className="w-full flex flex-col gap-1.5 mb-[6px] px-4">
       {/* 프로필 */}
       <MobilePrompter key={prompt.user.user_id} prompter={prompt.user} />
 
       {/* 카드 본문 */}
       <div className="relative bg-white rounded-2xl p-3 flex flex-col gap-2">
         {/* 모델 + 태그 */}
-        <div className="flex items-center gap-2.5 flex-wrap">
-          {prompt.models.map((modelObj, idx) => (
-            <ModelButton key={modelObj.promptmodel_id || idx} text={modelObj.model.name} />
-          ))}
-          <div className="flex gap-1 flex-wrap">
+        <div className="flex gap-[10px] overflow-x-auto">
+          <div className="flex gap-[6px] flex-nowrap min-w-0">
+            {prompt.models.map((modelObj, idx) => (
+              <ModelButton key={modelObj.promptmodel_id || idx} text={modelObj.model.name} />
+            ))}
+          </div>
+          <div className="flex gap-[6px] flex-nowrap min-w-0">
             {prompt.tags.slice(0, 4).map((tag, i) => (
               <TagButton hasDelete={false} key={i} text={`#${tag.tag.name}`} onClick={() => {}} />
             ))}
@@ -63,19 +65,29 @@ const MobilePrompt = ({ prompt }: Props) => {
                 {prompt.views}
               </div>
               <div className="flex items-center gap-1 text-[8px] text-text-on-background">
-                <img src={iconDownload} className="w-3 h-3" />
+                <img src={iconDownload} className="w-[12px] h-[12px]" />
                 {prompt.downloads}
               </div>
             </div>
           </div>
 
           {/* 설명 */}
-          <div className="max-h-24 overflow-hidden text-[8px] text-text-on-white whitespace-pre-line mt-[6px]">
-            {prompt.description}
+          <div className="max-h-24 max-w-[calc(100%-30px)] overflow-hidden text-[8px] text-text-on-white whitespace-pre-line mt-[6px]">
+            <p>{prompt.prompt_result}</p>
+            <div className="flex gap-2 overflow-x-auto mt-1">
+              {prompt.images?.map((image, index) => (
+                <img
+                  key={index}
+                  src={image.image_url || ''}
+                  alt={`Prompt Example Image ${index + 1}`}
+                  className="object-cover h-[70px] flex-shrink-0"
+                />
+              ))}
+            </div>
           </div>
+          {/* 찜 버튼 */}
+          <Likes key={prompt.prompt_id} {...prompt} />
         </div>
-        {/* 찜 버튼 */}
-        <Likes key={prompt.prompt_id} {...prompt} />
       </div>
     </div>
   );

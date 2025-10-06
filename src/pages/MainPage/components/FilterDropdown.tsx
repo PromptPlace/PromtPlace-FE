@@ -14,7 +14,7 @@ function FilterDropdown({ label, items, selected, onSelect, selectedItems }: Fil
     <div className="relative inline-block">
       {selected && (
         <div
-          className="absolute top-[17px] left-1/2 -translate-x-1/2 z-10
+          className="absolute top-[17px] left-16/9 -translate-x-9/16 z-10
             w-36 p-2.5 bg-white rounded-lg shadow-[0px_4px_8px_rgba(0,0,0,0.12)]
             inline-flex flex-col justify-center items-center">
           {items.map((item, index) => {

@@ -62,14 +62,6 @@ const MainPage = () => {
     }
   };
 
-  console.log('검색 조건:', {
-    selectedModels,
-    selectedTags,
-    selectedSort,
-    onlyFree,
-    keyword,
-  });
-
   // 검색어와 태그가 있을 때만 백엔드 API 호출
   useEffect(() => {
     if (keyword || selectedTags.length > 0) {
@@ -82,8 +74,6 @@ const MainPage = () => {
         page: 1,
         size: 20,
       };
-
-      console.log('검색 API 호출 파라미터:', searchParams);
 
       searchPromptMutation.mutate(searchParams, {
         onSuccess: (data) => {
@@ -99,10 +89,21 @@ const MainPage = () => {
   // 백엔드 검색 결과와 기본 프롬프트 리스트를 안전하게 처리
   const basePromptList: Prompt[] = (() => {
     if (keyword || selectedTags.length > 0) {
-      // 검색 API 응답: data가 이미 Prompt[]
-      return Array.isArray(searchPromptData?.data) ? searchPromptData.data : [];
+      const responseData = searchPromptData?.data;
+
+      if (
+        responseData &&
+        typeof responseData === 'object' &&
+        !Array.isArray(responseData) &&
+        'prompts' in responseData &&
+        Array.isArray((responseData as { prompts?: unknown }).prompts)
+      ) {
+        return (responseData as { prompts: Prompt[] }).prompts;
+      }
+
+      return [];
     } else {
-      // 기본 프롬프트 리스트
+      // 기본 프롬프트 리스트 (기존 코드와 동일)
       return Array.isArray(promptResult.data?.data) ? promptResult.data.data : [];
     }
   })();
@@ -115,11 +116,6 @@ const MainPage = () => {
   //     : Array.isArray(promptResult.data?.data)
   //       ? promptResult.data.data
   //       : [];
-
-  console.log('promptResult:', promptResult);
-  console.log('searchPromptData:', searchPromptData);
-  console.log('basePromptList:', basePromptList);
-  console.log('basePromptList type:', typeof basePromptList, Array.isArray(basePromptList));
 
   // 코치마크 관련
   const { accessToken } = useAuth();
@@ -231,6 +227,50 @@ const MainPage = () => {
         <div className="flex flex-col gap-[14px]">
           {/* {keyword ? <PrompterBar /> : <SearchPrompter creators={Prompter} />} */}
           <PrompterBar />
+
+          {/* Right-side footer links (desktop only) */}
+          <div className="mt-6 ml-2 w-[291px] mb-12">
+            <div className="inline-flex flex-col justify-start items-start gap-4">
+              <div className="inline-flex justify-center items-center gap-2.5">
+                <div className="w-72 justify-start text-text-on-background text-lg font-normal font-['Spoqa_Han_Sans_Neo'] leading-relaxed">
+                  <div>대표자 : 안송연</div>
+                  <div>사업자 등록번호 : 760-20-02108</div>
+                  <div>서울특별시 관악구 인헌동 12가길 7</div>
+                  <div>promptplace.official@gmail.com</div>
+                  <div>고객센터 : 010-6279-0934</div>
+                </div>
+              </div>
+
+              <div className="flex flex-col justify-start items-start gap-8">
+                <div className="inline-flex justify-start items-center gap-[12px]">
+                  <a
+                    href="https://guiltless-wedelia-8cd.notion.site/27087a067207808b9b96f648f236c2e5?pvs=74"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-center justify-start text-text-on-background text-lg font-bold font-['Spoqa_Han_Sans_Neo']">
+                    이용약관
+                  </a>
+                  <a
+                    href="https://guiltless-wedelia-8cd.notion.site/27087a06720780889090f88b0d499ebc"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="justify-start text-text-on-background text-lg font-bold">
+                    개인정보처리방침
+                  </a>
+                  <a
+                    href="https://guiltless-wedelia-8cd.notion.site/27087a067207800b8c78ed4508fcf698?pvs=74"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-center justify-start text-text-on-background text-lg font-bold">
+                    운영정책
+                  </a>
+                </div>
+                <div className="justify-start text-text-on-background text-lg font-normal font-['Spoqa_Han_Sans_Neo']">
+                  © PromptPlace. All rights reserved
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

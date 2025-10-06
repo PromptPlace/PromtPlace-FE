@@ -8,6 +8,7 @@ import Rating from '@components/Rating';
 import heartNone from '../../../assets/icon-heart-none-big.svg';
 import heartOnClick from '../../../assets/icon-heart-blue-big.svg';
 import rightArrow from '../assets/keyboard_arrow_down.svg';
+import Back from '../assets/back.svg';
 
 interface Props {
   title: string;
@@ -15,12 +16,12 @@ interface Props {
   downloads: number;
   onClose: () => void;
   onClickReview: () => void;
-  model?: string;
+  models?: string[];
   rating?: number;
   tags?: string[];
 }
 
-const PromptHeader = ({ title, views, downloads, onClose, onClickReview, model, rating, tags }: Props) => {
+const PromptHeader = ({ title, views, downloads, onClose, onClickReview, models, rating, tags }: Props) => {
   const MAX_TITLE_LENGTH = 19;
   const truncateTitle = (text: string) => {
     if (text.length <= MAX_TITLE_LENGTH) return text;
@@ -30,16 +31,20 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview, model, 
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
   const [liked, setLiked] = useState(false);
 
-  const safeModel = model && model.trim().length > 0 ? model : 'ChatGPT';
+  const safeModels = useMemo(() => (Array.isArray(models) && models.length > 0 ? models : ['ChatGPT']), [models]);
   const safeRating = Number.isFinite(rating as number) ? Number(rating) : 0;
   const safeTags = useMemo(() => (Array.isArray(tags) ? tags : []), [tags]);
 
   return (
-    <div className="w-[711px] max-lg:max-w-[280px] max-lg:max-h-[191px] bg-[#FFFEFB] px-8 max-lg:pt-[12px] max-lg:px-[12px] rounded-[16px]">
+    <div className="w-full lg:w-[711px] max-lg:max-h-[191px] bg-[#FFFEFB] px-8 max-lg:pt-[12px] max-lg:px-[12px] rounded-[16px]">
       {/* PC */}
       <div className="hidden lg:block h-[132px] box-border flex flex-col justify-between">
-        <div className="flex items-center justify-between w-full pt-[35px] pb-[5px]">
-          <ModelButton text={safeModel} />
+        <div className="flex items-center justify-between w-full pt-[30px] pb-[10px]">
+          <div className="flex gap-3">
+            {safeModels.map((m, i) => (
+              <ModelButton key={`${m}-${i}`} text={m} />
+            ))}
+          </div>
 
           {isAdmin && (
             <div className="flex gap-[24px]">
@@ -54,14 +59,9 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview, model, 
         </div>
 
         <div className="flex items-center justify-between w-full">
-          <div className="flex items-center gap-[15px]">
-            <button
-              onClick={onClose}
-              className="text-2xl pb-[10px] font-bold leading-none hover:opacity-70"
-              aria-label="뒤로가기">
-              &lt;
-            </button>
-            <h2 className="font-bold text-[32px] pb-[10px]">{truncateTitle(title)}</h2>
+          <div className="flex items-center">
+            <img src={Back} alt="뒤로가기" className="w-[33px] h-[33px] cursor-pointer mr-[10px]" onClick={onClose} />
+            <h2 className="font-bold text-[32px] leading-tight">{truncateTitle(title)}</h2>
           </div>
 
           <div className="flex gap-8">
@@ -75,8 +75,14 @@ const PromptHeader = ({ title, views, downloads, onClose, onClickReview, model, 
       <div className="lg:hidden max-lg:max-h-[167px]">
         {/* 모델 + 조회/다운로드 */}
         <div className="flex items-center gap-[8px]">
-          <div className="w-[54px] h-[23px] flex items-center justify-center font-medium text-[10px]">
-            <ModelButton text={safeModel} />
+          <div className="flex gap-[4px]">
+            {safeModels.map((m, i) => (
+              <div
+                key={`${m}-${i}`}
+                className="w-[54px] h-[23px] flex items-center justify-center font-medium text-[10px]">
+                <ModelButton text={m} />
+              </div>
+            ))}
           </div>
           <div className="flex gap-[8px] text-[8px] font-normal">
             <Count imgType="eye" count={views} />

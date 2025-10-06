@@ -16,6 +16,7 @@ import type {
   ResponsePostImg,
   RequestNotificationsDto,
   ResponseNotificationsDto,
+  ResponseIsNotifyDto,
 } from '@/types/ProfilePage/profile';
 import { axiosInstance } from '../axios';
 
@@ -58,6 +59,15 @@ export const patchEditMember = async ({
 // 회원 한줄 소개 작성
 export const postIntro = async ({ intro }: RequestIntroDto): Promise<ResponseIntroDto> => {
   const { data } = await axiosInstance.post('/api/members/intros', {
+    intro,
+  });
+
+  return data;
+};
+
+// 회원 한줄 소개 수정
+export const patchIntro = async ({ intro }: RequestIntroDto): Promise<ResponseIntroDto> => {
+  const { data } = await axiosInstance.patch('/api/members/intros', {
     intro,
   });
 
@@ -116,6 +126,13 @@ export const postNotifications = async ({
   prompter_id,
 }: RequestNotificationsDto): Promise<ResponseNotificationsDto> => {
   const { data } = await axiosInstance.post(`/api/notifications/${prompter_id}`);
+
+  return data;
+};
+
+// 프롬프터 알림 구독 여부 조회
+export const getNofity = async ({ prompter_id }: RequestNotificationsDto): Promise<ResponseIsNotifyDto> => {
+  const { data } = await axiosInstance.get(`/api/notifications/status/${prompter_id}`);
 
   return data;
 };

@@ -72,8 +72,8 @@ const PromptGuideDetailPage = ({ type }: PromptGuideDetailPageProps) => {
             title: fetched_data.title,
             content: fetched_data.content,
 
-            create_at: fetched_data.created_at.slice(0, 10),
-            update_at: fetched_data.updated_at.slice(0, 10),
+            create_at: fetched_data.created_at.slice(0, 10).replace(/-/g, '.'),
+            update_at: fetched_data.updated_at.slice(0, 10).replace(/-/g, '.'),
             is_visible: fetched_data.is_visible,
             file_url: fetched_data.file_url,
           };
@@ -89,8 +89,8 @@ const PromptGuideDetailPage = ({ type }: PromptGuideDetailPageProps) => {
             title: fetched_data.title,
             content: fetched_data.content,
 
-            create_at: fetched_data.created_at.slice(0, 10),
-            update_at: fetched_data.updated_at.slice(0, 10),
+            create_at: fetched_data.created_at.slice(0, 10).replace(/-/g, '.'),
+            update_at: fetched_data.updated_at.slice(0, 10).replace(/-/g, '.'),
             is_visible: fetched_data.is_visible,
             file_url: fetched_data.file_url,
           };
@@ -186,9 +186,8 @@ const PromptGuideDetailPage = ({ type }: PromptGuideDetailPageProps) => {
             {/* 본문 */}
             <div className="w-full max-w-[994px] h-[385px] flex justify-center overflow-y-auto prose prose-neutral text-base">
               <div className="w-[864px] border-b-[1px] border-white-stroke font-medium text-[20px] text-text-on-white py-[30px]">
-                {post.content}
+                <ReactMarkdown>{post.content}</ReactMarkdown>
               </div>
-              {/**추후 다시 markdown 적용해보기... */}
             </div>
 
             {/**하단 */}
@@ -234,7 +233,9 @@ const PromptGuideDetailPage = ({ type }: PromptGuideDetailPageProps) => {
             </div>
             {/*본문 */}
             <div className="w-full max-w-[280px] h-full min-h-[275px] border-b-[0.5px] border-white-stroke p-[20px] ">
-              <div className="text-[10px] text-text-on-white font-medium">{post.content}</div>
+              <div className="text-[10px] text-text-on-white font-medium">
+                <ReactMarkdown>{post.content}</ReactMarkdown>
+              </div>
             </div>
             {/*하단  */}
             <div className="w-full max-w-[280px] h-[64px] flex justify-center">

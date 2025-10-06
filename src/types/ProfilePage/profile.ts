@@ -11,9 +11,11 @@ export type ResponseMemberDto = CommonResponse<{
   name: string;
   nickname: string;
   intros: string;
+  profile_image: null | string;
   created_at: string;
   updated_at: string;
   status: number;
+  role: string;
 }>;
 
 // 회원 팔로워, 팔로잉 목록
@@ -147,4 +149,11 @@ export type ResponseNotificationsDto = CommonResponse<{
   subscribed: boolean;
   user_id: number;
   prompter_id: number;
+}>;
+
+// 프롬프터 구독 여부 조회
+export type ResponseIsNotifyDto = CommonResponse<{
+  user_id: number;
+  prompter_id: number;
+  subscribed: boolean;
 }>;

@@ -4,6 +4,9 @@ import CloseIcon from '@assets/icon-close.svg';
 import { useMemo, useState } from 'react';
 import KakaoPayIcon from '../assets/kakaopay.svg';
 import TossPayIcon from '../assets/tosspay.svg';
+import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEY } from '@/hooks/queries/MyPage/useGetPrompts';
+import { getPromptDownload } from '@/apis/PromptDetailPage/promptDownload';
 
 interface DownloadModalProps {
   isOpen: boolean;
@@ -21,38 +24,43 @@ interface DownloadModalProps {
 
 const DownloadModal = ({ isOpen, onClose, title, content, price, isFree, isPaid, onPaid }: DownloadModalProps) => {
   const isDesktop = useMemo(() => typeof window !== 'undefined' && window.innerWidth >= 1024, []);
+  const qc = useQueryClient();
 
   const [step, setStep] = useState<'init' | 'copied' | 'paid'>('init');
 
   if (!isOpen) return null;
 
   const handleCopy = async () => {
+    const textToCopy = content; // 서버에서 받아온 최신 content가 부모에서 내려옴
+
+    // 1) 복사
     try {
-      await navigator.clipboard.writeText(content);
+      await navigator.clipboard.writeText(textToCopy);
     } catch {
       const ta = document.createElement('textarea');
-      ta.value = content;
+      ta.value = textToCopy;
       document.body.appendChild(ta);
       ta.select();
       document.execCommand('copy');
       document.body.removeChild(ta);
     }
 
-    if (isDesktop) {
+    // 2) 목록 갱신 (무효화 + 강제 재조회)
+    try {
+      await qc.invalidateQueries({ queryKey: QUERY_KEY.downloadedPrompts });
+      await qc.refetchQueries({ queryKey: QUERY_KEY.downloadedPrompts });
+    } catch (e) {
+      console.error('다운로드 목록 갱신 실패:', e);
+    }
+
+    // 3) UX
+    if (isDesktop || isFree || isPaid) {
       alert('복사되었습니다!');
       onClose();
       return;
     }
-
-    if (isFree || isPaid) {
-      alert('복사되었습니다!');
-      onClose();
-      return;
-    }
-
     setStep('copied');
   };
-
   const handlePay = () => {
     setStep('paid');
     onPaid();
@@ -64,7 +72,7 @@ const DownloadModal = ({ isOpen, onClose, title, content, price, isFree, isPaid,
     <div className="bg-overlay fixed inset-0 z-50 flex items-center justify-center bg-opacity-40">
       <div
         className={`
-          relative bg-white rounded-[16px] shadow-lg overflow-y-auto max-lg:overflow-hidden text-[#121212]
+          relative bg-white rounded-[16px] shadow-lg overflow-y-auto max-lg:overflow-y-auto text-[#121212]
           w-[1056px] h-[745px] px-[64px] py-[48px]  max-lg:px-[20px]  max-lg:py-[20px]
     max-lg:w-[280px] 
           ${step === 'paid' ? 'max-lg:h-[100px]' : 'max-lg:h-[334px]'}

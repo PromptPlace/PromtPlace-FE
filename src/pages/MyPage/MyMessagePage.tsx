@@ -12,6 +12,7 @@ import { NotificationTableList, NotificationPagination, MobileNotification } fro
 
 import { LuChevronDown } from 'react-icons/lu';
 import { axiosInstance } from '@/apis/axios';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 interface MyMessagePageProps {
   type: 'message' | 'notification';
@@ -38,6 +39,8 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [notice, setNotice] = useState<Notification[]>([]);
   const navigate = useNavigate();
+
+  const { getItem } = useLocalStorage('user');
 
   const handleTypeChange = (nextType: 'message' | 'notification') => {
     if (nextType !== type) {
@@ -68,7 +71,12 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
             is_read: item.is_read,
           }));
 
-          setMessages(mapped);
+          // 혹시 모를 message_id 중복을 방어하는 코드
+          const uniqueMessages = mapped.filter(
+            (message, index, self) => index === self.findIndex((m) => m.message_id === message.message_id),
+          );
+
+          setMessages(uniqueMessages);
         } else if (type === 'notification') {
           const base = import.meta.env.VITE_SERVER_API_URL;
           const res = await axiosInstance.get(`${base}/api/notifications/me`, {
@@ -85,9 +93,10 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
 
             if (link) {
               if (link.includes('/inquires/') || link.includes('/inquiries/')) {
+                const User_data = getItem();
                 // 두 경우 모두 처리 (백엔드 수정 전까지 임시)
                 //inquiries가 맞음 (원래는)
-                link = '/mypage';
+                link = `/profile/${User_data.user_id}`;
               } else if (link.includes('/announcements/')) {
                 console.log(`${index}번째: announcements 변환`);
                 const segs = link.split('/').filter(Boolean);
@@ -190,6 +199,24 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
     }
   };
 
+  // 바깥 누르면 닫히게
+  useEffect(() => {
+    if (!openType) return;
+
+    function handleClickOutside(event: MouseEvent) {
+      const target = event.target as Node;
+      if (ref.current && !ref.current.contains(target)) {
+        setOpenType(false);
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [openType]);
+
   return (
     <>
       <div className="hidden lg:block">
@@ -223,6 +250,8 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
           <div className="flex flex-col justify-center items-center">
             {type === 'message' ? (
               <>
+                {console.log(messages)}
+
                 <MessageTableList
                   data={pageMessageData}
                   handleMessageRowClick={handleMessageRowClick}
@@ -250,6 +279,7 @@ const MyMessagePage = ({ type }: MyMessagePageProps) => {
           </div>
         </div>
       </div>
+
       {/*모바일 화면 */}
       <div className="lg:hidden block">
         <div className="w-full flex justify-center">

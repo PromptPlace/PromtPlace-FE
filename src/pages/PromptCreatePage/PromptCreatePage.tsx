@@ -66,6 +66,9 @@ const PromptCreatePage = () => {
     //이미지 개수 확인
     const isValidImg = files.length === 0 || files.length <= 3;
 
+    // 미리보기는 이미지나, 텍스트만 허용
+    const hasPreview = previewText.trim() !== '' || files.length > 0;
+
     const valid = !!(
       title.trim() !== '' &&
       content.trim() !== '' &&
@@ -73,7 +76,7 @@ const PromptCreatePage = () => {
       priceType &&
       isValidCost &&
       isValidTags &&
-      previewText.trim() !== '' &&
+      hasPreview &&
       isValidImg &&
       discriptionText.trim() !== ''
     );
@@ -88,8 +91,8 @@ const PromptCreatePage = () => {
       } else if (selectedModels.length === 0) {
         setModalText('모델을 설정해주세요.');
       } else if (!isValidCost || !priceType) {
-        setModalText('금액을 설정해주세요.');
-      } else if (previewText.trim() === '') {
+        setModalText('가격을 설정해주세요.');
+      } else if (previewText.trim() === '' && files.length === 0) {
         setModalText('프롬프트 미리보기를 입력해주세요.');
       } else if (discriptionText.trim() === '') {
         setModalText('프롬프트 설명을 입력해주세요.');
@@ -223,7 +226,7 @@ const PromptCreatePage = () => {
       setModalText('업로드가 완료되었습니다.');
       setTimeout(() => {
         navigate(`/prompt/${prompt_ID}`);
-      }, 2000);
+      }, 1000);
     } catch (err) {
       console.error(err);
       setModalText('업로드가 실패했습니다.');

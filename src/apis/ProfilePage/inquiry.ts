@@ -3,6 +3,7 @@ import type {
   RequestGetInquiriesDto,
   RequestInquiriesDto,
   RequestReplyInquiriesDto,
+  ResponseDeleteInquiryDto,
   ResponseGetDetailInquiriesDto,
   ResponseGetInquiriesDto,
   ResponseInquiriesDto,
@@ -57,6 +58,15 @@ export const patchReadInquiries = async ({
   inquiry_id,
 }: RequestGetDetailInquiriesDto): Promise<ResponseReadInquiriesDto> => {
   const { data } = await axiosInstance.patch(`/api/inquiries/${inquiry_id}/read`);
+
+  return data;
+};
+
+// 문의 삭제
+export const deleteInquiries = async ({
+  inquiry_id,
+}: RequestGetDetailInquiriesDto): Promise<ResponseDeleteInquiryDto> => {
+  const { data } = await axiosInstance.delete(`/api/inquiries/${inquiry_id}`);
 
   return data;
 };

@@ -327,6 +327,7 @@ const MyPromptPage = () => {
   const { data: downloadedPromptsData } = useGetDownloadedPrompts({
     enabled: activeTab === 'downloaded',
   });
+  console.log('다운로드한 프롬프트 데이터:', downloadedPromptsData);
 
   const { data: likedPromptsData } = useGetLikedPrompts({
     enabled: activeTab === 'liked',
@@ -383,7 +384,7 @@ const MyPromptPage = () => {
           <img
             src={BlueArchiveIcon}
             alt="BlueArchiveIcon"
-            className="w-[24px] max-lg:w-[20px] h-[24px] max-lg:h-[20px]"
+            className="w-[30px] max-lg:w-[18px] h-[30px] max-lg:h-[18px]"
           />
           <h1 className="text-[32px] max-lg:text-[20px] text-primary-hover font-bold">내 프롬프트</h1>
         </div>
@@ -397,21 +398,31 @@ const MyPromptPage = () => {
             onSelect={(value) => setActiveTab(value as 'authored' | 'downloaded' | 'liked')}
           />
         </div>
-        <div className=" bg-white">
-          <div className="mr-[8px] overflow-y-auto overflow-x-hidden max-h-[368px]">
-            {promptsToDisplay.map((prompt) => (
-              <PromptCard
-                key={prompt.prompt_id}
-                type={activeTab}
-                promptData={prompt}
-                DeletePrompt={() => handleDeleteAuthoredPrompts({ prompt_id: prompt.prompt_id })}
-                EditPrompt={() => EditAuthoredPrompt(prompt.prompt_id)}
-                DeleteLike={() => DeleteLikedPrompt(prompt.prompt_id)}
-              />
-            ))}
-            <div ref={ref} />
+        {promptsToDisplay.length > 0 ? (
+          <div className=" bg-white">
+            <div className="mr-[8px] overflow-y-auto overflow-x-hidden max-h-[368px] min-w-[1080px]">
+              {promptsToDisplay.map((prompt) => (
+                <PromptCard
+                  key={prompt.prompt_id}
+                  type={activeTab}
+                  promptData={prompt}
+                  DeletePrompt={() => handleDeleteAuthoredPrompts({ prompt_id: prompt.prompt_id })}
+                  EditPrompt={() => EditAuthoredPrompt(prompt.prompt_id)}
+                  DeleteLike={() => DeleteLikedPrompt(prompt.prompt_id)}
+                />
+              ))}
+              <div ref={ref} />
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex mt-[96px] max-lg:mt-[114px] justify-center text-text-on-background text-[24px] max-lg:text-[12px] font-medium">
+            {activeTab === 'authored'
+              ? '작성한 프롬프트가 없습니다'
+              : activeTab === 'downloaded'
+                ? '다운받은 프롬프트가 없습니다'
+                : '찜한 프롬프트가 없습니다'}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ export interface User {
   nickname: string;
   email: string;
   social_type: 'GOOGLE' | 'NAVER' | 'KAKAO';
-  status: 'ACTIVE' | 'INACTIVE';
+  status: boolean;
   role: 'USER' | 'ADMIN';
   create_at: string;
   updated_at: string;

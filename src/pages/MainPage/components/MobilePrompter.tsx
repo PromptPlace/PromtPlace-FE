@@ -38,6 +38,10 @@ const MobilePrompter = ({ prompter }: MobilePrompterProps) => {
     }
   };
 
+  // 실제 데이터에서 profileImage로 들어오는 경우 처리
+  const prompterData = prompter as typeof prompter & { profileImage?: { url: string } };
+  const profileImageUrl = prompterData.profileImage?.url || prompter.profileimg?.url || userImage;
+
   return (
     <div className="w-full h-12 py-1.5 flex justify-between items-center bg-[#F5F5F5]">
       {loginModalShow && (
@@ -45,13 +49,26 @@ const MobilePrompter = ({ prompter }: MobilePrompterProps) => {
       )}
       <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate(`/profile/${prompter.user_id}`)}>
         <div className="w-[36px] h-[36px] rounded-full bg-gray-200 flex justify-center items-center">
-          <img src={prompter.profile_img_url ?? userImage} alt="authorImage" className="w-full h-full rounded-full" />
+          <img
+            src={profileImageUrl}
+            alt="authorImage"
+            className="w-full h-full rounded-full object-cover"
+            onError={(e) => {
+              console.log('이미지 로드 실패:', profileImageUrl);
+              e.currentTarget.src = userImage;
+            }}
+            onLoad={() => {
+              console.log('이미지 로드 성공:', profileImageUrl);
+            }}
+          />
         </div>
-        <div className="max-w-44 text-black text-Black text-xs font-medium font-['Spoqa_Han_Sans_Neo'] uppercase leading-relaxed tracking-wide truncate ">
+        <div className="max-w-44 text-black text-Black text-xs font-medium font-['Spoqa_Han_Sans_Neo'] leading-relaxed tracking-wide truncate ">
           {data?.data.nickname || prompter.nickname}
         </div>
       </div>
-      <FollowButton follow={isFollow} onClick={handleFollow} size="sm" type="button" />
+      {prompter.user_id !== user.user_id && (
+        <FollowButton follow={isFollow} onClick={handleFollow} size="sm" type="button" />
+      )}
     </div>
   );
 };

@@ -106,7 +106,7 @@ const CreateModal = ({ isOpen, onClose, title, promptId, onSuccess }: CreateModa
 
             {/* 바텀시트 */}
             <motion.div
-              className="lg:hidden fixed bottom-0 left-0 w-full h-[276px] bg-white rounded-t-[24px] 
+              className="lg:hidden fixed bottom-[63px] left-0 w-full h-[276px] bg-white rounded-t-[24px] 
                          shadow-[0_-4px_12px_rgba(0,0,0,0.1)] p-[20px] pt-0 z-50"
               initial={{ y: '100%' }}
               animate={{ y: 0 }}

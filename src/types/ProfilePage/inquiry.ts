@@ -77,3 +77,10 @@ export type ResponseReadInquiriesDto = CommonResponse<{
   status: string;
   updated_at: string;
 }>;
+
+// 문의 삭제
+export type ResponseDeleteInquiryDto = {
+  error: string;
+  message: string;
+  statusCode: number;
+};
