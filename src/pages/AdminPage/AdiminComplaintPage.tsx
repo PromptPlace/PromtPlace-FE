@@ -1,6 +1,8 @@
 import ComplaintCard from './components/ComplaintCard';
 import { useState } from 'react';
 import Pagination from './components/Pagination';
+import { useComplaintsInfiniteQuery } from '@/hooks/queries/AdminPage/useGetComplaints';
+import { useEffect } from 'react';
 
 /**
  * TODO:
@@ -74,20 +76,28 @@ const dummyData = [
 const AdminComplaintPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useComplaintsInfiniteQuery();
+
+  //임시방편
+  useEffect(() => {
+    const loadedPages = data?.pages.length || 0;
+    if (currentPage > loadedPages && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [currentPage, data, hasNextPage, fetchNextPage, isFetchingNextPage]);
+
+  const currentReports = data?.pages?.[currentPage - 1]?.data?.reports || [];
+  const totalPages = hasNextPage ? currentPage + 1 : data?.pages.length;
 
   return (
     <div className="w-[1236px]  mx-auto pt-[102px]">
       <div className="text-[32px] font-bold text-alert mb-[72px]">신고함</div>
-      {dummyData.map((complaint) => (
+      {currentReports.map((complaint) => (
         <ComplaintCard key={complaint.report_id} complaint={complaint} />
       ))}
 
       <footer className="mt-[97px]">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={Math.ceil(dummyData.length / itemsPerPage)}
-          onPageChange={setCurrentPage}
-        />
+        <Pagination currentPage={currentPage} totalPages={totalPages || 1} onPageChange={setCurrentPage} />
       </footer>
     </div>
   );
