@@ -6,6 +6,7 @@ import AdminCancleIcon from '@assets/icon-cancle-admin.svg';
 import { useAuth } from '@/context/AuthContext';
 import DualModal from '@/components/Modal/DualModal';
 import TextModal from '@/components/Modal/TextModal';
+import useDeleteHistoriesAdmin from '@/hooks/mutations/ProfilePage/useDeleteHistoriesAdmin';
 
 interface RecordCardProps {
   history_id: number;
@@ -31,6 +32,9 @@ const RecordCard = ({
   const [showAdminConfirmModal, setShowAdminConfirmModal] = useState(false);
 
   const { user } = useAuth();
+
+  // 회원 이력 삭제
+  const { mutate: mutateDeleteHistoriesAdmin } = useDeleteHistoriesAdmin({ member_id: user.user_id });
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && input.trim()) {
@@ -100,6 +104,7 @@ const RecordCard = ({
           onClickYes={() => {
             setShowAdminModal(false);
             setShowAdminConfirmModal(true);
+            mutateDeleteHistoriesAdmin({ history_id });
           }}
           onClickNo={() => {
             setShowAdminModal(false);
