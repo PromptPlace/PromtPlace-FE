@@ -1,5 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import back from '@/assets/icon-arrow-left-black.svg';
+import useGetComplaintDetail from '@/hooks/queries/AdminPage/useGetComplaintDetail';
 
 interface ComplaintDetail {
   report_id: number;
@@ -19,7 +20,7 @@ interface ComplaintDetailPageProps {
 }
 
 //더미데이터
-const complaintDetail: ComplaintDetail = {
+const dummyComplaintDetail: ComplaintDetail = {
   report_id: 56,
   prompt_id: 2065,
   prompt_title: '프롬프트 제목프롬프트 제목프프롬프트 제목',
@@ -35,6 +36,10 @@ const complaintDetail: ComplaintDetail = {
 
 const AdminComplaintDetailPage = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const numericReportId = Number(id || 0);
+  const { data, isLoading, isError } = useGetComplaintDetail(numericReportId);
+  const complaintDetail = data?.data;
   return (
     <div className="w-[994px]  mx-auto mt-[39px] bg-white ">
       <div className="flex items-center gap-[10px] pl-[20px] pt-[55px]">
@@ -46,24 +51,24 @@ const AdminComplaintDetailPage = () => {
 
       <main>
         <section className="py-[30px] border-b-[1px] border-white-stroke">
-          <h1 className="text-[32px] font-bold px-[65px]">{complaintDetail.prompt_title}</h1>
+          <h1 className="text-[32px] font-bold px-[65px]">{complaintDetail?.prompt_title}</h1>
           <div className="flex flex-col text-[20px] font-medium text-text-on-background gap-[19px] px-[65px]">
             <div className="flex gap-[94px] py-[9px]">
-              <p>{complaintDetail.created_at}</p>
-              <p>{complaintDetail.reporter_nickname}:</p>
+              <p>{complaintDetail?.created_at}</p>
+              <p>{complaintDetail?.reporter_nickname}:</p>
             </div>
             <p>사유:</p>
           </div>
         </section>
         <section className="py-[30px] border-b-[1px] border-white-stroke  h-[425px] overflow-y-auto   mx-[65px]">
-          {complaintDetail.description}
+          {complaintDetail?.description}
         </section>
       </main>
 
       <footer className="py-[40px] pl-[65px]">
         <button
           className="px-[20px] py-[10px] border-[1px] border-alert rounded-[10px] text-[20px] font-medium text-alert"
-          onClick={() => navigate('/prompt/' + complaintDetail.prompt_id)}>
+          onClick={() => navigate('/prompt/' + complaintDetail?.prompt_id)}>
           이동
         </button>
       </footer>
