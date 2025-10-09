@@ -154,6 +154,25 @@ const TestPage = () => {
       <h3>🟣 SocialLoginModal.tsx</h3>
       <button onClick={() => setShowModal5(true)}>모달5 보기 click</button>
       {showModal5 && <SocialLoginModal isOpen={showModal5} onClose={() => setShowModal5(false)} onClick={() => {}} />}
+
+      <div>
+        <p className="custom-h1">H1(큰 타이틀)</p>
+        <p className="custom-h2">H2(주요 구역 큰 제목)</p>
+        <p className="custom-h3">H3(주요 구역 소 제목)</p>
+        <p className="custom-h4">H4(모달 큰 제목)</p>
+        <p className="custom-h5">H5(모달 소 제목)</p>
+
+        <p className="custom-body1">Body1(본문)</p>
+        <p className="custom-body2">Body2(카드 내 본문)</p>
+        <p className="custom-body3">Body3(보조 설명)</p>
+
+        <p className="custom-button1">Button1(CTA)</p>
+        <p className="custom-button2">Button2(칩)</p>
+
+        <div className="bg-sub-gradient w-full">sub-gradient</div>
+
+        <div className="w-full lg:bg-primary max-lg:bg-gray400 max-phone:bg-alert">breakpoint</div>
+      </div>
     </div>
   );
 };
