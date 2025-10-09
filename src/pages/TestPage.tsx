@@ -168,6 +168,8 @@ const TestPage = () => {
 
         <p className="custom-button1">Button1(CTA)</p>
         <p className="custom-button2">Button2(칩)</p>
+
+        <div className="bg-sub-gradient w-full">sub-gradient</div>
       </div>
     </div>
   );

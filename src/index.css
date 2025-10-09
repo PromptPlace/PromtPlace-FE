@@ -33,7 +33,10 @@
   --color-overlay: rgba(18, 18, 18, 0.4);
   --color-overlay-coach-mark: rgba(18, 18, 18, 0.75);
   --color-rating-active: #ffb400;
-  --color-alert: #e90000;
+  --color-alert: #f87171;
+
+  --color-sub1: #94d2ff;
+  --color-sub2: #6198ff;
 
   --color-gray50: #f9fafb;
   --color-gray100: #f3f4f6;
@@ -53,6 +56,7 @@
     var(--white, #fffefb) 15.18%,
     rgba(255, 254, 251, 0) 100%
   );
+  --background-image-sub-gradient: linear-gradient(249deg, #94d2ff 15.06%, #6198ff 126.87%);
 
   --shadow-button: 0px 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-button-hover: 0px 4px 8px rgba(0, 0, 0, 0.12);
