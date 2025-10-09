@@ -47,15 +47,29 @@
   --color-primary-blue: #55bbff;
   --color-secondary: #f0f7ff;
   --color-secondary-pressed: #c9e2ff;
+
   --color-white: #fffefb;
+  --color-black: #030712;
   --color-text-on-white: #121212;
   --color-white-stroke: #cccccc;
-  --color-background: #f5f5f5;
+  --color-background: #f3f4f6;
   --color-text-on-background: #999898;
   --color-overlay: rgba(18, 18, 18, 0.4);
   --color-overlay-coach-mark: rgba(18, 18, 18, 0.75);
   --color-rating-active: #ffb400;
   --color-alert: #e90000;
+
+  --color-gray50: #f9fafb;
+  --color-gray100: #f3f4f6;
+  --color-gray200: #e5e7eb;
+  --color-gray300: #d1d5db;
+  --color-gray400: #9ca3af;
+  --color-gray500: #6b7280;
+  --color-gray600: #4b5563;
+  --color-gray700: #374151;
+  --color-gray800: #1f2937;
+  --color-gray900: #111827;
+  --color-gray950: #030712;
 
   --background-image-primary-gradient: linear-gradient(207deg, #2979ff 17.05%, #5bf 107.21%);
   --background-image-notfound-gradient: linear-gradient(
