@@ -1,41 +1,17 @@
 @import 'tailwindcss';
 
 @font-face {
-  font-family: 'SpoqaHanSansNeo';
-  src: url('/fonts/SpoqaHanSansNeo-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'SpoqaHanSansNeo';
-  src: url('/fonts/SpoqaHanSansNeo-Medium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'SpoqaHanSansNeo';
-  src: url('/fonts/SpoqaHanSansNeo-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'SpoqaHanSansNeo';
-  src: url('/fonts/SpoqaHanSansNeo-Light.woff2') format('woff2');
+  font-family: 'SCoreDream';
+  src: url('/fonts/SCDream3-Light.otf') format('opentype');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'SpoqaHanSansNeo';
-  src: url('/fonts/SpoqaHanSansNeo-Thin.woff2') format('woff2');
-  font-weight: 100;
+  font-family: 'SCoreDream';
+  src: url('/fonts/SCDream5-Medium.otf') format('opentype');
+  font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
@@ -91,7 +67,7 @@
 @layer base {
   html,
   body {
-    font-family: 'SpoqaHanSansNeo';
+    font-family: 'SCoreDream';
     background-color: #f5f5f5;
     box-sizing: border-box;
   }
