@@ -170,6 +170,8 @@ const TestPage = () => {
         <p className="custom-button2">Button2(칩)</p>
 
         <div className="bg-sub-gradient w-full">sub-gradient</div>
+
+        <div className="w-full lg:bg-primary max-lg:bg-gray400 max-phone:bg-alert">breakpoint</div>
       </div>
     </div>
   );
