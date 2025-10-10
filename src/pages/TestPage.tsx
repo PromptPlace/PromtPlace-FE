@@ -13,6 +13,7 @@ import FollowButton from '@components/Button/FollowButton';
 import CircleButton from '@components/Button/CircleButton';
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
 import MobileButton from '@components/Button/MobileButton';
+import BackgroundButton from '@/components/Button/BackgroundButton';
 
 const TestPage = () => {
   const [tags, setTags] = useState<string[]>(['#스타트업', '#수채화', '#이미지', '#그림', '#누르면삭제']);
@@ -104,6 +105,10 @@ const TestPage = () => {
       <MobileButton text="선택 완료하기" />
       <MobileButton text="작성 완료하기" />
       <MobileButton text="변경하기" />
+
+      <h3>🔹 BackgroundButton.tsx</h3>
+      <BackgroundButton background="secondary" text="로그인" onClick={() => {}} />
+      <BackgroundButton background="primary" text="회원가입" onClick={() => {}} />
 
       <h3>🔶 Rating.tsx</h3>
       <Rating star={5} />
