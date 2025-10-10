@@ -1,20 +1,26 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 
+import { useAuth } from '@/context/AuthContext';
+import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
+
 import LogoIcon from '@assets/logo/text/text-logo-default.svg';
 import AppLogoIcon from '@assets/logo/app/app-logo-default.svg';
 import ArrowIcon from '@assets/header/icon-arrow_fill.svg';
+import NotificationIcon from '@assets/header/icon-notification.svg';
+import MessageIcon from '@assets/header/icon-message.svg';
+import UserIcon from '@assets/header/mypage.svg';
 
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
-import BackgroundButton from './Button/BackgroundButton';
+import BackgroundButton from '@components/Button/BackgroundButton';
 
 const Navbar = () => {
-  const navigate = useNavigate();
-  // const { accessToken, user } = useAuth();
-
   const [loginModalShow, setLoginModalShow] = useState(false);
 
-  // const { data } = useGetMember({ member_id: user.user_id });
+  const navigate = useNavigate();
+
+  const { accessToken, user } = useAuth();
+  const { data } = useGetMember({ member_id: user.user_id });
 
   const LINKS = [
     { to: '/', label: '홈' },
@@ -41,22 +47,54 @@ const Navbar = () => {
             className="cursor-pointer w-[48px] lg:hidden"
           />
 
-          <div className="flex gap-[24px]">
-            <BackgroundButton
-              background="secondary"
-              text="로그인"
-              onClick={() => {
-                setLoginModalShow(true);
-              }}
-            />
-            <BackgroundButton
-              background="primary"
-              text="회원가입"
-              onClick={() => {
-                alert('회원가입 연결 예정');
-              }}
-            />
-          </div>
+          {!accessToken && (
+            <div className="flex gap-[24px]">
+              <BackgroundButton
+                background="secondary"
+                text="로그인"
+                onClick={() => {
+                  setLoginModalShow(true);
+                }}
+              />
+              <BackgroundButton
+                background="primary"
+                text="회원가입"
+                onClick={() => {
+                  alert('회원가입 연결 예정');
+                }}
+              />
+            </div>
+          )}
+
+          {accessToken && (
+            <div className="flex gap-[26px] items-center cursor-pointer">
+              <BackgroundButton
+                background="secondary"
+                text="프롬프트 올리기"
+                onClick={() => {
+                  navigate('/create');
+                }}
+              />
+              <img
+                src={NotificationIcon}
+                alt="알림"
+                className="self-center"
+                onClick={() => navigate('/mypage/message/notification')}
+              />
+              <img
+                src={MessageIcon}
+                alt="메세지 알림"
+                className="self-center"
+                onClick={() => navigate('/mypage/message/message')}
+              />
+              <img
+                src={data?.data.profile_image || UserIcon}
+                alt="프로필 이미지"
+                className="w-[40px] object-cover self-center"
+                onClick={() => navigate(`/profile/${user.user_id}`)}
+              />
+            </div>
+          )}
         </div>
 
         <div className="px-[102px] max-lg:px-[20px] py-[16px] flex justify-between items-center custom-h3 text-black whitespace-nowrap">
@@ -74,7 +112,8 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center">
-            <p className="px-[8px]">AI 바로가기</p>
+            <p className="px-[8px] max-lg:hidden">AI 바로가기</p>
+            <p className="px-[8px] lg:hidden">AI</p>
             <img src={ArrowIcon} alt="메뉴 버튼" className="cursor-pointer self-center" />
           </div>
         </div>
