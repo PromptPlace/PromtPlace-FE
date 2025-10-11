@@ -61,6 +61,7 @@ const primaryButtonTheme = {
       'rounded-[50px] px-[9px] max-lg:px-[7px] py-[4px] hover:shadow-none max-lg:rounded-[24px] max-lg:border-[0.5px] max-lg:h-[17px] max-lg:py-[2px] max-lg:max-w-[58px] max-lg:w-full max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px]',
     plus: 'rounded-[50px] px-[53px] max-lg:px-[20px] text-[32px] max-lg:text-[16px] font-bold leading-[40px] max-lg:leading-[18px] text-base leading-[26px]',
     change: 'rounded-[50px] px-[10px] py-[5px] text-[14px] leading-[18px] text-base leading-[26px]',
+    full: 'w-full custom-h4 border-none px-[20px]! py-[20px]! max-w-[544px] w-full rounded-[12px]',
   },
 };
 
@@ -83,16 +84,16 @@ const PrimaryButton = ({
       onClick={onClick}
       type={type}
       className={clsx(
-        'flex items-center justify-center shadow-button hover:shadow-button-hover bg-white transition-all ease-in-out duration-300',
+        'flex items-center justify-center shadow-button hover:shadow-button-hover transition-all ease-in-out duration-300',
         isReviewDelete ? 'border-alert text-alert! text-sm leading-[18px]' : 'border-primary ',
         text === '프롬프트 더 보기' ? 'border-none' : 'border',
         buttonType === 'square' ? `custom-h4` : 'font-normal tracking-[0.46px]',
         textSize === 12 && 'custom-button2 max-lg:text-[12px] rounded-[8px]',
         textSize === 18 && 'custom-h4 bg-sub2! max-w-[260px] w-full border-none',
         disable && 'border-gray400! text-gray400! bg-gray300! hover:bg-gray300! active:bg-gray300! cursor-not-allowed',
-        textColor === 'white' && 'bg-primary! text-white',
+        textColor === 'white' && 'bg-primary text-white',
         textColor === 'primary' &&
-          'bg-whtie text-primary hover:border-primary-hover active:border-primary-pressed text-primary hover:text-primary-hover active:text-primary-pressed active:bg-secondary',
+          'bg-white text-primary hover:border-primary-hover active:border-primary-pressed text-primary hover:text-primary-hover active:text-primary-pressed active:bg-secondary',
         textColor === 'gray' && 'bg-white text-gray400! border-gray400!',
         primaryButtonTheme.buttonType[buttonType],
       )}

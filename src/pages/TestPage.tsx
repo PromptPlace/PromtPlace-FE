@@ -39,6 +39,8 @@ const TestPage = () => {
         onClick={() => alert('로그인 / 회원가입 버튼')}
         type="button"
       />
+      <PrimaryButton buttonType="full" text="로그인하기" textColor="white" onClick={() => {}} />
+      <PrimaryButton buttonType="full" text="로그인하기" textColor="white" disable={true} onClick={() => {}} />
       <PrimaryButton buttonType="tip" text="프롬프트 TIP" onClick={() => {}} />
       <PrimaryButton buttonType="square" text="내역보기" onClick={() => {}} />
       <PrimaryButton buttonType="square" text="로그아웃" onClick={() => {}} />
