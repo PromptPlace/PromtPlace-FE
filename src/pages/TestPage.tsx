@@ -116,7 +116,8 @@ const TestPage = () => {
       <IconButton buttonType="round" style="fill" imgType="none" textButton="blue" text="아니오" onClick={() => {}} />
       <IconButton buttonType="squareMd" style="fill" imgType="list" text="목록" onClick={() => {}} />
       <IconButton buttonType="squareMd" style="outline" imgType="attach" text="첨부" onClick={() => {}} />
-      <IconButton buttonType="squareBig" style="fill" imgType="download" text="다운로드" onClick={() => {}} />
+      <IconButton buttonType="squareBig" style="fill" imgType="download" text="프롬프트 구매하기" onClick={() => {}} />
+      <IconButton buttonType="squareBig" style="fill" imgType="download" text="프롬프트 다운로드" onClick={() => {}} />
       <IconButton buttonType="squareMd" style="red" imgType="alert" text="프롬프트 신고하기" onClick={() => {}} />
       <IconButton buttonType="squareMd" style="red" imgType="alert" text="신고하기" onClick={() => {}} />
       <IconButton buttonType="squareMini" style="fill" imgType="upload" text="이미지 업로드" onClick={() => {}} />
