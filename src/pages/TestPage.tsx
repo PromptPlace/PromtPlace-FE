@@ -43,6 +43,11 @@ const TestPage = () => {
       <PrimaryButton buttonType="square" text="내역보기" onClick={() => {}} />
       <PrimaryButton buttonType="square" text="로그아웃" onClick={() => {}} />
       <PrimaryButton buttonType="square" text="탈퇴하기" onClick={() => {}} />
+      <PrimaryButton buttonType="square" text="임시 저장글 보러가기" onClick={() => {}} />
+      <PrimaryButton buttonType="square" text="임시 저장" onClick={() => {}} />
+      <PrimaryButton buttonType="square" text="더 많은 프롬프트" onClick={() => {}} />
+      <PrimaryButton buttonType="square" text="초기화" onClick={() => {}} />
+      <PrimaryButton buttonType="square" text="프롬프트 더 보기" onClick={() => {}} />
       <PrimaryButton buttonType="squareMini" text="완료" onClick={() => {}} />
       <PrimaryButton buttonType="squareMini" text="등록" onClick={() => {}} />
       <PrimaryButton buttonType="review" text="리뷰 작성하기" onClick={() => {}} />
