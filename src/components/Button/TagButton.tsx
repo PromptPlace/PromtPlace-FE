@@ -1,4 +1,4 @@
-import CancelIcon from '@assets/icon-cancel.svg?react';
+import CancelIcon from '@assets/modal/icon-cancel_primary-12px.svg?react';
 import clsx from 'clsx';
 
 import DocIcon from '@assets/modal/icon-category_doc.svg';
@@ -12,16 +12,16 @@ import AudioIcon from '@assets/modal/icon-category_audio.svg';
 import IdeaIcon from '@assets/modal/icon-category_idea.svg';
 
 /**
- * 태그가 달린 버튼에서 사용하는 버튼 컴포넌트입니다.
+ * 태그가 달린 버튼 및 카테고리에서 사용하는 버튼 컴포넌트입니다.
  *
  * @param {boolean} hasDelete -- 삭제 버튼 여부
  * 지우는 버튼이 있는 경우에는 true로 넘기면 됩니다.
  * @param {string} text -- 버튼 내용
+ * 버튼 내용에 맞게 이미지가 선택됩니다.
  * @param {function} onClick -- 버튼 클릭 시 실행될 함수
  *
  * @example
- * <TagButton hasDelete={false} text="#글쓰기" onClick={() => {}} />
- *
+ * <TagButton hasDelete={false} text="글쓰기•문서작성" onClick={() => {}} />
  *
  * @author 김진효
  * **/
@@ -74,15 +74,14 @@ const TagButton = ({ hasDelete, text, onClick }: TagButtonProps) => {
   return (
     <div
       className={clsx(
-        'py-[6px] px-[12px] flex justify-center items-center gap-[8px] rounded-[50px] whitespace-nowrap border border-text-on-background text-primary bg-secondary shrink-0 max-lg:shadow-button',
-        !hasDelete && 'custom-button2 max-lg:border-none',
-        hasDelete && 'shadow-button-hover max-lg:border max-lg:border-text-on-background',
+        'custom-button2 py-[6px] px-[12px] flex justify-center items-center gap-[8px] rounded-[50px] whitespace-nowrap text-primary bg-secondary shrink-0',
+        !hasDelete && 'max-lg:border-none',
       )}>
       {icon && <img src={icon} alt="이미지" />}
       {text}
       {hasDelete && (
-        <div className="cursor-pointer w-[12px] h-[12px]">
-          <CancelIcon onClick={onClick} className="w-full h-full text-text-on-background" />
+        <div className="cursor-pointer">
+          <CancelIcon onClick={onClick} className="w-full h-full text-primary" />
         </div>
       )}
     </div>

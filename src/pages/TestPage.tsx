@@ -16,7 +16,7 @@ import MobileButton from '@components/Button/MobileButton';
 import BackgroundButton from '@/components/Button/BackgroundButton';
 
 const TestPage = () => {
-  const [tags, setTags] = useState<string[]>(['#스타트업', '#수채화', '#이미지', '#그림', '#누르면삭제']);
+  const [tags, setTags] = useState<string[]>(['보고서•레포트', '일러스트', '숏폼 스크립트', '코드 자동화']);
 
   const handleDelete = (text: string) => {
     setTags(tags.filter((tag) => tag !== text));
@@ -57,6 +57,7 @@ const TestPage = () => {
 
       <h3>🔹 ModelButton.tsx</h3>
       <ModelButton text="ChatGPT" />
+      <ModelButton hasDelete={true} text="ChatGPT" onClick={() => {}} />
 
       <h3>🔹 IconButton.tsx</h3>
       <IconButton
