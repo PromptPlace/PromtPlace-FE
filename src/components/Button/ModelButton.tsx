@@ -14,11 +14,7 @@ interface ModelButtonProps {
 }
 
 const ModelButton = ({ text }: ModelButtonProps) => {
-  return (
-    <div className="bg-primary rounded-[50px] py-[5px] px-[15px] max-lg:px-[6px] text-white text-base max-lg:text-[8px] font-normal max-lg:font-medium leading-[20px] max-lg:leading-[10px]">
-      {text}
-    </div>
-  );
+  return <div className="custom-button1 bg-sub2 rounded-[1000px] py-[6px] px-[12px] text-white">{text}</div>;
 };
 
 export default ModelButton;
