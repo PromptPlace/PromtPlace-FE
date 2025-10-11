@@ -48,6 +48,46 @@ const TestPage = () => {
       <PrimaryButton buttonType="square" text="더 많은 프롬프트" onClick={() => {}} />
       <PrimaryButton buttonType="square" text="초기화" onClick={() => {}} />
       <PrimaryButton buttonType="square" text="프롬프트 더 보기" onClick={() => {}} />
+      <PrimaryButton buttonType="square" text="이미지 업로드" py={6} px={12} textSize={12} onClick={() => {}} />
+      <PrimaryButton
+        buttonType="square"
+        text="이미지 업로드"
+        py={6}
+        px={12}
+        textSize={12}
+        disable={true}
+        onClick={() => {}}
+      />
+      <PrimaryButton buttonType="square" text="인증번호 발송" py={6} px={12} textSize={12} onClick={() => {}} />
+      <PrimaryButton buttonType="square" text="인증 확인" py={6} px={12} textSize={12} onClick={() => {}} />
+      <PrimaryButton buttonType="square" text="재발송" py={6} px={12} textSize={12} onClick={() => {}} />
+      <PrimaryButton
+        buttonType="square"
+        text="02:54"
+        py={6}
+        px={12}
+        textSize={12}
+        textColor="gray"
+        onClick={() => {}}
+      />
+      <PrimaryButton
+        buttonType="square"
+        text="인증 완료"
+        py={6}
+        px={12}
+        textSize={12}
+        textColor="white"
+        onClick={() => {}}
+      />
+      <PrimaryButton
+        buttonType="square"
+        text="테스트 결과"
+        py={20}
+        px={20}
+        textSize={18}
+        textColor="white"
+        onClick={() => {}}
+      />
       <PrimaryButton buttonType="squareMini" text="완료" onClick={() => {}} />
       <PrimaryButton buttonType="squareMini" text="등록" onClick={() => {}} />
       <PrimaryButton buttonType="review" text="리뷰 작성하기" onClick={() => {}} />
