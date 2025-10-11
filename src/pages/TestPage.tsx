@@ -85,8 +85,16 @@ const TestPage = () => {
       <GradientButton buttonType="textButton" text="출금하기" onClick={() => {}} />
 
       <h3>🔹 TagButton.tsx</h3>
-      <TagButton hasDelete={false} text="#글쓰기" onClick={() => {}} />
-      <TagButton hasDelete={false} text="#일러스트" onClick={() => {}} />
+      <TagButton hasDelete={false} text="글쓰기•문서작성" onClick={() => {}} />
+      <TagButton hasDelete={false} text="이미지 생성" onClick={() => {}} />
+      <TagButton hasDelete={false} text="광고 영상 콘셉트" onClick={() => {}} />
+      <TagButton hasDelete={false} text="디버깅•리팩토링" onClick={() => {}} />
+      <TagButton hasDelete={false} text="SNS 콘텐츠 아이디어" onClick={() => {}} />
+      <TagButton hasDelete={false} text="문제 풀이" onClick={() => {}} />
+      <TagButton hasDelete={false} text="생활•엔터테인먼트" onClick={() => {}} />
+      <TagButton hasDelete={false} text="배경음악" onClick={() => {}} />
+      <TagButton hasDelete={false} text="브레인스토밍" onClick={() => {}} />
+
       <div className="flex gap-4">
         {tags.map((tag, idx) => (
           <TagButton key={idx} hasDelete={true} text={tag} onClick={() => handleDelete(tag)} />
