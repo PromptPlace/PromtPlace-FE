@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '@/context/AuthContext';
@@ -13,9 +13,14 @@ import UserIcon from '@assets/header/mypage.svg';
 
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
 import BackgroundButton from '@components/Button/BackgroundButton';
+import NavbarModal from './NavbarModal';
+import clsx from 'clsx';
 
 const Navbar = () => {
   const [loginModalShow, setLoginModalShow] = useState(false);
+  const [isNavModalShow, setIsNavModalShow] = useState(false);
+
+  const navRef = useRef<HTMLDivElement | null>(null);
 
   const navigate = useNavigate();
 
@@ -28,6 +33,17 @@ const Navbar = () => {
     { to: '/guide/tip', label: 'AI 꿀팁' },
     { to: '/guide/notice', label: '공지사항' },
   ];
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setIsNavModalShow(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
 
   return (
     <>
@@ -111,10 +127,26 @@ const Navbar = () => {
             ))}
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center" ref={navRef}>
             <p className="px-[8px] max-lg:hidden">AI 바로가기</p>
             <p className="px-[8px] lg:hidden">AI</p>
-            <img src={ArrowIcon} alt="메뉴 버튼" className="cursor-pointer self-center" />
+            <img
+              src={ArrowIcon}
+              alt="메뉴 버튼"
+              className={clsx(
+                'cursor-pointer self-center transition-all ease-in-out duration-500',
+                isNavModalShow ? '-rotate-180' : 'rotate - none',
+              )}
+              onClick={() => setIsNavModalShow((prev) => !prev)}
+            />
+
+            {isNavModalShow && (
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className="absolute right-[102px] max-lg:right-[20px] top-[140px] z-30">
+                <NavbarModal setIsNavModalShow={setIsNavModalShow} />
+              </div>
+            )}
           </div>
         </div>
       </nav>

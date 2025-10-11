@@ -1,6 +1,6 @@
 import { useAuth } from '@/context/AuthContext';
 import ScrollToTop from '@utils/scrollToTop';
-import Navbar from '@components/Navbar';
+import Navbar from '@/components/Navbar/Navbar';
 import { Suspense } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import TabBar from '@components/TabBar';
