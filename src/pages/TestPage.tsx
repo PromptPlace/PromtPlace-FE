@@ -81,6 +81,9 @@ const TestPage = () => {
       <IconButton buttonType="squareMd" style="red" imgType="alert" text="신고하기" onClick={() => {}} />
       <IconButton buttonType="squareMini" style="fill" imgType="upload" text="이미지 업로드" onClick={() => {}} />
       <IconButton buttonType="squareMini" style="fill" imgType="copy" text="복사하기" onClick={() => {}} />
+      <div className="w-full px-[100px]">
+        <IconButton buttonType="full" style="fill" imgType="upload" text="업로드 하기" onClick={() => {}} />
+      </div>
 
       <h3>🔹 GradientButton.tsx</h3>
       <GradientButton buttonType="imgButton" text="프롬프트 작성하기" onClick={() => {}} />
