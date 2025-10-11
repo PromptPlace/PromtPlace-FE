@@ -58,6 +58,7 @@ const TestPage = () => {
       <h3>🔹 ModelButton.tsx</h3>
       <ModelButton text="ChatGPT" />
       <ModelButton hasDelete={true} text="ChatGPT" onClick={() => {}} />
+      <ModelButton hasActive={true} text="ChatGPT" />
 
       <h3>🔹 IconButton.tsx</h3>
       <IconButton
@@ -95,6 +96,7 @@ const TestPage = () => {
       <TagButton hasDelete={false} text="생활•엔터테인먼트" onClick={() => {}} />
       <TagButton hasDelete={false} text="배경음악" onClick={() => {}} />
       <TagButton hasDelete={false} text="브레인스토밍" onClick={() => {}} />
+      <TagButton hasActive={true} text="브레인스토밍" onClick={() => {}} />
 
       <div className="flex gap-4">
         {tags.map((tag, idx) => (
