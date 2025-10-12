@@ -37,7 +37,7 @@ const FollowButton = ({ follow, onClick, size = 'sm', type = 'button' }: FollowB
       className={clsx(
         'rounded-[50px] transition-all duration-300 ease-in-out flex items-center justify-center max-lg:rounded-[25px]',
         size === 'sm' &&
-          'h-[28px] w-[77px] px-[10px] text-sm font-normal leading-[18px] max-lg:h-[18px] max-lg:w-[45px] max-lg:px-[8px] max-lg:text-[8px] max-lg:font-bold max-lg:leading-[10px] max-lg:py-[3px] max-lg:whitespace-nowrap',
+          'custom-button1 py-[6px] w-[77px] h-[33px] max-lg:h-[18px] max-lg:w-[45px] max-lg:px-[8px] max-lg:text-[8px] max-lg:font-bold max-lg:leading-[10px] max-lg:py-[3px] max-lg:whitespace-nowrap',
         size === 'lg' && 'h-[37px] w-[108px] px-[17px] py-[5px] text-[20px] font-bold leading-[25px]',
         !follow &&
           'bg-white py-[5px] border border-primary hover:border-primary-hover text-primary hover:text-primary-hover max-lg:border-[0.5px]',
