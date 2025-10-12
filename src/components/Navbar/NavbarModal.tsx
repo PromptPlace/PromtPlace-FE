@@ -16,31 +16,31 @@ interface NavbarModalProps {
 }
 
 const LanguageModels = [
-  { id: 1, label: 'ChatGPT', url: '/' },
-  { id: 2, label: 'Gemini', url: '/' },
-  { id: 3, label: 'Claude', url: '/' },
-  { id: 4, label: 'Perplexity', url: '/' },
-  { id: 5, label: 'Grok', url: '/' },
-  { id: 6, label: 'DeepSeek', url: '/' },
+  { id: 1, label: 'ChatGPT', url: 'https://chat.openai.com/' },
+  { id: 2, label: 'Gemini', url: 'https://gemini.google.com/' },
+  { id: 3, label: 'Claude', url: 'https://claude.ai/' },
+  { id: 4, label: 'Perplexity', url: 'https://www.perplexity.ai/' },
+  { id: 5, label: 'Grok', url: 'https://x.ai/' },
+  { id: 6, label: 'DeepSeek', url: 'https://www.deepseek.com/' },
 ];
 
 const ImageModels = [
   {
     id: 1,
     label: 'DALL-E',
-    url: '/',
+    url: 'https://openai.com/dall-e',
   },
-  { id: 2, label: 'Nano Banana', url: '/' },
-  { id: 3, label: 'Midjourney', url: '/' },
-  { id: 4, label: 'Stable Diffusion', url: '/' },
+  { id: 2, label: 'Nano Banana', url: 'https://nanobanana.io/' },
+  { id: 3, label: 'Midjourney', url: 'https://www.midjourney.com/' },
+  { id: 4, label: 'Stable Diffusion', url: 'https://stability.ai/' },
 ];
 
 const VideoModels = [
-  { id: 1, label: 'Kling AI', url: '/' },
-  { id: 2, label: 'Veo', url: '/' },
-  { id: 3, label: 'Sora', url: '/' },
-  { id: 4, label: 'Runway', url: '/' },
-  { id: 5, label: 'Luma Dream Machine', url: '/' },
+  { id: 1, label: 'Kling AI', url: 'https://klingai.com/' },
+  { id: 2, label: 'Veo', url: 'https://deepmind.google/technologies/veo' },
+  { id: 3, label: 'Sora', url: 'https://openai.com/sora' },
+  { id: 4, label: 'Runway', url: 'https://runwayml.com/' },
+  { id: 5, label: 'Luma Dream Machine', url: '' },
 ];
 
 const Sections = [

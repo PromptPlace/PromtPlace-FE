@@ -1,5 +1,4 @@
 import ArrowIcon from '@assets/header/icon-arrow_btn_start_18px.svg';
-import { useNavigate } from 'react-router-dom';
 
 /**
  * 네비게이션바의 AI 바로가기를 눌렀을 때 나오는 모달 중 모델의 각 버튼입니다.
@@ -21,19 +20,12 @@ interface NavbarButtonProps {
 }
 
 const NavbarButton = ({ text, url, setIsNavModalShow }: NavbarButtonProps) => {
-  const navigate = useNavigate();
-
-  const handleNavigate = (url: string) => {
-    setIsNavModalShow(false);
-
-    setTimeout(() => {
-      navigate(url);
-    }, 100);
-  };
-
   return (
     <button
-      onClick={() => handleNavigate(url)}
+      onClick={() => {
+        setIsNavModalShow(false);
+        window.open(url, '_blank');
+      }}
       className="py-[12px] pl-[24px] pr-[12px] flex justify-between items-center rounded-[24px] border border-gray200 bg-white w-full">
       <p className="truncate">{text}</p>
       <img src={ArrowIcon} alt="바로가기 버튼" className="self-center" />
