@@ -3,7 +3,6 @@ import ScrollToTop from '@utils/scrollToTop';
 import Navbar from '@/components/Navbar/Navbar';
 import { Suspense } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import TabBar from '@components/TabBar';
 
 const AdminLayout = () => {
   const { user } = useAuth();
@@ -21,9 +20,9 @@ const AdminLayout = () => {
         </Suspense>
       </div>
 
-      <div className="lg:hidden max-lg:block">
+      {/* <div className="lg:hidden max-lg:block">
         <TabBar />
-      </div>
+      </div> */}
     </>
   );
 };
