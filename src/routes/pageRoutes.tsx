@@ -22,6 +22,8 @@ export const publicRoutes: RouteObject[] = [
       { path: '/test', element: <TestPage /> },
       { path: 'mypage', element: <lazyRoutes.MyPage /> },
       { path: '/auth/callback', element: <lazyRoutes.SocialLoginCallbackPage /> },
+      // { path: 'guide/tip/create', element: <lazyRoutes.PromptGuideCreatePage type="tip" /> },
+      // { path: 'guide/notice/create', element: <lazyRoutes.PromptGuideCreatePage type="notice" /> },
     ],
   },
 ];
@@ -56,6 +58,8 @@ export const adminRoutes: RouteObject[] = [
     children: [
       //ex: { path: 'report', element: <lazyRoutes.AdminReportPage /> },
       { path: 'complaint', element: <lazyRoutes.AdminComplaintPage /> },
+      { path: 'guide/tip/create', element: <lazyRoutes.PromptGuideCreatePage type="tip" /> },
+      { path: 'guide/notice/create', element: <lazyRoutes.PromptGuideCreatePage type="notice" /> },
       { path: 'complaint/:id', element: <lazyRoutes.AdminComplaintDetailPage /> },
     ],
   },

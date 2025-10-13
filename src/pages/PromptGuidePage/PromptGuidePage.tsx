@@ -14,6 +14,7 @@ import axios from 'axios';
 
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
+import { useAuth } from '@/context/AuthContext';
 
 /**
  * Memo
@@ -41,6 +42,7 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
   const [allNotice, setAllNotice] = useState<Post[]>([]);
 
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchAllPosts = async () => {
@@ -154,7 +156,7 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
       )}
       <div className="hidden lg:block">
         <div className="flex justify-center pt-[92px] mx-[102px]">
-          <div className="w-full max-w-[1236px] justify-start ml-[20px]">
+          <div className="w-full max-w-[1236px] flex justify-between ml-[20px]">
             <div className="flex justify-between items-center w-full max-w-[360px] h-[60px]">
               <button
                 onClick={() => handleTypeChange('tip')}
@@ -175,6 +177,18 @@ const PromptGuidePage = ({ type }: PromptGuidePageProps) => {
                 } pt-[10px] pb-[10px] pl-[40px]`}>
                 공지사항
               </button>
+            </div>
+            <div>
+              {user?.role === 'ADMIN' && (
+                <button
+                  onClick={() => {
+                    navigate(`/admin/guide/${type}`);
+                  }}
+                  className="w-[198px] h-[60px] flex justify-center items-center bg-alert text-white 
+                     rounded-[10px] py-[10px] px-[29px] text-[24px] font-bold">
+                  작성하기
+                </button>
+              )}
             </div>
           </div>
         </div>
