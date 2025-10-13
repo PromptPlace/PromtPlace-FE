@@ -20,4 +20,5 @@ export const lazyRoutes = {
   PromptGuideDetailPage: React.lazy(() => import('../pages/PromptGuidePage/PromptGuideDetailPage')),
   PromptEditPage: React.lazy(() => import('../pages/PromptEdit/PromptEditPage')),
   AdminComplaintPage: React.lazy(() => import('../pages/AdminPage/AdiminComplaintPage')),
+  PromptGuideCreatePage: React.lazy(() => import('../pages/AdminPage/PromptGuideCreatePage')),
 };
