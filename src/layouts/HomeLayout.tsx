@@ -15,9 +15,8 @@ const HomeLayout = () => {
 
 export default HomeLayout;*/
 
-import TabBar from '@/components/TabBar';
 import ScrollToTop from '@/utils/scrollToTop';
-import Navbar from '@components/Navbar';
+import Navbar from '@/components/Navbar/Navbar';
 import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 
@@ -32,9 +31,9 @@ const HomeLayout = () => {
         </Suspense>
       </div>
 
-      <div className="lg:hidden max-lg:block">
+      {/* <div className="lg:hidden max-lg:block">
         <TabBar />
-      </div>
+      </div> */}
     </>
   );
 };
