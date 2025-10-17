@@ -98,7 +98,15 @@ const PrimaryButton = ({
         primaryButtonTheme.buttonType[buttonType],
       )}
       style={
-        buttonType === 'square' ? { paddingTop: py, paddingBottom: py, paddingLeft: px, paddingRight: px } : undefined
+        buttonType === 'square' && py !== undefined
+          ? {
+              paddingTop: py,
+              paddingBottom: py,
+              paddingLeft: px,
+              paddingRight: px,
+              width: `${text !== '테스트 결과' ? '99px' : '100%'}`,
+            }
+          : undefined
       }>
       {text}
     </button>
