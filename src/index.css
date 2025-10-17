@@ -152,6 +152,12 @@
     font-weight: 500;
     line-height: 150%;
   }
+
+  .custom-button3 {
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 150%;
+  }
 }
 
 ::-webkit-scrollbar {
