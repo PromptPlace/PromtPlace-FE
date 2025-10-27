@@ -1,15 +1,30 @@
 import DefaultImg from '@assets/logo/app/app-logo-default.svg?react';
+import { useNavigate } from 'react-router-dom';
 
 interface NavbarNotificatioinModalCardProps {
   img: string | null;
   content: string;
   date: string;
   link: string;
+  setIsNotificationModalShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const NavbarNotificatioinModalCard = ({ img, content, date }: NavbarNotificatioinModalCardProps) => {
+const NavbarNotificatioinModalCard = ({
+  img,
+  content,
+  date,
+  link,
+  setIsNotificationModalShow,
+}: NavbarNotificatioinModalCardProps) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="pt-[8px] pr-[24px] pb-[20px] flex gap-[24px]">
+    <div
+      onClick={() => {
+        setIsNotificationModalShow((prev) => !prev);
+        navigate(link);
+      }}
+      className="pt-[8px] pr-[24px] pb-[20px] flex gap-[24px]">
       {img ? <img src={img} /> : <DefaultImg className="w-[48px] h-[48px]" />}
       <div className="flex flex-col gap-[8px]">
         <p className="custom-body2">{content}</p>

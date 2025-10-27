@@ -3,7 +3,11 @@ import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import NavbarNotificatioinModalCard from './NavbarNotificatioinModalCard';
 
-const NavbarNotificationModal = () => {
+interface NavbarNotificationModalProps {
+  setIsNotificationModalShow: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const NavbarNotificationModal = ({ setIsNotificationModalShow }: NavbarNotificationModalProps) => {
   const { ref, inView } = useInView({ threshold: 0 });
 
   // 회원 알림 목록 조회
@@ -28,6 +32,7 @@ const NavbarNotificationModal = () => {
               content={data.content}
               date={data.created_at}
               link={data.link_url}
+              setIsNotificationModalShow={setIsNotificationModalShow}
             />
           ))}
 

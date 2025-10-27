@@ -103,7 +103,7 @@ const Navbar = () => {
 
                 {isNotificationModalShow && (
                   <div className="absolute top-[34px] right-0 z-50">
-                    <NavbarNotificationModal />
+                    <NavbarNotificationModal setIsNotificationModalShow={setIsNotificationModalShow} />
                   </div>
                 )}
               </div>
