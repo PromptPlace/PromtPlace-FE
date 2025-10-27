@@ -16,11 +16,13 @@ import BackgroundButton from '@components/Button/BackgroundButton';
 import NavbarModal from './NavbarModal';
 import clsx from 'clsx';
 import NavbarNotificationModal from './NavbarNotificationModal';
+import TextModal from '../Modal/TextModal';
 
 const Navbar = () => {
   const [loginModalShow, setLoginModalShow] = useState(false);
   const [isNavModalShow, setIsNavModalShow] = useState(false);
   const [isNotificationModalShow, setIsNotificationModalShow] = useState(false);
+  const [isMessageModalShow, setIsMessageModalShow] = useState(false);
 
   const navRef = useRef<HTMLDivElement | null>(null);
 
@@ -112,7 +114,7 @@ const Navbar = () => {
                 src={MessageIcon}
                 alt="메세지 알림"
                 className="self-center max-phone:w-[16px] max-phone:h-[16px]"
-                onClick={() => navigate('/mypage/message/message')}
+                onClick={() => setIsMessageModalShow((prev) => !prev)}
               />
               <img
                 src={data?.data.profile_image || UserIcon}
@@ -165,6 +167,14 @@ const Navbar = () => {
 
       {loginModalShow && (
         <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
+      )}
+
+      {isMessageModalShow && (
+        <TextModal
+          text="아직 오픈하지 않은 페이지예요!"
+          size="lg"
+          onClick={() => setIsMessageModalShow((prev) => !prev)}
+        />
       )}
     </>
   );

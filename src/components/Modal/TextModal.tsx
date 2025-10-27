@@ -22,7 +22,7 @@ interface TextModalProps {
 
 const TextModal = ({ text, onClick, size }: TextModalProps) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-100 max-lg:px-[20px] max-lg:max-w-[425px] max-lg:m-auto">
+    <div className="fixed inset-0 flex items-center justify-center z-100 max-lg:px-[100px] max-phone:px-[20px] max-lg:m-auto">
       <div className="absolute inset-0 bg-overlay"></div>
 
       <div
