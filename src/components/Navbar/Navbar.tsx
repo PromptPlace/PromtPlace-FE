@@ -34,7 +34,7 @@ const Navbar = () => {
 
   const LINKS = [
     { to: '/', label: '홈', labelMobile: '홈' },
-    { to: '/prompt/10', label: '프롬프트 보기', labelMobile: '프롬프트' },
+    { to: '/prompt', label: '프롬프트 보기', labelMobile: '프롬프트' },
     { to: '/guide/tip', label: 'AI 꿀팁', labelMobile: 'AI 꿀팁' },
     { to: '/guide/notice', label: '공지사항', labelMobile: '공지' },
   ];

@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar/Navbar';
 import { Suspense } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import TabBar from '@/components/TabBar';
+import Footer from '@/components/Footer';
 
 const AdminLayout = () => {
   const { user } = useAuth();
@@ -15,7 +16,7 @@ const AdminLayout = () => {
     <>
       <ScrollToTop />
       <Navbar />
-      <div className="bg-background lg:pb-0 max-lg:pb-[64px]" style={{ minHeight: 'calc(100vh - 75px)' }}>
+      <div className="bg-background" style={{ minHeight: 'calc(100vh - 140px)' }}>
         <Suspense fallback={null}>
           <Outlet />
         </Suspense>
@@ -24,6 +25,8 @@ const AdminLayout = () => {
       <div className="phone:hidden max-phone:block">
         <TabBar />
       </div>
+
+      <Footer />
     </>
   );
 };

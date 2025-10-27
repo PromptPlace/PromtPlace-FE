@@ -20,13 +20,14 @@ import Navbar from '@/components/Navbar/Navbar';
 import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import TabBar from '@/components/TabBar';
+import Footer from '@/components/Footer';
 
 const HomeLayout = () => {
   return (
     <>
       <ScrollToTop />
       <Navbar />
-      <div className="bg-background lg:pb-0 max-lg:pb-[64px]" style={{ minHeight: 'calc(100vh - 75px)' }}>
+      <div className="bg-background" style={{ minHeight: 'calc(100vh - 140px)' }}>
         <Suspense fallback={null}>
           <Outlet />
         </Suspense>
@@ -35,6 +36,8 @@ const HomeLayout = () => {
       <div className="phone:hidden max-phone:block">
         <TabBar />
       </div>
+
+      <Footer />
     </>
   );
 };
