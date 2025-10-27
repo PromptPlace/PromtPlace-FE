@@ -119,9 +119,7 @@ const Navbar = () => {
               <NavLink
                 to={link.to}
                 key={link.to}
-                className={({ isActive }) =>
-                  `${link.label === '/' ? 'pr-[8px]' : 'px-[8px]'} ${isActive ? 'custom-h5 text-primary' : ''}`
-                }>
+                className={`${link.label === '/' ? 'pr-[8px]' : 'px-[8px]'} hover:font-medium hover:text-primary`}>
                 {link.label}
               </NavLink>
             ))}
