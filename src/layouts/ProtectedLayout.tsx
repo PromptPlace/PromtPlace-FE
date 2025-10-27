@@ -3,6 +3,7 @@ import ScrollToTop from '@utils/scrollToTop';
 import Navbar from '@/components/Navbar/Navbar';
 import { Suspense } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
+import TabBar from '@/components/TabBar';
 
 const ProtectedLayout = () => {
   const { accessToken } = useAuth();
@@ -20,9 +21,9 @@ const ProtectedLayout = () => {
         </Suspense>
       </div>
 
-      {/* <div className="lg:hidden max-lg:block">
+      <div className="phone:hidden max-phone:block">
         <TabBar />
-      </div> */}
+      </div>
     </>
   );
 };

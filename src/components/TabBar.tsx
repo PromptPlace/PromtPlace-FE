@@ -4,7 +4,8 @@ import MyPage from '@assets/tabbar/tabbar-mypage.png';
 
 import TabCreate from '@assets/mobile/icon-mobile-edit.svg?react';
 import TabHome from '@assets/mobile/icon-mobile-home.svg?react';
-import TabMyPage from '@assets/mobile/icon-mobile-person.svg?react';
+import TabMyPage from '@assets/header/icon-mypage.svg?react';
+import TabMyPageFill from '@assets/header/icon-mypage-fill.svg?react';
 import { matchPath, NavLink, useLocation } from 'react-router-dom';
 
 const getActiveTab = (pathName: string) => {
@@ -20,20 +21,20 @@ const TabBar = () => {
   const LINKS = [
     {
       to: '/create',
-      label: '프롬프트 작성',
+      label: '프롬프트 올리기',
       icon: (isActive: boolean) => <TabCreate className={isActive ? 'text-white' : 'text-[#999898]'} />,
       tab: <img src={Create} className="w-full h-full object-cover" />,
     },
     {
       to: '/',
-      label: '메인',
+      label: '홈',
       icon: (isActive: boolean) => <TabHome className={isActive ? 'text-white' : 'text-[#999898]'} />,
       tab: <img src={Main} className="w-full h-full object-cover" />,
     },
     {
       to: '/mypage',
       label: '마이페이지',
-      icon: (isActive: boolean) => <TabMyPage className={isActive ? 'text-white' : 'text-[#999898]'} />,
+      icon: (isActive: boolean) => (isActive ? <TabMyPageFill /> : <TabMyPage />),
       tab: <img src={MyPage} className="w-full h-full object-cover" />,
     },
   ];
