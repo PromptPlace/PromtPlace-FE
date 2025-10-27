@@ -15,10 +15,12 @@ import SocialLoginModal from '@components/Modal/SocialLoginModal';
 import BackgroundButton from '@components/Button/BackgroundButton';
 import NavbarModal from './NavbarModal';
 import clsx from 'clsx';
+import NavbarNotificationModal from './NavbarNotificationModal';
 
 const Navbar = () => {
   const [loginModalShow, setLoginModalShow] = useState(false);
   const [isNavModalShow, setIsNavModalShow] = useState(false);
+  const [isNotificationModalShow, setIsNotificationModalShow] = useState(false);
 
   const navRef = useRef<HTMLDivElement | null>(null);
 
@@ -91,12 +93,21 @@ const Navbar = () => {
                   navigate('/create');
                 }}
               />
-              <img
-                src={NotificationIcon}
-                alt="알림"
-                className="self-center max-phone:w-[16px] max-phone:h-[16px]"
-                onClick={() => navigate('/mypage/message/notification')}
-              />
+              <div className="relative">
+                <img
+                  src={NotificationIcon}
+                  alt="알림"
+                  className="self-center max-phone:w-[16px] max-phone:h-[16px]"
+                  onClick={() => setIsNotificationModalShow((prev) => !prev)}
+                />
+
+                {isNotificationModalShow && (
+                  <div className="absolute top-[34px] right-0 z-50">
+                    <NavbarNotificationModal />
+                  </div>
+                )}
+              </div>
+
               <img
                 src={MessageIcon}
                 alt="메세지 알림"
