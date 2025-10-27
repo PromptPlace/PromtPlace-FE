@@ -127,7 +127,10 @@ const Navbar = () => {
             ))}
           </div>
 
-          <div className="flex items-center" ref={navRef}>
+          <div
+            onClick={() => setIsNavModalShow((prev) => !prev)}
+            className="flex items-center cursor-pointer"
+            ref={navRef}>
             <p className="px-[8px] max-lg:hidden">AI 바로가기</p>
             <p className="px-[8px] lg:hidden">AI</p>
             <img
@@ -137,7 +140,6 @@ const Navbar = () => {
                 'cursor-pointer self-center transition-all ease-in-out duration-500',
                 isNavModalShow ? '-rotate-180' : 'rotate - none',
               )}
-              onClick={() => setIsNavModalShow((prev) => !prev)}
             />
 
             {isNavModalShow && (
