@@ -45,8 +45,8 @@ const TabBar = () => {
 
   return (
     <>
-      <div className="fixed bottom-0 max-w-[425px] w-full z-100">
-        <div className="max-w-[425px] w-full max-h-[95px] flex items-end">{activeLink?.tab}</div>
+      <div className="fixed bottom-0 max-w-[480px] w-full z-100">
+        <div className="max-w-[480px] w-full max-h-[95px] flex items-end">{activeLink?.tab}</div>
 
         <div className="flex justify-evenly items-center absolute inset-0 z-100  w-full">
           {LINKS.map((link, idx) => {
@@ -65,7 +65,9 @@ const TabBar = () => {
                     {!isActive && (
                       <>
                         {link.icon(false)}
-                        <p className="text-text-on-background text-[10px] font-normal leading-[13px]">{link.label}</p>
+                        <p className="text-text-on-background text-[10px] font-light leading-[16px] tracking-[0.2px]">
+                          {link.label}
+                        </p>
                       </>
                     )}
                   </>

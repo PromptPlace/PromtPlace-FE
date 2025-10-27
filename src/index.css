@@ -68,7 +68,7 @@
 
   --text-shadow-notfound: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
-  --breakpoint-phone: 26.625rem; /* 426px */
+  --breakpoint-phone: 30.0625rem; /* 481px */
 }
 
 @layer base {
