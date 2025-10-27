@@ -13,6 +13,7 @@ import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 import useGetPrompterList from '@/hooks/queries/MainPage/useGetPrompterList';
 import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
 import useOptimisticFollow from '@/hooks/mutations/MainPage/useOptimisticFollow';
+import editPrompterList from '@/assets/icon-red-pencil.svg';
 
 const PrompterBar = () => {
   const { accessToken, user } = useAuth();
@@ -20,7 +21,7 @@ const PrompterBar = () => {
   const navigate = useNavigate();
 
   const { data: promptersData } = useGetPrompterList();
-  console.log(promptersData?.data.members)
+  console.log(promptersData?.data.members);
 
   // useMemo를 사용하여 promptersData가 변경될 때만 목록을 다시 계산하도록 수정
   const allPrompters = useMemo(() => promptersData?.data?.members ?? [], [promptersData]);
@@ -58,9 +59,17 @@ const PrompterBar = () => {
       )}
       {/* 🔥 이달의 인기 프롬프터 */}
       <section className="w-[313px] h-[390px] rounded-2xl p-4 shadow-sm bg-white">
-        <div className="pb-2 font-bold text-xl flex items-center gap-1">
-          이달의 인기 프롬프터 <span>🔥</span>
+        <div className="pb-2 font-bold text-xl flex items-center gap-1 justify-between">
+          이달의 인기 프롬프터 🔥
+          {user && user.role === 'ADMIN' && (
+            <img
+              src={editPrompterList}
+              className="w-[32px] h-[32px] cursor-pointer"
+              onClick={() => navigate('/prompterlist')}
+            />
+          )}
         </div>
+
         <ul className="mt-4 space-y-4 ">
           {topPrompters.map((p) => {
             const isFollowed = myFollowingSet.has(p.user_id);
@@ -100,8 +109,15 @@ const PrompterBar = () => {
 
       {/* ⭐ 신규 인기 프롬프터 */}
       <section className="w-[313px] h-[246px] rounded-2xl p-4 shadow-sm bg-white">
-        <h4 className="pb-2 font-bold text-xl flex items-center gap-1">
-          신규 인기 프롬프터 <span>⭐</span>
+        <h4 className="pb-2 font-bold text-xl flex items-center gap-1 justify-between">
+          신규 인기 프롬프터 ⭐
+          {user && user.role === 'ADMIN' && (
+            <img
+              src={editPrompterList}
+              className="w-[32px] h-[32px] cursor-pointer"
+              onClick={() => navigate('/prompterlist')}
+            />
+          )}
         </h4>
         <ul className="mt-4 space-y-4">
           {topNewPrompters.map((p) => {
