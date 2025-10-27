@@ -25,6 +25,7 @@ const Navbar = () => {
   const [isMessageModalShow, setIsMessageModalShow] = useState(false);
 
   const navRef = useRef<HTMLDivElement | null>(null);
+  const notificationRef = useRef<HTMLDivElement | null>(null);
 
   const navigate = useNavigate();
 
@@ -42,6 +43,17 @@ const Navbar = () => {
     const handleClick = (e: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(e.target as Node)) {
         setIsNavModalShow(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (notificationRef.current && !notificationRef.current.contains(e.target as Node)) {
+        setIsNotificationModalShow(false);
       }
     };
 
@@ -104,7 +116,7 @@ const Navbar = () => {
                 />
 
                 {isNotificationModalShow && (
-                  <div className="absolute top-[34px] right-0 z-50">
+                  <div ref={notificationRef} className="absolute top-[34px] right-0 z-50">
                     <NavbarNotificationModal setIsNotificationModalShow={setIsNotificationModalShow} />
                   </div>
                 )}
