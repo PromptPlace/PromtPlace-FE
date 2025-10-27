@@ -99,7 +99,7 @@ const Navbar = () => {
           )}
 
           {accessToken && (
-            <div className="flex gap-[26px] max-phone:gap-[18px] items-center cursor-pointer">
+            <div className="flex gap-[26px] max-phone:gap-[20px] items-center cursor-pointer">
               <BackgroundButton
                 background="secondary"
                 text="프롬프트 올리기"
@@ -131,7 +131,7 @@ const Navbar = () => {
               <img
                 src={data?.data.profile_image || UserIcon}
                 alt="프로필 이미지"
-                className="w-[40px] object-cover self-center max-phone:hidden"
+                className="w-[40px] object-cover self-center max-phone:w-[32px] max-phone:h-[32px]"
                 onClick={() => navigate(`/profile/${user.user_id}`)}
               />
             </div>

@@ -19,7 +19,6 @@ import ScrollToTop from '@/utils/scrollToTop';
 import Navbar from '@/components/Navbar/Navbar';
 import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
-import TabBar from '@/components/TabBar';
 import Footer from '@/components/Footer';
 
 const HomeLayout = () => {
@@ -33,9 +32,9 @@ const HomeLayout = () => {
         </Suspense>
       </div>
 
-      <div className="phone:hidden max-phone:block">
+      {/* <div className="phone:hidden max-phone:block">
         <TabBar />
-      </div>
+      </div> */}
 
       <Footer />
     </>
