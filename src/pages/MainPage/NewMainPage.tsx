@@ -2,6 +2,7 @@ import { useAuth } from '@/context/AuthContext';
 import React from 'react';
 import CategorySection from './components/CategorySection';
 import PromptCard from '../../components/PromptCard';
+import Filter from './components/Filter';
 
 const Prompt = {
   promptId: 1,
@@ -34,7 +35,9 @@ const NewMainPage = () => {
         <CategorySection />
       </div>
 
-      <div>필터</div>
+      <div className="mt-[40px]">
+        <Filter />
+      </div>
 
       <div className="mt-[56px]">
         <div className="self-stretch justify-center mb-[32px]">

@@ -79,7 +79,7 @@ const CategorySection = () => {
         ))}
       </div>
       {selectedCategory !== null && (
-        <div className="w-[1237px] h-[62px] inline-flex justify-start itmes-start gap-10">
+        <div className="w-[1237px] h-[62px] inline-flex justify-start itmes-start gap-10 mt-[56px]">
           <div className="text-center justify-center text-text-on-white text-2xl">
             {categoryData.find((cat) => cat.id === selectedCategory)?.name}
           </div>
