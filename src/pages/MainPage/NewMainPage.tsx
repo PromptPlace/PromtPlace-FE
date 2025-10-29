@@ -6,7 +6,7 @@ import Filter from './components/Filter';
 
 const Prompt = {
   promptId: 1,
-  promptImage: '',
+  promptImage: 'https://promptplace-s3.s3.ap-northeast-2.amazonaws.com/promptimages/7d53a160-db18-4deb-8437-744f2fc1005e_promptplace.png',
   promptDescription:
     '그냥 팥빙수가 아닌, 추억이 담긴 그때의 팥빙수를 드시고 싶으시군요! 그렇다면 이렇게 재료를 준비해서 만들어 보세요! 🍨 클래식 팥빙수 (1인분 / 약 500kcal)  재료  우유얼음 250g (우유 200ml + 연유 20g 얼려 갈기, 약 150kcal)  통조림 단팥 120g (약 220kcal)  인절미 40g (약 100kcal)  아몬드슬라이스 10g (약 60kcal)  연유 15g (약 70kcal)  조리 단계  우유얼음 준비  우유+연유를 얼려둔 얼음을 블렌더에 넣고 눈꽃처럼 갈아줍니다.  1차 층 쌓기  그릇에 얼음 절반 → 단팥 절반 올리기.  2차 층 쌓기  남은 얼음 → 단팥 나머지 올리기.  토핑 올리기  인절',
   promptModels: ['ChatGPT', 'Gemini', 'ChatGPT', 'CHatGPT', 'ChatGPT'],
