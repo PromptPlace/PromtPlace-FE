@@ -21,12 +21,16 @@ import ProfileButton from './ProfileButton';
 import ArrowIcon from '@assets/icon-arrow-right-profile.svg?react';
 import ProfileIcon from '@assets/header/icon-mypage.svg';
 
-const ProfileCard = () => {
+interface ProfileCardProps {
+  mypage?: boolean;
+}
+
+const ProfileCard = ({ mypage }: ProfileCardProps) => {
   const { id } = useParams();
   const { user } = useAuth();
 
   const myId = user.user_id;
-  const isMyProfile = id ? Number(id) === myId : false;
+  const isMyProfile = (id ? Number(id) === myId : false) || mypage;
   const member_id = isMyProfile ? myId : Number(id);
 
   // 팔로잉, 팔로워 모달
