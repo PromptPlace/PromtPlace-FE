@@ -86,7 +86,7 @@ const FollowCard = ({ title, list, setShow, member_id }: FollowCardProps) => {
                   <ProfileIcon />
                   <div className="flex flex-col items-start py-[12px]">
                     <p className="custom-h4">{f.nickname}</p>
-                    <p className="custom-body2">팔로워 {f.count}명</p>
+                    <p className="custom-body2">팔로워 {f.count || 0}명</p>
                   </div>
                 </div>
 

@@ -98,6 +98,13 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
     }
   }, [isMyProfile, navigate, mypage]);
 
+  useEffect(() => {
+    if (myFollowingData?.data) {
+      const followed = myFollowingData.data.some((f) => f.following_id === member_id);
+      setIsFollow(followed);
+    }
+  }, [myFollowingData, member_id]);
+
   return (
     <>
       <div className="px-[32px] pt-[40px] pb-[32px] bg-white rounded-[12px] mt-[80px] flex gap-[40px]">
@@ -114,7 +121,11 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
             <p className="custom-h2 mr-[16px]">{userData?.data.nickname}</p>
 
             <div
-              onClick={() => setShowFollower((prev) => !prev)}
+              onClick={() => {
+                if (followerData?.data.length !== 0) {
+                  setShowFollower((prev) => !prev);
+                }
+              }}
               className="flex flex-col gap-[4px] items-center cursor-pointer">
               <div className="flex">
                 <p className="custom-body3">팔로워</p>

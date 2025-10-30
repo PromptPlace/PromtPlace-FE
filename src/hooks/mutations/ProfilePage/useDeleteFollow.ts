@@ -7,10 +7,10 @@ function useDeleteFollow({ member_id }: RequestMemberDto) {
   return useMutation({
     mutationFn: ({ member_id }: RequestMemberDto) => deleteFollow({ member_id }),
     onSuccess: () => {
-      queryClient.invalidateQueries({
+      queryClient.refetchQueries({
         queryKey: ['member-following', member_id],
       });
-      queryClient.invalidateQueries({
+      queryClient.refetchQueries({
         queryKey: ['member-follower', member_id],
       });
     },
