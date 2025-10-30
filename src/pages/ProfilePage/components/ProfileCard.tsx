@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useAuth } from '@/context/AuthContext';
 
@@ -28,6 +28,7 @@ interface ProfileCardProps {
 const ProfileCard = ({ mypage }: ProfileCardProps) => {
   const { id } = useParams();
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const myId = user.user_id;
   const isMyProfile = (id ? Number(id) === myId : false) || mypage;
@@ -90,6 +91,12 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
   const promptCount = promptsData
     ? promptsData?.pages?.reduce((acc, page) => acc + (page?.data?.prompts?.length ?? 0), 0)
     : 0;
+
+  useEffect(() => {
+    if (isMyProfile) {
+      navigate('/mypage/profile');
+    }
+  }, [isMyProfile, navigate]);
 
   return (
     <>
