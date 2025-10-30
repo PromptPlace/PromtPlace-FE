@@ -74,12 +74,12 @@ const FollowCard = ({ title, list, setShow, member_id }: FollowCardProps) => {
   return (
     <>
       <div className="fixed inset-0 bg-overlay flex justify-center items-center z-100">
-        <div className="bg-white pt-[30px] pl-[20px] pr-[14px] max-w-[416px] w-full rounded-[16px]">
-          <div className="flex items-center justify-start p-[10px] gap-[10px]">
+        <div className="bg-white py-[30px] pl-[20px] pr-[14px] max-w-[416px] w-full rounded-[16px]">
+          <div className="flex items-center justify-start p-[10px] gap-[19px]">
             <ArrowIcon onClick={() => setShow(false)} className="cursor-pointer" />
             <div className="custom-h2 text-text-on-white">{title}</div>
           </div>
-          <div className="mt-[16px] max-h-[740px] overflow-auto">
+          <div className="mt-[16px] max-h-[572.8px] overflow-auto">
             {normalizedList?.map((f) => (
               <div key={f.follow_id} className="flex justify-between items-center pl-[40px] pr-[34px]">
                 <div className="flex items-center gap-[10px] ">
