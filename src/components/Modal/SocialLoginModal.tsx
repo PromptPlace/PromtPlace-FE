@@ -2,9 +2,9 @@ import CloseIcon from '@assets/icon-close.svg';
 import KakaoIcon from '@assets/icon-kakao-logo.svg';
 import GoogleIcon from '@assets/icon-google-logo.svg';
 import NaverIcon from '@assets/icon-naver-logo.svg';
-import PromptPlaceLogo from '@assets/icon-promptplace-logo.svg';
-import HeaderLogo from '@assets/icon-header-logo.svg';
-
+import PromptPlaceLogo from '@assets/logo/text/text-logo-login.svg';
+import PrimaryButton from '@components/Button/PrimaryButton';
+import { Link } from 'react-router-dom';
 /**
  * TODO:
  * - 소셜 로그인 버튼 hover/click 효과 추후 반영 필요
@@ -18,16 +18,13 @@ interface SocialLoginModalProps {
   onClick: (provider: string) => void;
 }
 
-const SocialButton = ({ icon, text, onClick }: { icon: string; text: string; onClick: () => void }) => (
+const SocialButton = ({ icon, onClick }: { icon: string; text: string; onClick: () => void }) => (
   <button
     onClick={onClick}
-    className="w-[334px] max-lg:w-[212px] h-[64px] max-lg:h-[48px] border-[1px] border-text-on-white rounded-[50px] px-[40px] max-lg:px-[16px] py-[16px] max-lg:py-[8px] flex items-center  gap-[15px] shadow-[0_1px_3px_0_rgba(0,0,0,0.08)]
+    className="w-[56px] h-[56px]  border-[0.5px] border-text-on-white rounded-[50px] px-[16px] py-[16px] flex items-center shadow-[0_1px_3px_0_rgba(0,0,0,0.08)]
     hover:bg-secondary hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.12)] 
     active:bg-secondary-pressed">
-    <img src={icon} alt="소셜 로고" className="w-[32px] max-lg:w-[20px] h-[32px] max-lg:h-[20px]" />
-    <span className="w-[216px] max-lg:w-[145px] text-text-on-white text-[20px] max-lg:text-[12px] font-medium max-lg:font-bold ">
-      {text}
-    </span>
+    <img src={icon} alt="소셜 로고" className="w-[24px] max-lg:w-[20px] h-[24px] max-lg:h-[20px]" />
   </button>
 );
 
@@ -77,39 +74,75 @@ export const handleKakaoLogin = () => {
 const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-110 p-4 max-lg:p-[0px]">
-      <div className="relative flex justify-center items-center w-[563px] max-lg:w-full h-[661px] max-lg:h-full flex-col  rounded-[16px] max-lg:rounded-none max-lg:px-[20px] bg-white shadow-gradient ">
+    <div className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-110  max-lg:p-[0px]">
+      <div className="relative flex justify-center items-center w-[656px] max-lg:w-full h-[903px] max-lg:h-full flex-col px-[56px] py-[48] rounded-[16px] max-lg:rounded-none max-lg:px-[20px] bg-white shadow-gradient ">
         <button className="max-lg:hidden absolute top-[34px] right-[34px]" onClick={onClose}>
-          <img src={CloseIcon} alt="닫기" className="h-[24px] w-[24px]" />
+          <img src={CloseIcon} alt="나가기" className="h-[24px] w-[24px]" />
         </button>
-        <div className="w-full max-w-[280px]">
-          <div className=" mb-[48px] max-lg:mb-[20px] mt-[105px] max-lg:mt-[21px] flex flex-col lg:items-center gap-[15px]">
-            <img
-              src={PromptPlaceLogo}
-              alt="PromptPlace 로고"
-              className="w-[72px] max-lg:w-[48px] h-[72px] max-lg:h-[48px]"
+        <img src={PromptPlaceLogo} alt="PromptPlace 로고" className="mb-[40px]" />
+
+        <div className="w-full">
+          <p className=" custom-h2 mb-[8px]">로그인하기</p>
+          <p className=" custom-h3 mb-[24px]">로그인하고 더 많은 혜택을 누려보세요!</p>
+        </div>
+
+        <form className="flex flex-col w-full">
+          <div className="flex flex-col">
+            <label className="custom-h5 mb-[12px]">이메일</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="예) abc1234@gmail.com"
+              className="bg-background px-[16px] py-[12px] placeholder:text-gray-400 text-text-on-white custom-body2 mb-[20px]"
             />
-
-            <img src={HeaderLogo} alt="PromptPlace 헤더 로고" className="max-lg:hidden h-[35px] w-[350px]" />
           </div>
+          <div className="flex flex-col mb-[40px]">
+            <label className="custom-h5 mb-[12px]" htmlFor="password">
+              비밀번호
+            </label>
+            <input
+              type="password"
+              id="password"
+              placeholder="예) **********"
+              className="bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px]"
+            />
+            {/* (비밀번호 보기 아이콘 버튼) */}
+          </div>
+          <PrimaryButton buttonType="full" text="로그인하기" textColor="white" disable={true} onClick={() => {}} />
+        </form>
 
-          <p className="lg:hidden text-[16px], text-text-on-white font-bold mb-[8px]">프롬프트 플레이스,</p>
-          <p className="lg:hidden text-[14px], text-text-on-white font-medium mb-[82px]">
-            로그인 후 더 많은 서비스를 이용하세요.
+        <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
+          <Link to="/signup">회원가입하기</Link>
+          <Link to="/find-password">비밀번호 찾기</Link>
+        </nav>
+
+        <section className="flex flex-col items-center w-full gap-[16px] mx-[114px] mb-[40px]">
+          <div className="flex items-center w-[464px]">
+            {/* 1. 왼쪽 선 */}
+            <div className="flex-1 border-t border-gray-200"></div>
+            <p className="custom-body3">간편 로그인 하기</p>
+            <div className="flex-1 border-t border-gray-200"></div>
+          </div>
+          <div className="flex gap-[32px]">
+            <SocialButton icon={GoogleIcon} text="구글로 로그인" onClick={handleGoogleLogin} />
+            <SocialButton icon={NaverIcon} text="네이버로 로그인" onClick={handleNaverLogin} />
+          </div>
+        </section>
+
+        <footer>
+          <p className="custom-h3">
+            로그인 또는 회원가입 시 서비스의
+            <Link to="/terms" className="underline decoration-1">
+              이용약관
+            </Link>
+            과
+            {' '}
+            <Link to="/privacy" className="underline decoration-1">
+              개인정보 처리 방침
+            </Link>
+            에 동의한 것으로 간주됩니다.
           </p>
-        </div>
-
-        <div className="flex flex-col items-center w-[334px]  gap-[32px] max-lg:gap-[20px] mb-[226px] max-lg:mb-[82px] mx-[114px] max-lg:mx-[0px]">
-          <SocialButton icon={GoogleIcon} text="구글로 로그인" onClick={handleGoogleLogin} />
-          <SocialButton icon={NaverIcon} text="네이버로 로그인" onClick={handleNaverLogin} />
-          <div id="naverIdLogin" style={{ display: 'none' }} />
-        </div>
-
-        <button
-          onClick={onClose}
-          className="lg:hidden flex  underline text-[12px] text-primary text-normal w-[130px] h-[15px] ">
-          가입 안하고 마저 탐색하기
-        </button>
+        </footer>
       </div>
     </div>
   );
