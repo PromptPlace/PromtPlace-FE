@@ -5,6 +5,10 @@ import NaverIcon from '@assets/icon-naver-logo.svg';
 import PromptPlaceLogo from '@assets/logo/text/text-logo-login.svg';
 import PrimaryButton from '@components/Button/PrimaryButton';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import eye_visible from '@assets/icon-eye-visible.svg';
+import eye_invisible from '@assets/icon-eye-invisible.svg';
+import exitIcon from '@assets/icon-exit.svg';
 /**
  * TODO:
  * - 소셜 로그인 버튼 hover/click 효과 추후 반영 필요
@@ -72,12 +76,29 @@ export const handleKakaoLogin = () => {
 };
 
 const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(''); // 로그인 실패 시 여기에 메시지 설정
+
+  const isDisabled = email === '' || password === '';
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // 여기에 이메일/비밀번호 로그인 로직 추가
+  };
+
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-110  max-lg:p-[0px]">
-      <div className="relative flex justify-center items-center w-[656px] max-lg:w-full h-[903px] max-lg:h-full flex-col px-[56px] py-[48] rounded-[16px] max-lg:rounded-none max-lg:px-[20px] bg-white shadow-gradient ">
-        <button className="max-lg:hidden absolute top-[34px] right-[34px]" onClick={onClose}>
-          <img src={CloseIcon} alt="나가기" className="h-[24px] w-[24px]" />
+      <div className="relative flex  justify-center items-center w-[656px] max-lg:w-full h-[903px] max-lg:h-full flex-col px-[56px] py-[48] rounded-[16px] max-lg:rounded-none max-lg:px-[20px] bg-white shadow-gradient ">
+        <button className="flex max-lg:hidden absolute top-[48px] right-[56px] gap-[4px] py-[3px] h-[22px]" onClick={onClose}>
+          <img src={exitIcon} alt="나가기" className="h-[16px] w-[16px] " />
+          <p className="custom-body2 text-gray-700">나가기</p>
         </button>
         <img src={PromptPlaceLogo} alt="PromptPlace 로고" className="mb-[40px]" />
 
@@ -86,7 +107,7 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
           <p className=" custom-h3 mb-[24px]">로그인하고 더 많은 혜택을 누려보세요!</p>
         </div>
 
-        <form className="flex flex-col w-full">
+        <form className="flex flex-col w-full" onSubmit={handleSubmit}>
           <div className="flex flex-col">
             <label className="custom-h5 mb-[12px]">이메일</label>
             <input
@@ -94,21 +115,46 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
               id="email"
               placeholder="예) abc1234@gmail.com"
               className="bg-background px-[16px] py-[12px] placeholder:text-gray-400 text-text-on-white custom-body2 mb-[20px]"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="flex flex-col mb-[40px]">
             <label className="custom-h5 mb-[12px]" htmlFor="password">
               비밀번호
             </label>
-            <input
-              type="password"
-              id="password"
-              placeholder="예) **********"
-              className="bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px]"
-            />
-            {/* (비밀번호 보기 아이콘 버튼) */}
+            <div className="relative w-full">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                placeholder="예) **********"
+                className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px]"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              {/* (비밀번호 보기 아이콘 버튼) */}
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute inset-y-0 right-[15px] pr-3 flex items-center">
+                <img
+                  src={showPassword ? eye_visible : eye_invisible}
+                  alt={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
+                  className="w-[24px] h-[24px] flex items-center justify-center"
+                />
+              </button>
+            </div>
+
+            {error && <p className="text-alert custom-h5 mt-[4px]">{error}</p>}
           </div>
-          <PrimaryButton buttonType="full" text="로그인하기" textColor="white" disable={true} onClick={() => {}} />
+          <PrimaryButton
+            buttonType="full"
+            type="submit"
+            text="로그인하기"
+            textColor="white"
+            disable={isDisabled}
+            onClick={() => {}}
+          />
         </form>
 
         <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
@@ -135,8 +181,7 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
             <Link to="/terms" className="underline decoration-1">
               이용약관
             </Link>
-            과
-            {' '}
+            과{' '}
             <Link to="/privacy" className="underline decoration-1">
               개인정보 처리 방침
             </Link>
