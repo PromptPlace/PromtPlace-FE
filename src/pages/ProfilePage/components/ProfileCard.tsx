@@ -1,0 +1,169 @@
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+
+import { useAuth } from '@/context/AuthContext';
+
+import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
+import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
+import { useShowLoginModal } from '@/hooks/useShowLoginModal';
+import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
+import useGetFollower from '@/hooks/queries/ProfilePage/useGetFollower';
+import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
+import useGetPrompts from '@/hooks/queries/ProfilePage/useGetPrompts';
+import useGetSNS from '@/hooks/queries/ProfilePage/useGetSNS';
+
+import type { FollowerWithStatus, FollowingWithStatus } from '@/types/ProfilePage/profile';
+import TextModal from '@/components/Modal/TextModal';
+import FollowCard from './FollowCard';
+import SnsButton from './SnsButton';
+import ProfileButton from './ProfileButton';
+
+import ArrowIcon from '@assets/icon-arrow-right-profile.svg?react';
+import ProfileIcon from '@assets/header/icon-mypage.svg';
+
+const ProfileCard = () => {
+  const { id } = useParams();
+  const { user } = useAuth();
+
+  const myId = user.user_id;
+  const isMyProfile = id ? Number(id) === myId : false;
+  const member_id = isMyProfile ? myId : Number(id);
+
+  // 팔로잉, 팔로워 모달
+  const [showFollowing, setShowFollowing] = useState(false);
+  const [showFollower, setShowFollower] = useState(false);
+
+  const { data: myFollowingData } = useGetFollowing({ member_id: user.user_id });
+  const [isFollow, setIsFollow] = useState(() =>
+    Boolean(myFollowingData?.data.some((f) => f.following_id === member_id)),
+  ); // 팔로우 여부
+
+  // 회원 정보 불러오기
+  const { data: userData } = useGetMember({ member_id });
+
+  // 팔로워, 팔로잉 목록
+  const { data: followerData } = useGetFollower({ member_id });
+  const { data: followingData } = useGetFollowing({ member_id });
+
+  // 팔로우, 언팔로우
+  const { mutate: mutateFollow } = usePatchFollow({ member_id: member_id });
+  const { mutate: mutateUnFollow } = useDeleteFollow({ member_id: member_id });
+
+  const { handleShowLoginModal } = useShowLoginModal();
+  const [isMessageModalShow, setIsMessageModalShow] = useState(false); // 문의하기 모달
+
+  // 작성한 프롬프트 목록
+  const { data: promptsData } = useGetPrompts({ member_id });
+
+  // 회원 SNS 목록
+  const { data: snsData } = useGetSNS({ member_id });
+
+  // 팔로우 및 팔로잉
+  const handleFollow = () => {
+    handleShowLoginModal(() => {
+      if (isFollow) {
+        mutateUnFollow({ member_id: member_id });
+      } else {
+        mutateFollow({ member_id: member_id });
+      }
+      setIsFollow((prev) => !prev);
+    });
+  };
+
+  const normalizedFollowerList: FollowerWithStatus[] =
+    followerData?.data.map((f) => ({
+      ...f,
+      isFollowing: followingData?.data.some((fw) => fw.following_id === f.follower_id) ?? false,
+    })) || [];
+
+  const normalizedFollowingList: FollowingWithStatus[] =
+    followingData?.data.map((f) => ({
+      ...f,
+      isFollowing: true,
+    })) || [];
+
+  // 올린 프롬프트 개수
+  const promptCount = promptsData
+    ? promptsData?.pages?.reduce((acc, page) => acc + (page?.data?.prompts?.length ?? 0), 0)
+    : 0;
+
+  return (
+    <>
+      <div className="px-[32px] pt-[40px] pb-[32px] bg-white rounded-[12px] mt-[80px] flex gap-[40px]">
+        <div className="w-[120px] h-[120px] rounded-full overflow-hidden shrink-0">
+          <img
+            src={userData?.data.profile_image ?? ProfileIcon}
+            alt="프로필 이미지"
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        <div className="pt-[12px] flex flex-col justify-between gap-[24px] w-full">
+          <div className="flex gap-[24px]">
+            <p className="custom-h2 mr-[16px]">{userData?.data.nickname}</p>
+
+            <div
+              onClick={() => setShowFollower((prev) => !prev)}
+              className="flex flex-col gap-[4px] items-center cursor-pointer">
+              <div className="flex">
+                <p className="custom-body3">팔로워</p>
+                <ArrowIcon />
+              </div>
+              <p className="custom-h4">{followerData?.data.length}</p>
+            </div>
+
+            <div className="flex flex-col gap-[4px] items-center">
+              <p className="custom-body3">올린 프롬프트</p>
+              <p className="custom-h4">{promptCount}</p>
+            </div>
+          </div>
+
+          <div className="flex gap-[12px] px-[12px]">
+            {snsData?.data.map((sns) => (
+              <SnsButton url={sns.url} key={sns.sns_id} />
+            ))}
+          </div>
+
+          <div className="custom-body1 h-[102px] overflow-y-scroll">{userData?.data.intros}</div>
+
+          <div className="flex gap-[20px]">
+            <ProfileButton text="문의하기" type="chat" onClick={() => setIsMessageModalShow((prev) => !prev)} />
+            <ProfileButton
+              text={isFollow ? '팔로우 완료' : '팔로우'}
+              type={isFollow ? 'check' : 'plus'}
+              onClick={handleFollow}
+            />
+          </div>
+        </div>
+      </div>
+
+      {showFollower && (
+        <FollowCard
+          title={`${userData?.data.nickname}님의 팔로워 목록`}
+          list={normalizedFollowerList}
+          setShow={setShowFollower}
+          member_id={member_id}
+        />
+      )}
+
+      {showFollowing && (
+        <FollowCard
+          title={`${userData?.data.nickname}님의 팔로잉 목록`}
+          list={normalizedFollowingList}
+          setShow={setShowFollowing}
+          member_id={member_id}
+        />
+      )}
+
+      {isMessageModalShow && (
+        <TextModal
+          text="아직 오픈하지 않은 페이지예요!"
+          size="lg"
+          onClick={() => setIsMessageModalShow((prev) => !prev)}
+        />
+      )}
+    </>
+  );
+};
+
+export default ProfileCard;
