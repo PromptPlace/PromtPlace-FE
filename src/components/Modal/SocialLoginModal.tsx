@@ -96,7 +96,9 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-110  max-lg:p-[0px]">
       <div className="relative flex  justify-center items-center w-[656px] max-lg:w-full h-[903px] max-lg:h-full flex-col px-[56px] py-[48] rounded-[16px] max-lg:rounded-none max-lg:px-[20px] bg-white shadow-gradient ">
-        <button className="flex max-lg:hidden absolute top-[48px] right-[56px] gap-[4px] py-[3px] h-[22px]" onClick={onClose}>
+        <button
+          className="flex max-lg:hidden absolute top-[48px] right-[56px] gap-[4px] py-[3px] h-[22px]"
+          onClick={onClose}>
           <img src={exitIcon} alt="나가기" className="h-[16px] w-[16px] " />
           <p className="custom-body2 text-gray-700">나가기</p>
         </button>
