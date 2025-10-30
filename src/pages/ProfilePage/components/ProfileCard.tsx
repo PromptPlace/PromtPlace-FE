@@ -112,6 +112,18 @@ const ProfileCard = () => {
               <p className="custom-h4">{followerData?.data.length}</p>
             </div>
 
+            {isMyProfile && (
+              <div
+                onClick={() => setShowFollowing((prev) => !prev)}
+                className="flex flex-col gap-[4px] items-center cursor-pointer">
+                <div className="flex">
+                  <p className="custom-body3">팔로잉</p>
+                  <ArrowIcon />
+                </div>
+                <p className="custom-h4">{followingData?.data.length}</p>
+              </div>
+            )}
+
             <div className="flex flex-col gap-[4px] items-center">
               <p className="custom-body3">올린 프롬프트</p>
               <p className="custom-h4">{promptCount}</p>
@@ -126,14 +138,16 @@ const ProfileCard = () => {
 
           <div className="custom-body1 h-[102px] overflow-y-scroll">{userData?.data.intros}</div>
 
-          <div className="flex gap-[20px]">
-            <ProfileButton text="문의하기" type="chat" onClick={() => setIsMessageModalShow((prev) => !prev)} />
-            <ProfileButton
-              text={isFollow ? '팔로우 완료' : '팔로우'}
-              type={isFollow ? 'check' : 'plus'}
-              onClick={handleFollow}
-            />
-          </div>
+          {!isMyProfile && (
+            <div className="flex gap-[20px]">
+              <ProfileButton text="문의하기" type="chat" onClick={() => setIsMessageModalShow((prev) => !prev)} />
+              <ProfileButton
+                text={isFollow ? '팔로우 완료' : '팔로우'}
+                type={isFollow ? 'check' : 'plus'}
+                onClick={handleFollow}
+              />
+            </div>
+          )}
         </div>
       </div>
 
