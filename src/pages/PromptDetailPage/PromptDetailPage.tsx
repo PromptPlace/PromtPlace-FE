@@ -1,122 +1,83 @@
-import PromptHeader from './components/PromptHeader';
-import PromptInfo from './components/PromptInfo';
-import PromptActions from './components/PromptActions';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
-import ReviewList from './components/ReviewList';
-import IconButton from '@components/Button/IconButton';
-import profile from '@/assets/icon-profile-gray.svg';
-import FollowButton from '@components/Button/FollowButton';
-import ArrowLeft from './assets/keyboard_arrow_down _left.svg';
+import { useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
+
+// components
+import PromptDetailCard from './components/PromptDetailCard';
+import PromptAuthorAndReview from './components/PromptAuthorAndReview';
 import ReportModal from './components/ReportModal';
 import DownloadModal from './components/DownloadModal';
-import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
-import useGetPromptDetail from '@/hooks/queries/PromptDetailPage/useGetPromptDetail';
-import useGetAllPromptReviews from '@/hooks/queries/PromptDetailPage/useGetAllPromptReviews';
+import PaymentModal from './components/PaymentModal';
+
+// hooks
+import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import usePromptDownload from '@/hooks/mutations/PromptDetailPage/usePromptDownload';
-import type { Review as UIReview } from './components/ReviewList';
-import { isAxiosError } from 'axios';
+import useGetPromptDetail from '@/hooks/queries/PromptDetailPage/useGetPromptDetail';
 import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
 import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
 import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
-import { useQueryClient } from '@tanstack/react-query';
-import PaymentModal from './components/PaymentModal';
+import useGetAllPromptReviews from '@/hooks/queries/PromptDetailPage/useGetAllPromptReviews';
+
+// types
+import type { UIReview } from './components/ReviewList';
 
 const PromptDetailPage = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-
   const promptId = useMemo(() => {
     const n = Number(id);
     return Number.isFinite(n) && n > 0 ? n : NaN;
   }, [id]);
 
-  const { data, isLoading, isError } = useGetPromptDetail(promptId);
-
-  const prompt = useMemo(() => {
-    if (!data) return null;
-    const getModelNames = () => {
-      if (!Array.isArray(data?.models)) return [];
-      const names = data.models
-        .map((m: any) => {
-          if (typeof m === 'string') return m;
-          if (m?.name) return String(m.name);
-          if (m?.model?.name) return String(m.model.name);
-          return '';
-        })
-        .filter(Boolean);
-      // 중복 제거
-      return Array.from(new Set(names));
-    };
-    const tags = (data.tags ?? []).filter((t) => t?.tag).map((t) => t.tag.name);
-    console.log('parsed tags', tags);
-    return {
-      prompt_id: data.prompt_id,
-      user_id: data.user_id,
-      title: data.title,
-      prompt: data.prompt,
-      prompt_result: data.prompt_result,
-      has_image: !!data.has_image,
-      description: data.description,
-      usage_guide: data.usage_guide,
-      price: Number.isFinite(data.price) ? Number(data.price) : 0,
-      is_free: !!data.is_free,
-      downloads: Number.isFinite(data.downloads) ? Number(data.downloads) : 0,
-      views: Number.isFinite(data.views) ? Number(data.views) : 0,
-      likes: Number.isFinite(data.likes) ? Number(data.likes) : 0,
-      review_count: Number.isFinite(data.review_count) ? Number(data.review_count) : 0,
-      review_rating_avg: Number.isFinite(data.review_rating_avg) ? Number(data.review_rating_avg) : 0,
-      updated_at: data.updated_at ?? '',
-      user: data.user,
-      tags: (data.tags ?? [])
-        .filter((t) => t?.tag)
-        .map((t) => ({
-          tag_id: t.tag.tag_id,
-          name: t.tag.name,
-        })),
-
-      models: getModelNames(),
-    };
-  }, [data]);
-
-  const { mutateAsync: fetchDownload, isPending: isDownloading } = usePromptDownload();
-
-  const isAdmin = localStorage.getItem('isAdmin') === 'true';
-
   const qc = useQueryClient();
+  const { data: prompt, isLoading } = useGetPromptDetail(promptId);
 
   const storedUser = localStorage.getItem('user');
   const currentUserId = storedUser ? JSON.parse(storedUser).user_id : null;
-
   const targetUserId = prompt?.user?.user_id ?? -1;
 
   const followMut = usePatchFollow({ member_id: targetUserId });
   const unfollowMut = useDeleteFollow({ member_id: targetUserId });
-
   const { data: myFollowings } = useGetFollowing({
     member_id: Number.isFinite(currentUserId) ? Number(currentUserId) : -1,
   });
 
-  const [showReviews, setShowReviews] = useState(false);
   const [follow, setFollow] = useState(false);
-
+  const [isPaid, setIsPaid] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const handleOpenReportModal = () => setIsReportModalOpen(true);
-  const handleCloseReportModal = () => setIsReportModalOpen(false);
-
-  const [reviews, setReviews] = useState<UIReview[]>([]);
-  const [reviewCount, setReviewCount] = useState<number>(0);
-
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [downloadData, setDownloadData] = useState<{
-    title: string;
-    content: string;
-  } | null>(null);
+  const [downloadData, setDownloadData] = useState<{ title: string; content: string } | null>(null);
 
-  const [isPaid, setIsPaid] = useState(false);
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
+
+  const [reviews, setReviews] = useState<UIReview[]>([]);
+  const [reviewCount, setReviewCount] = useState(0);
+  const { data: allReviews } = useGetAllPromptReviews(promptId, {
+    enabled: Number.isFinite(promptId),
+  });
+
+  useEffect(() => {
+    if (Array.isArray(allReviews)) {
+      setReviews(
+        allReviews.map((r) => ({
+          review_id: r.review_id,
+          writer_id: r.writer_id,
+          writer_profile_image_url: r.writer_image_url ?? null,
+          writer_nickname: r.writer_nickname,
+          rating: Number(r.rating) || 0,
+          content: r.content,
+          created_at: r.created_at,
+        })),
+      );
+      setReviewCount(allReviews.length);
+    } else {
+      setReviews([]);
+      setReviewCount(0);
+    }
+  }, [allReviews]);
 
   useEffect(() => {
     if (!Array.isArray(myFollowings) || !Number.isFinite(targetUserId)) return;
@@ -124,39 +85,9 @@ const PromptDetailPage = () => {
     setFollow(isFollowing);
   }, [myFollowings, targetUserId]);
 
-  useEffect(() => {
-    if (prompt) setReviewCount(prompt.review_count);
-  }, [prompt]);
-
-  const {
-    data: allReviews,
-    isLoading: isReviewsLoading,
-    isError: isReviewsError,
-  } = useGetAllPromptReviews(promptId, { enabled: showReviews, perPage: 50 });
-
-  useEffect(() => {
-    if (prompt) setReviewCount(prompt.review_count);
-  }, [prompt]);
-
-  useEffect(() => {
-    if (!allReviews) return;
-    setReviews(
-      allReviews.map((r) => ({
-        review_id: r.review_id,
-        writer_id: r.writer_id,
-        writer_profile_image_url: r.writer_image_url ?? null,
-        writer_nickname: r.writer_nickname,
-        rating: Number(r.rating) || 0,
-        content: r.content,
-        created_at: r.created_at,
-      })),
-    );
-  }, [allReviews]);
-
+  const { mutateAsync: fetchDownload } = usePromptDownload();
   const handleDownloadClick = async () => {
     if (!Number.isFinite(promptId)) return;
-
-    // 유료 프롬프트이고 아직 결제하지 않은 경우 PaymentModal 표시
     if (prompt && !prompt.is_free && !isPaid) {
       setIsPaymentModalOpen(true);
       return;
@@ -164,13 +95,8 @@ const PromptDetailPage = () => {
 
     try {
       const res = await fetchDownload(promptId);
-      if (!prompt?.is_free) {
-        setIsPaid(res.is_paid ?? false);
-      }
-      setDownloadData({
-        title: res.title,
-        content: res.content ?? '',
-      });
+      if (!prompt?.is_free) setIsPaid(res.is_paid ?? false);
+      setDownloadData({ title: res.title, content: res.content ?? '' });
       setIsDownloadModalOpen(true);
     } catch (e: unknown) {
       if (isAxiosError(e)) {
@@ -180,12 +106,7 @@ const PromptDetailPage = () => {
           return;
         }
         if (status === 403) {
-          // 결제가 필요한 경우
           setIsPaymentModalOpen(true);
-          return;
-        }
-        if (status === 404) {
-          alert('프롬프트를 찾을 수 없습니다.');
           return;
         }
       }
@@ -196,165 +117,70 @@ const PromptDetailPage = () => {
   const handlePaid = () => {
     setIsPaid(true);
     setIsPaymentModalOpen(false);
-    // 결제 완료 후 자동으로 다운로드 모달 열기
   };
 
   const handleToggleFollow = async () => {
     if (!Number.isFinite(targetUserId)) return;
-
     const prev = follow;
     setFollow(!prev);
 
     try {
-      if (!prev) {
-        await followMut.mutateAsync({ member_id: targetUserId });
-      } else {
-        await unfollowMut.mutateAsync({ member_id: targetUserId });
-      }
+      if (!prev) await followMut.mutateAsync({ member_id: targetUserId });
+      else await unfollowMut.mutateAsync({ member_id: targetUserId });
 
-      const tasks: Promise<unknown>[] = [];
-      if (Number.isFinite(currentUserId)) {
-        tasks.push(qc.invalidateQueries({ queryKey: ['member-following', Number(currentUserId)] }));
-      }
-      tasks.push(qc.invalidateQueries({ queryKey: ['member-follower', targetUserId] }));
-
-      await Promise.all(tasks);
+      if (Number.isFinite(currentUserId))
+        await qc.invalidateQueries({ queryKey: ['member-following', Number(currentUserId)] });
+      await qc.invalidateQueries({ queryKey: ['member-follower', targetUserId] });
     } catch (e) {
       setFollow(prev);
-      if (isAxiosError(e) && (e.response?.status ?? 0) === 401) {
-        handleShowLoginModal(handleToggleFollow);
-        return;
-      }
-      alert('팔로우 처리에 실패했습니다.');
+      if (isAxiosError(e) && (e.response?.status ?? 0) === 401) handleShowLoginModal(handleToggleFollow);
+      else alert('팔로우 처리에 실패했습니다.');
     }
   };
 
-  if (!Number.isFinite(promptId)) return <div>잘못된 접근입니다. (유효하지 않은 ID)</div>;
-  if (isLoading) return <div>로딩 중…</div>;
-  if (isError || !prompt) return <div>프롬프트를 불러오지 못했습니다.</div>;
+  if (!Number.isFinite(promptId)) return <div>잘못된 접근입니다.</div>;
+  if (isLoading) return <div className="text-center text-gray-500 text-sm py-12">프롬프트 불러오는 중...</div>;
+  if (!prompt) return <div>프롬프트를 불러오지 못했습니다.</div>;
 
-  if (showReviews) {
-    if (isReviewsLoading) return <div>리뷰 불러오는 중…</div>;
-    if (isReviewsError) return <div>리뷰를 불러오지 못했습니다.</div>;
-
-    return (
-      <ReviewList
-        reviews={reviews}
-        setReviews={setReviews}
-        reviewCount={reviewCount}
-        setReviewCount={setReviewCount}
-        title={prompt.title}
-        onClose={() => setShowReviews(false)}
-        currentUserId={currentUserId}
-      />
-    );
-  }
-  console.log('prompt.tags', prompt?.tags);
+  const modelNames = Array.isArray(prompt.models) ? prompt.models.map((m) => m?.name).filter(Boolean) : [];
+  const tagNames = Array.isArray(prompt.categories)
+    ? prompt.categories.map((c) => c?.category?.name).filter(Boolean)
+    : [];
 
   return (
-    <div className="bg-[#F5F5F5] min-h-screen max-lg:pb-[calc(139px+env(safe-area-inset-bottom)+16px)">
-      {/* 모바일 유저 정보 섹션 */}
-      <div className="lg:hidden w-full max-h-[60px] pt-[12px] px-[20px] mx-auto">
-        <div className="box-border flex items-center max-h-[48px] py-[6px]">
-          {/* 아이콘 */}
-          <img
-            src={ArrowLeft}
-            alt="뒤로가기"
-            className="w-[20px] h-[48px] cursor-pointer mr-[10px]"
-            onClick={() => navigate(-1)}
-          />
+    <div className="bg-[#F5F5F5] min-h-screen py-8 px-4">
+      <div className="max-w-[1236px] mx-auto flex flex-col gap-6">
+        <PromptDetailCard
+          title={prompt.title}
+          views={prompt.views}
+          downloads={prompt.downloads}
+          onClose={() => navigate(-1)}
+          onClickReview={() => {}}
+          models={modelNames}
+          tags={tagNames}
+          description={prompt.description}
+          usageGuide={prompt.usage_guide}
+          isPaid={isPaid}
+          price={prompt.price}
+          isFree={prompt.is_free}
+          onDownload={() => handleShowLoginModal(handleDownloadClick)}
+        />
 
-          {/* 프로필 */}
-          <div className="w-[36px] flex items-center justify-center mr-[8px]">
-            <img
-              src={prompt.user?.profileImage?.url ?? profile}
-              alt="profile"
-              className="w-[36px] h-[36px] rounded-full object-cover"
-            />
-          </div>
-
-          {/* 닉네임 + 팔로우 */}
-          <div className="flex items-center w-[214px]">
-            <p className="font-medium text-[12px] mr-[10px]">{prompt.user?.nickname ?? '작성자'}</p>
-            {currentUserId !== prompt.user.user_id && <FollowButton follow={follow} onClick={handleToggleFollow} />}
-          </div>
-        </div>
-      </div>
-      <div className="flex max-lg:flex-col max-lg:gap-[20px] max-w-7xl max-lg:px-[20px] max-lg:pt-0 max-lg:w-full gap-10 mx-auto">
-        {/* 왼쪽: 정보 */}
-        <div className="w-[711px] max-lg:w-full max-lg:h-[544px] bg-[#FFFEFB] rounded-[16px] flex flex-col h-[736px]">
-          <PromptHeader
-            title={prompt.title}
-            views={prompt.views}
-            onClose={() => navigate(-1)}
-            downloads={prompt.downloads}
-            onClickReview={() => setShowReviews(true)}
-            models={prompt.models}
-            tags={prompt.tags.map((tag) => tag.name)}
-          />
-
-          <PromptInfo description={prompt.description} usageGuide={prompt.usage_guide} isPaid={isPaid} />
-        </div>
-
-        <div className="lg:hidden flex justify-end">
-          <IconButton
-            buttonType="squareMd"
-            style="red"
-            imgType="alert"
-            text="신고하기"
-            onClick={handleOpenReportModal}
-          />
-        </div>
-
-        {/* 오른쪽: 액션 */}
-        <div
-          className={`max-lg:hidden w-[459px] max-lg:max-w-[280px] ${isAdmin ? 'h-[548px]' : 'h-[654px]'} bg-[#FFFEFB] shrink-0 rounded-[16px] overflow-hidden`}>
-          <PromptActions
-            title={prompt.title}
-            price={prompt.price}
-            isFree={prompt.is_free}
-            downloads={prompt.downloads}
-            review_count={prompt.review_count}
-            review_rating_avg={prompt.review_rating_avg}
-            updatedAt={prompt.updated_at}
-            tags={prompt.tags}
-            onClickReview={() => setShowReviews(true)}
-            user={{
-              user_id: prompt.user.user_id,
-              nickname: prompt.user.nickname,
-              profileImage: prompt.user.profileImage,
-            }}
-          />
-        </div>
+        <PromptAuthorAndReview
+          user={prompt.user}
+          currentUserId={currentUserId}
+          follow={follow}
+          onToggleFollow={handleToggleFollow}
+          reviews={reviews}
+          setReviews={setReviews}
+          reviewCount={reviewCount}
+          setReviewCount={setReviewCount}
+          title={prompt.title}
+        />
       </div>
 
-      {/* 모바일 하단 고정 영역 */}
-      <div className="lg:hidden bottom-0 fixed left-1/2 -translate-x-1/2 z-[10]  max-w-[425px] h-[139px] w-full flex justify-center pointer-events-none">
-        <div className="bg-white max-w-[425px] rounded-t-[24px] shadow-[0_-4px_12px_rgba(0,0,0,0.1)] px-[20px] pb-[20px] pt-[15px] h-[139px] z-[10] w-full h-full pointer-events-auto">
-          <div className="flex justify-end w-full h-full mr-[8%]">
-            <div
-              className={`flex items-center ${isPaid ? 'gap-[10px]' : 'gap-[20px]'} h-[34px] ${
-                isPaid ? 'ml-[8%]' : 'ml-[28%]'
-              }`}>
-              {isPaid && !prompt.is_free && (
-                <span className="text-[16px] font-medium text-black whitespace-nowrap">구매 완료</span>
-              )}
-
-              <span className="text-[16px] font-medium text-black">{prompt.price.toLocaleString()}원</span>
-
-              <IconButton
-                buttonType="squareBig"
-                style="fill"
-                imgType="download"
-                text="다운로드"
-                onClick={() => handleShowLoginModal(handleDownloadClick)}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <ReportModal isOpen={isReportModalOpen} onClose={handleCloseReportModal} promptId={promptId} />
-      {isPaymentModalOpen && ( //유료프롬프트 & 미결제 시 PaymentModal 열기
+      <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} promptId={promptId} />
+      {isPaymentModalOpen && (
         <PaymentModal
           promptId={Number(id)}
           title={prompt.title}

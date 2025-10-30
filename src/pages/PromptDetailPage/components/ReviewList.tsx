@@ -133,7 +133,7 @@ const ReviewList = ({
 
   return (
     <>
-      <div className="hidden lg:flex w-[459px] bg-[#FFFEFB] h-[654px] px-8 py-6 flex-col max-lg:mx-[20px]">
+      <div className="hidden lg:flex w-[766px] rounded-[16px] bg-[#FFFEFB] h-auto px-8 py-6 flex-col max-lg:mx-[20px]">
         {/* 상단 */}
         <div className="flex items-center mb-4">
           <button onClick={onClose} className="text-2xl font-bold leading-none hover:opacity-70" aria-label="뒤로가기">
