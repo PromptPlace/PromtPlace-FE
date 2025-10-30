@@ -93,10 +93,10 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
     : 0;
 
   useEffect(() => {
-    if (isMyProfile) {
-      navigate('/mypage/profile');
+    if (isMyProfile && !mypage) {
+      navigate('/mypage');
     }
-  }, [isMyProfile, navigate]);
+  }, [isMyProfile, navigate, mypage]);
 
   return (
     <>
