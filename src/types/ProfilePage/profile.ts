@@ -91,16 +91,8 @@ export type Tag = {
 export type Prompt = {
   prompt_id: number;
   title: string;
-  image_url: null;
-  created_at: string;
-  downloads: number;
-  views: number;
-  is_free: number;
-  price: number;
-  description: string;
-  reviews: null | string;
-  models: string[];
-  categories: string[];
+  models: Model[];
+  tags: Tag[];
 };
 
 export type Pagination = {
