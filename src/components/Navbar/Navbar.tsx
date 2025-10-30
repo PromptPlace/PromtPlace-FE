@@ -64,7 +64,7 @@ const Navbar = () => {
   return (
     <>
       <nav className="bg-white">
-        <div className="px-[102px] max-lg:px-[20px] py-[18px] flex justify-between">
+        <div className="px-[102px] max-lg:px-[40px] max-phone:px-[20px] py-[18px] flex justify-between">
           <img
             src={LogoIcon}
             alt="로고이미지"
@@ -138,7 +138,7 @@ const Navbar = () => {
           )}
         </div>
 
-        <div className="px-[102px] max-lg:px-[20px] py-[16px] flex justify-between items-center custom-h3 max-phone:text-[14px] text-black whitespace-nowrap">
+        <div className="px-[102px] max-lg:px-[40px] max-phone:px-[20px] py-[16px] flex justify-between items-center custom-h3 max-phone:text-[14px] text-black whitespace-nowrap">
           <div className="flex items-center gap-[20px] max-lg:gap-[8px]">
             {LINKS.map((link) => (
               <NavLink
