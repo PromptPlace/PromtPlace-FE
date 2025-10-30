@@ -1,4 +1,3 @@
-// components/VariousFunction.tsx
 const VariousFunction = () => {
   return (
     <div className="px-[102px] w-full bg-white">
@@ -41,7 +40,7 @@ const VariousFunction = () => {
             바로가기
             <span>→</span>
           </button>
-          {/* 공지사항 리스트 (한 박스에 모두 포함) */}
+          {/* 공지사항 리스트 */}
           <div className="mt-4 bg-white rounded-md p-4 shadow-sm text-sm space-y-3">
             <div>
               <p className="text-[#9CA3AF] text-xs">2025.10.18.</p>
