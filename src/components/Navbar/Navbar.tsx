@@ -111,7 +111,7 @@ const Navbar = () => {
                   navigate('/create');
                 }}
               />
-              <div className="relative">
+              <div className="phone:relative">
                 <img
                   src={notificationData?.data.hasNew ? NotificationAlarmIcon : NotificationIcon}
                   alt="알림"
@@ -120,7 +120,7 @@ const Navbar = () => {
                 />
 
                 {isNotificationModalShow && (
-                  <div ref={notificationRef} className="absolute top-[34px] right-0 z-50">
+                  <div ref={notificationRef} className="phone:absolute top-[34px] right-0 z-50 max-phone:top-[70px]">
                     <NavbarNotificationModal setIsNotificationModalShow={setIsNotificationModalShow} />
                   </div>
                 )}
