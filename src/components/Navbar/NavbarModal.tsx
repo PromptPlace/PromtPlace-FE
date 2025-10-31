@@ -51,7 +51,7 @@ const Sections = [
 
 const NavbarModal = ({ setIsNavModalShow }: NavbarModalProps) => {
   return (
-    <div className="p-[32px] pr-[16px] rounded-[16px] border border-transparent-inverse bg-white flex flex-col gap-[16px] h-[400px] max-w-[679px] w-full">
+    <div className="p-[32px] pr-[16px] rounded-[16px] border border-transparent-inverse bg-white flex flex-col gap-[16px] h-[400px] max-lg:h-[664px] max-phone:h-[608px] max-w-[679px] w-full relative z-[20]">
       <div className="overflow-y-scroll">
         {Sections.map((section) => (
           <NavbarSection
