@@ -28,6 +28,7 @@ const NavbarNotificationModal = ({ setIsNotificationModalShow }: NavbarNotificat
           .flat()
           .map((data) => (
             <NavbarNotificatioinModalCard
+              key={data.notification_id}
               img={null}
               content={data.content}
               date={data.created_at}

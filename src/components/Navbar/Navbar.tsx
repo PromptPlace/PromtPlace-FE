@@ -8,7 +8,9 @@ import LogoIcon from '@assets/logo/text/text-logo-default.svg';
 import AppLogoIcon from '@assets/logo/app/app-logo-default.svg';
 import ArrowIcon from '@assets/header/icon-arrow_fill.svg';
 import NotificationIcon from '@assets/header/icon-notification.svg';
+import NotificationAlarmIcon from '@assets/header/icon-notification_new.svg';
 import MessageIcon from '@assets/header/icon-message.svg';
+import MessageAlarmIcon from '@assets/header/icon-message_new.svg';
 import UserIcon from '@assets/header/mypage.svg';
 
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
@@ -17,6 +19,7 @@ import NavbarModal from './NavbarModal';
 import clsx from 'clsx';
 import NavbarNotificationModal from './NavbarNotificationModal';
 import TextModal from '../Modal/TextModal';
+import useGetNewNotification from '@/hooks/queries/Navbar/useGetNewNotification';
 
 const Navbar = () => {
   const [loginModalShow, setLoginModalShow] = useState(false);
@@ -31,6 +34,7 @@ const Navbar = () => {
 
   const { accessToken, user } = useAuth();
   const { data } = useGetMember({ member_id: user.user_id });
+  const { data: notificationData } = useGetNewNotification();
 
   const LINKS = [
     { to: '/', label: '홈', labelMobile: '홈' },
@@ -109,7 +113,7 @@ const Navbar = () => {
               />
               <div className="relative">
                 <img
-                  src={NotificationIcon}
+                  src={notificationData?.data.hasNew ? NotificationAlarmIcon : NotificationIcon}
                   alt="알림"
                   className="self-center max-phone:w-[16px] max-phone:h-[16px]"
                   onClick={() => setIsNotificationModalShow((prev) => !prev)}
@@ -123,7 +127,7 @@ const Navbar = () => {
               </div>
 
               <img
-                src={MessageIcon}
+                src={data?.data.has_unread_messages ? MessageAlarmIcon : MessageIcon}
                 alt="메세지 알림"
                 className="self-center max-phone:w-[16px] max-phone:h-[16px]"
                 onClick={() => setIsMessageModalShow((prev) => !prev)}
