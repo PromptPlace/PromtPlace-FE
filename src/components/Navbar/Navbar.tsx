@@ -173,7 +173,7 @@ const Navbar = () => {
             {isNavModalShow && (
               <div
                 onClick={(e) => e.stopPropagation()}
-                className="absolute right-[102px] max-lg:right-[20px] top-[140px] z-30">
+                className="absolute right-[102px] max-lg:right-[20px] top-[140px] z-30 max-phone:right-1/2 max-phone:translate-x-1/2">
                 <NavbarModal setIsNavModalShow={setIsNavModalShow} />
               </div>
             )}
