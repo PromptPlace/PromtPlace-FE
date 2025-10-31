@@ -64,9 +64,11 @@ const CategorySection = () => {
 
   return (
     <div className="overflow-hidden scroll-m-0">
-      <div className="w-full max-w-[1185px] mx-auto flex flex-wrap gap-[20px] justify-center">
+      <div
+        className="w-full max-w-[1185px] mx-auto flex overflow-x-scroll gap-[20px] justify-start snap-x snap-mandatory px-0 hide-scrollbar"
+        style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
         {categoryData.map((category) => (
-          <div className="flex flex-col" key={category.id}>
+          <div className="flex flex-col flex-shrink-0 snap-start" key={category.id}>
             <div
               onClick={() => handleSelectCategory(category.id)}
               className="w-28 px-2 py-3 rounded-xl inline-flex flex-col justify-center items-center gap-4 cursor-pointer">
