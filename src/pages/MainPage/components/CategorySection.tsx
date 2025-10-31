@@ -63,7 +63,7 @@ const CategorySection = () => {
   };
 
   return (
-    <div>
+    <div className="overflow-hidden scroll-m-0">
       <div className="w-full max-w-[1185px] mx-auto flex flex-wrap gap-[20px] justify-center">
         {categoryData.map((category) => (
           <div className="flex flex-col" key={category.id}>
