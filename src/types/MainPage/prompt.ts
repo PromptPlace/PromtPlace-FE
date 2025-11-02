@@ -26,7 +26,7 @@ export interface PromptModel {
   name: string;
 }
 
-export interface PromptModel {
+export interface PromptModels {
   promptmodel_id: number;
   prompt_id: number;
   model_id: number;
@@ -46,16 +46,16 @@ export interface Prompt {
   downloads: number;
   views: number;
   likes: number;
-  review_count: number;
-  review_rating_avg: number;
+  model_version: string;
   created_at: string;
   updated_at: string;
   inactive_date: string | null;
-  download_url: string;
-  images: PromptImage[];
-  tags: PromptTag[];
-  models: PromptModel[];
   user: PromptWriter;
+  models: PromptModels[];
+  categories: string[];
+  images: PromptImage[];
+  review_count: number;
+  review_rating_avg: number;
 }
 
 export interface SearchPromptWriter {
