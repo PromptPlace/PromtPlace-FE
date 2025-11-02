@@ -26,7 +26,7 @@ const NavbarButton = ({ text, url, setIsNavModalShow }: NavbarButtonProps) => {
         setIsNavModalShow(false);
         window.open(url, '_blank');
       }}
-      className="py-[12px] pl-[24px] pr-[12px] flex justify-between items-center rounded-[24px] border border-gray200 bg-white w-full">
+      className="py-[12px] pl-[24px] pr-[12px] flex justify-between items-center rounded-[24px] border border-gray200 bg-white w-full max-lg:w-[296px] max-phone:w-[239px]">
       <p className="truncate">{text}</p>
       <img src={ArrowIcon} alt="바로가기 버튼" className="self-center" />
     </button>

@@ -20,7 +20,7 @@ const NavbarNotificationModal = ({ setIsNotificationModalShow }: NavbarNotificat
   }, [inView, isFetching, hasNextPage, fetchNextPage]);
 
   return (
-    <div className="w-[409px] p-[32px] rounded-[16px] border border-transparent-inverse bg-white shadow-gradient flex flex-col gap-[16px]">
+    <div className="w-[409px] max-phone:w-[335px] p-[32px] rounded-[16px] border border-transparent-inverse bg-white shadow-gradient flex flex-col gap-[16px] max-phone:absolute max-phone:left-1/2 max-phone:-translate-x-1/2 max-phone:top-[70px] max-phone:z-[50]">
       <div className="custom-h4 pb-[16px] border-b border-b-gray200 text-center">알림</div>
       <div className="max-h-[401px] h-full overflow-y-auto">
         {notificationData?.pages
@@ -28,6 +28,7 @@ const NavbarNotificationModal = ({ setIsNotificationModalShow }: NavbarNotificat
           .flat()
           .map((data) => (
             <NavbarNotificatioinModalCard
+              key={data.notification_id}
               img={null}
               content={data.content}
               date={data.created_at}
