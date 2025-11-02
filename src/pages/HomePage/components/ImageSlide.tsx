@@ -17,7 +17,9 @@ interface CustomArrowProps {
 
 const PrevArrow = ({ onClick }: CustomArrowProps) => {
   return (
-    <button onClick={onClick} className="absolute top-[-16px] right-[84px] z-[10]">
+    <button
+      onClick={onClick}
+      className="absolute top-[-16px] right-[84px] z-[10] max-phone:w-[24px] max-phone:right-[64px]">
       <img src={PrevIcon} alt="prev" className="w-full h-full object-contain" />
     </button>
   );
@@ -25,7 +27,9 @@ const PrevArrow = ({ onClick }: CustomArrowProps) => {
 
 const NextArrow = ({ onClick }: CustomArrowProps) => {
   return (
-    <button onClick={onClick} className="absolute top-[-16px] right-[40px] z-[10]">
+    <button
+      onClick={onClick}
+      className="absolute top-[-16px] right-[40px] z-[10] max-phone:w-[24px] max-phone:right-[20px]">
       <img src={NextIcon} alt="next" className="w-full h-full object-contain" />
     </button>
   );
