@@ -326,7 +326,7 @@ const PromptActions = ({
       {/* 유저 정보 */}
       <div className="h-[96px] box-border flex items-center gap-3">
         <img
-          src={user?.profileImage?.url ?? profile}
+          src={user?.profileImage ?? profile}
           alt="profile"
           className="w-10 h-10 rounded-full cursor-pointer"
           onClick={() => navigate(`/profile/${user.user_id}`)}

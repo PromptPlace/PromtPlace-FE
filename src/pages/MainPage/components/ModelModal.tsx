@@ -17,18 +17,18 @@ const ModelModal = () => {
   const confirmSelection = () => alert(`선택된 모델: ${selectedModels.join(', ') || '없음'}`);
 
   return (
-    <div className="w-96 p-8 bg-white rounded-2xl shadow-[2px_2px_30px_0px_black] outline-1 outline-offset-[-1px] outline-gray-300 inline-flex flex-col justify-center items-center gap-6 overflow-hidden">
+    <div className="w-96 p-8 bg-white rounded-2xl shadow-[2px_2px_30px_0px_rgba(0,0,0,0.25)] outline-1 outline-offset-[-1px] outline-gray-300 inline-flex flex-col justify-center items-center gap-6 overflow-hidden">
       {/* 상단 타이틀 */}
       <div className="pb-4 border-b-[0.88px] border-gray-200 inline-flex gap-2.5 w-full">
         <div className="self-stretch justify-center text-lg text-text-on-white leading-6">모델</div>
       </div>
 
-      {/* 각 섹션 반복 */}
+      {/* 섹션 반복 */}
       <div className="w-full flex flex-col gap-6">
         {Object.entries(modelData).map(([category, models]) => (
           <div key={category} className="flex flex-col gap-2">
             <div className="text-xs text-primary">{category}</div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-[16px]">
               {models.map((model) => (
                 <button
                   key={model}
