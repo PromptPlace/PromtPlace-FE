@@ -16,6 +16,7 @@ export type ResponseMemberDto = CommonResponse<{
   updated_at: string;
   status: number;
   role: string;
+  has_unread_messages: boolean;
 }>;
 
 // 회원 팔로워, 팔로잉 목록
