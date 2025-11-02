@@ -191,6 +191,31 @@
   .slick-slide.slick-active.slick-center.slick-current {
     transform: scale(1.38);
   }
+
+  .slick-slide.slick-active.slick-center.slick-current div button {
+    width: 186px !important;
+    height: 45px !important;
+    right: calc(40px / 1.38) !important;
+    bottom: calc(42px / 1.38) !important;
+  }
+
+  @media (max-width: 1024px) {
+    .slick-slide.slick-active.slick-center.slick-current div button {
+      right: calc(16px / 1.38) !important;
+      bottom: calc(16px / 1.38) !important;
+      gap: calc(17.14px / 1.38) !important;
+    }
+  }
+
+  @media (max-width: 481px) {
+    .slick-slide.slick-active.slick-center.slick-current div button {
+      width: 113px !important;
+      height: 25px !important;
+      right: calc(13.71px / 1.38) !important;
+      bottom: calc(13.71px / 1.38) !important;
+      gap: calc(17.14px / 1.38) !important;
+    }
+  }
 }
 
 ::-webkit-scrollbar {

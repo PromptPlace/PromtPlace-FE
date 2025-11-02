@@ -9,6 +9,7 @@ import Slide3 from '@assets/home/img-slide3.png';
 import PrevIcon from '@assets/home/icon-slide-prev.svg';
 import NextIcon from '@assets/home/icon-slide-next.svg';
 import ImageBox from './ImageBox';
+import { useEffect, useState } from 'react';
 
 interface CustomArrowProps {
   onClick?: () => void;
@@ -16,7 +17,7 @@ interface CustomArrowProps {
 
 const PrevArrow = ({ onClick }: CustomArrowProps) => {
   return (
-    <button onClick={onClick} className="absolute top-0 right-[84px] z-[10]">
+    <button onClick={onClick} className="absolute top-[-16px] right-[84px] z-[10]">
       <img src={PrevIcon} alt="prev" className="w-full h-full object-contain" />
     </button>
   );
@@ -24,16 +25,20 @@ const PrevArrow = ({ onClick }: CustomArrowProps) => {
 
 const NextArrow = ({ onClick }: CustomArrowProps) => {
   return (
-    <button onClick={onClick} className="absolute top-0 right-[40px] z-[10]">
+    <button onClick={onClick} className="absolute top-[-16px] right-[40px] z-[10]">
       <img src={NextIcon} alt="next" className="w-full h-full object-contain" />
     </button>
   );
 };
 
 const ImageSlide = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [centerWidth, setCenterWidth] = useState(665);
+  const [centerPadding, setCenterPadding] = useState(0);
+
   const settings = {
     centerMode: true,
-    centerPadding: '30%',
+    centerPadding: `${centerPadding}px`,
     infinite: true,
     slidesToShow: 1,
     autoplay: true,
@@ -59,9 +64,24 @@ const ImageSlide = () => {
     },
   ];
 
+  useEffect(() => {
+    const updateSettings = () => {
+      let width = 665;
+      if (window.innerWidth <= 480) width = 240;
+      else if (window.innerWidth <= 1023) width = 380;
+
+      setCenterWidth(width);
+      setCenterPadding((window.innerWidth - width) / 2);
+    };
+
+    updateSettings();
+    window.addEventListener('resize', updateSettings);
+    return () => window.removeEventListener('resize', updateSettings);
+  }, []);
+
   return (
     <Slider {...settings} prevArrow={<PrevArrow />} nextArrow={<NextArrow />} className="mt-[104px]">
-      {SLIDES.concat(SLIDES).map((slide) => (
+      {SLIDES.map((slide) => (
         <ImageBox key={slide.id} url={slide.url} to={slide.to} />
       ))}
     </Slider>
