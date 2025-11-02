@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 
-const ModelModal = () => {
-  const [selectedModels, setSelectedModels] = useState<string[]>([]);
+interface ModelModalProps {
+  selectedModels: string[];
+  onConfirm: (models: string[]) => void;
+}
+
+const ModelModal = ({ selectedModels: initialSelectedModels, onConfirm }: ModelModalProps) => {
+  const [selectedModels, setSelectedModels] = useState<string[]>(initialSelectedModels);
 
   const modelData = {
     '언어모델(LLM)': ['ChatGPT', 'Gemini', 'Claude', 'Perplexity', 'Grok', 'DeepSeek'],
@@ -14,7 +19,9 @@ const ModelModal = () => {
   };
 
   const resetSelection = () => setSelectedModels([]);
-  const confirmSelection = () => alert(`선택된 모델: ${selectedModels.join(', ') || '없음'}`);
+  const confirmSelection = () => {
+    onConfirm(selectedModels);
+  };
 
   return (
     <div className="w-96 p-8 bg-white rounded-2xl shadow-[2px_2px_30px_0px_rgba(0,0,0,0.25)] outline-1 outline-offset-[-1px] outline-gray-300 inline-flex flex-col justify-center items-center gap-6 overflow-hidden">

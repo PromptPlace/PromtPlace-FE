@@ -55,11 +55,21 @@ const categoryData = [
   },
 ];
 
-const CategorySection = () => {
+interface CategorySectionProps {
+  onCategorySelect?: (categoryId: number | null, categoryName: string | null) => void;
+}
+
+const CategorySection = ({ onCategorySelect }: CategorySectionProps) => {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
   const handleSelectCategory = (categoryId: number) => {
-    setSelectedCategory(categoryId);
+    const newCategoryId = selectedCategory === categoryId ? null : categoryId;
+    const categoryName = newCategoryId !== null 
+      ? categoryData.find((cat) => cat.id === newCategoryId)?.name || null 
+      : null;
+    
+    setSelectedCategory(newCategoryId);
+    onCategorySelect?.(newCategoryId, categoryName);
   };
 
   return (
@@ -71,11 +81,19 @@ const CategorySection = () => {
           <div className="flex flex-col flex-shrink-0 snap-start" key={category.id}>
             <div
               onClick={() => handleSelectCategory(category.id)}
-              className="w-28 px-2 py-3 rounded-xl inline-flex flex-col justify-center items-center gap-4 cursor-pointer">
-              <div className="w-[80px] h-[80px] bg-white rounded-3xl flex items-center justify-center overflow-hidden shadow-[0px_4px_8px_0px_rgba(0,0,0,0.12)]">
+              className={`w-28 px-2 py-3 rounded-xl inline-flex flex-col justify-center items-center gap-4 cursor-pointer transition-all ${
+                selectedCategory === category.id ? 'bg-primary/10' : ''
+              }`}>
+              <div className={`w-[80px] h-[80px] bg-white rounded-3xl flex items-center justify-center overflow-hidden shadow-[0px_4px_8px_0px_rgba(0,0,0,0.12)] ${
+                selectedCategory === category.id ? 'ring-2 ring-primary' : ''
+              }`}>
                 <img src="" alt={category.name} className="object-cover w-full h-full" />
               </div>
-              <div className="text-center text-xs font-light leading-4">{category.name}</div>
+              <div className={`text-center text-xs font-light leading-4 ${
+                selectedCategory === category.id ? 'font-medium text-primary' : ''
+              }`}>
+                {category.name}
+              </div>
             </div>
           </div>
         ))}
