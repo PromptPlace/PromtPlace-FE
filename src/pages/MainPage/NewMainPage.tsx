@@ -12,6 +12,7 @@ const NewMainPage = () => {
   const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(null);
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [selectedSort, setSelectedSort] = useState<string>('조회순');
+  const [displayCount, setDisplayCount] = useState(20); // 표시할 프롬프트 개수
 
   const prompts = data?.data || [];
   
@@ -44,24 +45,36 @@ const NewMainPage = () => {
     }
   });
   
+  // 표시할 프롬프트 (페이지네이션)
+  const displayedPrompts = sortedPrompts.slice(0, displayCount);
+  const hasNext = sortedPrompts.length > displayCount;
+  
   const totalCount = sortedPrompts.length;
 
   const handleCategorySelect = (categoryId: number | null, categoryName: string | null) => {
     setSelectedCategoryName(categoryName);
+    setDisplayCount(20); // 카테고리 변경 시 페이지 리셋
   };
 
   const handleModelChange = (models: string[]) => {
     setSelectedModels(models);
+    setDisplayCount(20); // 모델 변경 시 페이지 리셋
   };
 
   const handleSortChange = (sort: string) => {
     setSelectedSort(sort);
+    setDisplayCount(20); // 정렬 변경 시 페이지 리셋
   };
 
   const handleReset = () => {
     setSelectedCategoryName(null);
     setSelectedModels([]);
     setSelectedSort('조회순');
+    setDisplayCount(20); // 리셋 시 페이지도 리셋
+  };
+
+  const handleLoadMore = () => {
+    setDisplayCount((prev) => prev + 20);
   };
 
   console.log(prompts.map((p) => p.models));
@@ -105,7 +118,19 @@ const NewMainPage = () => {
           </span>
         </div>
 
-        <PromptGrid prompts={sortedPrompts} />
+        <PromptGrid prompts={displayedPrompts} />
+
+        {hasNext && (
+          <div className="flex justify-center mt-[134px]">
+            <button
+              onClick={handleLoadMore}
+              className="px-10 py-3 bg-background rounded-xl outline outline-[0.80px] outline-gray-400 inline-flex justify-center items-center gap-2 hover:bg-gray-50 transition">
+              <div className="text-center justify-center text-gray-500 text-xs font-medium font-['S-Core_Dream'] leading-4">
+                프롬프트 더 보기
+              </div>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
