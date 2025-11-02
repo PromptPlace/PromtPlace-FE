@@ -251,7 +251,7 @@ const PromptDetailCard = ({
                 onClick={onDownload}
               />
               <button
-                className="w-[49px] h-[49px] rounded-[12px] bg-[#FFFEFB] border border-[0.8px] border-[#D1D5DB] flex items-center justify-center"
+                className="w-[49px] h-[49px] rounded-[12px] bg-[#FFFEFB] border-[1px] border-[#D1D5DB] flex items-center justify-center"
                 onClick={() => setLiked((v) => !v)}
                 aria-label="좋아요">
                 <img src={liked ? heartOnClick : heartNone} alt="like" className="w-[28px] h-[28px]" />

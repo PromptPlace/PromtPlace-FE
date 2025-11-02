@@ -4,6 +4,7 @@ import defaultProfile from '../assets/profile.png';
 import mail from '../../../assets/icon-mail-black.svg';
 import person from '../../../assets/icon-person-blue.svg';
 import { useNavigate } from 'react-router-dom';
+import RatingTitle from '@components/RatingTitle';
 
 import InstaIcon from '@assets/icon-instagram-logo.svg';
 import YoutubeIcon from '@assets/icon-youtube-logo.svg';
@@ -23,10 +24,11 @@ interface PromptAuthorAndReviewProps {
   user: {
     user_id: number;
     nickname: string;
-    profileImage?: { url: string } | null;
-    intro?: string | null;
-    sns_list?: { url: string }[];
+    profileImage: string | null;
+    intro: string | null;
+    sns_list: { url: string }[];
   };
+
   currentUserId?: number | null;
   follow: boolean;
   onToggleFollow: () => void;
@@ -35,6 +37,7 @@ interface PromptAuthorAndReviewProps {
   reviewCount: number;
   setReviewCount: React.Dispatch<React.SetStateAction<number>>;
   title: string;
+  reviewRatingAvg?: number;
 }
 
 const PromptAuthorAndReview = ({
@@ -47,12 +50,12 @@ const PromptAuthorAndReview = ({
   reviewCount,
   setReviewCount,
   title,
+  reviewRatingAvg = 0,
 }: PromptAuthorAndReviewProps) => {
   const navigate = useNavigate();
 
   const getSNSIcons = () => {
     if (!user.sns_list) return null;
-
     return user.sns_list.map((sns, idx) => {
       const url = sns.url.toLowerCase();
       if (url.includes('instagram.com')) {
@@ -86,10 +89,9 @@ const PromptAuthorAndReview = ({
       <div className="bg-[#FFFEFB] rounded-[16px] p-6 w-[430px] h-auto text-left self-start">
         <p className="text-sm font-medium text-gray-500 mb-2">제작자 프로필</p>
 
-        {/* 상단 정보 */}
         <div className="flex items-center gap-4">
           <img
-            src={user?.profileImage?.url ?? defaultProfile}
+            src={user?.profileImage ?? defaultProfile}
             alt="profile"
             className="w-[49px] h-[49px] rounded-[12px] border border-gray-300 object-cover"
           />
@@ -102,10 +104,8 @@ const PromptAuthorAndReview = ({
           </div>
         </div>
 
-        {/* 자기소개 */}
         {user.intro && <p className="ml-15 mt-4 text-sm text-gray-600 leading-[22px] break-keep">{user.intro}</p>}
 
-        {/* 버튼 */}
         <div className="mt-5 flex gap-2">
           <button className="flex-1 h-[48px] border border-[#D1D5DB] rounded-md text-[14px] text-gray-700 flex items-center justify-center gap-3 hover:bg-gray-100 transition">
             <img src={mail} alt="문의하기" className="w-4 h-4" />
@@ -120,16 +120,38 @@ const PromptAuthorAndReview = ({
         </div>
       </div>
 
-      {/* 리뷰 리스트 */}
-      <ReviewList
-        reviews={reviews}
-        setReviews={setReviews}
-        reviewCount={reviewCount}
-        setReviewCount={setReviewCount}
-        title={title}
-        onClose={() => {}}
-        currentUserId={currentUserId ?? undefined}
-      />
+      {/* 오른쪽: 리뷰 요약 + 리뷰 리스트 */}
+      <div className="bg-[#FFFEFB] rounded-[16px] p-6 flex-1 h-auto">
+        {/* 상단 요약 */}
+        <div className="flex flex-col mb-4 p-6">
+          {/* 상단: 리뷰 전체보기 + 리뷰 수 */}
+          <div className="flex items-center gap-2 mb-4">
+            <h2 className="text-[24px] font-medium">리뷰 전체보기</h2>
+            <span
+              className="px-[10px] py-[5px] rounded-[50px] border border-[#CCCCCC] bg-[#FFFEFB]
+                 text-[#999898] font-medium text-[16px]">
+              {reviewCount}
+            </span>
+          </div>
+
+          {/* 하단: 별점 + 점수 */}
+          <div className="flex items-center gap-4">
+            <RatingTitle star={Number.isFinite(reviewRatingAvg) ? reviewRatingAvg : 0} />
+            <span className="text-[#999898] font-medium text-[16px]">{reviewRatingAvg.toFixed(1)}점</span>
+          </div>
+        </div>
+
+        {/* 리뷰 리스트 */}
+        <ReviewList
+          reviews={reviews}
+          setReviews={setReviews}
+          reviewCount={reviewCount}
+          setReviewCount={setReviewCount}
+          title={title}
+          onClose={() => {}}
+          currentUserId={currentUserId ?? undefined}
+        />
+      </div>
     </section>
   );
 };

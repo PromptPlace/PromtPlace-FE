@@ -134,16 +134,6 @@ const ReviewList = ({
   return (
     <>
       <div className="hidden lg:flex w-[766px] rounded-[16px] bg-[#FFFEFB] h-auto px-8 py-6 flex-col max-lg:mx-[20px]">
-        {/* 상단 */}
-        <div className="flex items-center mb-4">
-          <button onClick={onClose} className="text-2xl font-bold leading-none hover:opacity-70" aria-label="뒤로가기">
-            &lt;
-          </button>
-          <h2 className="font-bold text-[20px] ml-3 inline-flex items-center gap-2">구매자 리뷰 ({reviewCount})</h2>
-        </div>
-
-        <div className="h-[1px] bg-[#CCCCCC] w-full mb-4" />
-
         {/* 리뷰 리스트 */}
         <div
           className="flex-1 overflow-y-auto pr-2 custom-scrollbar relative"

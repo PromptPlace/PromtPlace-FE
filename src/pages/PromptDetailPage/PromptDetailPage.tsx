@@ -20,8 +20,7 @@ import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
 import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
 import useGetAllPromptReviews from '@/hooks/queries/PromptDetailPage/useGetAllPromptReviews';
 
-// types
-import type { UIReview } from './components/ReviewList';
+import type { Review } from './components/ReviewList';
 
 const PromptDetailPage = () => {
   const navigate = useNavigate();
@@ -53,7 +52,7 @@ const PromptDetailPage = () => {
 
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
 
-  const [reviews, setReviews] = useState<UIReview[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [reviewCount, setReviewCount] = useState(0);
   const { data: allReviews } = useGetAllPromptReviews(promptId, {
     enabled: Number.isFinite(promptId),
