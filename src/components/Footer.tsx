@@ -44,7 +44,7 @@ const Footer = () => {
     },
   ];
   return (
-    <footer className="bg-white mt-[168px] px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
+    <footer className="bg-background mt-[168px] px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
       <nav className="pt-[32px] pb-[16px] flex gap-[20px]">
         {LINKS.map((link) => (
           <Link
@@ -64,7 +64,7 @@ const Footer = () => {
           <div
             className={clsx(
               'custom-body2 max-phone:text-[12px]',
-              content.title === '대표자' && 'col-span-2 max-lg:col-span-1 text-red-500',
+              content.title === '대표자' && 'col-span-2 max-lg:col-span-1',
             )}
             key={content.title}>
             <span className="text-gray700">{content.title}</span> :{' '}
