@@ -179,8 +179,8 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
 
           <div className="flex gap-[12px] px-[12px] max-phone:px-[0px] max-phone:ml-[40px] max-phone:mt-[-4px] flex-wrap">
             <SnsButton
-              url={snsData?.data[snsData.data.length - 1].url || ''}
-              id={snsData?.data[snsData.data.length - 1].user_sns_id || ''}
+              url={snsData?.data[snsData.data.length - 1]?.url || ''}
+              id={snsData?.data[snsData.data.length - 1]?.user_sns_id || ''}
             />
           </div>
 
