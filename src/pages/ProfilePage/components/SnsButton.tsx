@@ -28,7 +28,7 @@ const SnsButton = ({ url, id }: SnsButtonProps) => {
     <a href={url} target="_blank">
       <div className="flex py-[6px] px-[12px] gap-[8px] justify-center items-center rounded-[50px] border border-[0.8px] border-gray300 bg-white self-center max-phone:rounded-full max-phone:px-[6px] max-phone:gap-[12px]">
         <img src={snsType} alt="sns" className="w-[24px] h-[24px]" />
-        <p className="custom-body3 overflow-hidden text-ellipsis max-phone:hidden">@{id}</p>
+        <p className="custom-body3 overflow-hidden text-ellipsis max-phone:hidden">{id}</p>
       </div>
     </a>
   );
