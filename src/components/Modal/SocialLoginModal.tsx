@@ -26,6 +26,8 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
   const [view, setView] = useState<ModalView>('login');
   const [signupEmail, setsignUpEmail] = useState<string>('');
   const [signupPassword, setsignUpPassword] = useState<string>('');
+  const [signupAuthCode, setsignUpAuthCode] = useState<string>('');
+  const [changePasswordAuthCode, setChangePasswordAuthCode] = useState<string>('');
   //메인 모달
 
   //뷰 렌더링함수
@@ -34,11 +36,19 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
       case 'login':
         return <LoginView setView={setView} />;
       case 'signup':
-        return <SignupView setView={setView} email={signupEmail} setEmail={setsignUpEmail} />;
+        return (
+          <SignupView
+            setView={setView}
+            email={signupEmail}
+            setEmail={setsignUpEmail}
+            authCode={signupAuthCode}
+            setAuthCode={setsignUpAuthCode}
+          />
+        );
       case 'forgotPassword':
-        return <ForgotPasswordView setView={setView} />;
+        return <ForgotPasswordView setView={setView} authCode={changePasswordAuthCode} setAuthCode={setChangePasswordAuthCode} />;
       case 'changePassword':
-        return <ChangePasswordView setView={setView} />;
+        return <ChangePasswordView setView={setView} authCode={changePasswordAuthCode} />;
       case 'initPassword':
         return (
           <InitPasswordView
@@ -57,6 +67,8 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
             setEmail={setsignUpEmail}
             password={signupPassword}
             setPassword={setsignUpPassword}
+            authCode={signupAuthCode}
+            setAuthCode={setsignUpAuthCode}
           />
         );
       // case 'signupEmail':
