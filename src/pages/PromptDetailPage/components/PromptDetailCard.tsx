@@ -12,6 +12,7 @@ import heartNone from '../../../assets/promptDetail/icon-heart-none_gray-300_28p
 import heartOnClick from '../../../assets/promptDetail/icon-heart-fill_gradient_28px.svg';
 import reportIcon from '../assets/report.svg';
 import star from '../assets/star.png';
+import ReportModal from '../components/ReportModal';
 
 interface Props {
   title: string;
@@ -19,9 +20,9 @@ interface Props {
   downloads: number;
   onClose: () => void;
   onClickReview: () => void;
-  models?: string[] | null; // 부모에서 정규화된 문자열 배열 전달
+  models?: string[] | null;
   rating?: number;
-  tags?: string[] | null; // 부모에서 정규화된 문자열 배열 전달
+  tags?: string[] | null;
   description?: string | null;
   usageGuide?: string | null;
   isPaid?: boolean;
@@ -52,14 +53,14 @@ const PromptDetailCard = ({
     enabled: Number.isFinite(promptId),
   });
 
-  // 모델: 부모가 준 models 우선, 없으면 서버 응답으로 보강
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+
   const safeModels = useMemo<string[]>(() => {
     if (Array.isArray(models) && models.length > 0) return models;
     const fromServer = Array.isArray(data?.models) ? data!.models.map((m: any) => m?.model?.name).filter(Boolean) : [];
     return fromServer;
   }, [models, data?.models]);
 
-  // 날짜 포맷
   const formatDateToDot = (dateStr: string): string => {
     if (!dateStr) return '-';
     const date = new Date(dateStr);
@@ -73,7 +74,6 @@ const PromptDetailCard = ({
   const modelVersion = data?.model_version ?? '-';
   const uploadedAt = data?.created_at ? formatDateToDot(data.created_at) : '-';
 
-  // 한 줄 소개: description 첫 줄
   const rawDescription = descProp ?? data?.description ?? '';
   const oneLiner =
     (typeof rawDescription === 'string'
@@ -83,11 +83,9 @@ const PromptDetailCard = ({
           .filter(Boolean)[0]
       : undefined) ?? '';
 
-  // 활용법 / 결과
   const usageGuide = usageProp ?? data?.usage_guide ?? '';
   const promptResult = data?.prompt_result ?? '';
 
-  // 이미지 정규화 (order_index 기준 정렬, 최대 3장)
   const rawImages: string[] = Array.isArray(data?.images)
     ? data!.images
         .filter((img): img is { order_index: number; image_url: string } => !!img && typeof img.image_url === 'string')
@@ -110,19 +108,20 @@ const PromptDetailCard = ({
 
   return (
     <>
-      {/* 상단 */}
       <div className="flex items-center justify-between mb-1 font-light">
         <span className="text-[14px] text-[#030712]">이미지 생성 &gt;</span>
         <button
           type="button"
           className="text-[14px] text-[#6b7280] underline flex items-center gap-1"
-          onClick={() => alert('신고하기')}>
+          onClick={() => setIsReportModalOpen(true)}>
           <img src={reportIcon} alt="신고" className="w-[24px] h-[24px]" />
           해당 프롬프트 신고하기
         </button>
+
+        <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} promptId={promptId} />
       </div>
 
-      <div className="w-full bg-[#FFFEFB] rounded-[16px] p-6 flex flex-col gap-6">
+      <div className="w-full bg-[#FFFEFB] rounded-[16px] p-6 px-[5%] max-w-[1236px] mx-auto flex flex-col gap-6">
         {/* 헤더 */}
         <div className="flex items-start justify-between mb-1 flex-wrap gap-y-1">
           <div className="flex-1 min-w-0">
@@ -165,13 +164,11 @@ const PromptDetailCard = ({
 
         {/* 본문 */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          {/* 좌측 */}
-          <section className="md:col-span-5">
+          <section className="md:col-span-5 w-full max-w-full">
             <div className="flex items-center gap-3 mb-1">
-              {' '}
-              <img src={star} alt="별 아이콘" className="w-[36px] h-[35px]" />{' '}
-              <p className="text-[13px] text-[#6b7280]">이 프롬프트로 다운받아 입력하면</p>{' '}
-            </div>{' '}
+              <img src={star} alt="별 아이콘" className="w-[36px] h-[35px]" />
+              <p className="text-[13px] text-[#6b7280]">이 프롬프트로 다운받아 입력하면</p>
+            </div>
             <h3 className="font-medium text-[18px] ml-12 md:text-[20px]">AI가 이렇게 대답해줘요</h3>
             {hasImages ? (
               <>
@@ -201,7 +198,7 @@ const PromptDetailCard = ({
                 </div>
               </>
             ) : (
-              <div className="mt-4 max-w-[328px] xl:max-w-[485px] rounded-[12px] rounded-tl-none bg-[#F0F7FF] p-4">
+              <div className="mt-4 w-full max-w-[485px] rounded-[12px] rounded-tl-none bg-[#F0F7FF] p-4">
                 <p className="text-[14px] font-light leading-[22px] whitespace-pre-line">
                   {isLoading ? '불러오는 중…' : usageGuide}
                 </p>
@@ -214,7 +211,7 @@ const PromptDetailCard = ({
             )}
           </section>
 
-          <aside className="md:col-span-6 w-[388px] max-w-[388px] xl:w-[647px] xl:max-w-[647px]">
+          <aside className="md:col-span-6 w-full max-w-full">
             <p className="text-[14px] font-light text-[#6b7280] mb-2">이 프롬프트의 활용법이 궁금하다면</p>
             <h3 className="font-medium text-[18px] md:text-[20px]">
               {hasImages ? '이렇게 쓰는 프롬프트예요' : '프롬프트에 대한 설명이에요'}
@@ -225,10 +222,9 @@ const PromptDetailCard = ({
           </aside>
         </div>
 
-        {/* 하단 액션 전체 영역 */}
-        <div className="mt-6 flex justify-between items-end gap-4 max-lg:flex-col max-lg:items-start">
-          {/* 왼쪽: 태그 영역 */}
-          <div className="flex flex-wrap gap-2">
+        <div className="mt-6 flex flex-col-reverse lg:flex-row lg:justify-between lg:items-end gap-4">
+          {/* 왼쪽 (1024px 이상): 태그 */}
+          <div className="flex flex-wrap gap-2 lg:justify-start">
             {Array.isArray(tags) && tags.length > 0 ? (
               tags.map((tag, idx) => <TagButton key={idx} hasDelete={false} text={`#${tag}`} onClick={() => {}} />)
             ) : (
@@ -236,13 +232,13 @@ const PromptDetailCard = ({
             )}
           </div>
 
-          {/* 오른쪽: 가격 + 다운로드 버튼 */}
-          <div className="flex flex-col items-end gap-2 text-right">
+          {/* 오른쪽 (1024px 이상): 가격 + 버튼 */}
+          <div className="flex flex-col items-end text-right w-full lg:w-auto">
             <p className="font-medium text-[24px]">{isFree ? '무료' : `${price.toLocaleString()}원`}</p>
             {isPaid && !isFree && <span className="text-sm text-green-600">구매 완료</span>}
             <span className="text-[12px] font-light text-[#374151]">* 다운로드를 하고 프롬프트를 사용해보세요!</span>
 
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-5 mt-2 lg:mt-0">
               <IconButton
                 buttonType="squareBig"
                 style="fill"
