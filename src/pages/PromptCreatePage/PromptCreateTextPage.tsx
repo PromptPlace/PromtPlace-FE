@@ -8,7 +8,7 @@ import FilterModal from './components/FilterModal';
 import TagButton from '@/components/Button/TagButton';
 
 import TextModal from '@/components/Modal/TextModal';
-import { axiosInstance } from '@/apis/axios';
+
 import useCreatePromptText from '@/hooks/mutations/PromptCreatePage/useCreateText';
 
 interface PostText {
