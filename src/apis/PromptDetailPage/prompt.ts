@@ -23,8 +23,9 @@ export async function getPromptDetail(promptId: number): Promise<PromptDetailDto
     downloads: d.downloads,
     views: d.views,
     likes: d.likes,
+    model_version: d.model_version ?? null,
     review_count: d.review_count,
-    review_rating_avg: d.review_rating_avg,
+    review_rating_avg: d.average_rating,
     created_at: d.created_at,
     updated_at: d.updated_at,
     inactive_date: d.inactive_date,
@@ -33,19 +34,24 @@ export async function getPromptDetail(promptId: number): Promise<PromptDetailDto
       user_id: d.user.user_id,
       nickname: d.user.nickname,
       profileImage: d.user.profileImage?.url ?? null,
+      intro: d.user.intro?.description ?? null,
+      sns_list: d.user.sns_list ?? [],
     },
 
     models: d.models.map((m: { model: { name: string } }) => ({
       name: m.model.name,
     })),
 
-    tags: d.tags.map((t: any) => ({
-      prompttag_id: t.prompttag_id,
-      prompt_id: t.prompt_id,
-      tag_id: t.tag_id,
-      tag: {
-        tag_id: t.tag.tag_id,
-        name: t.tag.name,
+    categories: d.categories.map((c: any) => ({
+      promptcategory_id: c.promptcategory_id,
+      prompt_id: c.prompt_id,
+      category_id: c.category_id,
+      category: {
+        category_id: c.category.category_id,
+        name: c.category.name,
+        mainCategory: {
+          name: c.category.mainCategory.name,
+        },
       },
     })),
 

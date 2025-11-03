@@ -30,7 +30,7 @@ const NavbarSection = ({ title, models, setIsNavModalShow }: NavbarSectionProps)
   return (
     <>
       <div>{title}</div>
-      <div className="px-[16px] py-[12px] grid grid-flow-col grid-rows-3 grid-cols-2 gap-x-[20px] gap-y-[8px]">
+      <div className="px-[16px] py-[12px] grid grid-flow-col grid-rows-3 grid-cols-2 gap-x-[20px] gap-y-[8px] max-lg:flex max-lg:flex-col">
         {models.map((model) => (
           <NavbarButton key={model.id} text={model.label} url={model.url} setIsNavModalShow={setIsNavModalShow} />
         ))}

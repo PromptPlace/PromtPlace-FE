@@ -28,9 +28,8 @@ const BackgroundButton = ({ background, text, onClick, type }: BackgroundButtonP
       onClick={onClick}
       type={type}
       className={clsx(
-        'custom-button1 rounded-[12px] py-[12px] flex justify-center items-center self-center shrink-0',
+        'custom-button1 max-phone:text-[12px] rounded-[12px] py-[12px] px-[16px] flex justify-center items-center self-center shrink-0',
         background === 'secondary' ? 'bg-secondary text-primary' : 'bg-primary text-white',
-        text === '프롬프트 올리기' ? 'px-[20px]' : 'px-[16px]',
       )}>
       {text}
     </button>

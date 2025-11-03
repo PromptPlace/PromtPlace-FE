@@ -68,7 +68,7 @@
 
   --text-shadow-notfound: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
-  --breakpoint-phone: 26.625rem; /* 426px */
+  --breakpoint-phone: 30.0625rem; /* 481px */
 }
 
 @layer base {
@@ -151,6 +151,92 @@
     font-size: 12px;
     font-weight: 500;
     line-height: 150%;
+  }
+
+  .custom-button3 {
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 150%;
+  }
+
+  /* slick */
+  .slick-arrow.slick-next::before,
+  .slick-arrow.slick-next {
+    position: absolute !important;
+    top: 0px !important;
+  }
+
+  .slick-track {
+    display: flex !important;
+  }
+
+  .slick-slide {
+    padding: 60px 10px !important;
+  }
+
+  .image-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 254, 251, 0.4);
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+  }
+
+  .slick-center .image-overlay::after {
+    opacity: 0;
+  }
+
+  .slick-slide.slick-active.slick-center.slick-current {
+    transform: scale(1.38);
+  }
+
+  .slick-slide.slick-active.slick-center.slick-current button {
+    width: calc(186px / 1.38) !important;
+    height: calc(45px / 1.38) !important;
+    right: calc(40px / 1.38) !important;
+    bottom: calc(42px / 1.38) !important;
+    gap: calc(20px / 1.38) !important;
+    padding: calc(12px / 1.38) calc(12px / 1.38) calc(12px / 1.38) calc(24px / 1.38) !important;
+  }
+
+  .slick-slide.slick-active.slick-center.slick-current a {
+    font-size: calc(14px / 1.38) !important;
+  }
+
+  .slick-slide.slick-active.slick-center.slick-current svg {
+    width: calc(18px / 1.38);
+  }
+
+  @media (max-width: 1024px) {
+    .slick-slide.slick-active.slick-center.slick-current button {
+      right: calc(16px / 1.38) !important;
+      bottom: calc(16px / 1.38) !important;
+    }
+  }
+
+  @media (max-width: 481px) {
+    .slick-slide.slick-active.slick-center.slick-current div button {
+      width: calc(113px / 1.38) !important;
+      height: calc(25px / 1.38) !important;
+      right: calc(13.71px / 1.38) !important;
+      bottom: calc(13.71px / 1.38) !important;
+      gap: calc(17.14px / 1.38) !important;
+      padding: calc(6.86px / 1.38) calc(6.86px / 1.38) calc(6.86px / 1.38) calc(13.71px / 1.38) !important;
+    }
+  }
+
+  @media (max-width: 481px) {
+    .slick-slide.slick-active.slick-center.slick-current a {
+      font-size: calc(8px / 1.38) !important;
+    }
+  }
+
+  @media (max-width: 481px) {
+    .slick-slide.slick-active.slick-center.slick-current svg {
+      width: calc(10px / 1.38) !important;
+    }
   }
 }
 

@@ -11,7 +11,8 @@ export const publicRoutes: RouteObject[] = [
     element: <HomeLayout />,
     errorElement: <lazyRoutes.NotFoundPage />,
     children: [
-      { index: true, element: <lazyRoutes.MainPage /> },
+      { index: true, element: <lazyRoutes.HomePage /> },
+      { path: 'prompt', element: <lazyRoutes.MainPage /> },
       { path: 'prompt/:id', element: <lazyRoutes.PromptDetailPage /> },
       { path: 'create', element: <lazyRoutes.PromptCreatePage /> },
       { path: 'create/landing', element: <lazyRoutes.PromptLandingPage /> },

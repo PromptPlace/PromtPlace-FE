@@ -2,7 +2,8 @@ import React from 'react';
 
 export const lazyRoutes = {
   SocialLoginCallbackPage: React.lazy(() => import('../pages/callback/SocialLoginCallback')),
-  MainPage: React.lazy(() => import('../pages/MainPage/MainPage')),
+  MainPage: React.lazy(() => import('../pages/MainPage/NewMainPage')),
+  HomePage: React.lazy(() => import('../pages/HomePage/HomePage')),
   MyInfoPage: React.lazy(() => import('../pages/MyPage/MyInfoPage')),
   MyAccountPage: React.lazy(() => import('../pages/MyPage/MyAccountPage')),
   MyMessagePage: React.lazy(() => import('../pages/MyPage/MyMessagePage')),
@@ -13,7 +14,7 @@ export const lazyRoutes = {
   MyPromptPage: React.lazy(() => import('../pages/MyPage/MyPromptPage')),
   MyReviewPage: React.lazy(() => import('../pages/MyPage/MyReviewPage')),
   NotFoundPage: React.lazy(() => import('../pages/NotFoundPage/NotFoundPage')),
-  ProfilePage: React.lazy(() => import('../pages/ProfilePage/ProfilePage')),
+  ProfilePage: React.lazy(() => import('../pages/ProfilePage/NewProfilePage')),
   PromptCreatePage: React.lazy(() => import('../pages/PromptCreatePage/PromptCreatePage')),
   PromptLandingPage: React.lazy(() => import('../pages/PromptCreatePage/PromptLandingPage')),
   PromptCreateTextPage: React.lazy(() => import('../pages/PromptCreatePage/PromptCreateTextPage')),

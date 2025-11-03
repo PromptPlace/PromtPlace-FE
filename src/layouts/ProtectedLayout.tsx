@@ -3,6 +3,7 @@ import ScrollToTop from '@utils/scrollToTop';
 import Navbar from '@/components/Navbar/Navbar';
 import { Suspense } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
+import Footer from '@/components/Footer';
 
 const ProtectedLayout = () => {
   const { accessToken } = useAuth();
@@ -14,15 +15,17 @@ const ProtectedLayout = () => {
     <>
       <ScrollToTop />
       <Navbar />
-      <div className="bg-background lg:pb-0 max-lg:pb-[64px]" style={{ minHeight: 'calc(100vh - 75px)' }}>
+      <div className="bg-background" style={{ minHeight: 'calc(100vh - 140px)' }}>
         <Suspense fallback={null}>
           <Outlet />
         </Suspense>
       </div>
 
-      {/* <div className="lg:hidden max-lg:block">
+      {/* <div className="phone:hidden max-phone:block">
         <TabBar />
       </div> */}
+
+      <Footer />
     </>
   );
 };
