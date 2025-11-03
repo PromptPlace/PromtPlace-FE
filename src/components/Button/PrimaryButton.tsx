@@ -52,7 +52,8 @@ const primaryButtonTheme = {
     login:
       'rounded-[40px] max-lg:rounded-[4px] max-w-[171px] max-lg:max-w-[112px] w-full py-[9px] max-lg:py-[8px] max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px] max-lg:tracking-[0.46px] max-lg:border-[0.5px] text-base leading-[26px]',
     tip: 'rounded-[40px] max-w-[127px] w-full py-[9px] text-base leading-[26px]',
-    square: 'rounded-[12px] py-[12px] px-[20px] border-[0.8px]',
+    square:
+      'rounded-[12px] py-[12px] px-[20px] border-[0.8px] max-phone:py-[6px] max-phone:px-[12px] max-phone:text-[10px] max-phone:rounded-[8px]',
     squareMini:
       'rounded-[10px] max-lg:rounded-[4px] py-[2px] px-[14px] max-lg:px-[8px] max-lg:text-[10px] max-lg:font-normal max-lg:leading-[13px] max-lg:tracking-[0.46px] text-base leading-[26px]',
     review:
