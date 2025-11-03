@@ -11,6 +11,7 @@ import PrimaryButton from '@/components/Button/PrimaryButton';
 import type { ResponseMemberDto } from '@/types/ProfilePage/profile';
 import ProfileIcon from '@assets/header/mypage.svg?react';
 import useGetSNS from '@/hooks/queries/ProfilePage/useGetSNS';
+import clsx from 'clsx';
 
 interface ProfileViewProps {
   userData?: ResponseMemberDto;
@@ -94,19 +95,31 @@ const ProfileView = ({ userData, setActiveTab }: ProfileViewProps) => {
           <div className="flex flex-col gap-[12px]">
             <label className="custom-h5 block max-phone:text-[14px]">SNS</label>
             <label className="custom-button2 block text-gray-700 max-phone:text-[12px]">SNS 아이디</label>
-            <p className="text-gray-400 custom-body2 px-[16px] py-[12px] max-phone:text-[12px]">
+            <p
+              className={clsx(
+                snsData?.data[0] ? 'text-text-on-white' : 'text-gray-400',
+                'custom-body2 px-[16px] py-[12px] max-phone:text-[12px]',
+              )}>
               {snsData?.data[0] ? snsData?.data[snsData.data.length - 1].user_sns_id : '아직 작성하지 않았어요!'}
             </p>
 
             <label className="custom-button2 block text-gray-700 max-phone:text-[12px]">접속 가능한 URL</label>
-            <p className="text-gray-400 custom-body2 px-[16px] py-[12px] max-phone:text-[12px]">
+            <p
+              className={clsx(
+                snsData?.data[0] ? 'text-text-on-white' : 'text-gray-400',
+                'custom-body2 px-[16px] py-[12px] max-phone:text-[12px]',
+              )}>
               {snsData?.data[0] ? snsData?.data[snsData.data.length - 1].url : '아직 작성하지 않았어요!'}
             </p>
           </div>
 
           <div className="flex flex-col gap-[12px]">
             <label className="custom-h5 block max-phone:text-[14px]">소개말</label>
-            <p className="text-gray-400 custom-body2 px-[16px] py-[12px] max-phone:text-[12px]">
+            <p
+              className={clsx(
+                userData?.data.intros ? 'text-text-on-white' : 'text-gray-400',
+                'custom-body2 px-[16px] py-[12px] max-phone:text-[12px]',
+              )}>
               {userData?.data.intros ? userData.data.intros : '아직 작성하지 않았어요!'}
             </p>
           </div>
