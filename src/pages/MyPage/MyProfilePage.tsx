@@ -2,13 +2,10 @@ import ProfileCard from '../ProfilePage/components/ProfileCard';
 import MyProfileTabs from './components/MyProfileTabs';
 import { useState } from 'react';
 import prepareIcon from '@assets/icon-prepare.svg';
-import MyPageInfo from './MyInfoPage';
 import ProfileView from './components/ProfileView';
 import ProfileEditView from './components/ProfileEditView';
-import PrimaryButton from '@/components/Button/PrimaryButton';
 import { useAuth } from '@/context/AuthContext';
 import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
-import UploadPrompt from '../MainPage/components/UploadPromt';
 
 const MyProfilePage = () => {
   const { user } = useAuth();

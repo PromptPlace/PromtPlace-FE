@@ -3,9 +3,11 @@ import PrimaryButton from '@components/Button/PrimaryButton';
 import eye_visible from '@assets/icon-eye-visible.svg';
 import eye_invisible from '@assets/icon-eye-invisible.svg';
 import type { ModalView } from '@/types/LoginPage/auth';
+import useResetPasswordRequest from '@/hooks/mutations/LoginPage/useResetPasswordRequest';
 
 interface LoginViewProps {
   setView: (view: ModalView) => void;
+  authCode: string;
 }
 
 type PasswordStatus = 'default' | 'valid' | 'invalid';
@@ -13,7 +15,7 @@ type RepeatPasswordStatus = 'default' | 'match' | 'mismatch';
 
 
 
-const ChangePasswordView = ({ setView }: LoginViewProps) => {
+const ChangePasswordView = ({ setView, authCode }: LoginViewProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -68,6 +70,24 @@ const ChangePasswordView = ({ setView }: LoginViewProps) => {
       setErrorRepeat('mismatch');
     }
   }, [password, repeatPassword]); // 두 상태 중 하나라도 바뀌면 실행됩니다.
+
+  const { mutate: resetPassword } = useResetPasswordRequest();
+  const handlePasswordChange = () => {
+    resetPassword(
+      { email, newPassword: password, confirmPassword: repeatPassword, tempToken: authCode },
+      {
+        onSuccess: () => {
+          // 비밀번호 변경 성공 시 처리
+          console.log('비밀번호 변경 성공');
+          setView('login');
+        },
+        onError: (error) => {
+          // 비밀번호 변경 실패 시 처리
+          console.error('비밀번호 변경 실패:', error);
+        },
+      }
+    );
+  };
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -146,7 +166,7 @@ const ChangePasswordView = ({ setView }: LoginViewProps) => {
           text="변경하기"
           textColor="white"
           disable={isDisabled}
-          onClick={() => {}}
+          onClick={handlePasswordChange}
         />
       </form>
       <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
