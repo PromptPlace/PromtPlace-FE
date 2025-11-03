@@ -11,9 +11,13 @@ export const publicRoutes: RouteObject[] = [
     element: <HomeLayout />,
     errorElement: <lazyRoutes.NotFoundPage />,
     children: [
-      { index: true, element: <lazyRoutes.MainPage /> },
+      { index: true, element: <lazyRoutes.HomePage /> },
+      { path: 'prompt', element: <lazyRoutes.MainPage /> },
       { path: 'prompt/:id', element: <lazyRoutes.PromptDetailPage /> },
       { path: 'create', element: <lazyRoutes.PromptCreatePage /> },
+      { path: 'create/landing', element: <lazyRoutes.PromptLandingPage /> },
+      { path: 'create/text', element: <lazyRoutes.PromptCreateTextPage /> },
+      { path: 'create/img', element: <lazyRoutes.PromptCreateImgPage /> },
       { path: 'guide/tip', element: <lazyRoutes.PromptGuidePage type="tip" /> },
       { path: 'guide/tip/:id', element: <lazyRoutes.PromptGuideDetailPage type="tip" /> },
       { path: 'guide/notice', element: <lazyRoutes.PromptGuidePage type="notice" /> },
@@ -22,6 +26,8 @@ export const publicRoutes: RouteObject[] = [
       { path: '/test', element: <TestPage /> },
       { path: 'mypage', element: <lazyRoutes.MyPage /> },
       { path: '/auth/callback', element: <lazyRoutes.SocialLoginCallbackPage /> },
+      // { path: 'guide/tip/create', element: <lazyRoutes.PromptGuideCreatePage type="tip" /> },
+      // { path: 'guide/notice/create', element: <lazyRoutes.PromptGuideCreatePage type="notice" /> },
     ],
   },
 ];
@@ -45,6 +51,7 @@ export const protectedRoutes: RouteObject[] = [
       { path: 'info', element: <lazyRoutes.MyInfoPage /> },
       { path: 'info/account', element: <lazyRoutes.MyAccountPage /> },
       { path: 'edit/:id', element: <lazyRoutes.PromptEditPage /> },
+      { path: 'profile', element: <lazyRoutes.MyProfilePage /> },
     ],
   },
 ];
@@ -56,6 +63,8 @@ export const adminRoutes: RouteObject[] = [
     children: [
       //ex: { path: 'report', element: <lazyRoutes.AdminReportPage /> },
       { path: 'complaint', element: <lazyRoutes.AdminComplaintPage /> },
+      { path: 'guide/tip/create', element: <lazyRoutes.PromptGuideCreatePage type="tip" /> },
+      { path: 'guide/notice/create', element: <lazyRoutes.PromptGuideCreatePage type="notice" /> },
       { path: 'complaint/:id', element: <lazyRoutes.AdminComplaintDetailPage /> },
     ],
   },

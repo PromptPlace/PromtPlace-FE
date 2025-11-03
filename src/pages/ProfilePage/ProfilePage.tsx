@@ -295,8 +295,8 @@ const ProfilePage = () => {
   };
 
   // 회원 SNS 작성
-  const handleAddSns = ({ url, description }: RequestPostSNS) => {
-    mutatePostSNS({ url, description });
+  const handleAddSns = ({ url, description, user_sns_id }: RequestPostSNS) => {
+    mutatePostSNS({ url, description, user_sns_id });
   };
 
   // 회원 SNS 수정
@@ -859,7 +859,7 @@ const ProfilePage = () => {
                       buttonType="plus"
                       text="+"
                       onClick={() => {
-                        handleAddSns({ url: 'https://example.com', description: ' ' });
+                        handleAddSns({ url: 'https://example.com', description: ' ', user_sns_id: '' });
                       }}
                     />
                   </div>

@@ -13,9 +13,10 @@ import FollowButton from '@components/Button/FollowButton';
 import CircleButton from '@components/Button/CircleButton';
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
 import MobileButton from '@components/Button/MobileButton';
+import BackgroundButton from '@/components/Button/BackgroundButton';
 
 const TestPage = () => {
-  const [tags, setTags] = useState<string[]>(['#스타트업', '#수채화', '#이미지', '#그림', '#누르면삭제']);
+  const [tags, setTags] = useState<string[]>(['보고서•레포트', '일러스트', '숏폼 스크립트', '코드 자동화']);
 
   const handleDelete = (text: string) => {
     setTags(tags.filter((tag) => tag !== text));
@@ -38,10 +39,57 @@ const TestPage = () => {
         onClick={() => alert('로그인 / 회원가입 버튼')}
         type="button"
       />
+      <PrimaryButton buttonType="full" text="로그인하기" textColor="white" onClick={() => {}} />
+      <PrimaryButton buttonType="full" text="로그인하기" textColor="white" disable={true} onClick={() => {}} />
       <PrimaryButton buttonType="tip" text="프롬프트 TIP" onClick={() => {}} />
       <PrimaryButton buttonType="square" text="내역보기" onClick={() => {}} />
       <PrimaryButton buttonType="square" text="로그아웃" onClick={() => {}} />
       <PrimaryButton buttonType="square" text="탈퇴하기" onClick={() => {}} />
+      <PrimaryButton buttonType="square" text="임시 저장글 보러가기" onClick={() => {}} />
+      <PrimaryButton buttonType="square" text="임시 저장" onClick={() => {}} />
+      <PrimaryButton buttonType="square" text="더 많은 프롬프트" onClick={() => {}} />
+      <PrimaryButton buttonType="square" text="초기화" onClick={() => {}} />
+      <PrimaryButton buttonType="square" text="프롬프트 더 보기" onClick={() => {}} />
+      <PrimaryButton buttonType="square" text="이미지 업로드" py={6} px={12} textSize={12} onClick={() => {}} />
+      <PrimaryButton
+        buttonType="square"
+        text="이미지 업로드"
+        py={6}
+        px={12}
+        textSize={12}
+        disable={true}
+        onClick={() => {}}
+      />
+      <PrimaryButton buttonType="square" text="인증번호 발송" py={6} px={12} textSize={12} onClick={() => {}} />
+      <PrimaryButton buttonType="square" text="인증 확인" py={6} px={12} textSize={12} onClick={() => {}} />
+      <PrimaryButton buttonType="square" text="재발송" py={6} px={12} textSize={12} onClick={() => {}} />
+      <PrimaryButton
+        buttonType="square"
+        text="02:54"
+        py={6}
+        px={12}
+        textSize={12}
+        textColor="gray"
+        onClick={() => {}}
+      />
+      <PrimaryButton
+        buttonType="square"
+        text="인증 완료"
+        py={6}
+        px={12}
+        textSize={12}
+        textColor="white"
+        onClick={() => {}}
+      />
+      <PrimaryButton
+        buttonType="square"
+        text="테스트 결과"
+        py={20}
+        px={20}
+        textSize={18}
+        textColor="white"
+        onClick={() => {}}
+      />
       <PrimaryButton buttonType="squareMini" text="완료" onClick={() => {}} />
       <PrimaryButton buttonType="squareMini" text="등록" onClick={() => {}} />
       <PrimaryButton buttonType="review" text="리뷰 작성하기" onClick={() => {}} />
@@ -51,6 +99,8 @@ const TestPage = () => {
 
       <h3>🔹 ModelButton.tsx</h3>
       <ModelButton text="ChatGPT" />
+      <ModelButton hasDelete={true} text="ChatGPT" onClick={() => {}} />
+      <ModelButton hasActive={true} text="ChatGPT" />
 
       <h3>🔹 IconButton.tsx</h3>
       <IconButton
@@ -68,19 +118,32 @@ const TestPage = () => {
       <IconButton buttonType="round" style="fill" imgType="none" textButton="blue" text="아니오" onClick={() => {}} />
       <IconButton buttonType="squareMd" style="fill" imgType="list" text="목록" onClick={() => {}} />
       <IconButton buttonType="squareMd" style="outline" imgType="attach" text="첨부" onClick={() => {}} />
-      <IconButton buttonType="squareBig" style="fill" imgType="download" text="다운로드" onClick={() => {}} />
+      <IconButton buttonType="squareBig" style="fill" imgType="download" text="프롬프트 구매하기" onClick={() => {}} />
+      <IconButton buttonType="squareBig" style="fill" imgType="download" text="프롬프트 다운로드" onClick={() => {}} />
       <IconButton buttonType="squareMd" style="red" imgType="alert" text="프롬프트 신고하기" onClick={() => {}} />
       <IconButton buttonType="squareMd" style="red" imgType="alert" text="신고하기" onClick={() => {}} />
       <IconButton buttonType="squareMini" style="fill" imgType="upload" text="이미지 업로드" onClick={() => {}} />
       <IconButton buttonType="squareMini" style="fill" imgType="copy" text="복사하기" onClick={() => {}} />
+      <div className="w-full px-[100px]">
+        <IconButton buttonType="full" style="fill" imgType="upload" text="업로드 하기" onClick={() => {}} />
+      </div>
 
       <h3>🔹 GradientButton.tsx</h3>
       <GradientButton buttonType="imgButton" text="프롬프트 작성하기" onClick={() => {}} />
       <GradientButton buttonType="textButton" text="출금하기" onClick={() => {}} />
 
       <h3>🔹 TagButton.tsx</h3>
-      <TagButton hasDelete={false} text="#글쓰기" onClick={() => {}} />
-      <TagButton hasDelete={false} text="#일러스트" onClick={() => {}} />
+      <TagButton hasDelete={false} text="글쓰기•문서작성" onClick={() => {}} />
+      <TagButton hasDelete={false} text="이미지 생성" onClick={() => {}} />
+      <TagButton hasDelete={false} text="광고 영상 콘셉트" onClick={() => {}} />
+      <TagButton hasDelete={false} text="디버깅•리팩토링" onClick={() => {}} />
+      <TagButton hasDelete={false} text="SNS 콘텐츠 아이디어" onClick={() => {}} />
+      <TagButton hasDelete={false} text="문제 풀이" onClick={() => {}} />
+      <TagButton hasDelete={false} text="생활•엔터테인먼트" onClick={() => {}} />
+      <TagButton hasDelete={false} text="배경음악" onClick={() => {}} />
+      <TagButton hasDelete={false} text="브레인스토밍" onClick={() => {}} />
+      <TagButton hasActive={true} text="브레인스토밍" onClick={() => {}} />
+
       <div className="flex gap-4">
         {tags.map((tag, idx) => (
           <TagButton key={idx} hasDelete={true} text={tag} onClick={() => handleDelete(tag)} />
@@ -104,6 +167,10 @@ const TestPage = () => {
       <MobileButton text="선택 완료하기" />
       <MobileButton text="작성 완료하기" />
       <MobileButton text="변경하기" />
+
+      <h3>🔹 BackgroundButton.tsx</h3>
+      <BackgroundButton background="secondary" text="로그인" onClick={() => {}} />
+      <BackgroundButton background="primary" text="회원가입" onClick={() => {}} />
 
       <h3>🔶 Rating.tsx</h3>
       <Rating star={5} />
@@ -154,6 +221,26 @@ const TestPage = () => {
       <h3>🟣 SocialLoginModal.tsx</h3>
       <button onClick={() => setShowModal5(true)}>모달5 보기 click</button>
       {showModal5 && <SocialLoginModal isOpen={showModal5} onClose={() => setShowModal5(false)} onClick={() => {}} />}
+
+      <div>
+        <p className="custom-h1">H1(큰 타이틀)</p>
+        <p className="custom-h2">H2(주요 구역 큰 제목)</p>
+        <p className="custom-h3">H3(주요 구역 소 제목)</p>
+        <p className="custom-h4">H4(모달 큰 제목)</p>
+        <p className="custom-h5">H5(모달 소 제목)</p>
+
+        <p className="custom-body1">Body1(본문)</p>
+        <p className="custom-body2">Body2(카드 내 본문)</p>
+        <p className="custom-body3">Body3(보조 설명)</p>
+
+        <p className="custom-button1">Button1(CTA)</p>
+        <p className="custom-button2">Button2(칩)</p>
+        <p className="custom-button3">Button3(모델칩)</p>
+
+        <div className="bg-sub-gradient w-full">sub-gradient</div>
+
+        <div className="w-full lg:bg-primary max-lg:bg-gray400 max-phone:bg-alert">breakpoint</div>
+      </div>
     </div>
   );
 };

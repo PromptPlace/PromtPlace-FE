@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import likeIcon from '@/assets/icon-heart-blue-big.svg';
-import unLikeIcon from '@/assets/icon-heart-none-big.svg';
+import likeIcon from '@/assets/icon-heart-blue.svg';
+import unLikeIcon from '@/assets/icon-heart-none.svg';
 import usePromptLike from '@/hooks/mutations/PromptDetailPage/usePromptLike';
 import usePromptUnlike from '@/hooks/mutations/PromptDetailPage/usePromptUnlike';
 import useMyLikedPrompts, { likedKeys } from '@/hooks/queries/PromptDetailPage/useMyLikedPrompts';
@@ -9,9 +9,8 @@ import { isAxiosError } from 'axios';
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import { useAuth } from '@/context/AuthContext';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
-import type { Prompt } from '@/types/MainPage/prompt';
 
-const Likes: React.FC<Prompt> = ({ prompt_id }) => {
+const Likes = ({ prompt_id }: { prompt_id: number }) => {
   const { accessToken } = useAuth();
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
   const qc = useQueryClient();
@@ -68,10 +67,8 @@ const Likes: React.FC<Prompt> = ({ prompt_id }) => {
             return;
           }
           handleToggleLike();
-        }}
-        className="absolute right-3 bottom-3 lg:right-6 lg:bottom-6 z-10"
-      >
-        <img src={liked ? likeIcon : unLikeIcon} className="w-[16px] h-[16px] lg:w-[24px] lg:h-[24px]" />
+        }}>
+        <img src={liked ? likeIcon : unLikeIcon} className="w-7 h-6" />
       </button>
     </>
   );

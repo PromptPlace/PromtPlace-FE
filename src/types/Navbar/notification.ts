@@ -1,0 +1,19 @@
+import type { CommonResponse } from '../common';
+
+// 회원 알림 목록 조회
+type Notificaion = {
+  notification_id: number;
+  content: string;
+  created_at: string;
+  link_url: string;
+};
+
+export type ResponseNotificationDto = CommonResponse<{
+  has_more: boolean;
+  notifications: Notificaion[];
+}>;
+
+// 새 알림 여부 조회
+export type ResponseNewNotificationDto = CommonResponse<{
+  hasNew: boolean;
+}>;

@@ -1,41 +1,17 @@
 @import 'tailwindcss';
 
 @font-face {
-  font-family: 'SpoqaHanSansNeo';
-  src: url('/fonts/SpoqaHanSansNeo-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'SpoqaHanSansNeo';
-  src: url('/fonts/SpoqaHanSansNeo-Medium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'SpoqaHanSansNeo';
-  src: url('/fonts/SpoqaHanSansNeo-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'SpoqaHanSansNeo';
-  src: url('/fonts/SpoqaHanSansNeo-Light.woff2') format('woff2');
+  font-family: 'SCoreDream';
+  src: url('/fonts/SCDream3-Light.otf') format('opentype');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'SpoqaHanSansNeo';
-  src: url('/fonts/SpoqaHanSansNeo-Thin.woff2') format('woff2');
-  font-weight: 100;
+  font-family: 'SCoreDream';
+  src: url('/fonts/SCDream5-Medium.otf') format('opentype');
+  font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
@@ -47,15 +23,33 @@
   --color-primary-blue: #55bbff;
   --color-secondary: #f0f7ff;
   --color-secondary-pressed: #c9e2ff;
+
   --color-white: #fffefb;
+  --color-black: #030712;
   --color-text-on-white: #121212;
   --color-white-stroke: #cccccc;
-  --color-background: #f5f5f5;
+  --color-background: #f3f4f6;
   --color-text-on-background: #999898;
   --color-overlay: rgba(18, 18, 18, 0.4);
   --color-overlay-coach-mark: rgba(18, 18, 18, 0.75);
+  --color-transparent-inverse: rgba(0, 0, 0, 0.1);
   --color-rating-active: #ffb400;
-  --color-alert: #e90000;
+  --color-alert: #f87171;
+
+  --color-sub1: #94d2ff;
+  --color-sub2: #6198ff;
+
+  --color-gray50: #f9fafb;
+  --color-gray100: #f3f4f6;
+  --color-gray200: #e5e7eb;
+  --color-gray300: #d1d5db;
+  --color-gray400: #9ca3af;
+  --color-gray500: #6b7280;
+  --color-gray600: #4b5563;
+  --color-gray700: #374151;
+  --color-gray800: #1f2937;
+  --color-gray900: #111827;
+  --color-gray950: #030712;
 
   --background-image-primary-gradient: linear-gradient(207deg, #2979ff 17.05%, #5bf 107.21%);
   --background-image-notfound-gradient: linear-gradient(
@@ -63,6 +57,7 @@
     var(--white, #fffefb) 15.18%,
     rgba(255, 254, 251, 0) 100%
   );
+  --background-image-sub-gradient: linear-gradient(249deg, #94d2ff 15.06%, #6198ff 126.87%);
 
   --shadow-button: 0px 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-button-hover: 0px 4px 8px rgba(0, 0, 0, 0.12);
@@ -72,12 +67,15 @@
   --inset-shadow-inner: inset 0px 2px 4px rgba(0, 0, 0, 0.05);
 
   --text-shadow-notfound: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+  --breakpoint-phone: 30.0625rem; /* 481px */
+  --breakpoint-mypage: 48rem; /* 768px */
 }
 
 @layer base {
   html,
   body {
-    font-family: 'SpoqaHanSansNeo';
+    font-family: 'SCoreDream';
     background-color: #f5f5f5;
     box-sizing: border-box;
   }
@@ -87,8 +85,165 @@
   }
 }
 
+@layer components {
+  .custom-h1 {
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 140%;
+  }
+
+  .custom-h2 {
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 140%;
+  }
+
+  .custom-h3 {
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    line-height: 140%;
+  }
+
+  .custom-h4 {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 140%;
+  }
+
+  .custom-h5 {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 140%;
+  }
+
+  .custom-body1 {
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    line-height: 160%;
+  }
+
+  .custom-body2 {
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    line-height: 160%;
+  }
+
+  .custom-body3 {
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    line-height: 140%;
+  }
+
+  .custom-button1 {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 150%;
+  }
+
+  .custom-button2 {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 150%;
+  }
+
+  .custom-button3 {
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 150%;
+  }
+
+  /* slick */
+  .slick-arrow.slick-next::before,
+  .slick-arrow.slick-next {
+    position: absolute !important;
+    top: 0px !important;
+  }
+
+  .slick-track {
+    display: flex !important;
+  }
+
+  .slick-slide {
+    padding: 60px 10px !important;
+  }
+
+  .image-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 254, 251, 0.4);
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+  }
+
+  .slick-center .image-overlay::after {
+    opacity: 0;
+  }
+
+  .slick-slide.slick-active.slick-center.slick-current {
+    transform: scale(1.38);
+  }
+
+  .slick-slide.slick-active.slick-center.slick-current button {
+    width: calc(186px / 1.38) !important;
+    height: calc(45px / 1.38) !important;
+    right: calc(40px / 1.38) !important;
+    bottom: calc(42px / 1.38) !important;
+    gap: calc(20px / 1.38) !important;
+    padding: calc(12px / 1.38) calc(12px / 1.38) calc(12px / 1.38) calc(24px / 1.38) !important;
+  }
+
+  .slick-slide.slick-active.slick-center.slick-current a {
+    font-size: calc(14px / 1.38) !important;
+  }
+
+  .slick-slide.slick-active.slick-center.slick-current svg {
+    width: calc(18px / 1.38);
+  }
+
+  @media (max-width: 1024px) {
+    .slick-slide.slick-active.slick-center.slick-current button {
+      right: calc(16px / 1.38) !important;
+      bottom: calc(16px / 1.38) !important;
+    }
+  }
+
+  @media (max-width: 481px) {
+    .slick-slide.slick-active.slick-center.slick-current div button {
+      width: calc(113px / 1.38) !important;
+      height: calc(25px / 1.38) !important;
+      right: calc(13.71px / 1.38) !important;
+      bottom: calc(13.71px / 1.38) !important;
+      gap: calc(17.14px / 1.38) !important;
+      padding: calc(6.86px / 1.38) calc(6.86px / 1.38) calc(6.86px / 1.38) calc(13.71px / 1.38) !important;
+    }
+  }
+
+  @media (max-width: 481px) {
+    .slick-slide.slick-active.slick-center.slick-current a {
+      font-size: calc(8px / 1.38) !important;
+    }
+  }
+
+  @media (max-width: 481px) {
+    .slick-slide.slick-active.slick-center.slick-current svg {
+      width: calc(10px / 1.38) !important;
+    }
+  }
+}
+
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 @media (max-width: 1440px) {

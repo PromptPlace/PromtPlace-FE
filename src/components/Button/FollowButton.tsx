@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import FollowCheckIcon from '@assets/icon-follow-check.svg';
+import FollowCheckIcon from '@assets/profile/icon-complete.svg';
 
 /**
  * 팔로우 버튼 컴포넌트입니다.
@@ -35,22 +35,21 @@ const FollowButton = ({ follow, onClick, size = 'sm', type = 'button' }: FollowB
       type={type}
       onClick={onClick}
       className={clsx(
-        'rounded-[50px] transition-all duration-300 ease-in-out flex items-center justify-center max-lg:rounded-[25px]',
-        size === 'sm' &&
-          'h-[28px] w-[77px] px-[10px] text-sm font-normal leading-[18px] max-lg:h-[18px] max-lg:w-[45px] max-lg:px-[8px] max-lg:text-[8px] max-lg:font-bold max-lg:leading-[10px] max-lg:py-[3px] max-lg:whitespace-nowrap',
+        'rounded-[50px] transition-all duration-300 ease-in-out flex items-center justify-center max-lg:rounded-[25px] whitespace-nowrap',
+        size === 'sm' && 'custom-button1 py-[6px] w-[77px] h-[33px]',
         size === 'lg' && 'h-[37px] w-[108px] px-[17px] py-[5px] text-[20px] font-bold leading-[25px]',
         !follow &&
           'bg-white py-[5px] border border-primary hover:border-primary-hover text-primary hover:text-primary-hover max-lg:border-[0.5px]',
         !follow && size === 'lg' && 'border border-primary-hover text-primary-hover',
-        follow && 'bg-primary hover:bg-primary-hover text-white gap-[5.89px] max-lg:gap-[2px]',
+        follow && 'bg-primary hover:bg-primary-hover text-white pr-[12px] pl-[18px]',
         follow && size === 'lg' && 'bg-primary-hover',
       )}>
       {!follow && <>팔로우 +</>}
       {follow && (
         <>
           완료
-          <div className="w-[15px] h-[11px] max-lg:w-[6px] max-lg:h-[4px]">
-            <img src={FollowCheckIcon} className="w-full h-full object-contain" />
+          <div>
+            <img src={FollowCheckIcon} />
           </div>
         </>
       )}

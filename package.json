@@ -10,7 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@lexical/react": "^0.33.0",
+    "@mui/material": "^7.3.4",
     "@react-oauth/google": "^0.12.2",
     "@tailwindcss/vite": "^4.1.11",
     "@tanstack/react-query": "^5.81.5",
@@ -27,7 +30,10 @@
     "react-intersection-observer": "^9.16.0",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.6.3",
+    "react-slick": "^0.31.0",
+    "slick-carousel": "^1.8.1",
     "tailwind-scrollbar": "^4.0.2",
+    "tailwind-scrollbar-hide": "^4.0.0",
     "tailwindcss": "^4.1.11",
     "workbox-window": "^7.3.0"
   },
@@ -37,6 +43,7 @@
     "@svgr/webpack": "^8.1.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
+    "@types/react-slick": "^0.23.13",
     "@typescript-eslint/eslint-plugin": "^8.38.0",
     "@typescript-eslint/parser": "^8.38.0",
     "@vitejs/plugin-react": "^4.5.2",

@@ -7,22 +7,21 @@ export type ModelDto = {
   name: string;
 };
 
-export type PromptDetailDto = {
+export interface PromptDetailDto {
   prompt_id: number;
   user_id: number;
   title: string;
+  description: string;
   prompt: string;
   prompt_result: string;
-  has_image: boolean;
-  description: string;
   usage_guide: string;
+  has_image: boolean;
   price: number;
   is_free: boolean;
   downloads: number;
   views: number;
   likes: number;
-  review_count: number;
-  review_rating_avg: number;
+  model_version?: string | null;
   created_at: string;
   updated_at: string;
   inactive_date: string | null;
@@ -30,22 +29,33 @@ export type PromptDetailDto = {
   user: {
     user_id: number;
     nickname: string;
-    profileImage: { url: string } | null;
+    profileImage: string | null;
+    intro: string | null;
+    sns_list: { url: string }[];
   };
+
   models: {
-    promptmodel_id: number;
-    prompt_id: number;
-    model_id: number;
-    model: { name: string };
+    name: string;
   }[];
-  tags: {
-    prompttag_id: number;
+
+  categories: {
+    promptcategory_id: number;
     prompt_id: number;
-    tag_id: number;
-    tag: { tag_id: number; name: string };
+    category_id: number;
+    category: {
+      category_id: number;
+      name: string;
+      mainCategory: {
+        name: string;
+      };
+    };
   }[];
+
   images: {
     image_url: string;
     order_index: number;
   }[];
-};
+
+  review_count: number;
+  review_rating_avg: number;
+}

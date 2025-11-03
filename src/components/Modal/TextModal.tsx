@@ -22,21 +22,21 @@ interface TextModalProps {
 
 const TextModal = ({ text, onClick, size }: TextModalProps) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-100 max-lg:px-[20px] max-lg:max-w-[425px] max-lg:m-auto">
+    <div className="fixed inset-0 flex items-center justify-center z-100 max-lg:px-[40px] max-phone:px-[27px]">
       <div className="absolute inset-0 bg-overlay"></div>
 
       <div
         className={clsx(
-          'relative w-full py-[51.5px] max-lg:py-[20px] bg-white rounded-[16px] max-lg:rounded-[8px] shadow-gradient z-10  flex items-center justify-center',
+          'relative w-full py-[51.5px] max-lg:py-[54.5px] max-lg:px-[102px] max-phone:px-[78px] max-lg:text-center bg-white rounded-[16px] shadow-gradient z-10 flex items-center justify-center',
           `${size === 'lg' && 'max-w-[940px]'}`,
           `${size === 'sm' && 'max-w-[830px]'}`,
         )}>
-        <p className="text-[32px] max-lg:text-[12px] font-bold leading-[40px] max-lg:leading-[15px] text-text-on-white">
+        <p className="lg:text-[32px] lg:leading-[40px] lg:font-bold max-lg:text-[24px] max-phone:text-[20px]! max-lg:leading-[33.6px] max-phone:leading-[28px]! max-lg:tracking-[-0.24px] max-phone:tracking-[-0.2px]! max-phone:font-medium text-text-on-white">
           {text}
         </p>
         <div
           onClick={onClick}
-          className="absolute top-[20px] max-lg:top-[8px] right-[20px] max-lg:right-[8px] cursor-pointer max-lg:w-[12px] max-lg:h-[12px]">
+          className="absolute top-[20px] right-[20px] cursor-pointer max-phone:w-[16px] max-phone:h-[16px]">
           <img src={CloseIcon} alt="닫기" className="w-full h-full object-contain" />
         </div>
       </div>

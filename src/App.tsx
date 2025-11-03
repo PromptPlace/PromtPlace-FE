@@ -14,9 +14,7 @@ function App() {
       <AuthProvider>
         <GTMScript />
 
-        <div className="max-lg:max-w-[425px] max-lg:w-full max-lg:mx-auto">
-          <RouterProvider router={router} />
-        </div>
+        <RouterProvider router={router} />
 
         {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
       </AuthProvider>
