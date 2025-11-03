@@ -4,12 +4,13 @@ import { SingleModal } from './MyPageModal';
 import { useNavigate } from 'react-router-dom';
 import { withdrawUser } from '@/apis/MyPage/withdrawl';
 import { useAuth } from '@/context/AuthContext';
-import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
 import GoogleIcon from '@/assets/icon-google-logo.svg';
 import KakaoIcon from '@/assets/icon-kakao-logo.svg';
 import NaverIcon from '@/assets/icon-naver-logo.svg';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import type { ResponseMemberDto } from '@/types/ProfilePage/profile';
+import ProfileIcon from '@assets/header/mypage.svg?react';
+import useGetSNS from '@/hooks/queries/ProfilePage/useGetSNS';
 
 interface ProfileViewProps {
   userData?: ResponseMemberDto;
@@ -22,6 +23,8 @@ const ProfileView = ({ userData, setActiveTab }: ProfileViewProps) => {
   const showWarning = () => setDeleteStep('warning');
 
   const { logout, user } = useAuth();
+  // 회원 SNS 목록
+  const { data: snsData } = useGetSNS({ member_id: user.user_id });
 
   const deleteAccount = () => {
     // 실제 API 호출 로직
@@ -66,14 +69,17 @@ const ProfileView = ({ userData, setActiveTab }: ProfileViewProps) => {
         </button>
 
         <label className="custom-h2 text-text-on-white block">프로필</label>
-        <section className="flex-flex-col gap-[20px] bg-white  mt-[20px] mb-[56px] p-[24px] rounded-[12px]">
+        <section className="flex flex-col gap-[20px] bg-white  mt-[20px] mb-[56px] p-[24px] rounded-[12px]">
           <div>
-            <label className="custom-h5 block mb-[12px]">닉네임</label>
-            <p className="custom-body2 text-text-on-white px-[16px] py-[12px]">{userData?.data.nickname}</p>
+            <label className="custom-h5 block mb-[12px] max-phone:text-[14px]">닉네임</label>
+            <p className="custom-body2 text-text-on-white px-[16px] py-[12px] max-phone:text-[12px]">
+              {userData?.data.nickname}
+            </p>
           </div>
+
           <div>
-            <label className="custom-h5 block mb-[12px]">프로필 사진</label>
-            <p className="h-[120px] w-[120px]">
+            <label className="custom-h5 block mb-[12px] max-phone:text-[14px]">프로필 사진</label>
+            <p className="h-[120px] w-[120px] max-lg:w-[80px] max-lg:h-[80px]">
               {userData?.data.profile_image ? (
                 <img
                   src={userData.data.profile_image}
@@ -81,25 +87,32 @@ const ProfileView = ({ userData, setActiveTab }: ProfileViewProps) => {
                   className="h-full w-full object-cover rounded-full"
                 />
               ) : (
-                '기본 프로필사진'
+                <ProfileIcon className="w-full h-full" />
               )}
             </p>
           </div>
+
           <div className="flex flex-col gap-[12px]">
-            <label className="custom-h5 block">SNS</label>
-            <label className="custom-button2 block text-gray-700">SNS 아이디</label>
-            <p className="text-gray-400 custom-body2 px-[16px] py-[12px]"> 아직 작성하지 않았어요!</p>
-            <label className="custom-button2 block text-gray-700">접속 가능한 URL</label>
-            <p className="text-gray-400 custom-body2 px-[16px] py-[12px]"> 아직 작성하지 않았어요!</p>
+            <label className="custom-h5 block max-phone:text-[14px]">SNS</label>
+            <label className="custom-button2 block text-gray-700 max-phone:text-[12px]">SNS 아이디</label>
+            <p className="text-gray-400 custom-body2 px-[16px] py-[12px] max-phone:text-[12px]">
+              {snsData?.data[0] ? snsData?.data[0].user_sns_id : '아직 작성하지 않았어요!'}
+            </p>
+
+            <label className="custom-button2 block text-gray-700 max-phone:text-[12px]">접속 가능한 URL</label>
+            <p className="text-gray-400 custom-body2 px-[16px] py-[12px] max-phone:text-[12px]">
+              {snsData?.data[0] ? snsData?.data[0].url : '아직 작성하지 않았어요!'}
+            </p>
           </div>
+
           <div className="flex flex-col gap-[12px]">
-            <label className="custom-h5 block">소개말</label>
-            <p className="text-gray-400 custom-body2 px-[16px] py-[12px]">
-              {' '}
+            <label className="custom-h5 block max-phone:text-[14px]">소개말</label>
+            <p className="text-gray-400 custom-body2 px-[16px] py-[12px] max-phone:text-[12px]">
               {userData?.data.intros ? userData.data.intros : '아직 작성하지 않았어요!'}
             </p>
           </div>
         </section>
+
         <label className="custom-h2 text-text-on-white">계정</label>
         <section className="flex-flex-col gap-[20px] bg-white  mt-[20px] p-[24px] rounded-[12px]">
           <div>
