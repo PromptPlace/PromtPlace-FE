@@ -126,7 +126,8 @@ const NewMainPage = () => {
           </span>
         </div>
 
-        <PromptGrid prompts={displayedPrompts} />
+        {/* <PromptGrid prompts={displayedPrompts} /> */}
+        <PromptGrid prompts={prompts} />
 
         {hasNext && (
           <div className="flex justify-center mt-[134px]">
