@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import FollowButton from '@components/Button/FollowButton';
 import ReviewList from './ReviewList';
 import defaultProfile from '../assets/profile.png';
@@ -9,6 +10,7 @@ import RatingTitle from '@components/RatingTitle';
 import InstaIcon from '@assets/icon-instagram-logo.svg';
 import YoutubeIcon from '@assets/icon-youtube-logo.svg';
 import XIcon from '@assets/icon-x-logo.svg';
+import TextModal from '@components/Modal/TextModal';
 
 interface Review {
   review_id: number;
@@ -53,6 +55,7 @@ const PromptAuthorAndReview = ({
   reviewRatingAvg = 0,
 }: PromptAuthorAndReviewProps) => {
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
 
   const getSNSIcons = () => {
     if (!user.sns_list) return null;
@@ -84,10 +87,10 @@ const PromptAuthorAndReview = ({
   };
 
   return (
-    <section className="flex flex-col lg:flex-row gap-[40px] mt-8">
+    <section className="flex flex-col lg:flex-row gap-[40px] mt-8 w-full max-w-[1236px] xl:px-0 mx-auto">
       {/* 작성자 프로필 카드 */}
-      <div className="bg-[#FFFEFB] rounded-[16px] p-6 w-[430px] h-auto text-left self-start">
-        <p className="text-sm font-medium text-gray-500 mb-2">제작자 프로필</p>
+      <div className="bg-[#FFFEFB] rounded-[16px] p-6 w-full lg:w-[30%] xl:w-[35%] self-start">
+        <p className="text-sm md:text-base font-medium text-gray-500 mb-2">제작자 프로필</p>
 
         <div className="flex items-center gap-4">
           <img
@@ -96,7 +99,7 @@ const PromptAuthorAndReview = ({
             className="w-[49px] h-[49px] rounded-[12px] border border-gray-300 object-cover"
           />
           <div className="flex flex-col">
-            <p className="text-base font-semibold">{user?.nickname ?? 'Unknown'}</p>
+            <p className="text-base md:text-lg font-semibold">{user?.nickname ?? 'Unknown'}</p>
             <div className="flex items-center gap-2 mt-1">
               {getSNSIcons()}
               {currentUserId !== user?.user_id && <FollowButton follow={follow} onClick={onToggleFollow} />}
@@ -104,10 +107,14 @@ const PromptAuthorAndReview = ({
           </div>
         </div>
 
-        {user.intro && <p className="ml-15 mt-4 text-sm text-gray-600 leading-[22px] break-keep">{user.intro}</p>}
+        {user.intro && (
+          <p className="ml-15 mt-4 text-sm md:text-base text-gray-600 leading-[22px] break-keep">{user.intro}</p>
+        )}
 
-        <div className="mt-5 flex gap-2">
-          <button className="flex-1 h-[48px] border border-[#D1D5DB] rounded-md text-[14px] text-gray-700 flex items-center justify-center gap-3 hover:bg-gray-100 transition">
+        <div className="mt-5 flex gap-2 flex-col sm:flex-row">
+          <button
+            className="flex-1 h-[48px] border border-[#D1D5DB] rounded-md text-[14px] text-gray-700 flex items-center justify-center gap-3 hover:bg-gray-100 transition"
+            onClick={() => setShowModal(true)}>
             <img src={mail} alt="문의하기" className="w-4 h-4" />
             문의하기
           </button>
@@ -119,29 +126,25 @@ const PromptAuthorAndReview = ({
           </button>
         </div>
       </div>
-
-      {/* 오른쪽: 리뷰 요약 + 리뷰 리스트 */}
-      <div className="bg-[#FFFEFB] rounded-[16px] p-6 flex-1 h-auto">
+      {/* 리뷰 카드 */}
+      <div className="bg-[#FFFEFB] rounded-[16px] p-6 w-full lg:w-[70%] xl:w-[65%]">
         {/* 상단 요약 */}
         <div className="flex flex-col mb-4 p-6">
-          {/* 상단: 리뷰 전체보기 + 리뷰 수 */}
           <div className="flex items-center gap-2 mb-4">
-            <h2 className="text-[24px] font-medium">리뷰 전체보기</h2>
-            <span
-              className="px-[10px] py-[5px] rounded-[50px] border border-[#CCCCCC] bg-[#FFFEFB]
-                 text-[#999898] font-medium text-[16px]">
+            <h2 className="text-[20px] md:text-[24px] font-medium">리뷰 전체보기</h2>
+            <span className="px-[10px] py-[5px] rounded-[50px] border border-[#CCCCCC] bg-[#FFFEFB] text-[#999898] font-medium text-[14px] md:text-[16px]">
               {reviewCount}
             </span>
           </div>
 
-          {/* 하단: 별점 + 점수 */}
           <div className="flex items-center gap-4">
             <RatingTitle star={Number.isFinite(reviewRatingAvg) ? reviewRatingAvg : 0} />
-            <span className="text-[#999898] font-medium text-[16px]">{reviewRatingAvg.toFixed(1)}점</span>
+            <span className="text-[#999898] font-medium text-[14px] md:text-[16px]">
+              {reviewRatingAvg.toFixed(1)}점
+            </span>
           </div>
         </div>
 
-        {/* 리뷰 리스트 */}
         <ReviewList
           reviews={reviews}
           setReviews={setReviews}
@@ -152,6 +155,8 @@ const PromptAuthorAndReview = ({
           currentUserId={currentUserId ?? undefined}
         />
       </div>
+
+      {showModal && <TextModal text="아직 오픈하지 않은 페이지예요!" onClick={() => setShowModal(false)} size="lg" />}
     </section>
   );
 };

@@ -147,8 +147,8 @@ const PromptDetailPage = () => {
     : [];
 
   return (
-    <div className="bg-[#F5F5F5] min-h-screen py-8 px-4">
-      <div className="max-w-[1236px] mx-auto flex flex-col gap-6">
+    <div className="bg-[#F5F5F5] min-h-screen py-8 px-[5%] max-w-full flex justify-center">
+      <div className="w-full max-w-[1236px] flex flex-col gap-6 max-lg:gap-5 max-md:gap-4 max-sm:gap-3">
         <PromptDetailCard
           title={prompt.title}
           views={prompt.views}
