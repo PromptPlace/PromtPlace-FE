@@ -17,7 +17,7 @@ export type ResponseSNSDto = CommonResponse<SNS[]>;
 export type RequestPatchSNSDto = {
   url: string;
   description: string;
-  user_sns_id: string;
+  // user_sns_id: string;
 };
 
 export type ResponsePatchSNSDto = {
@@ -36,7 +36,11 @@ export type ResponseDeleteSNS = {
 };
 
 // 회원 SNS 작성
-export type RequestPostSNS = RequestPatchSNSDto;
+export type RequestPostSNS = {
+  url: string;
+  description: string;
+  user_sns_id: string;
+};
 
 export type ResponsePostSns = {
   message: string;

@@ -23,7 +23,6 @@ const ProfileView = ({ userData, setActiveTab }: ProfileViewProps) => {
   const showWarning = () => setDeleteStep('warning');
 
   const { logout, user } = useAuth();
-  // 회원 SNS 목록
   const { data: snsData } = useGetSNS({ member_id: user.user_id });
 
   const deleteAccount = () => {
@@ -60,7 +59,7 @@ const ProfileView = ({ userData, setActiveTab }: ProfileViewProps) => {
   };
 
   return (
-    <div className="flex justify-center pt-[56px] max-lg:pt-[12px] min-h-screen bg-background ">
+    <div className="flex justify-center pt-[56px] max-lg:pt-[12px] min-h-screen bg-background">
       <div className="flex flex-col w-full max-lg:px-[20px]">
         <button
           className="self-end custom-button1 w-[237px] px-[91px] py-[12px] rounded-[12px] border-[0.8px] border-primary bg-white text-primary text-[14px]"
@@ -96,12 +95,12 @@ const ProfileView = ({ userData, setActiveTab }: ProfileViewProps) => {
             <label className="custom-h5 block max-phone:text-[14px]">SNS</label>
             <label className="custom-button2 block text-gray-700 max-phone:text-[12px]">SNS 아이디</label>
             <p className="text-gray-400 custom-body2 px-[16px] py-[12px] max-phone:text-[12px]">
-              {snsData?.data[0] ? snsData?.data[0].user_sns_id : '아직 작성하지 않았어요!'}
+              {snsData?.data[0] ? snsData?.data[snsData.data.length - 1].user_sns_id : '아직 작성하지 않았어요!'}
             </p>
 
             <label className="custom-button2 block text-gray-700 max-phone:text-[12px]">접속 가능한 URL</label>
             <p className="text-gray-400 custom-body2 px-[16px] py-[12px] max-phone:text-[12px]">
-              {snsData?.data[0] ? snsData?.data[0].url : '아직 작성하지 않았어요!'}
+              {snsData?.data[0] ? snsData?.data[snsData.data.length - 1].url : '아직 작성하지 않았어요!'}
             </p>
           </div>
 

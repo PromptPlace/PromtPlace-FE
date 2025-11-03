@@ -178,9 +178,10 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
           </div>
 
           <div className="flex gap-[12px] px-[12px] max-phone:px-[0px] max-phone:ml-[40px] max-phone:mt-[-4px] flex-wrap">
-            {snsData?.data.map((sns) => (
-              <SnsButton url={sns.url} key={sns.sns_id} />
-            ))}
+            <SnsButton
+              url={snsData?.data[snsData.data.length - 1].url || ''}
+              id={snsData?.data[snsData.data.length - 1].user_sns_id || ''}
+            />
           </div>
 
           <div className="custom-body1 h-[102px] max-lg:h-[130px] max-phone:h-[208px] overflow-y-scroll max-phone:ml-[40px]">
