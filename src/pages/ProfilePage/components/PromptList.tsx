@@ -25,19 +25,19 @@ const PromptList = () => {
 
   return (
     <div className="mt-[56px]">
-      <div className="flex gap-[20px]">
-        <p className="custom-h2">{userData?.data.nickname}님이 작성한 프롬프트</p>
+      <div className="flex gap-[20px] items-start">
+        <p className="custom-h2 max-phone:text-[20px]">{userData?.data.nickname}님이 작성한 프롬프트</p>
         <div className="custom-h5 text-gray500 rounded-[50px] border border-[0.8px] border-gray400 bg-white py-[5px] px-[10px]">
           {promptCount}
         </div>
       </div>
 
       {promptCount === 0 && (
-        <div className="mt-[80px] flex flex-col justify-center items-center gap-[20px]">
+        <div className="mt-[80px] flex flex-col justify-center items-center gap-[20px] max-phone:mt-[64px]">
           <TwinkleIcon />
           <div className="custom-h3 text-gray500 flex flex-col gap-[8px] items-center">
-            <p>아직 올린 프롬프트가 없어요!</p>
-            <p>다음에 확인해주세요.</p>
+            <p className="max-phone:text-[14px]">아직 올린 프롬프트가 없어요!</p>
+            <p className="max-phone:text-[10px]">다음에 확인해주세요.</p>
           </div>
         </div>
       )}
