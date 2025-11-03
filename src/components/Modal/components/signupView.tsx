@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PrimaryButton from '@components/Button/PrimaryButton';
 import type { ModalView } from '@/types/LoginPage/auth';
 import useRequestSignupEmailCode from '@/hooks/mutations/LoginPage/useRequestSignupEmailCode';
-import useVerifySignupAuthcode from '@/hooks/mutations/LoginPage/useVerifySignupAuthcode';
+import useVerifySignupAuthcode from '@/hooks/mutations/LoginPage/useVerifySignupAuthCode';
 
 interface LoginViewProps {
   setView: (view: ModalView) => void;
@@ -115,7 +115,9 @@ const SignupView = ({ setView, email, setEmail, authCode, setAuthCode }: LoginVi
         );
 
       case 'request': // '인증 확인'
-        return <PrimaryButton buttonType="square" text="인증 확인" py={6} px={12} textSize={12} onClick={handleVerifyCode} />;
+        return (
+          <PrimaryButton buttonType="square" text="인증 확인" py={6} px={12} textSize={12} onClick={handleVerifyCode} />
+        );
     }
   };
 
