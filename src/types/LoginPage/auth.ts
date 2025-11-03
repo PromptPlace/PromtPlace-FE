@@ -23,3 +23,14 @@ export interface loginResponse {
   data: loginResponseData;
   statusCode: number;
 }
+
+export type ModalView =
+  | 'login'
+  | 'signup'
+  | 'initPassword'
+  | 'agreeTerms'
+  | 'onboarding'
+  | 'changePassword'
+  | 'forgotPassword';
+export type EmailStatus = 'default' | 'pending' | 'verified' | 'error';
+export type CodeStatus = 'idle' | 'request' | 'verified' | 'error';

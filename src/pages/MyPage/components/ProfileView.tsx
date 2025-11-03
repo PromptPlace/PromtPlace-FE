@@ -1,8 +1,6 @@
-import iconPerson from '@assets/icon-person-blue.svg';
-import InfoRow from './components/InfoRow';
 import { useState } from 'react';
 import DualModal from '@/components/Modal/DualModal';
-import { SingleModal } from './components/MyPageModal';
+import { SingleModal } from './MyPageModal';
 import { useNavigate } from 'react-router-dom';
 import { withdrawUser } from '@/apis/MyPage/withdrawl';
 import { useAuth } from '@/context/AuthContext';
@@ -11,25 +9,19 @@ import GoogleIcon from '@/assets/icon-google-logo.svg';
 import KakaoIcon from '@/assets/icon-kakao-logo.svg';
 import NaverIcon from '@/assets/icon-naver-logo.svg';
 import PrimaryButton from '@/components/Button/PrimaryButton';
+import type { ResponseMemberDto } from '@/types/ProfilePage/profile';
 
-// 실제로는 API로 받아올 사용자 정보
-const userInfo: {
-  nickname: string;
-  email: string;
-  provider: 'google' | 'kakao' | 'naver';
-} = {
-  nickname: '주토피아노',
-  email: 'kyaassddff0934@naver.com',
-  provider: 'naver',
-};
+interface ProfileViewProps {
+  userData?: ResponseMemberDto;
+  setActiveTab: React.Dispatch<React.SetStateAction<'prompt' | 'dashboard' | 'profile' | 'profileEdit'>>;
+}
 
-const MyPageInfo = () => {
+const ProfileView = ({ userData, setActiveTab }: ProfileViewProps) => {
   const [deleteStep, setDeleteStep] = useState<'confirm' | 'warning' | 'complete' | null>(null);
   const confirmDelete = () => setDeleteStep('confirm');
   const showWarning = () => setDeleteStep('warning');
 
-  const { login, logout, user } = useAuth();
-  const { data: userData } = useGetMember({ member_id: user.user_id });
+  const { logout, user } = useAuth();
 
   const deleteAccount = () => {
     // 실제 API 호출 로직
@@ -65,17 +57,33 @@ const MyPageInfo = () => {
   };
 
   return (
-    <div className="flex justify-center pt-[92px] max-lg:pt-[12px] min-h-screen bg-background ">
-      <div className="w-full max-lg:px-[20px]">
-        <label className="custom-h2 text-text-on-white">프로필</label>
-        <section className="flex-flex-col gap-[20px] bg-white  mt-[20px] p-[24px] rounded-[12px]">
+    <div className="flex justify-center pt-[56px] max-lg:pt-[12px] min-h-screen bg-background ">
+      <div className="flex flex-col w-full max-lg:px-[20px]">
+        <button
+          className="self-end custom-button1 w-[237px] px-[91px] py-[12px] rounded-[12px] border-[0.8px] border-primary bg-white text-primary text-[14px]"
+          onClick={() => setActiveTab('profileEdit')}>
+          편집하기
+        </button>
+
+        <label className="custom-h2 text-text-on-white block">프로필</label>
+        <section className="flex-flex-col gap-[20px] bg-white  mt-[20px] mb-[56px] p-[24px] rounded-[12px]">
           <div>
             <label className="custom-h5 block mb-[12px]">닉네임</label>
             <p className="custom-body2 text-text-on-white px-[16px] py-[12px]">{userData?.data.nickname}</p>
           </div>
           <div>
             <label className="custom-h5 block mb-[12px]">프로필 사진</label>
-            <p className="h-[120px] w-[120px]">프로필 사진</p>
+            <p className="h-[120px] w-[120px]">
+              {userData?.data.profile_image ? (
+                <img
+                  src={userData.data.profile_image}
+                  alt="Profile"
+                  className="h-full w-full object-cover rounded-full"
+                />
+              ) : (
+                '기본 프로필사진'
+              )}
+            </p>
           </div>
           <div className="flex flex-col gap-[12px]">
             <label className="custom-h5 block">SNS</label>
@@ -86,7 +94,10 @@ const MyPageInfo = () => {
           </div>
           <div className="flex flex-col gap-[12px]">
             <label className="custom-h5 block">소개말</label>
-            <p className="text-gray-400 custom-body2 px-[16px] py-[12px]"> 아직 작성하지 않았어요!</p>
+            <p className="text-gray-400 custom-body2 px-[16px] py-[12px]">
+              {' '}
+              {userData?.data.intros ? userData.data.intros : '아직 작성하지 않았어요!'}
+            </p>
           </div>
         </section>
         <label className="custom-h2 text-text-on-white">계정</label>
@@ -95,7 +106,7 @@ const MyPageInfo = () => {
             <label className="custom-h5 block mb-[12px]">가입한 계정</label>
             <div className="flex gap-[12px] custom-body2 text-text-on-white px-[16px] py-[12px]">
               {getProviderIcon(user.social_type)}
-              {userData?.data.email}
+              {user.email}
             </div>
           </div>
           <div>
@@ -103,7 +114,7 @@ const MyPageInfo = () => {
             <div className="flex justify-between custom-body2 text-text-on-white px-[16px] py-[12px]">
               <div className="flex gap-[12px]">
                 {getProviderIcon(user.social_type)}
-                {userData?.data.email}
+                {user.email}
               </div>
               <PrimaryButton buttonType="square" text="변경하기" onClick={() => {}} />
             </div>
@@ -155,4 +166,4 @@ const MyPageInfo = () => {
   );
 };
 
-export default MyPageInfo;
+export default ProfileView;

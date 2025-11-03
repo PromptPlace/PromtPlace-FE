@@ -1,3 +1,4 @@
+import MyProfilePage from '@/pages/MyPage/MyProfilePage';
 import React from 'react';
 
 export const lazyRoutes = {
@@ -13,6 +14,7 @@ export const lazyRoutes = {
   MyPaymentHistory: React.lazy(() => import('../pages/MyPage/MyPaymentHistoryPage')),
   MyPromptPage: React.lazy(() => import('../pages/MyPage/MyPromptPage')),
   MyReviewPage: React.lazy(() => import('../pages/MyPage/MyReviewPage')),
+  MyProfilePage: React.lazy(() => import('../pages/MyPage/MyProfilePage')),
   NotFoundPage: React.lazy(() => import('../pages/NotFoundPage/NotFoundPage')),
   ProfilePage: React.lazy(() => import('../pages/ProfilePage/NewProfilePage')),
   PromptCreatePage: React.lazy(() => import('../pages/PromptCreatePage/PromptCreatePage')),

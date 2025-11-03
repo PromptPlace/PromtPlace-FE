@@ -10,7 +10,9 @@ import 'slick-carousel/slick/slick-theme.css';
 const HomePage = () => {
   return (
     <>
-      <Search />
+      <div className="flex justify-center items-center">
+        <Search />
+      </div>
       <ImageSlide />
       <RecommnedPrompts />
       <VariousFunction />
