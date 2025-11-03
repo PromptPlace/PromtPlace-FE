@@ -20,6 +20,7 @@ import ProfileButton from './ProfileButton';
 
 import ArrowIcon from '@assets/icon-arrow-right-profile.svg?react';
 import ProfileIcon from '@assets/header/icon-mypage.svg';
+import clsx from 'clsx';
 
 interface ProfileCardProps {
   mypage?: boolean;
@@ -107,8 +108,19 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
 
   return (
     <>
-      <div className="px-[32px] pt-[40px] pb-[32px] bg-white rounded-[12px] mt-[80px] flex gap-[40px] max-phone:px-[16px] max-phone:pt-[20px] max-phone:pb-[16px] max-phone:flex-col max-phone:gap-[16px]">
-        <div className="max-phone:flex max-phone:gap-[20px] max-phone:items-center">
+      <div
+        className={clsx(
+          mypage &&
+            'max-mypage:px-[16px] max-mypage:pt-[20px] max-mypage:pb-[16px] max-mypage:flex-col max-mypage:gap-[16px]',
+          !mypage &&
+            'max-phone:px-[16px] max-phone:pt-[20px] max-phone:pb-[16px] max-phone:flex-col max-phone:gap-[16px]',
+          'px-[32px] pt-[40px] pb-[32px] bg-white rounded-[12px] mt-[80px] flex gap-[40px]',
+        )}>
+        <div
+          className={clsx(
+            mypage && 'max-mypage:flex max-mypage:gap-[20px] max-mypage:items-center',
+            'max-phone:flex max-phone:gap-[20px] max-phone:items-center',
+          )}>
           <div className="w-[120px] h-[120px] rounded-full overflow-hidden shrink-0 max-lg:w-[80px] max-lg:h-[80px]">
             <img
               src={userData?.data.profile_image ?? ProfileIcon}
@@ -117,12 +129,21 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
             />
           </div>
 
-          <p className="phone:hidden custom-h2">{userData?.data.nickname}</p>
+          <p className={clsx(mypage && 'mypage:hidden', !mypage && 'phone:hidden', 'custom-h2')}>
+            {userData?.data.nickname}
+          </p>
         </div>
 
         <div className="pt-[12px] flex flex-col justify-between gap-[24px] w-full max-phone:gap-[20px]">
           <div className="flex gap-[24px] max-phone:ml-[40px]">
-            <p className="custom-h2 mr-[16px] max-phone:hidden whitespace-nowrap">{userData?.data.nickname}</p>
+            <p
+              className={clsx(
+                mypage && 'max-mypage:hidden',
+                !mypage && 'max-phone:hidden',
+                'custom-h2 mr-[16px] whitespace-nowrap',
+              )}>
+              {userData?.data.nickname}
+            </p>
 
             <div
               onClick={() => {
