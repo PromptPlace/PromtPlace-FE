@@ -8,13 +8,13 @@ type TabType = 'prompt' | 'dashboard' | 'profile';
 
 const MyProfileTabs = ({ activeTab, setActiveTab }: { activeTab: string; setActiveTab: (tab: TabType) => void }) => {
   return (
-    <div className="flex justify-center border-b w-full min-w-[1080px]">
+    <div className="flex justify-center w-full w-full my-[56px] max-phone:my-[40px]">
       {TABS.map((tab) => (
         <button
           key={tab.id}
           onClick={() => setActiveTab(tab.id)}
-          className={`flex-1 text-center py-[30px] custom-h4 ${
-            activeTab === tab.id ? 'border-b-[3px] border-primary-hover text-primary-hover' : 'text-text-on-background'
+          className={`flex-1 text-center py-[20px] max-phone:py-[16px] custom-h4 ${
+            activeTab === tab.id ? 'border-b-[3px] border-primary text-primary' : 'text-text-on-background'
           }`}>
           {tab.title}
         </button>

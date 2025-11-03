@@ -13,8 +13,8 @@ const MyProfilePage = () => {
   const [activeTab, setActiveTab] = useState<'prompt' | 'dashboard' | 'profile' | 'profileEdit'>('prompt');
 
   return (
-    <div className="px-[102px] mb-[56px]">
-      <ProfileCard mypage={true} />;
+    <div className="px-[102px] mb-[56px] max-lg:px-[40px] max-phone:px-[20px]">
+      <ProfileCard mypage={true} />
       <MyProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       <main>
         {activeTab === 'prompt' && <div>프롬프트 탭 내용</div>}

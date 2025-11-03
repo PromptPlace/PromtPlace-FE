@@ -69,6 +69,7 @@
   --text-shadow-notfound: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
   --breakpoint-phone: 30.0625rem; /* 481px */
+  --breakpoint-mypage: 48rem; /* 768px */
 }
 
 @layer base {
@@ -242,6 +243,7 @@
 
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 @media (max-width: 1440px) {

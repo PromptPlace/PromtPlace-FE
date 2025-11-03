@@ -63,7 +63,9 @@ const PromptCard = ({ prompt }: PromptCardProps) => {
         </div>
 
         {/* 좋아요 버튼 */}
-        <div className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center cursor-pointer">
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center cursor-pointer pointer-events: none">
           <Likes prompt_id={prompt.prompt_id} />
         </div>
       </div>
