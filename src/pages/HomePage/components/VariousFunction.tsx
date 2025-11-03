@@ -103,14 +103,14 @@ const VariousFunction = () => {
   };
 
   return (
-    <div className="w-full bg-white flex justify-center px-[5%] lg:px-0">
+    <div className="w-full bg-white flex justify-center px-[5%] lg:px-0 pt-[64px]">
       <div className="w-full max-w-[1440px]">
         <h2 className="text-[24px] font-medium text-[#1F2937] mb-[28px]">프롬프트 플레이스의 다양한 기능</h2>
 
         <div className="flex flex-col lg:flex-row lg:gap-[32px] items-center lg:items-start w-full justify-center">
           {/* 왼쪽: AI 꿀팁 */}
           <section
-            className="bg-[#F3F4F6] rounded-[12px] p-[40px] text-left 
+            className="bg-[#F3F4F6] rounded-[12px] p-[40px] text-left
                w-[90%] lg:w-[calc(90%-478px-32px)] mb-6 lg:mb-0">
             <h3 className="text-[32px] max-lg:text-[24px] max-phone:text-[20px] font-medium mb-1">AI 꿀팁</h3>
             <p className="text-[16px] font-light max-lg:text-[14px] max-phone:text-[12px] text-[#030712] mb-4">
@@ -150,7 +150,7 @@ const VariousFunction = () => {
 
           {/* 오른쪽: 공지사항 */}
           <section
-            className="bg-[#F3F4F6] rounded-[12px] p-[40px] text-left 
+            className="bg-[#F3F4F6] rounded-[12px] p-[40px] text-left
                w-[90%] lg:w-[478px]">
             <h3 className="text-[32px] max-lg:text-[24px] max-phone:text-[20px] font-medium mb-1">공지사항</h3>
             <p className="text-[16px] font-light max-lg:text-[14px] max-phone:text-[12px] text-[#030712] mb-4">
