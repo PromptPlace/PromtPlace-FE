@@ -68,7 +68,7 @@ const CategorySection = ({
                 className={`text-center text-xs leading-4 ${
                   selectedCategory === category.id ? 'font-medium' : 'font-light'
                 }`}>
-                {category.name}
+                {category.displayName}
               </div>
             </div>
           </div>
