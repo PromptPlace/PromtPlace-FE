@@ -1,33 +1,107 @@
-import { useAuth } from '@/context/AuthContext';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import CategorySection from './components/CategorySection';
-import PromptCard from '../../components/PromptCard';
 import Filter from './components/Filter';
 import useGetPromptList from '@/hooks/queries/MainPage/useGetPromptList';
+import useGetSearchPromptList from '@/hooks/queries/MainPage/useGetSearchList';
 import PromptGrid from '@/components/PromptGrid';
+import type { Prompt } from '@/types/MainPage/prompt';
+import { categoryData } from './components/categoryData';
 
 const NewMainPage = () => {
-  const { user } = useAuth();
-  const { data, isLoading, isError } = useGetPromptList();
-  const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>('글쓰기/문서 작성');
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>('전체');
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('search') || '';
+  const categoryIdFromUrl = searchParams.get('categoryId');
+  const categoryNameFromUrl = searchParams.get('categoryName');
+
+  // 초기값 결정: URL에서 카테고리 정보가 있으면 그것을 사용, 없으면 기본값
+  const getInitialCategoryName = () => {
+    if (categoryNameFromUrl) return categoryNameFromUrl;
+    if (searchQuery) return null;
+    return '글쓰기/문서 작성';
+  };
+
+  const getInitialSubcategory = () => {
+    if (categoryNameFromUrl) return '전체';
+    if (searchQuery) return null;
+    return '전체';
+  };
+
+  const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(getInitialCategoryName());
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(getInitialSubcategory());
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [selectedSort, setSelectedSort] = useState<string>('조회순');
   const [displayCount, setDisplayCount] = useState(20); // 표시할 프롬프트 개수
 
-  const prompts = data?.data || [];
+  // 정렬 값 변환
+  const getSortValue = (): 'recent' | 'popular' | 'download' | 'views' | 'rating_avg' => {
+    switch (selectedSort) {
+      case '조회순':
+        return 'views';
+      case '별점순':
+        return 'rating_avg';
+      case '다운로드순':
+        return 'download';
+      default:
+        return 'views';
+    }
+  };
+
+  // 검색이 있을 때와 없을 때 다른 쿼리 사용
+  const { data: normalData } = useGetPromptList();
+  const { data: searchData } = useGetSearchPromptList(
+    {
+      model: selectedModels.length > 0 ? selectedModels : null,
+      tag: null,
+      keyword: searchQuery || null,
+      page: 1,
+      size: 100,
+      sort: getSortValue(),
+      is_free: false,
+    },
+    !!searchQuery, // searchQuery가 있을 때만 enabled
+  );
+
+  // 검색어 또는 URL 카테고리 파라미터가 변경될 때 처리
+  useEffect(() => {
+    if (categoryNameFromUrl) {
+      // URL에서 카테고리 정보가 있으면 설정
+      setSelectedCategoryName(categoryNameFromUrl);
+      setSelectedSubcategory('전체');
+    } else if (searchQuery) {
+      // 검색어가 있으면 카테고리 초기화
+      setSelectedCategoryName(null);
+      setSelectedSubcategory(null);
+    } else {
+      // 둘 다 없으면 기본 카테고리로 복귀
+      setSelectedCategoryName('글쓰기/문서 작성');
+      setSelectedSubcategory('전체');
+    }
+  }, [searchQuery, categoryNameFromUrl]);
+
+  const prompts: Prompt[] = searchQuery ? (searchData?.data ? searchData.data.prompts : []) : normalData?.data || [];
 
   // 선택된 카테고리와 모델에 따라 프롬프트 필터링
   let filteredPrompts = prompts;
 
-  // 카테고리 필터링
-  if (selectedCategoryName) {
-    filteredPrompts = filteredPrompts.filter((prompt) => prompt.categories.includes(selectedCategoryName));
-  }
+  // 카테고리 필터링 (검색 시에도 적용)
+  if (selectedCategoryName && selectedSubcategory !== null) {
+    // 선택된 대분류의 모든 서브카테고리 가져오기
+    const selectedCategoryData = categoryData.find((cat) => cat.name === selectedCategoryName);
+    const allowedSubcategories = selectedCategoryData?.subcategories || [];
 
-  // 서브카테고리 필터링 (전체가 아닌 경우에만)
-  if (selectedSubcategory && selectedSubcategory !== '전체') {
-    filteredPrompts = filteredPrompts.filter((prompt) => prompt.categories.includes(selectedSubcategory));
+
+    // '전체'일 때는 대분류의 모든 서브카테고리를 포함
+    if (selectedSubcategory === '전체') {
+      filteredPrompts = filteredPrompts.filter((prompt) =>
+        prompt.categories.some((cat) => allowedSubcategories.includes(cat.category.name)),
+      );
+    } else {
+      // 특정 서브카테고리 선택 시
+      filteredPrompts = filteredPrompts.filter((prompt) =>
+        prompt.categories.some((cat) => cat.category.name === selectedSubcategory),
+      );
+    }
   }
 
   // 모델 필터링
@@ -37,7 +111,7 @@ const NewMainPage = () => {
     );
   }
 
-  // 정렬
+  // 정렬 (항상 클라이언트 사이드에서 적용)
   const sortedPrompts = [...filteredPrompts].sort((a, b) => {
     switch (selectedSort) {
       case '조회순':
@@ -56,6 +130,8 @@ const NewMainPage = () => {
   const hasNext = sortedPrompts.length > displayCount;
 
   const totalCount = sortedPrompts.length;
+
+  console.log('displayedPrompts:', displayedPrompts);
 
   const handleCategorySelect = (categoryId: number | null, categoryName: string | null) => {
     setSelectedCategoryName(categoryName);
@@ -79,8 +155,15 @@ const NewMainPage = () => {
   };
 
   const handleReset = () => {
-    setSelectedCategoryName(null);
-    setSelectedSubcategory('전체');
+    if (searchQuery) {
+      // 검색 모드일 때는 카테고리/서브카테고리를 null로
+      setSelectedCategoryName(null);
+      setSelectedSubcategory(null);
+    } else {
+      // 일반 모드일 때는 기본값으로
+      setSelectedCategoryName('글쓰기/문서 작성');
+      setSelectedSubcategory('전체');
+    }
     setSelectedModels([]);
     setSelectedSort('조회순');
     setDisplayCount(20); // 페이지 리셋
@@ -89,8 +172,6 @@ const NewMainPage = () => {
   const handleLoadMore = () => {
     setDisplayCount((prev) => prev + 20);
   };
-
-  console.log(prompts.map((p) => p.categories));
 
   return (
     <div className="px-[102px]">
@@ -102,8 +183,22 @@ const NewMainPage = () => {
       </div>
 
       <div>
-        <CategorySection onCategorySelect={handleCategorySelect} onSubcategorySelect={handleSubcategorySelect} />
+        <CategorySection
+          onCategorySelect={handleCategorySelect}
+          onSubcategorySelect={handleSubcategorySelect}
+          initialCategoryId={
+            categoryIdFromUrl
+              ? Number(categoryIdFromUrl)
+              : searchQuery
+                ? null
+                : 1
+          }
+        />
       </div>
+
+      {searchQuery && (
+        <div className="mt-[64px] justify-center text-gray-950 text-3xl leading-10">'{searchQuery}' 검색 결과</div>
+      )}
 
       <div className="mt-[40px]">
         <Filter onModelChange={handleModelChange} onSortChange={handleSortChange} onReset={handleReset} />
@@ -111,23 +206,13 @@ const NewMainPage = () => {
 
       <div className="mt-[56px]">
         <div className="self-stretch justify-center mb-[32px]">
-          {/* {selectedCategoryName && (
-            <span className="text-gray-950 text-base font-medium mr-2">'{selectedCategoryName}' 카테고리 · </span>
-          )}
-          {selectedSubcategory && selectedSubcategory !== '전체' && (
-            <span className="text-gray-950 text-base font-medium mr-2">'{selectedSubcategory}' · </span>
-          )}
-          {selectedModels.length > 0 && (
-            <span className="text-gray-950 text-base font-medium mr-2">{selectedModels.join(', ')} · </span>
-          )} */}
           <span className="text-primary text-base font-medium font-['S-Core_Dream'] leading-6">{totalCount}</span>
           <span className="text-gray-950 text-base font-light font-['S-Core_Dream'] leading-6 tracking-tight">
             개의 프롬프트가 있습니다.
           </span>
         </div>
 
-        {/* <PromptGrid prompts={displayedPrompts} /> */}
-        <PromptGrid prompts={prompts} />
+        <PromptGrid prompts={displayedPrompts} />
 
         {hasNext && (
           <div className="flex justify-center mt-[134px]">
