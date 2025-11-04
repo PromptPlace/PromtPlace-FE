@@ -19,7 +19,7 @@ export interface PromptTag {
 export interface PromptWriter {
   user_id: number;
   nickname: string;
-  profileimg: ProfileImage;
+  profileImage: ProfileImage;
 }
 
 export interface PromptModel {
@@ -32,6 +32,17 @@ export interface PromptModels {
   model_id: number;
   model: PromptModel;
 }
+
+export interface PromptCategory {
+  promptcategory_id: number;
+  prompt_id: number;
+  category_id: number;
+  category: {
+    category_id: number;
+    name: string;
+  };
+}
+
 export interface Prompt {
   prompt_id: number;
   user_id: number;
@@ -52,7 +63,7 @@ export interface Prompt {
   inactive_date: string | null;
   user: PromptWriter;
   models: PromptModels[];
-  categories: string[];
+  categories: PromptCategory[];
   images: PromptImage[];
   review_count: number;
   review_rating_avg: number;
@@ -80,12 +91,13 @@ export interface searchPrompt {
   views: number;
   likes: number;
   review_rating_avg: number;
+  model_version: string;
   created_at: string;
   updated_at: string;
   inactive_date: string | null;
-  user: SearchPromptWriter;
-  models: PromptModel[];  
-  tags: PromptTag[];
+  user: PromptWriter;
+  models: PromptModels[];
+  categories: PromptCategory[];
   images: PromptImage[];
   review_count: number;
 }
