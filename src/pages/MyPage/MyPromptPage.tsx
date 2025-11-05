@@ -349,13 +349,13 @@ const MyPromptPage = () => {
     // `flatMap`을 사용해 각 페이지의 'prompts' 배열을 하나의 배열로 합칩니다.
     return promptsResponse.pages.flatMap((page) =>
       // 각 페이지 내부의 prompts 배열을 순회하며 구조를 변경합니다.
-      page.data.prompts.map((prompt) => ({
+      page.data.map((prompt) => ({
         prompt_id: prompt.prompt_id,
         title: prompt.title,
         // models 배열에서 이름(name)만 추출해 새 배열을 만듭니다.
         models: prompt.models.map((item) => item.model.name),
         // tags 배열에서 이름(name)만 추출해 새 배열을 만듭니다.
-        tags: prompt.tags.map((item) => item.tag.name),
+        // tags: prompt.tags.map((item) => item.tag.name),
         // 'author_nickname'은 아래 "중요" 부분을 참고하세요.
       })),
     );

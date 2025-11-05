@@ -89,13 +89,11 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
     })) || [];
 
   // 올린 프롬프트 개수
-  const promptCount = promptsData
-    ? promptsData?.pages?.reduce((acc, page) => acc + (page?.data?.prompts?.length ?? 0), 0)
-    : 0;
+  const promptCount = promptsData ? promptsData?.pages?.reduce((acc, page) => acc + (page?.data?.length ?? 0), 0) : 0;
 
   useEffect(() => {
     if (isMyProfile && !mypage) {
-      navigate('/mypage');
+      navigate('/mypage/profile');
     }
   }, [isMyProfile, navigate, mypage]);
 

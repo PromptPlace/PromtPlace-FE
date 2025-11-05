@@ -3,11 +3,12 @@ import type { RequestMemberDto, ResponsePromptsDto } from '@/types/ProfilePage/p
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 function useGetPrompts({ member_id }: RequestMemberDto) {
-  return useInfiniteQuery({
+  return useInfiniteQuery<ResponsePromptsDto>({
     queryKey: ['member-prompts', member_id],
-    queryFn: ({ pageParam }) => getPrompts({ member_id }, { cursor: pageParam, limit: 10 }),
-    getNextPageParam: (lastPage: ResponsePromptsDto) =>
-      lastPage?.data?.pagination?.has_more ? lastPage?.data?.pagination?.nextCursor : undefined,
+    // @ts-expect-error pageParam is inferred as unknown
+    queryFn: ({ pageParam = undefined }) => getPrompts({ member_id }, { cursor: pageParam, limit: 10 }),
+    getNextPageParam: (lastPage) =>
+      lastPage?.pagination?.has_more ? (lastPage?.pagination?.nextCursor ?? undefined) : undefined,
     initialPageParam: undefined,
     staleTime: Infinity,
   });
