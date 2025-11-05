@@ -175,8 +175,8 @@ const PromptLandingPage = () => {
         </div>
       </div>
 
-      {/* 724px 이하: 모바일 */}
-      <div className="block min-[725px]:hidden">
+      {/* 480px 이하: 모바일 */}
+      <div className="block min-[480px]:hidden">
         {/* 오른쪽 위 고정 이미지 */}
         <img src={twostars} alt="stars" className="absolute top-[162px] right-[40px] w-[80px] h-[70px]" />
         <div className="relative">
@@ -192,7 +192,7 @@ const PromptLandingPage = () => {
           </div>
         </div>
       </div>
-      <div className="">
+      <div className="block min-[480px]:hidden">
         <div className="mt-[123px] px-[20px]">
           <div className="">
             <div className=" w-full  h-[105px]">
