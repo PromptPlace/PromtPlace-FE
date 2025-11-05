@@ -6,7 +6,7 @@ import NaverIcon from '@assets/icon-naver-logo.svg';
 import eye_visible from '@assets/icon-eye-visible.svg';
 import eye_invisible from '@assets/icon-eye-invisible.svg';
 import type { ModalView } from '@/types/LoginPage/auth';
-
+import { useAuth } from '@/context/AuthContext';
 
 interface LoginViewProps {
   setView: (view: ModalView) => void;
@@ -74,6 +74,7 @@ const LoginView = ({ setView }: LoginViewProps) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(''); // 로그인 실패 시 여기에 메시지 설정
+  const { loginEmail } = useAuth();
 
   const isDisabled = email === '' || password === '';
 
@@ -81,9 +82,24 @@ const LoginView = ({ setView }: LoginViewProps) => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // 여기에 이메일/비밀번호 로그인 로직 추가
+    try {
+      const isInitialSetupRequired = await loginEmail(email, password);
+
+      if (isInitialSetupRequired) {
+        setView('onboarding');
+      } else {
+        // 'close' 뷰가 없으므로 부모의 onClose()를 호출해야 합니다.
+        // 이 컴포넌트는 onClose를 prop으로 받고 있지 않으므로,
+        // 부모(SocialLoginModal)에서 LoginView에 onClose를 넘겨줘야 합니다.
+        setView('close');
+      }
+    } catch (error) {
+      setError('로그인에 실패했습니다. 다시 시도해주세요.');
+      console.error('로그인 오류:', error);
+    }
   };
 
   return (
@@ -133,14 +149,7 @@ const LoginView = ({ setView }: LoginViewProps) => {
 
           {error && <p className="text-alert custom-h5 mt-[4px]">{error}</p>}
         </div>
-        <PrimaryButton
-          buttonType="full"
-          type="submit"
-          text="로그인하기"
-          textColor="white"
-          disable={isDisabled}
-          onClick={() => {}}
-        />
+        <PrimaryButton buttonType="full" type="submit" text="로그인하기" textColor="white" disable={isDisabled} onClick={() => {}} />
       </form>
       <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
         {/* 수정필요  Link가 아닌 signup, find-password가 렌더링 되도록*/}
