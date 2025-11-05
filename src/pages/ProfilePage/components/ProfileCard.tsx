@@ -20,6 +20,7 @@ import ProfileButton from './ProfileButton';
 
 import ArrowIcon from '@assets/icon-arrow-right-profile.svg?react';
 import ProfileIcon from '@assets/header/icon-mypage.svg';
+import clsx from 'clsx';
 
 interface ProfileCardProps {
   mypage?: boolean;
@@ -88,13 +89,11 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
     })) || [];
 
   // 올린 프롬프트 개수
-  const promptCount = promptsData
-    ? promptsData?.pages?.reduce((acc, page) => acc + (page?.data?.prompts?.length ?? 0), 0)
-    : 0;
+  const promptCount = promptsData ? promptsData?.pages?.reduce((acc, page) => acc + (page?.data?.length ?? 0), 0) : 0;
 
   useEffect(() => {
     if (isMyProfile && !mypage) {
-      navigate('/mypage');
+      navigate('/mypage/profile');
     }
   }, [isMyProfile, navigate, mypage]);
 
@@ -107,18 +106,42 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
 
   return (
     <>
-      <div className="px-[32px] pt-[40px] pb-[32px] bg-white rounded-[12px] mt-[80px] flex gap-[40px]">
-        <div className="w-[120px] h-[120px] rounded-full overflow-hidden shrink-0">
-          <img
-            src={userData?.data.profile_image ?? ProfileIcon}
-            alt="프로필 이미지"
-            className="w-full h-full object-cover"
-          />
+      <div
+        className={clsx(
+          mypage &&
+            'max-mypage:px-[16px] max-mypage:pt-[20px] max-mypage:pb-[16px] max-mypage:flex-col max-mypage:gap-[16px]',
+          !mypage &&
+            'max-phone:px-[16px] max-phone:pt-[20px] max-phone:pb-[16px] max-phone:flex-col max-phone:gap-[16px]',
+          'px-[32px] pt-[40px] pb-[32px] bg-white rounded-[12px] mt-[80px] flex gap-[40px]',
+        )}>
+        <div
+          className={clsx(
+            mypage && 'max-mypage:flex max-mypage:gap-[20px] max-mypage:items-center',
+            'max-phone:flex max-phone:gap-[20px] max-phone:items-center',
+          )}>
+          <div className="w-[120px] h-[120px] rounded-full overflow-hidden shrink-0 max-lg:w-[80px] max-lg:h-[80px]">
+            <img
+              src={userData?.data.profile_image ?? ProfileIcon}
+              alt="프로필 이미지"
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          <p className={clsx(mypage && 'mypage:hidden', !mypage && 'phone:hidden', 'custom-h2')}>
+            {userData?.data.nickname}
+          </p>
         </div>
 
-        <div className="pt-[12px] flex flex-col justify-between gap-[24px] w-full">
-          <div className="flex gap-[24px]">
-            <p className="custom-h2 mr-[16px]">{userData?.data.nickname}</p>
+        <div className="pt-[12px] flex flex-col justify-between gap-[24px] w-full max-phone:gap-[20px]">
+          <div className="flex gap-[24px] max-phone:ml-[40px]">
+            <p
+              className={clsx(
+                mypage && 'max-mypage:hidden',
+                !mypage && 'max-phone:hidden',
+                'custom-h2 mr-[16px] whitespace-nowrap',
+              )}>
+              {userData?.data.nickname}
+            </p>
 
             <div
               onClick={() => {
@@ -128,7 +151,7 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
               }}
               className="flex flex-col gap-[4px] items-center cursor-pointer">
               <div className="flex">
-                <p className="custom-body3">팔로워</p>
+                <p className="custom-body3 whitespace-nowrap">팔로워</p>
                 <ArrowIcon />
               </div>
               <p className="custom-h4">{followerData?.data.length}</p>
@@ -147,18 +170,21 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
             )}
 
             <div className="flex flex-col gap-[4px] items-center">
-              <p className="custom-body3">올린 프롬프트</p>
+              <p className="custom-body3 whitespace-nowrap">올린 프롬프트</p>
               <p className="custom-h4">{promptCount}</p>
             </div>
           </div>
 
-          <div className="flex gap-[12px] px-[12px]">
-            {snsData?.data.map((sns) => (
-              <SnsButton url={sns.url} key={sns.sns_id} />
-            ))}
+          <div className="flex gap-[12px] px-[12px] max-phone:px-[0px] max-phone:ml-[40px] max-phone:mt-[-4px] flex-wrap">
+            <SnsButton
+              url={snsData?.data[snsData.data.length - 1]?.url || ''}
+              id={snsData?.data[snsData.data.length - 1]?.user_sns_id || ''}
+            />
           </div>
 
-          <div className="custom-body1 h-[102px] overflow-y-scroll">{userData?.data.intros}</div>
+          <div className="custom-body1 h-[102px] max-lg:h-[130px] max-phone:h-[208px] overflow-y-scroll max-phone:ml-[40px]">
+            {userData?.data.intros}
+          </div>
 
           {!isMyProfile && (
             <div className="flex gap-[20px]">

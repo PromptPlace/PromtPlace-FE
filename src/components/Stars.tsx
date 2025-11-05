@@ -18,7 +18,7 @@ interface RatingProps {
   star?: number; // optional로 변경
 }
 
-const Rating = ({ star = 0 }: RatingProps) => {
+const Stars = ({ star = 0 }: RatingProps) => {
   const stars = [];
   const fullStars = Math.floor(star);
   const halfStar = star - fullStars >= 0.5;
@@ -30,14 +30,14 @@ const Rating = ({ star = 0 }: RatingProps) => {
         src={StarFill}
         key={'full' + i}
         alt="star full"
-        className="w-[24px] h-[24px] max-lg:w-[12px] max-lg:h-[12px]"
+        className="w-[16px] h-[16px] max-lg:w-[12px] max-lg:h-[12px]"
       />,
     );
   }
 
   if (halfStar) {
     stars.push(
-      <img src={StarHalf} key={'half'} alt="star half" className="w-[24px] h-[24px] max-lg:w-[12px] max-lg:h-[12px]" />,
+      <img src={StarHalf} key={'half'} alt="star half" className="w-[16px] h-[16px] max-lg:w-[12px] max-lg:h-[12px]" />,
     );
   }
 
@@ -47,7 +47,7 @@ const Rating = ({ star = 0 }: RatingProps) => {
         src={StarEmpty}
         key={'empty' + i}
         alt="star empty"
-        className="w-[24px] h-[24px] max-lg:w-[12px] max-lg:h-[12px]"
+        className="w-[16px] h-[16px] max-lg:w-[12px] max-lg:h-[12px]"
       />,
     );
   }
@@ -55,11 +55,8 @@ const Rating = ({ star = 0 }: RatingProps) => {
   return (
     <div className="flex justify-center items-end gap-[5px]">
       <div className="flex gap-[2px] justify-center items-center">{stars}</div>
-      <div className="text-text-on-background text-sm font-normal leading-[18px] max-lg:text-[8px] max-lg:leading-[10px]">
-        {star.toFixed(1)}
-      </div>
     </div>
   );
 };
 
-export default Rating;
+export default Stars;

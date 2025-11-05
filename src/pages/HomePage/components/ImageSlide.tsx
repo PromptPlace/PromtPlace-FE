@@ -54,17 +54,17 @@ const ImageSlide = () => {
     {
       id: 1,
       url: Slide1,
-      to: '#',
+      to: '/prompt/2131',
     },
     {
       id: 2,
       url: Slide2,
-      to: '#',
+      to: '/prompt/2130',
     },
     {
       id: 3,
       url: Slide3,
-      to: '#',
+      to: '/prompt/2129',
     },
   ];
 

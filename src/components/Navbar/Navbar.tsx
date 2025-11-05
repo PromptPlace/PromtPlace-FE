@@ -10,7 +10,7 @@ import ArrowIcon from '@assets/header/icon-arrow_fill.svg';
 import NotificationIcon from '@assets/header/icon-notification.svg';
 import NotificationAlarmIcon from '@assets/header/icon-notification_new.svg';
 import MessageIcon from '@assets/header/icon-message.svg';
-import MessageAlarmIcon from '@assets/header/icon-message_new.svg';
+// import MessageAlarmIcon from '@assets/header/icon-message_new.svg';
 import UserIcon from '@assets/header/mypage.svg';
 
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
@@ -127,7 +127,7 @@ const Navbar = () => {
               </div>
 
               <img
-                src={data?.data.has_unread_messages ? MessageAlarmIcon : MessageIcon}
+                src={data?.data.has_unread_messages ? MessageIcon : MessageIcon}
                 alt="메세지 알림"
                 className="self-center max-phone:w-[16px] max-phone:h-[16px]"
                 onClick={() => setIsMessageModalShow((prev) => !prev)}
@@ -136,7 +136,7 @@ const Navbar = () => {
                 src={data?.data.profile_image || UserIcon}
                 alt="프로필 이미지"
                 className="w-[40px] object-cover self-center max-phone:w-[32px] max-phone:h-[32px]"
-                onClick={() => navigate(`/profile/${user.user_id}`)}
+                onClick={() => navigate(`/mypage/profile`)}
               />
             </div>
           )}

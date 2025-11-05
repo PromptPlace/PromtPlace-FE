@@ -5,6 +5,8 @@ import UnCheckIcon from '@assets/icon-terms-check-white-stroke.svg';
 import CheckIcon from '@assets/icon-terms-check.svg';
 import AllChcekIcon from '@assets/icon-check-white-stroke.svg';
 import AllUnCheckIcon from '@assets/icon-check-blue-circle.svg';
+import useSignUpRequest from '@/hooks/mutations/LoginPage/useSignUpRequest';
+import type { signupRequest } from '@/types/LoginPage/auth';
 
 interface LoginViewProps {
   setView: (view: ModalView) => void;
@@ -12,6 +14,8 @@ interface LoginViewProps {
   setEmail: (email: string) => void;
   password: string;
   setPassword: (password: string) => void;
+  authCode: string;
+  setAuthCode: (authCode: string) => void;
 }
 
 interface CustomCheckboxProps {
@@ -29,7 +33,7 @@ const CustomCheckbox = ({ isChecked, label, onClick }: CustomCheckboxProps) => (
   </button>
 );
 
-const AgreeTermsView = ({ setView, email, setEmail, password, setPassword }: LoginViewProps) => {
+const AgreeTermsView = ({ setView, email, password, authCode }: LoginViewProps) => {
   const [allChecked, setAllChecked] = useState(false);
   const [termsChecked, setTermsChecked] = useState(false);
   const [privacyChecked, setPrivacyChecked] = useState(false);
@@ -54,9 +58,31 @@ const AgreeTermsView = ({ setView, email, setEmail, password, setPassword }: Log
     }
   }, [termsChecked, privacyChecked, ageChecked, marketingChecked]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // 여기에 회원가입 로직 추가 최종 회원가입 요청 api 호출
+  const { mutate: signUpRequest } = useSignUpRequest();
+
+  const formData: signupRequest = {
+    email,
+    password,
+    tempToken: authCode,
+    consents: [
+      { type: 'SERVICE_TERMS_REQUIRED', isAgreed: termsChecked },
+      { type: 'PRIVACY_POLICY_REQUIRED', isAgreed: privacyChecked },
+      { type: 'OVER_14_REQUIRED', isAgreed: ageChecked },
+      { type: 'MARKETING_OPTIONAL', isAgreed: marketingChecked },
+    ],
+  };
+
+  const handleSubmit = () => {
+    signUpRequest(formData, {
+      onSuccess: (data) => {
+        console.log('회원가입 성공:', data);
+        // 추가적인 성공 처리 로직 작성
+      },
+      onError: (error) => {
+        console.error('회원가입 실패:', error);
+        // 추가적인 오류 처리 로직 작성
+      },
+    });
   };
 
   return (
@@ -101,7 +127,7 @@ const AgreeTermsView = ({ setView, email, setEmail, password, setPassword }: Log
         text="회원가입하기"
         textColor="white"
         disable={isDisabled}
-        onClick={() => {}}
+        onClick={handleSubmit}
       />
 
       <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">

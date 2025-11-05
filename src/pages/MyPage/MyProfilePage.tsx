@@ -2,13 +2,10 @@ import ProfileCard from '../ProfilePage/components/ProfileCard';
 import MyProfileTabs from './components/MyProfileTabs';
 import { useState } from 'react';
 import prepareIcon from '@assets/icon-prepare.svg';
-import MyPageInfo from './MyInfoPage';
 import ProfileView from './components/ProfileView';
 import ProfileEditView from './components/ProfileEditView';
-import PrimaryButton from '@/components/Button/PrimaryButton';
 import { useAuth } from '@/context/AuthContext';
 import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
-import UploadPrompt from '../MainPage/components/UploadPromt';
 
 const MyProfilePage = () => {
   const { user } = useAuth();
@@ -16,8 +13,8 @@ const MyProfilePage = () => {
   const [activeTab, setActiveTab] = useState<'prompt' | 'dashboard' | 'profile' | 'profileEdit'>('prompt');
 
   return (
-    <div className="px-[102px] mb-[56px]">
-      <ProfileCard mypage={true} />;
+    <div className="px-[102px] mb-[56px] max-lg:px-[40px] max-phone:px-[20px]">
+      <ProfileCard mypage={true} />
       <MyProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       <main>
         {activeTab === 'prompt' && <div>프롬프트 탭 내용</div>}

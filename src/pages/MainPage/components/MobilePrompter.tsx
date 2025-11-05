@@ -40,7 +40,7 @@ const MobilePrompter = ({ prompter }: MobilePrompterProps) => {
 
   // 실제 데이터에서 profileImage로 들어오는 경우 처리
   const prompterData = prompter as typeof prompter & { profileImage?: { url: string } };
-  const profileImageUrl = prompterData.profileImage?.url || prompter.profileimg?.url || userImage;
+  const profileImageUrl = prompterData.profileImage?.url || prompter.profileImage?.url || userImage;
 
   return (
     <div className="w-full h-12 py-1.5 flex justify-between items-center bg-[#F5F5F5]">
