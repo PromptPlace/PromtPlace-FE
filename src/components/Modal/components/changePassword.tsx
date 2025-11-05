@@ -7,16 +7,14 @@ import useResetPasswordRequest from '@/hooks/mutations/LoginPage/useResetPasswor
 
 interface LoginViewProps {
   setView: (view: ModalView) => void;
-  authCode: string;
+  tempToken: string;
+  email: string;
 }
 
 type PasswordStatus = 'default' | 'valid' | 'invalid';
 type RepeatPasswordStatus = 'default' | 'match' | 'mismatch';
 
-
-
-const ChangePasswordView = ({ setView, authCode }: LoginViewProps) => {
-  const [email, setEmail] = useState('');
+const ChangePasswordView = ({ setView, tempToken, email }: LoginViewProps) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showrepeatPassword, setShowRepeatPassword] = useState(false);
@@ -73,8 +71,9 @@ const ChangePasswordView = ({ setView, authCode }: LoginViewProps) => {
 
   const { mutate: resetPassword } = useResetPasswordRequest();
   const handlePasswordChange = () => {
+    console.log('비밀번호 변경 요청:', { email, password, repeatPassword, tempToken });
     resetPassword(
-      { email, newPassword: password, confirmPassword: repeatPassword, tempToken: authCode },
+      { email, newPassword: password, confirmPassword: repeatPassword, tempToken },
       {
         onSuccess: () => {
           // 비밀번호 변경 성공 시 처리
@@ -85,7 +84,7 @@ const ChangePasswordView = ({ setView, authCode }: LoginViewProps) => {
           // 비밀번호 변경 실패 시 처리
           console.error('비밀번호 변경 실패:', error);
         },
-      }
+      },
     );
   };
 
@@ -122,7 +121,9 @@ const ChangePasswordView = ({ setView, authCode }: LoginViewProps) => {
             </button>
           </div>
 
-          {error === 'valid' && <p className="text-primary custom-h5 mt-[4px]">사용 가능한 비밀번호예요.</p>}
+          {error === 'valid' && (
+            <p className="text-primary custom-button2 min-h-5 mt-[4px]">사용 가능한 비밀번호예요.</p>
+          )}
           {error === 'invalid' && (
             <p className="text-alert custom-h5 mt-[4px]">
               영문, 숫자, 특수문자 조합으로 8자 이상의 비밀번호를 입력해주세요.
@@ -156,9 +157,11 @@ const ChangePasswordView = ({ setView, authCode }: LoginViewProps) => {
           </div>
 
           {errorRepeat === 'mismatch' && (
-            <p className="text-alert custom-h5 mt-[4px]">비밀번호가 달라요! 확인해 보시겠어요?</p>
+            <p className="text-alert custom-button2 mt-[4px] min-h-5">비밀번호가 달라요! 확인해 보시겠어요?</p>
           )}
-          {errorRepeat === 'match' && <p className="text-primary custom-h5 mt-[4px]">동일한 비밀번호예요</p>}
+          {errorRepeat === 'match' && (
+            <p className="text-primary custom-button2 mt-[4px] min-h-5">동일한 비밀번호예요</p>
+          )}
         </div>
         <PrimaryButton
           buttonType="full"
