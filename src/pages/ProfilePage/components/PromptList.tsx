@@ -1,13 +1,14 @@
 import { useAuth } from '@/context/AuthContext';
 import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
 import useGetPrompts from '@/hooks/queries/ProfilePage/useGetPrompts';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import TwinkleIcon from '@assets/profile/icon-twinkle.svg?react';
 import ArrowIcon from '@assets/icon-arrow-right-black.svg?react';
 import PromptGrid from '@/components/PromptGrid';
 import { CATEGORY_MAP } from '@/types/ProfilePage/categoryMap';
 import type { Prompt } from '@/types/ProfilePage/profile';
+import { categoryData } from '@/pages/MainPage/components/categoryData';
 
 const PromptList = () => {
   const { id } = useParams();
@@ -16,6 +17,8 @@ const PromptList = () => {
   const myId = user.user_id;
   const isMyProfile = id ? Number(id) === myId : false;
   const member_id = isMyProfile ? myId : Number(id);
+
+  const navigate = useNavigate();
 
   // 회원 정보 불러오기
   const { data: userData } = useGetMember({ member_id });
@@ -55,7 +58,14 @@ const PromptList = () => {
       <div className="mt-[40px]">
         {Object.entries(groupedPrompts).map(([category, prompts]) => (
           <div className="flex flex-col mb-[20px]">
-            <div className="flex gap-[13px] items-center">
+            <div
+              className="flex gap-[13px] items-center cursor-pointer"
+              onClick={() => {
+                const matched = categoryData.find((c) => c.name === category);
+                if (matched) {
+                  navigate(`/prompt?categoryId=${matched.id}&categoryName=${encodeURIComponent(category)}`);
+                }
+              }}>
               <p>{category}</p>
               <ArrowIcon />
             </div>
