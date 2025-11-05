@@ -4,6 +4,35 @@ export interface ApiResponse<T> {
   data: T[];
 }
 
+interface PromptReview {
+  nickname: string;
+  content: string;
+  rating: number;
+}
+
+export interface NewAuthoredPromptDTO {
+  prompt_id: number;
+  title: string;
+  image_url: string | null;
+  views: number;
+  downloads: number;
+  reviews: {
+    has_more: boolean;
+    data: PromptReview[];
+  };
+}
+
+export interface NewAuthoredPromptsApiResponse {
+  message: string;
+  statusCode: number;
+  data: {
+    prompts: NewAuthoredPromptDTO[];
+    nextCursor: number | null;
+    has_more: boolean;
+    limit: number;
+  };
+}
+
 export interface DownloadedPromptDTO {
   prompt_id: number;
   title: string;
