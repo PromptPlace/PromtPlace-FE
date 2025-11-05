@@ -129,7 +129,7 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
 
           {error === 'valid' && <p className="text-primary custom-h5 mt-[4px]">사용 가능한 비밀번호예요.</p>}
           {error === 'invalid' && (
-            <p className="text-alert custom-h5 mt-[4px]">
+            <p className="text-alert custom-button2 mt-[4px]">
               영문, 숫자, 특수문자 조합으로 8자 이상의 비밀번호를 입력해주세요.
             </p>
           )}
@@ -161,7 +161,7 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
           </div>
 
           {errorRepeat === 'mismatch' && (
-            <p className="text-alert custom-h5 mt-[4px]">비밀번호가 달라요! 확인해 보시겠어요?</p>
+            <p className="text-alert custom-button2 mt-[4px]">비밀번호가 달라요! 확인해 보시겠어요?</p>
           )}
           {errorRepeat === 'match' && <p className="text-primary custom-h5 mt-[4px]">동일한 비밀번호예요.</p>}
         </div>
@@ -171,7 +171,7 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
           text="다음"
           textColor="white"
           disable={isDisabled}
-          onClick={() => setView('login')}
+          onClick={() => setView('agreeTerms')}
         />
       </form>
       <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
