@@ -9,6 +9,7 @@ import PromptGrid from '@/components/PromptGrid';
 import { CATEGORY_MAP } from '@/types/ProfilePage/categoryMap';
 import type { Prompt } from '@/types/ProfilePage/profile';
 import { categoryData } from '@/pages/MainPage/components/categoryData';
+import PromptMobileCard from '@/pages/HomePage/components/PromptMobileCard';
 
 const PromptList = () => {
   const { id } = useParams();
@@ -55,9 +56,9 @@ const PromptList = () => {
         </div>
       </div>
 
-      <div className="mt-[40px]">
-        {Object.entries(groupedPrompts).map(([category, prompts]) => (
-          <div className="flex flex-col mb-[20px]">
+      <div className="mt-[40px] max-phone:hidden">
+        {Object.entries(groupedPrompts).map(([category, prompts], idx) => (
+          <div className="flex flex-col mb-[20px]" key={idx}>
             <div
               className="flex gap-[13px] items-center cursor-pointer"
               onClick={() => {
@@ -74,6 +75,33 @@ const PromptList = () => {
             <PromptGrid prompts={prompts} />
           </div>
         ))}
+      </div>
+
+      <div className="phone:hidden mt-[40px] max-phone:mt-[20px] pb-[24px]">
+        <div className="flex flex-col gap-[8px]">
+          {Object.entries(groupedPrompts)?.map(([category, prompts], idx) => (
+            <div className="flex flex-col mb-[20px]" key={idx}>
+              <div
+                className="flex gap-[13px] items-center cursor-pointer"
+                onClick={() => {
+                  const matched = categoryData.find((c) => c.name === category);
+                  if (matched) {
+                    navigate(`/prompt?categoryId=${matched.id}&categoryName=${encodeURIComponent(category)}`);
+                  }
+                }}>
+                <p>{category}</p>
+                <ArrowIcon />
+              </div>
+
+              <div className="mt-[16px] flex flex-col gap-[8px]">
+                {prompts?.map((prompt) => (
+                  // @ts-expect-error 타입 통일 예정
+                  <PromptMobileCard key={prompt.prompt_id} prompt={prompt} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {promptCount === 0 && (
