@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { categoryData } from '@/pages/MainPage/components/categoryData';
+import leftblob from '@/assets/icon-left-blob.svg';
+import rightblob from '@/assets/icon-right-blob.svg';
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -28,12 +30,12 @@ const Search = () => {
       <div className="absolute w-full h-[564px] bg-gradient-to-b from-white/40 to-white z-0 top-0 left-0">
         {/* 왼쪽 배경 blob */}
         <div className="absolute left-0 top-0 w-44 h-44 mx-[106px] mt-[157px] pointer-events-none">
-          <img src="/src/assets/icon-left-blob.svg" />
+          <img src={leftblob} />
         </div>
 
         {/* 오른쪽 배경 blob */}
         <div className="absolute right-[72px] top-[104px] w-48 h-48 pointer-events-none">
-          <img src="/src/assets/icon-right-blob.svg" />
+          <img src={rightblob} />
         </div>
       </div>
 
