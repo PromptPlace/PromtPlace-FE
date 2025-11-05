@@ -18,7 +18,7 @@ export const publicRoutes: RouteObject[] = [
       { path: 'create/text', element: <lazyRoutes.PromptCreateTextPage /> },
       { path: 'create/img', element: <lazyRoutes.PromptCreateImgPage /> },
       { path: 'guide/tip', element: <lazyRoutes.PromptTipePage /> },
-      { path: 'guide/tip/:id', element: <lazyRoutes.PromptGuideDetailPage type="tip" /> },
+      { path: 'guide/tip/:id', element: <lazyRoutes.PromptTipDetailPage /> },
       { path: 'guide/notice', element: <lazyRoutes.PromptGuidePage type="notice" /> },
       { path: 'guide/notice/:id', element: <lazyRoutes.PromptGuideDetailPage type="notice" /> },
       { path: 'profile/:id', element: <lazyRoutes.ProfilePage /> },
