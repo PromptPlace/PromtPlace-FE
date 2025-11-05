@@ -117,7 +117,7 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
     <div className="flex justify-center pt-[56px] max-lg:pt-[12px] min-h-screen bg-background">
       <div className="flex flex-col w-full max-lg:px-[20px]">
         <button
-          className="self-end custom-button1 w-[237px] px-[91px] py-[12px] rounded-[12px] bg-primary text-white text-[14px] max-phone:py-[12px] max-phone:px-[20px] max-phone:text-[12px] max-phone:max-w-[143px] max-phone:w-full"
+          className="self-end custom-button1 w-[237px] py-[12px] rounded-[12px] bg-primary text-white text-[14px] max-phone:py-[12px] max-phone:text-[12px] max-phone:max-w-[143px] max-phone:w-full"
           onClick={() => {
             setActiveTab('profile');
             handleProfileSubmit();
