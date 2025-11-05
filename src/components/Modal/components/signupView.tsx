@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect,} from 'react';
 import { Link } from 'react-router-dom';
 import PrimaryButton from '@components/Button/PrimaryButton';
 import type { ModalView } from '@/types/LoginPage/auth';
@@ -161,7 +161,7 @@ const SignupView = ({ setView, email, setEmail, tempToken, setTempToken }: Login
           <div className="relative w-full">
             <input
               id="verificationCode"
-              placeholder="숫자 네 자리를 입력해 주세요"
+              placeholder="숫자 여섯 자리를 입력해 주세요"
               className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white  rounded-[8px]"
               value={authCode}
               onChange={(e) => setAuthCode(e.target.value)}
