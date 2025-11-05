@@ -19,16 +19,16 @@ const PromptList = () => {
       <section>
         <h2>다운받은 프롬프트</h2>
         {downloadedData?.data.map((prompt) => (
-          <DownloadedPromptCard key={prompt.prompt_id} prompt={prompt} />
+          <DownloadedPromptCard/>
         ))}
         <Link to="/profile/downloaded">더보기 &gt;</Link>
       </section>
 
       <section>
         <h2>찜한 프롬프트</h2>
-        {likedData?.data.map((prompt) => (
-          <PromptCard key={prompt.prompt_id} prompt={prompt} />
-        ))}
+    
+         <div> 찜한 프롬프트</div>
+
       </section>
     </div>
   );
