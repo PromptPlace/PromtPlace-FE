@@ -143,7 +143,7 @@ const PromptTipDetailPage = () => {
                     <div className="flex items-center gap-[12px] h-[17px]">
                       <div className="border-r border-gray-400">
                         <span className="text-[12px] font-light text-black">작성자 : </span>
-                        <span className="text-[12px] font-light text-gray500 pr-[8px] ">프롬프트클리닉</span>
+                        <span className="text-[12px] font-light text-gray500 pr-[8px] ">프롬프트플레이스</span>
                       </div>
                       <div>
                         <span className="text-[12px] font-light text-black">등록일 : </span>
@@ -229,7 +229,7 @@ const PromptTipDetailPage = () => {
                     <div className="flex items-center gap-[12px] h-[17px] mb-[16px]">
                       <div className="border-r border-gray-400">
                         <span className="text-[12px] font-light text-black">작성자 : </span>
-                        <span className="text-[12px] font-light text-gray500 pr-[8px] ">프롬프트클리닉</span>
+                        <span className="text-[12px] font-light text-gray500 pr-[8px] ">프롬프트플레이스</span>
                       </div>
                       <div>
                         <span className="text-[12px] font-light text-black">등록일 : </span>
@@ -314,7 +314,7 @@ const PromptTipDetailPage = () => {
                     <div className="flex items-center gap-[12px] h-[17px] mb-[16px]">
                       <div className="border-r border-gray-400">
                         <span className="text-[12px] font-light text-black">작성자 : </span>
-                        <span className="text-[12px] font-light text-gray500 pr-[8px] ">프롬프트클리닉</span>
+                        <span className="text-[12px] font-light text-gray500 pr-[8px] ">프롬프트플레이스</span>
                       </div>
                       <div>
                         <span className="text-[12px] font-light text-black">등록일 : </span>
