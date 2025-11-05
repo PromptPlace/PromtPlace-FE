@@ -142,13 +142,14 @@ const PromptDetailPage = () => {
   if (!prompt) return <div>프롬프트를 불러오지 못했습니다.</div>;
 
   const modelNames = Array.isArray(prompt.models) ? prompt.models.map((m) => m?.name).filter(Boolean) : [];
+
   const tagNames = Array.isArray(prompt.categories)
-    ? prompt.categories.map((c) => c?.category?.name).filter(Boolean)
+    ? prompt.categories.map((c) => c?.category?.name).filter((v): v is string => !!v && v.trim().length > 0)
     : [];
 
   return (
-    <div className="bg-[#F5F5F5] min-h-screen py-8 px-[5%] max-w-full flex justify-center">
-      <div className="w-full max-w-[1236px] flex flex-col gap-6 max-lg:gap-5 max-md:gap-4 max-sm:gap-3">
+    <div className="bg-[#F5F5F5] min-h-screen py-8 pt-[64px] px-5 md:px-8 min-[1025px]:px-[102px]">
+      <div className="w-full flex flex-col gap-[20px] max-lg:gap-5 max-md:gap-4 max-sm:gap-3">
         <PromptDetailCard
           title={prompt.title}
           views={prompt.views}
@@ -174,6 +175,7 @@ const PromptDetailPage = () => {
           setReviews={setReviews}
           reviewCount={reviewCount}
           setReviewCount={setReviewCount}
+          reviewRatingAvg={Number(prompt.review_rating_avg ?? 0)}
           title={prompt.title}
         />
       </div>

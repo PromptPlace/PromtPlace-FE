@@ -25,7 +25,7 @@ export async function getPromptDetail(promptId: number): Promise<PromptDetailDto
     likes: d.likes,
     model_version: d.model_version ?? null,
     review_count: d.review_count,
-    review_rating_avg: d.average_rating,
+    review_rating_avg: d.review_rating_avg,
     created_at: d.created_at,
     updated_at: d.updated_at,
     inactive_date: d.inactive_date,

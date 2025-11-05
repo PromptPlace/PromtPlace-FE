@@ -103,15 +103,13 @@ const VariousFunction = () => {
   };
 
   return (
-    <div className="w-full bg-white flex justify-center px-[5%] lg:px-0 pt-[64px]">
-      <div className="w-full max-w-[1440px]">
+    <div className="w-full bg-white px-[102px] pt-[64px]">
+      <div className="w-full max-w-[1440px] mx-auto">
         <h2 className="text-[24px] font-medium text-[#1F2937] mb-[28px]">프롬프트 플레이스의 다양한 기능</h2>
 
-        <div className="flex flex-col lg:flex-row lg:gap-[32px] items-center lg:items-start w-full justify-center">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_478px] gap-[32px] items-start">
           {/* 왼쪽: AI 꿀팁 */}
-          <section
-            className="bg-[#F3F4F6] rounded-[12px] p-[40px] text-left
-               w-[90%] lg:w-[calc(90%-478px-32px)] mb-6 lg:mb-0">
+          <section className="bg-[#F3F4F6] rounded-[12px] p-[40px] text-left w-full">
             <h3 className="text-[32px] max-lg:text-[24px] max-phone:text-[20px] font-medium mb-1">AI 꿀팁</h3>
             <p className="text-[16px] font-light max-lg:text-[14px] max-phone:text-[12px] text-[#030712] mb-4">
               각종 AI, 프롬프트 작성 꿀팁을 확인하세요!
@@ -120,12 +118,11 @@ const VariousFunction = () => {
             <button
               type="button"
               onClick={() => navigate('/guide/tip')}
-              className="flex items-center bg-[#FFFEFB] gap-2 text-sm text-[#030712] border-[#E5E7EB] rounded-full px-4 py-2 hover:bg-gray-100 transition">
-              바로가기
-              <span>→</span>
+              className="flex items-center bg-[#FFFEFB] gap-2 text-sm text-[#030712] border border-[#E5E7EB] rounded-full px-4 py-2 hover:bg-gray-100 transition">
+              바로가기 <span>→</span>
             </button>
 
-            <div className="mt-4 bg-white rounded-[12px] py-4 px-6 text-sm space-y-3">
+            <div className="mt-4 bg-white rounded-[12px] py-4 px-6 text-sm">
               {tips.length === 0 ? (
                 <p className="text-[#9CA3AF] text-[12px] font-light">게시글이 없습니다.</p>
               ) : (
@@ -149,9 +146,7 @@ const VariousFunction = () => {
           </section>
 
           {/* 오른쪽: 공지사항 */}
-          <section
-            className="bg-[#F3F4F6] rounded-[12px] p-[40px] text-left
-               w-[90%] lg:w-[478px]">
+          <section className="bg-[#F3F4F6] rounded-[12px] p-[40px] text-left w-full">
             <h3 className="text-[32px] max-lg:text-[24px] max-phone:text-[20px] font-medium mb-1">공지사항</h3>
             <p className="text-[16px] font-light max-lg:text-[14px] max-phone:text-[12px] text-[#030712] mb-4">
               프롬프트 플레이스의 공지사항을 확인해보세요!
@@ -160,12 +155,11 @@ const VariousFunction = () => {
             <button
               type="button"
               onClick={() => navigate('/guide/notice')}
-              className="flex items-center bg-[#FFFEFB] gap-2 text-sm text-[#030712] border-[#E5E7EB] rounded-full px-4 py-2 hover:bg-gray-100 transition">
-              바로가기
-              <span>→</span>
+              className="flex items-center gap-2 text-sm text-[#030712] bg-[#FFFEFB] border border-[#E5E7EB] rounded-full px-4 py-2 hover:bg-gray-100 transition">
+              바로가기 <span>→</span>
             </button>
 
-            <div className="mt-4 bg-white p-4 rounded-[12px] text-sm space-y-3">
+            <div className="mt-4 bg-white p-4 rounded-[12px] text-sm">
               {notices.length === 0 ? (
                 <p className="text-[#9CA3AF] text-[12px] font-light">게시글이 없습니다.</p>
               ) : (
