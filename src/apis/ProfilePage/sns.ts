@@ -20,10 +20,12 @@ export const patchSNS = async ({
   sns_id,
   url,
   description,
+  user_sns_id,
 }: { sns_id: number } & RequestPatchSNSDto): Promise<ResponsePatchSNSDto> => {
   const { data } = await axiosInstance.patch(`/api/members/sns/${sns_id}`, {
     url,
     description,
+    user_sns_id,
   });
 
   return data;

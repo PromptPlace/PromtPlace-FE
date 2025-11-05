@@ -17,6 +17,7 @@ import useImgUpload from '@/hooks/useImgUpload';
 import usePostSNS from '@/hooks/mutations/ProfilePage/usePostSNS';
 import usePostEditIntro from '@/hooks/mutations/ProfilePage/usePostEditIntro';
 import usePatchEditIntro from '@/hooks/mutations/ProfilePage/usePatchEditIntro';
+import usePatchSNS from '@/hooks/mutations/ProfilePage/usePatchSNS';
 
 interface ProfileEditViewProps {
   userData?: ResponseMemberDto;
@@ -67,8 +68,10 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
   const [nickname, setNickname] = useState(userData?.data.nickname || '');
   //sns 아이디 및 접속 가능한 URL도 상태로 관리 필요
   const [intros, setIntros] = useState(userData?.data.intros || '');
-  const [snsUrl, setSnsUrl] = useState(snsData?.data[snsData.data.length - 1].url || '');
-  const [snsId, setSnsId] = useState(snsData?.data[snsData.data.length - 1].user_sns_id || '');
+
+  const lastSNS = snsData?.data?.length ? snsData.data[snsData.data.length - 1] : undefined;
+  const [snsUrl, setSnsUrl] = useState(lastSNS?.url || '');
+  const [snsId, setSnsId] = useState(lastSNS?.user_sns_id || '');
 
   // 회원 정보 수정
   const { mutate } = usePatchEditMember({ member_id: user.user_id });
@@ -80,6 +83,8 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
 
   // 회원 SNS 작성
   const { mutate: mutatePostSNS } = usePostSNS({ member_id: user.user_id });
+  // 회원 SNS 수정
+  const { mutate: mutatePatchSNS } = usePatchSNS({ member_id: user.user_id });
 
   // 회원 한줄 소개 작성 및 수정
   const { mutate: mutateIntro } = usePostEditIntro({ member_id: user.user_id });
@@ -89,7 +94,17 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
     // 프로필 수정 제출 로직 구현 필요
     console.log('프로필 수정 제출:', { nickname, intros });
     mutate({ nickname }); // nickname 수정
-    mutatePostSNS({ url: snsUrl, description: '', user_sns_id: snsId }); // SNS 작성
+
+    if (snsData?.data.length === 0) {
+      mutatePostSNS({ url: snsUrl, description: '', user_sns_id: snsId });
+    } else if (snsData?.data.length !== 0 && snsData?.data) {
+      mutatePatchSNS({
+        url: snsUrl,
+        description: '',
+        user_sns_id: snsId,
+        sns_id: snsData?.data[snsData?.data?.length - 1].sns_id,
+      });
+    }
 
     if (!userData?.data.intros) {
       mutateIntro({ intro: intros });
@@ -165,7 +180,7 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
               id="snsId"
               type="text"
               className="custom-body2 text-text-on-white w-full rounded-[8px] bg-gray-50 px-[16px] py-[12px] placeholder:text-gray-400"
-              placeholder={snsData?.data[snsData.data.length - 1].user_sns_id || '예) @promptplace'}
+              placeholder={lastSNS?.user_sns_id || '예) @promptplace'}
               value={snsId}
               onChange={(e) => setSnsId(e.target.value)}
             />
@@ -175,9 +190,7 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
               id="snsUrl"
               type="text"
               className="custom-body2 text-text-on-white w-full rounded-[8px] bg-gray-50 px-[16px] py-[12px] placeholder:text-gray-400"
-              placeholder={
-                snsData?.data[snsData.data.length - 1].url || '예) https://www.instagram.com/designking_01/#'
-              }
+              placeholder={lastSNS?.url || '예) https://www.instagram.com/designking_01/#'}
               value={snsUrl}
               onChange={(e) => setSnsUrl(e.target.value)}
             />
