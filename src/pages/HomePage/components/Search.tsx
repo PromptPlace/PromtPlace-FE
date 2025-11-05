@@ -120,7 +120,7 @@ const Search = () => {
               <div className="w-[80px] h-[80px] bg-white rounded-3xl flex items-center justify-center overflow-hidden shadow-[0px_4px_8px_0px_rgba(0,0,0,0.12)]">
                 <img src={category.image} alt={category.name} className="object-cover w-12 h-12" />
               </div>
-              <div className="text-center text-xs leading-4 font-light">{category.name}</div>
+              <div className="w-50 text-center text-xs leading-4 font-light">{category.displayName}</div>
             </div>
           </div>
         ))}

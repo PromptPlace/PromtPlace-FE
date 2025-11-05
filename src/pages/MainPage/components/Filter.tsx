@@ -15,7 +15,7 @@ const Filter = ({ onModelChange, onSortChange, onReset }: FilterProps) => {
   const [selectedModel, setSelectedModel] = useState<string[]>([]);
 
   const [filterIsOpen, setFilterIsOpen] = useState(false);
-  const [selectedSort, setSelectedSort] = useState<string>('조회순');
+  const [selectedSort, setSelectedSort] = useState<string>('');
 
   const modalRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -47,7 +47,7 @@ const Filter = ({ onModelChange, onSortChange, onReset }: FilterProps) => {
 
   const handleReset = () => {
     setSelectedModel([]);
-    setSelectedSort('조회순');
+    setSelectedSort('');
     onReset?.();
   };
 
@@ -64,8 +64,8 @@ const Filter = ({ onModelChange, onSortChange, onReset }: FilterProps) => {
             }}>
             <div className="w-20 h-5 text-base leading-6 text-text-on-white">모델</div>
             <div className="inline-flex justify-start items-center gap-2 cursor-pointer">
-              <div className="w-24 h-5 text-xs font-light leading-4 text-text-on-white">
-                {selectedModel.length > 0 ? `${selectedModel.length}개 선택` : 'AI 모델 선택'}
+              <div className="max-w-[104px] h-5 text-xs font-light leading-4 text-text-on-white truncate">
+                {selectedModel.length > 0 ? selectedModel.join(', ') : 'AI 모델 선택'}
               </div>
               {/* 아래 화살표 아이콘 */}
               <div className="w-3.5 h-3.5 relative flex items-center justify-center">
@@ -89,7 +89,9 @@ const Filter = ({ onModelChange, onSortChange, onReset }: FilterProps) => {
             }}>
             <div className="w-12 h-5 text-base leading-6 text-text-on-white">필터</div>
             <div className="inline-flex justify-start items-center gap-2 cursor-pointer">
-              <div className="min-w-28 text-xs font-light leading-4 text-text-on-white">{selectedSort}</div>
+              <div className="min-w-28 text-xs font-light leading-4 text-text-on-white">
+                {selectedSort || '조회순, 별점순 등 선택'}
+              </div>
               <div className="w-3.5 h-3.5 relative flex items-center justify-center">
                 <img src={arrowDown} alt="arrow down" className="w-2.5 h-[5px]"></img>
               </div>

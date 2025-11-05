@@ -7,15 +7,9 @@ interface CategorySectionProps {
   initialCategoryId?: number | null;
 }
 
-const CategorySection = ({
-  onCategorySelect,
-  onSubcategorySelect,
-  initialCategoryId = 1,
-}: CategorySectionProps) => {
+const CategorySection = ({ onCategorySelect, onSubcategorySelect, initialCategoryId = 1 }: CategorySectionProps) => {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(initialCategoryId);
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(
-    initialCategoryId ? '전체' : null,
-  );
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(initialCategoryId ? '전체' : null);
 
   // 초기 카테고리 및 서브카테고리
   useEffect(() => {
@@ -65,7 +59,7 @@ const CategorySection = ({
                 <img src={category.image} alt={category.name} className="object-cover w-12 h-12" />
               </div>
               <div
-                className={`text-center text-xs leading-4 ${
+                className={`text-center text-xs leading-4 w-50 ${
                   selectedCategory === category.id ? 'font-medium' : 'font-light'
                 }`}>
                 {category.displayName}
@@ -75,7 +69,7 @@ const CategorySection = ({
         ))}
       </div>
       {selectedCategory !== null && (
-        <div className="w-[1237px] h-[62px] inline-flex justify-start itmes-start gap-[20px] mt-[56px]">
+        <div className="w-[1237px] h-[62px] inline-flex justify-start items-start gap-[20px] mt-[56px]">
           <div className="text-center justify-center text-text-on-white text-2xl pr-[20px]">
             {categoryData.find((cat) => cat.id === selectedCategory)?.name}
           </div>
@@ -93,23 +87,26 @@ const CategorySection = ({
           </div>
           {categoryData
             .find((cat) => cat.id === selectedCategory)
-            ?.subcategories.map((subcategory) => (
-              <div
-                key={subcategory}
-                onClick={() => handleSelectSubcategory(subcategory)}
-                className={`px-2.5 py-5 inline-flex justify-center items-center gap-2.5 cursor-pointer ${
-                  selectedSubcategory === subcategory
-                    ? 'border-b-[3px] border-primary'
-                    : 'border-b-[3px] border-transparent'
-                }`}>
+            ?.subcategories.map((subcategory, index) => {
+              const displayText = categoryData.find((cat) => cat.id === selectedCategory)?.displaySubcategories[index];
+              return (
                 <div
-                  className={`text-center justify-center text-base font-medium font-['S-Core_Dream'] leading-6 ${
-                    selectedSubcategory === subcategory ? 'text-primary' : 'text-gray-500'
+                  key={subcategory}
+                  onClick={() => handleSelectSubcategory(subcategory)}
+                  className={`px-2.5 py-5 inline-flex justify-center items-center gap-2.5 cursor-pointer ${
+                    selectedSubcategory === subcategory
+                      ? 'border-b-[3px] border-primary'
+                      : 'border-b-[3px] border-transparent'
                   }`}>
-                  {subcategory}
+                  <div
+                    className={`text-center justify-center text-base font-medium font-['S-Core_Dream'] leading-6 ${
+                      selectedSubcategory === subcategory ? 'text-primary' : 'text-gray-500'
+                    }`}>
+                    {displayText}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
         </div>
       )}
     </div>
