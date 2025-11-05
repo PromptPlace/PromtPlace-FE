@@ -104,7 +104,7 @@ const ChangePasswordView = ({ setView, tempToken, email }: LoginViewProps) => {
               type={showPassword ? 'text' : 'password'}
               id="password"
               placeholder="비밀번호를 입력해주세요."
-              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px]"
+              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px] rounded-[8px]"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -139,7 +139,7 @@ const ChangePasswordView = ({ setView, tempToken, email }: LoginViewProps) => {
               type={showrepeatPassword ? 'text' : 'password'}
               id="repeat-password"
               placeholder="비밀번호를 한번 더 입력해주세요."
-              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px]"
+              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px] rounded-[8px]"
               value={repeatPassword}
               onChange={(e) => setRepeatPassword(e.target.value)}
             />

@@ -41,7 +41,7 @@ const OnBoardingView = ({ setView }: LoginViewProps) => {
             type="text"
             id="nickname"
             placeholder="서비스 내에서 사용할 닉네임을 적어주세요(최대 10자)"
-            className="bg-background px-[16px] py-[12px] placeholder:text-gray-400 text-text-on-white custom-body2 mb-[20px]"
+            className="bg-background px-[16px] py-[12px] placeholder:text-gray-400 text-text-on-white custom-body2 mb-[20px] rounded-[8px]"
             value={nickName}
             onChange={(e) => setNickName(e.target.value)}
           />
@@ -54,7 +54,7 @@ const OnBoardingView = ({ setView }: LoginViewProps) => {
             <input
               id="introduce"
               placeholder="자유롭게 소개를 적어보세요."
-              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white "
+              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white rounded-[8px]"
               value={introduce}
               onChange={(e) => setIntroduce(e.target.value)}
             />
