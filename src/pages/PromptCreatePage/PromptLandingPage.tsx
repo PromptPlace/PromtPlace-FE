@@ -12,7 +12,7 @@ const PromptLandingPage = () => {
     <>
       {/** Web 화면 */}
       <div className="hidden min-[1026px]:block">
-        <div className="h-screen flex justify-center items-center gap-[72px] mt-[152px] mb-[170px] mx-[120px]">
+        <div className="h-screen flex justify-between gap-[72px] mt-[170px] mx-[120px]">
           {/* 왼쪽 영역 */}
           <div className="max-w-[527px] min-h-[575px] w-full  ">
             <div className="flex justify-end">
