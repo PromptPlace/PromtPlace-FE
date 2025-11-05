@@ -85,7 +85,6 @@ const PromptDetailCard = ({
 
   const usageGuide = usageProp ?? data?.usage_guide ?? '';
   const promptResult = data?.prompt_result ?? '';
-
   const rawImages: string[] = Array.isArray(data?.images)
     ? data!.images
         .filter((img): img is { order_index: number; image_url: string } => !!img && typeof img.image_url === 'string')
@@ -93,11 +92,8 @@ const PromptDetailCard = ({
         .map((i) => i.image_url)
     : [];
 
-  const hasImages = rawImages.length > 0;
-  const normalizedImages = hasImages ? rawImages.slice(0, 3) : [];
-  while (normalizedImages.length > 0 && normalizedImages.length < 3) {
-    normalizedImages.push(normalizedImages[0]);
-  }
+  const normalizedImages = rawImages.slice(0, 3);
+  const hasImages = normalizedImages.length > 0;
 
   const [activeIdx, setActiveIdx] = useState(0);
   useEffect(() => setActiveIdx(0), [normalizedImages.length]);
@@ -200,7 +196,7 @@ const PromptDetailCard = ({
             ) : (
               <div className="mt-4 w-full max-w-[485px] rounded-[12px] rounded-tl-none bg-[#F0F7FF] p-4">
                 <p className="text-[14px] font-light leading-[22px] whitespace-pre-line">
-                  {isLoading ? '불러오는 중…' : usageGuide}
+                  {isLoading ? '불러오는 중…' : promptResult || ''}
                 </p>
               </div>
             )}
@@ -217,7 +213,7 @@ const PromptDetailCard = ({
               {hasImages ? '이렇게 쓰는 프롬프트예요' : '프롬프트에 대한 설명이에요'}
             </h3>
             <div className="mt-3 text-[16px] font-light leading-[22px] whitespace-pre-line">
-              {isLoading ? '불러오는 중…' : hasImages ? usageGuide || '' : promptResult || ''}
+              {isLoading ? '불러오는 중…' : hasImages ? usageGuide || '' : usageGuide || ''}
             </div>
           </aside>
         </div>
