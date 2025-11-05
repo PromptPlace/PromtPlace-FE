@@ -23,6 +23,7 @@ import useGetNewNotification from '@/hooks/queries/Navbar/useGetNewNotification'
 
 const Navbar = () => {
   const [loginModalShow, setLoginModalShow] = useState(false);
+  const [signupModalShow, setSignupModalShow] = useState(false);
   const [isNavModalShow, setIsNavModalShow] = useState(false);
   const [isNotificationModalShow, setIsNotificationModalShow] = useState(false);
   const [isMessageModalShow, setIsMessageModalShow] = useState(false);
@@ -96,7 +97,7 @@ const Navbar = () => {
                 background="primary"
                 text="회원가입"
                 onClick={() => {
-                  alert('회원가입 연결 예정');
+                  setSignupModalShow(true);
                 }}
               />
             </div>
@@ -183,6 +184,15 @@ const Navbar = () => {
 
       {loginModalShow && (
         <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
+      )}
+
+      {signupModalShow && (
+        <SocialLoginModal
+          isOpen={signupModalShow}
+          onClose={() => setSignupModalShow(false)}
+          onClick={() => {}}
+          initialView="signup"
+        />
       )}
 
       {isMessageModalShow && (

@@ -1,6 +1,6 @@
 import PromptPlaceLogo from '@assets/logo/text/text-logo-login.svg';
 import { Link } from 'react-router-dom';
-import { useState, useLayoutEffect } from 'react';
+import { useState, useLayoutEffect, useEffect } from 'react';
 import exitIcon from '@assets/icon-exit.svg';
 import LoginView from './components/loginView';
 import SignupView from './components/signupView';
@@ -21,16 +21,23 @@ interface SocialLoginModalProps {
   isOpen: boolean;
   onClose: () => void;
   onClick: (provider: string) => void;
+  initialView?: ModalView;
 }
 
-const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
-  const [view, setView] = useState<ModalView>('login');
+const SocialLoginModal = ({ isOpen, onClose, initialView = 'login' }: SocialLoginModalProps) => {
+  const [view, setView] = useState<ModalView>(initialView);
   const [signupEmail, setsignUpEmail] = useState<string>('');
   const [signupPassword, setsignUpPassword] = useState<string>('');
   const [changePasswordtempToken, setChangePasswordtempToken] = useState<string>('');
   const [changePasswordEmail, setChangePasswordEmail] = useState<string>('');
   const [tempToken, setTempToken] = useState<string>('');
   //메인 모달
+
+  useEffect(() => {
+    if (isOpen) {
+      setView(initialView);
+    }
+  }, [isOpen, initialView]);
 
   const [scale, setScale] = useState(1);
   const BASE_WIDTH = 656; // 👈 모달의 기본 너비(w-[656px])
