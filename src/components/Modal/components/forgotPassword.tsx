@@ -154,7 +154,7 @@ const ForgotPasswordView = ({ setView, setTempToken, email, setEmail }: LoginVie
           <div className="relative w-full">
             <input
               id="verificationCode"
-              placeholder="숫자 네 자리를 입력해 주세요"
+              placeholder="숫자 여섯 자리를 입력해 주세요"
               className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px] rounded-[8px]"
               value={authCode}
               onChange={(e) => setAuthCode(e.target.value)}
