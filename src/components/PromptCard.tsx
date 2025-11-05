@@ -97,7 +97,7 @@ const PromptCard = ({ prompt }: PromptCardProps) => {
           <div className="justify-start flex">
             <Stars star={prompt.review_rating_avg} />
           </div>
-          <div className="text-xs font-light text-gray-400 w-full h-[17px] truncate">{prompt.promptReview}</div>
+          <div className="text-xs font-light text-gray-400 w-full h-[17px] truncate"></div>
         </div>
       </div>
     </div>
