@@ -19,7 +19,7 @@ interface AskCardProps {
 
 const AskCard = ({ prompts, isMyProfile, type, setType, member_id, mutatePostInquiries }: AskCardProps) => {
   const [isListClicked, setIsListClicked] = useState(false);
-  const [prompt, setPrompt] = useState(prompts?.pages[0]?.data.prompts[0].title);
+  const [prompt, setPrompt] = useState(prompts?.pages[0]?.data[0].title);
   const [content, setContent] = useState('');
 
   const [isClicked, setIsClicked] = useState(false);
@@ -61,7 +61,7 @@ const AskCard = ({ prompts, isMyProfile, type, setType, member_id, mutatePostInq
                   <>
                     <div className="absolute top-[34px] left-0 right-0 rounded-[4px] max-h-[200px] overflow-auto">
                       {prompts?.pages.map((page) =>
-                        page.data.prompts.map((prompt) => {
+                        page.data.map((prompt) => {
                           return (
                             <div
                               key={prompt.prompt_id}
