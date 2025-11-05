@@ -4,6 +4,10 @@ import useGetPrompts from '@/hooks/queries/ProfilePage/useGetPrompts';
 import { useParams } from 'react-router-dom';
 
 import TwinkleIcon from '@assets/profile/icon-twinkle.svg?react';
+import ArrowIcon from '@assets/icon-arrow-right-black.svg?react';
+import PromptGrid from '@/components/PromptGrid';
+import { CATEGORY_MAP } from '@/types/ProfilePage/categoryMap';
+import type { Prompt } from '@/types/ProfilePage/profile';
 
 const PromptList = () => {
   const { id } = useParams();
@@ -19,9 +23,25 @@ const PromptList = () => {
   // 작성한 프롬프트 목록
   const { data: promptsData } = useGetPrompts({ member_id });
 
-  const promptCount = promptsData
-    ? promptsData?.pages?.reduce((acc, page) => acc + (page?.data?.prompts?.length ?? 0), 0)
-    : 0;
+  const allPrompts = promptsData?.pages.flatMap((prompt) => prompt.data) ?? []; // 전체 데이터
+
+  const groupedPrompts = allPrompts.reduce(
+    (acc, item) => {
+      const subNames = item.categories?.map((category) => category.category.name) ?? [];
+
+      const mainNames = Array.from(new Set(subNames.map((name) => CATEGORY_MAP[name] ?? '')));
+
+      mainNames.forEach((main) => {
+        if (!acc[main]) acc[main] = [];
+        acc[main].push(item);
+      });
+
+      return acc;
+    },
+    {} as Record<string, Prompt[]>,
+  ); // 카테고리별 프롬프트
+
+  const promptCount = promptsData ? promptsData?.pages?.reduce((acc, page) => acc + (page?.data?.length ?? 0), 0) : 0;
 
   return (
     <div className="mt-[56px]">
@@ -30,6 +50,20 @@ const PromptList = () => {
         <div className="custom-h5 text-gray500 rounded-[50px] border border-[0.8px] border-gray400 bg-white py-[5px] px-[10px]">
           {promptCount}
         </div>
+      </div>
+
+      <div className="mt-[40px]">
+        {Object.entries(groupedPrompts).map(([category, prompts]) => (
+          <div className="flex flex-col mb-[20px]">
+            <div className="flex gap-[13px] items-center">
+              <p>{category}</p>
+              <ArrowIcon />
+            </div>
+
+            {/* @ts-expect-error 타입 통일 예정 */}
+            <PromptGrid prompts={prompts} />
+          </div>
+        ))}
       </div>
 
       {promptCount === 0 && (

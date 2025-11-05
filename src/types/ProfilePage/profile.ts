@@ -78,6 +78,9 @@ export type RequestPromptsDto = {
 };
 
 export type Model = {
+  promptmodel_id: number;
+  prompt_id: number;
+  model_id: number;
   model: {
     name: string;
   };
@@ -89,11 +92,47 @@ export type Tag = {
   };
 };
 
+export type User = {
+  user_id: number;
+  nickname: string;
+  profileImage: string;
+};
+
+export type Catetory = {
+  promptcategory_id: number;
+  prompt_id: number;
+  category_id: number;
+  category: {
+    category_id: number;
+    name: string;
+  };
+};
+
 export type Prompt = {
   prompt_id: number;
+  user_id: number;
   title: string;
+  prompt: string;
+  prompt_result: string;
+  has_image: boolean;
+  description: string;
+  usage_guide: string;
+  price: number;
+  is_free: boolean;
+  downloads: number;
+  views: number;
+  likes: number;
+  model_version: string;
+  created_at: string;
+  updated_at: string;
+  inactive_date: null | string;
+  images: string[];
   models: Model[];
-  tags: Tag[];
+  user: User;
+  review_count: number;
+  review_rating_avg: number;
+  reviews: null | string[];
+  categories: Catetory[];
 };
 
 export type Pagination = {
@@ -102,7 +141,9 @@ export type Pagination = {
   limit: number;
 };
 
-export type ResponsePromptsDto = CommonResponse<{ prompts: Prompt[]; pagination: Pagination }>;
+export type ResponsePromptsDto = CommonResponse<Prompt[]> & {
+  pagination: Pagination;
+};
 
 // 프롬프트 삭제
 export type RequestDeletePromptDto = {
