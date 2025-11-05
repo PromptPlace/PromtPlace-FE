@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEY } from '@constants/key';
 import { postSearchPromptList } from '@/apis/MainPage/prompt';
-import type { ResponsePromptDTO, SearchPromptDto } from '@/types/MainPage/prompt';
+import type { ResponseSearchPromptDTO, SearchPromptDto } from '@/types/MainPage/prompt';
 import type { RequestSearchPrompt } from '@/types/MainPage/prompt';
 
 function useGetSearchPromptList(params: RequestSearchPrompt, enabled: boolean) {
@@ -13,7 +13,7 @@ function useGetSearchPromptList(params: RequestSearchPrompt, enabled: boolean) {
     keyword: params.keyword !== undefined ? params.keyword : null,
   };
 
-  return useQuery<ResponsePromptDTO>({
+  return useQuery<ResponseSearchPromptDTO>({
     queryKey: [QUERY_KEY.searchpromptList, formattedParams],
     queryFn: () => postSearchPromptList(formattedParams),
     staleTime: 1000 * 6 * 5,
