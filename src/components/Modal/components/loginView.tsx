@@ -6,7 +6,7 @@ import NaverIcon from '@assets/icon-naver-logo.svg';
 import eye_visible from '@assets/icon-eye-visible.svg';
 import eye_invisible from '@assets/icon-eye-invisible.svg';
 import type { ModalView } from '@/types/LoginPage/auth';
-
+import { useAuth } from '@/context/AuthContext';
 
 interface LoginViewProps {
   setView: (view: ModalView) => void;
@@ -74,6 +74,7 @@ const LoginView = ({ setView }: LoginViewProps) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(''); // 로그인 실패 시 여기에 메시지 설정
+  const { loginEmail } = useAuth();
 
   const isDisabled = email === '' || password === '';
 
@@ -81,40 +82,55 @@ const LoginView = ({ setView }: LoginViewProps) => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // 여기에 이메일/비밀번호 로그인 로직 추가
+    try {
+      const isInitialSetupRequired = await loginEmail(email, password);
+
+      if (isInitialSetupRequired) {
+        setView('onboarding');
+      } else {
+        // 'close' 뷰가 없으므로 부모의 onClose()를 호출해야 합니다.
+        // 이 컴포넌트는 onClose를 prop으로 받고 있지 않으므로,
+        // 부모(SocialLoginModal)에서 LoginView에 onClose를 넘겨줘야 합니다.
+        setView('close');
+      }
+    } catch (error) {
+      setError('로그인에 실패했습니다. 다시 시도해주세요.');
+      console.error('로그인 오류:', error);
+    }
   };
 
   return (
     <div className="flex flex-col items-center w-full">
       {' '}
       <div className="w-full">
-        <p className=" custom-h2 mb-[8px]">로그인하기</p>
-        <p className=" custom-h3 mb-[24px]">로그인하고 더 많은 혜택을 누려보세요!</p>
+        <p className=" custom-h2 mb-[8px] text-black">로그인하기</p>
+        <p className=" custom-h3 mb-[24px] text-black">로그인하고 더 많은 혜택을 누려보세요!</p>
       </div>
       <form className="flex flex-col w-full" onSubmit={handleSubmit}>
         <div className="flex flex-col">
-          <label className="custom-h5 mb-[12px]">이메일</label>
+          <label className="custom-h5 mb-[12px] text-black">이메일</label>
           <input
             type="email"
             id="email"
             placeholder="예) abc1234@gmail.com"
-            className="bg-background px-[16px] py-[12px] placeholder:text-gray-400 text-text-on-white custom-body2 mb-[20px]"
+            className="bg-background px-[16px] py-[12px] placeholder:text-gray-400 text-text-on-white custom-body2 mb-[20px] rounded-[8px]"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className="flex flex-col mb-[40px]">
-          <label className="custom-h5 mb-[12px]" htmlFor="password">
+          <label className="custom-h5 mb-[12px] mt-[12.5px]  text-black" htmlFor="password">
             비밀번호
           </label>
-          <div className="relative w-full">
+          <div className="relative w-full mb-[12px]">
             <input
               type={showPassword ? 'text' : 'password'}
               id="password"
               placeholder="예) **********"
-              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px]"
+              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white  rounded-[8px]"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -144,8 +160,12 @@ const LoginView = ({ setView }: LoginViewProps) => {
       </form>
       <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
         {/* 수정필요  Link가 아닌 signup, find-password가 렌더링 되도록*/}
-        <button onClick={() => setView('signup')}>회원가입하기</button>
-        <button onClick={() => setView('forgotPassword')}>비밀번호 찾기</button>
+        <button className="text-black" onClick={() => setView('signup')}>
+          회원가입하기
+        </button>
+        <button className="text-black" onClick={() => setView('forgotPassword')}>
+          비밀번호 찾기
+        </button>
       </nav>
       <section className="flex flex-col items-center w-full gap-[16px] mx-[114px] mb-[40px]">
         <div className="flex items-center w-[464px]">

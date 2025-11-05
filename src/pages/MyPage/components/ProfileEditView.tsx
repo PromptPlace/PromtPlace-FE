@@ -65,6 +65,15 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
     }
   };
 
+  //이메일 파싱해서 어느 소셜 계정인지 구분 필요
+  const getProviderFromEmail = (email: string) => {
+    if (email.includes('@google.com')) return 'GOOGLE';
+    if (email.includes('@kakao.com')) return 'KAKAO';
+    if (email.includes('@naver.com')) return 'NAVER';
+    return null;
+  };
+const socialType = getProviderFromEmail(userData?.data.email || '');
+
   const [nickname, setNickname] = useState(userData?.data.nickname || '');
   //sns 아이디 및 접속 가능한 URL도 상태로 관리 필요
   const [intros, setIntros] = useState(userData?.data.intros || '');
@@ -217,7 +226,7 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
           <div>
             <label className="custom-h5 block mb-[12px]">가입한 계정</label>
             <div className="flex gap-[12px] custom-body2 text-text-on-white px-[16px] py-[12px]">
-              {getProviderIcon(user.social_type)}
+              {getProviderIcon(socialType as 'GOOGLE' | 'KAKAO' | 'NAVER')}
               {userData?.data.email}
             </div>
           </div>
@@ -225,7 +234,7 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
             <label className="custom-h5 block mb-[12px]">계정 바꾸기</label>
             <div className="flex justify-between custom-body2 text-text-on-white px-[16px] py-[12px]">
               <div className="flex gap-[12px]">
-                {getProviderIcon(user.social_type)}
+                {getProviderIcon(socialType as 'GOOGLE' | 'KAKAO' | 'NAVER')}
                 {userData?.data.email}
               </div>
               <PrimaryButton buttonType="square" text="변경하기" onClick={() => {}} />

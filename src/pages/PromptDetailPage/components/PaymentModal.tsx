@@ -89,7 +89,7 @@ const PaymentModal = ({
       pg: selected, // 'kakaopay' | 'tosspay'
       merchant_uid: 'store-ac1c069c-7294-44cc-a81b-1ec7558c55d2', // 명세서에 정의된 고정값
       amount: price,
-      buyer_name: user.nickname || '구매자',
+      buyer_name:  '구매자', //기존: buyer_name: user.nickname || '구매자' User타입에서 nickname 제거로 고정값 처리
       redirect_url: `${window.location.origin}/payment/result`,
       custom_data: {
         promptId: { promptId: promptId },
@@ -109,7 +109,7 @@ const PaymentModal = ({
           name: `${title} 구매`,
           amount: price,
           buyer_email: user.email || '',
-          buyer_name: user.nickname || '구매자',
+          buyer_name: '구매자',  //기존: buyer_name: user.nickname || '구매자'
           buyer_tel: phoneNumber || '010-0000-0000',
           buyer_addr: '',
           buyer_postcode: '',

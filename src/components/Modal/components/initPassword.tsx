@@ -73,11 +73,11 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
     <div className="flex flex-col items-center w-full">
       {' '}
       <div className="w-full">
-        <p className=" custom-h2 mb-[8px]">회원가입하기</p>
-        <p className=" custom-h3 mb-[24px]">프롬프트 플레이스에서 나를 위한 프롬프트를 찾아보세요</p>
+        <p className=" custom-h2 mb-[8px] text-black  ">회원가입하기</p>
+        <p className=" custom-h3 mb-[24px] text-black">프롬프트 플레이스에서 나를 위한 프롬프트를 찾아보세요</p>
       </div>
       <div className="relative w-full">
-        <label className="custom-h5 mb-[12px]">이메일</label>
+        <label className="custom-h5 mb-[12px] text-black">이메일</label>
         <div className="flex flex-col">
           <input
             type="email"
@@ -102,15 +102,15 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
       </div>
       <form className="flex flex-col w-full" onSubmit={handleSubmit}>
         <div className="flex flex-col mb-[20px]">
-          <label className="custom-h5 mb-[12px]" htmlFor="password">
-            새로운 비밀번호
+          <label className="custom-h5 mb-[12px] text-black" htmlFor="password">
+            비밀번호
           </label>
-          <div className="relative w-full">
+          <div className="relative w-full mb-[12px]">
             <input
               type={showPassword ? 'text' : 'password'}
               id="password"
               placeholder="비밀번호를 입력해주세요."
-              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px]"
+              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white rounded-[8px]"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -129,21 +129,21 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
 
           {error === 'valid' && <p className="text-primary custom-h5 mt-[4px]">사용 가능한 비밀번호예요.</p>}
           {error === 'invalid' && (
-            <p className="text-alert custom-h5 mt-[4px]">
+            <p className="text-alert custom-button2 mt-[4px]">
               영문, 숫자, 특수문자 조합으로 8자 이상의 비밀번호를 입력해주세요.
             </p>
           )}
         </div>
         <div className="flex flex-col mb-[40px]">
-          <label className="custom-h5 mb-[12px]" htmlFor="repeat-password">
+          <label className="custom-h5 mb-[12px] mt-[12.5px] text-black" htmlFor="repeat-password">
             비밀번호 확인
           </label>
-          <div className="relative w-full">
+          <div className="relative w-full mb-[12px]">
             <input
               type={showrepeatPassword ? 'text' : 'password'}
               id="repeat-password"
               placeholder="비밀번호를 한번 더 입력해주세요."
-              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px]"
+              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white rounded-[8px]"
               value={repeatPassword}
               onChange={(e) => setRepeatPassword(e.target.value)}
             />
@@ -161,7 +161,7 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
           </div>
 
           {errorRepeat === 'mismatch' && (
-            <p className="text-alert custom-h5 mt-[4px]">비밀번호가 달라요! 확인해 보시겠어요?</p>
+            <p className="text-alert custom-button2 mt-[4px]">비밀번호가 달라요! 확인해 보시겠어요?</p>
           )}
           {errorRepeat === 'match' && <p className="text-primary custom-h5 mt-[4px]">동일한 비밀번호예요.</p>}
         </div>
@@ -171,13 +171,13 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
           text="다음"
           textColor="white"
           disable={isDisabled}
-          onClick={() => setView('login')}
+          onClick={() => setView('agreeTerms')}
         />
       </form>
       <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
         {/* 수정필요  Link가 아닌 signup, find-password가 렌더링 되도록*/}
-        <button onClick={() => setView('login')}>로그인하기</button>
-        <button onClick={() => setView('signup')}>회원가입하기</button>
+        <button className="text-black" onClick={() => setView('login')}>로그인하기</button>
+        <button className="text-black" onClick={() => setView('signup')}>회원가입하기</button>
       </nav>
     </div>
   );
