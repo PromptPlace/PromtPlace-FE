@@ -131,11 +131,11 @@ const ForgotPasswordView = ({ setView, setTempToken, email, setEmail }: LoginVie
     <div className="flex flex-col items-center w-full">
       {' '}
       <div className="w-full">
-        <p className=" custom-h2 mb-[8px]">비밀번호 찾기</p>
+        <p className=" custom-h2 mb-[8px] text-black">비밀번호 찾기</p>
       </div>
       <form className="flex flex-col w-full" onSubmit={handleSubmit}>
         <div className="relative">
-          <label className="custom-h5 mb-[12px]">이메일</label>
+          <label className="custom-h5 mb-[12px] text-black">이메일</label>
           <div className="flex flex-col">
             <input
               type="email"
@@ -150,7 +150,7 @@ const ForgotPasswordView = ({ setView, setTempToken, email, setEmail }: LoginVie
         </div>
         {emailError && <p className="text-alert custom-h5 mt-[4px]">{emailError}</p>}
         <div className="flex flex-col mb-[40px]">
-          <label className="custom-h5 mb-[12px]">인증번호 입력</label>
+          <label className="custom-h5 mb-[12px] text-black">인증번호 입력</label>
           <div className="relative w-full">
             <input
               id="verificationCode"
@@ -176,8 +176,8 @@ const ForgotPasswordView = ({ setView, setTempToken, email, setEmail }: LoginVie
         />
       </form>
       <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
-        <button onClick={() => setView('login')}>로그인하기</button>
-        <button onClick={() => setView('signup')}>회원가입 하기</button>
+        <button className="text-black" onClick={() => setView('login')}>로그인하기</button>
+        <button className="text-black" onClick={() => setView('signup')}>회원가입 하기</button>
       </nav>
     </div>
   );

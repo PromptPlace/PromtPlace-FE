@@ -73,11 +73,11 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
     <div className="flex flex-col items-center w-full">
       {' '}
       <div className="w-full">
-        <p className=" custom-h2 mb-[8px]">회원가입하기</p>
-        <p className=" custom-h3 mb-[24px]">프롬프트 플레이스에서 나를 위한 프롬프트를 찾아보세요</p>
+        <p className=" custom-h2 mb-[8px] text-black  ">회원가입하기</p>
+        <p className=" custom-h3 mb-[24px] text-black">프롬프트 플레이스에서 나를 위한 프롬프트를 찾아보세요</p>
       </div>
       <div className="relative w-full">
-        <label className="custom-h5 mb-[12px]">이메일</label>
+        <label className="custom-h5 mb-[12px] text-black">이메일</label>
         <div className="flex flex-col">
           <input
             type="email"
@@ -102,8 +102,8 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
       </div>
       <form className="flex flex-col w-full" onSubmit={handleSubmit}>
         <div className="flex flex-col mb-[20px]">
-          <label className="custom-h5 mb-[12px]" htmlFor="password">
-            새로운 비밀번호
+          <label className="custom-h5 mb-[12px] text-black" htmlFor="password">
+            비밀번호
           </label>
           <div className="relative w-full">
             <input
@@ -135,7 +135,7 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
           )}
         </div>
         <div className="flex flex-col mb-[40px]">
-          <label className="custom-h5 mb-[12px]" htmlFor="repeat-password">
+          <label className="custom-h5 mb-[12px] text-black" htmlFor="repeat-password">
             비밀번호 확인
           </label>
           <div className="relative w-full">
@@ -176,8 +176,8 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
       </form>
       <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
         {/* 수정필요  Link가 아닌 signup, find-password가 렌더링 되도록*/}
-        <button onClick={() => setView('login')}>로그인하기</button>
-        <button onClick={() => setView('signup')}>회원가입하기</button>
+        <button className="text-black" onClick={() => setView('login')}>로그인하기</button>
+        <button className="text-black" onClick={() => setView('signup')}>회원가입하기</button>
       </nav>
     </div>
   );

@@ -100,7 +100,7 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
         <button
           className="flex max-lg:hidden absolute top-[48px] right-[56px] gap-[4px] py-[3px] h-[22px]"
           onClick={onClose}>
-          <img src={exitIcon} alt="나가기" className="h-[20px] w-[16px] " />
+          <img src={exitIcon} alt="나가기" className="h-[20px] w-[16px] text-gray-700" />
           <p className="custom-body2 text-gray-700">나가기</p>
         </button>
         <img src={PromptPlaceLogo} alt="PromptPlace 로고" className="mb-[40px] mt-[40px]" />
@@ -108,7 +108,7 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
         {renderView()}
 
         <footer>
-          <p className="custom-h3">
+          <p className="custom-h3 text-gray-700">
             로그인 또는 회원가입 시 서비스의{' '}
             <Link to="/terms" className="underline decoration-1">
               이용약관

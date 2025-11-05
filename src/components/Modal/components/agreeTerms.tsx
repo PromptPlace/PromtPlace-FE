@@ -87,16 +87,16 @@ const AgreeTermsView = ({ setView, email, password, tempToken }: LoginViewProps)
   return (
     <form className="flex flex-col items-center w-full" onSubmit={handleSubmit}>
       <div className="w-full">
-        <p className=" custom-h2 mb-[8px]">
+        <p className=" custom-h2 mb-[8px] text-black">
           서비스를 이용하기 위해서
           <br />
           아래의 이용약관에 동의해 주세요.
         </p>
-        <p className=" custom-h3 mb-[24px]">필수 약관에 동의해야 서비스를 사용할 수 있어요.</p>
+        <p className=" custom-h3 mb-[24px] text-black">필수 약관에 동의해야 서비스를 사용할 수 있어요.</p>
         <section className="mb-[40px]">
           <div className="flex items-center" onClick={handleAllChecked}>
             <img src={allChecked ? AllUnCheckIcon : AllChcekIcon} alt="all-check" className="m-[10px]" />
-            <span className="custom-h5">모두 동의합니다.</span>
+            <span className="custom-h5 text-black">모두 동의합니다.</span>
           </div>
           <CustomCheckbox
             isChecked={termsChecked}
@@ -130,8 +130,8 @@ const AgreeTermsView = ({ setView, email, password, tempToken }: LoginViewProps)
       />
 
       <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
-        <button onClick={() => setView('login')}>로그인하기</button>
-        <button onClick={() => setView('forgotPassword')}>비밀번호 찾기</button>
+        <button className="text-black" onClick={() => setView('login')}>로그인하기</button>
+        <button className="text-black" onClick={() => setView('forgotPassword')}>비밀번호 찾기</button>
       </nav>
     </form>
   );

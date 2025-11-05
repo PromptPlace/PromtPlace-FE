@@ -137,12 +137,12 @@ const SignupView = ({ setView, email, setEmail, tempToken, setTempToken }: Login
     <div className="flex flex-col items-center w-full">
       {' '}
       <div className="w-full">
-        <p className=" custom-h2 mb-[8px]">회원가입하기</p>
-        <p className=" custom-h3 mb-[24px]">프롬프트 플레이스에서 나를 위한 프롬프트를 찾아보세요</p>
+        <p className=" custom-h2 mb-[8px] text-black">회원가입하기</p>
+        <p className=" custom-h3 mb-[24px] text-black">프롬프트 플레이스에서 나를 위한 프롬프트를 찾아보세요</p>
       </div>
       <form className="flex flex-col w-full" onSubmit={handleSubmit}>
         <div className="relative">
-          <label className="custom-h5 mb-[12px]">이메일</label>
+          <label className="custom-h5 mb-[12px] text-black">이메일</label>
           <div className="flex flex-col">
             <input
               type="email"
@@ -157,7 +157,7 @@ const SignupView = ({ setView, email, setEmail, tempToken, setTempToken }: Login
         </div>
         <p className="text-alert custom-button2 mt-[4px] min-h-5">{emailError}</p>
         <div className="flex flex-col mb-[40px]">
-          <label className="custom-h5 mb-[12px]">인증번호 입력</label>
+          <label className="custom-h5 mb-[12px] text-black">인증번호 입력</label>
           <div className="relative w-full">
             <input
               id="verificationCode"
@@ -183,8 +183,8 @@ const SignupView = ({ setView, email, setEmail, tempToken, setTempToken }: Login
         />
       </form>
       <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
-        <button onClick={() => setView('login')}>로그인하기</button>
-        <button onClick={() => setView('forgotPassword')}>비밀번호 찾기</button>
+        <button className="text-black" onClick={() => setView('login')}>로그인하기</button>
+        <button className="text-black" onClick={() => setView('forgotPassword')}>비밀번호 찾기</button>
       </nav>
     </div>
   );

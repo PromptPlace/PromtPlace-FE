@@ -92,11 +92,11 @@ const ChangePasswordView = ({ setView, tempToken, email }: LoginViewProps) => {
     <div className="flex flex-col items-center w-full">
       {' '}
       <div className="w-full">
-        <p className=" custom-h2 mb-[24px]">비밀번호 찾기</p>
+        <p className=" custom-h2 mb-[24px] text-black">비밀번호 찾기</p>
       </div>
       <form className="flex flex-col w-full" onSubmit={handleSubmit}>
         <div className="flex flex-col mb-[20px]">
-          <label className="custom-h5 mb-[12px]" htmlFor="password">
+          <label className="custom-h5 mb-[12px] text-black" htmlFor="password">
             새로운 비밀번호
           </label>
           <div className="relative w-full">
@@ -131,7 +131,7 @@ const ChangePasswordView = ({ setView, tempToken, email }: LoginViewProps) => {
           )}
         </div>
         <div className="flex flex-col mb-[40px]">
-          <label className="custom-h5 mb-[12px]" htmlFor="repeat-password">
+          <label className="custom-h5 mb-[12px] text-black" htmlFor="repeat-password">
             비밀번호 확인
           </label>
           <div className="relative w-full">
@@ -174,8 +174,8 @@ const ChangePasswordView = ({ setView, tempToken, email }: LoginViewProps) => {
       </form>
       <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
         {/* 수정필요  Link가 아닌 signup, find-password가 렌더링 되도록*/}
-        <button onClick={() => setView('login')}>로그인하기</button>
-        <button onClick={() => setView('signup')}>회원가입하기</button>
+        <button className="text-black" onClick={() => setView('login')}>로그인하기</button>
+        <button className="text-black" onClick={() => setView('signup')}>회원가입하기</button>
       </nav>
     </div>
   );
