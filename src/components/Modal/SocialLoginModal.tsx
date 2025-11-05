@@ -9,6 +9,7 @@ import ChangePasswordView from './components/changePassword';
 import InitPasswordView from './components/initPassword';
 import AgreeTermsView from './components/agreeTerms';
 import type { ModalView } from '@/types/LoginPage/auth';
+import OnBoardingView from './components/onBoarding';
 /**
  * TODO:
  * - 소셜 로그인 버튼 hover/click 효과 추후 반영 필요
@@ -26,8 +27,9 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
   const [view, setView] = useState<ModalView>('login');
   const [signupEmail, setsignUpEmail] = useState<string>('');
   const [signupPassword, setsignUpPassword] = useState<string>('');
-  const [signupAuthCode, setsignUpAuthCode] = useState<string>('');
-  const [changePasswordAuthCode, setChangePasswordAuthCode] = useState<string>('');
+  const [changePasswordtempToken, setChangePasswordtempToken] = useState<string>('');
+  const [changePasswordEmail, setChangePasswordEmail] = useState<string>('');
+  const [tempToken, setTempToken] = useState<string>('');
   //메인 모달
 
   //뷰 렌더링함수
@@ -41,14 +43,22 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
             setView={setView}
             email={signupEmail}
             setEmail={setsignUpEmail}
-            authCode={signupAuthCode}
-            setAuthCode={setsignUpAuthCode}
+            tempToken={tempToken}
+            setTempToken={setTempToken}
           />
         );
       case 'forgotPassword':
-        return <ForgotPasswordView setView={setView} authCode={changePasswordAuthCode} setAuthCode={setChangePasswordAuthCode} />;
+        return (
+          <ForgotPasswordView
+            setView={setView}
+            tempToken={changePasswordtempToken}
+            setTempToken={setChangePasswordtempToken}
+            email={changePasswordEmail}
+            setEmail={setChangePasswordEmail}
+          />
+        );
       case 'changePassword':
-        return <ChangePasswordView setView={setView} authCode={changePasswordAuthCode} />;
+        return <ChangePasswordView setView={setView} tempToken={changePasswordtempToken} email={changePasswordEmail} />;
       case 'initPassword':
         return (
           <InitPasswordView
@@ -67,10 +77,14 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
             setEmail={setsignUpEmail}
             password={signupPassword}
             setPassword={setsignUpPassword}
-            authCode={signupAuthCode}
-            setAuthCode={setsignUpAuthCode}
+            tempToken={tempToken}
           />
         );
+      case 'onboarding':
+        return <OnBoardingView setView={setView} />;
+      case 'close':
+        onClose();
+        break;
       // case 'signupEmail':
       //   return <SignupEmailView setView={setView} />;
       // ... (다른 뷰 케이스들) ...
