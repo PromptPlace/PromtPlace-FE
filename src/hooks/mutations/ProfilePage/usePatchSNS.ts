@@ -6,8 +6,8 @@ import { useMutation } from '@tanstack/react-query';
 
 function usePatchSNS({ member_id }: RequestMemberDto) {
   return useMutation({
-    mutationFn: ({ sns_id, url, description }: { sns_id: number } & RequestPatchSNSDto) =>
-      patchSNS({ sns_id, url, description }),
+    mutationFn: ({ sns_id, url, description, user_sns_id }: { sns_id: number } & RequestPatchSNSDto) =>
+      patchSNS({ sns_id, url, description, user_sns_id }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['member-sns', member_id],

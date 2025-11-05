@@ -300,8 +300,8 @@ const ProfilePage = () => {
   };
 
   // 회원 SNS 수정
-  const handleUpdateSns = ({ sns_id, url, description }: { sns_id: number } & RequestPatchSNSDto) => {
-    mutatePatchSNS({ sns_id, url, description });
+  const handleUpdateSns = ({ sns_id, url, description, user_sns_id }: { sns_id: number } & RequestPatchSNSDto) => {
+    mutatePatchSNS({ sns_id, url, description, user_sns_id });
   };
 
   useEffect(() => {
