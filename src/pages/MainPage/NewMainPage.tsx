@@ -30,7 +30,7 @@ const NewMainPage = () => {
   const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(getInitialCategoryName());
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(getInitialSubcategory());
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
-  const [selectedSort, setSelectedSort] = useState<string>('조회순');
+  const [selectedSort, setSelectedSort] = useState<string>('');
   const [displayCount, setDisplayCount] = useState(20); // 표시할 프롬프트 개수
 
   // 정렬 값 변환
@@ -43,7 +43,7 @@ const NewMainPage = () => {
       case '다운로드순':
         return 'download';
       default:
-        return 'views';
+        return 'recent'; // 기본값은 최신순
     }
   };
 
@@ -121,7 +121,8 @@ const NewMainPage = () => {
       case '다운로드순':
         return b.downloads - a.downloads;
       default:
-        return 0;
+        // 선택 안 했을 때 기본값은 최신순
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     }
   });
 
@@ -165,7 +166,7 @@ const NewMainPage = () => {
       setSelectedSubcategory('전체');
     }
     setSelectedModels([]);
-    setSelectedSort('조회순');
+    setSelectedSort('');
     setDisplayCount(20); // 페이지 리셋
   };
 
