@@ -30,7 +30,7 @@ const ModelButton = ({ hasDelete = false, hasActive = false, text, onClick }: Mo
         hasDelete ? 'custom-button2' : 'custom-button1',
         hasActive
           ? 'custom-button2 cursor-pointer bg-white active:bg-secondary-pressed text-primary border border-primary border-[0.8px]'
-          : 'bg-sub2 text-gray-50',
+          : 'bg-sub2 text-white',
         'rounded-[50px] py-[6px] px-[12px] flex gap-[8px] items-center',
       )}>
       {text}
