@@ -95,8 +95,8 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
 
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-110  max-lg:p-[0px]">
-      <div className="relative flex  justify-center items-center w-[656px] max-lg:w-full py-[48px] max-lg:h-full flex-col px-[56px] py-[48] rounded-[16px] max-lg:rounded-none max-lg:px-[20px] bg-white shadow-gradient ">
+    <div onClick={onClose} className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-110  max-lg:p-[0px]">
+      <div onClick={(e) => e.stopPropagation()} className="relative flex  justify-center items-center w-[656px] max-h-[850px]  py-[48px]  flex-col px-[56px] py-[48] rounded-[16px] max-lg:rounded-none max-lg:px-[20px] bg-white shadow-gradient ">
         <button
           className="flex max-lg:hidden absolute top-[48px] right-[56px] gap-[4px] py-[3px] h-[22px]"
           onClick={onClose}>
