@@ -125,12 +125,12 @@ const LoginView = ({ setView }: LoginViewProps) => {
           <label className="custom-h5 mb-[12px] mt-[12.5px]  text-black" htmlFor="password">
             비밀번호
           </label>
-          <div className="relative w-full">
+          <div className="relative w-full mb-[12px]">
             <input
               type={showPassword ? 'text' : 'password'}
               id="password"
               placeholder="예) **********"
-              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px] rounded-[8px]"
+              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white  rounded-[8px]"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
