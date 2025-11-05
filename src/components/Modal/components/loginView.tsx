@@ -116,13 +116,13 @@ const LoginView = ({ setView }: LoginViewProps) => {
             type="email"
             id="email"
             placeholder="예) abc1234@gmail.com"
-            className="bg-background px-[16px] py-[12px] placeholder:text-gray-400 text-text-on-white custom-body2 mb-[20px]"
+            className="bg-background px-[16px] py-[12px] placeholder:text-gray-400 text-text-on-white custom-body2 mb-[20px] rounded-[8px]"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className="flex flex-col mb-[40px]">
-          <label className="custom-h5 mb-[12px] text-black" htmlFor="password">
+          <label className="custom-h5 mb-[12px] mt-[12.5px]  text-black" htmlFor="password">
             비밀번호
           </label>
           <div className="relative w-full">
@@ -130,7 +130,7 @@ const LoginView = ({ setView }: LoginViewProps) => {
               type={showPassword ? 'text' : 'password'}
               id="password"
               placeholder="예) **********"
-              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px]"
+              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px] rounded-[8px]"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -149,12 +149,23 @@ const LoginView = ({ setView }: LoginViewProps) => {
 
           {error && <p className="text-alert custom-h5 mt-[4px]">{error}</p>}
         </div>
-        <PrimaryButton buttonType="full" type="submit" text="로그인하기" textColor="white" disable={isDisabled} onClick={() => {}} />
+        <PrimaryButton
+          buttonType="full"
+          type="submit"
+          text="로그인하기"
+          textColor="white"
+          disable={isDisabled}
+          onClick={() => {}}
+        />
       </form>
       <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
         {/* 수정필요  Link가 아닌 signup, find-password가 렌더링 되도록*/}
-        <button className="text-black" onClick={() => setView('signup')}>회원가입하기</button>
-        <button className="text-black" onClick={() => setView('forgotPassword')}>비밀번호 찾기</button>
+        <button className="text-black" onClick={() => setView('signup')}>
+          회원가입하기
+        </button>
+        <button className="text-black" onClick={() => setView('forgotPassword')}>
+          비밀번호 찾기
+        </button>
       </nav>
       <section className="flex flex-col items-center w-full gap-[16px] mx-[114px] mb-[40px]">
         <div className="flex items-center w-[464px]">
