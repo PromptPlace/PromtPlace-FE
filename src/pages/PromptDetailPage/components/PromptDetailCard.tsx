@@ -108,7 +108,7 @@ const PromptDetailCard = ({
         <span className="text-[14px] text-[#030712]">이미지 생성 &gt;</span>
         <button
           type="button"
-          className="text-[14px] text-[#6b7280] underline flex items-center gap-1"
+          className="text-[14px] text-gray-400 underline flex items-center gap-1"
           onClick={() => setIsReportModalOpen(true)}>
           <img src={reportIcon} alt="신고" className="w-[24px] h-[24px]" />
           해당 프롬프트 신고하기
