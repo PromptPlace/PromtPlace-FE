@@ -14,8 +14,7 @@ interface LoginViewProps {
   setEmail: (email: string) => void;
   password: string;
   setPassword: (password: string) => void;
-  authCode: string;
-  setAuthCode: (authCode: string) => void;
+  tempToken: string;
 }
 
 interface CustomCheckboxProps {
@@ -33,7 +32,7 @@ const CustomCheckbox = ({ isChecked, label, onClick }: CustomCheckboxProps) => (
   </button>
 );
 
-const AgreeTermsView = ({ setView, email, password, authCode }: LoginViewProps) => {
+const AgreeTermsView = ({ setView, email, password, tempToken }: LoginViewProps) => {
   const [allChecked, setAllChecked] = useState(false);
   const [termsChecked, setTermsChecked] = useState(false);
   const [privacyChecked, setPrivacyChecked] = useState(false);
@@ -63,7 +62,7 @@ const AgreeTermsView = ({ setView, email, password, authCode }: LoginViewProps) 
   const formData: signupRequest = {
     email,
     password,
-    tempToken: authCode,
+    tempToken,
     consents: [
       { type: 'SERVICE_TERMS_REQUIRED', isAgreed: termsChecked },
       { type: 'PRIVACY_POLICY_REQUIRED', isAgreed: privacyChecked },
