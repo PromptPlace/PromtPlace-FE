@@ -31,8 +31,8 @@ const PromptMobileCard = ({ prompt }: PromptMobileCardProps) => {
         onClick={() => navigate(`/prompt/${prompt.prompt_id}`)}
         className="px-[12px] py-[16px] flex flex-col gap-[8px] justify-between flex-1">
         <div className="flex flex-col gap-[4px] text-text-on-white text-[10px]  leading-[14px] tracking-[-0.1px]">
-          <div className="font-light">{prompt.user.nickname}</div>
-          <div className="font-bold">{prompt.title}</div>
+          <div className="font-light">{prompt?.user?.nickname}</div>
+          <div className="font-bold">{prompt?.title}</div>
         </div>
 
         <div className="flex justify-between">

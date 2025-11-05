@@ -57,7 +57,7 @@ const PromptCard = ({ prompt }: PromptCardProps) => {
           {prompt.models.map((model, index) => (
             <div key={index} className="px-2 py-0.5 bg-overlay rounded inline-flex justify-center items-center gap-2.5">
               <span className="text-white text-[10px] font-medium leading-4 line-clamp-1 font-[custom-button3]">
-                {model.model.name}
+                {model?.model?.name}
               </span>
             </div>
           ))}
@@ -75,7 +75,7 @@ const PromptCard = ({ prompt }: PromptCardProps) => {
         className="w-full h-[270px] px-6 py-5 inline-flex flex-col justify-start gap-3 bg-white rounded-b-lg cursor-pointer"
         onClick={() => navigate(`/prompt/${prompt.prompt_id}`)}>
         <div className="text-xs font-light leading-4 inline-flex justify-between items-start self-stretch">
-          <div>{prompt.user.nickname}</div>
+          <div>{prompt?.user?.nickname}</div>
           <div className="text-gray-400 ">{new Date(prompt.created_at).toLocaleDateString('ko-KR')}</div>
         </div>
 

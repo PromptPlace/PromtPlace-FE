@@ -31,7 +31,7 @@ const PromptList = () => {
 
   const groupedPrompts = allPrompts.reduce(
     (acc, item) => {
-      const subNames = item.categories?.map((category) => category.category.name) ?? [];
+      const subNames = item.categories?.map((category) => category?.category?.name) ?? [];
 
       const mainNames = Array.from(new Set(subNames.map((name) => CATEGORY_MAP[name] ?? '')));
 
