@@ -11,7 +11,7 @@ import idea from '@assets/icon-category-idea.svg';
 export const categoryData = [
   {
     id: 1,
-    name: '글쓰기/문서 작성',
+    name: '글쓰기 / 문서 작성',
     displayName: '글쓰기 • 문서 작성',
     displaySubcategories: [
       '보고서 • 레포트',
@@ -41,7 +41,7 @@ export const categoryData = [
   },
   {
     id: 3,
-    name: '대본/스토리보드',
+    name: '대본 / 스토리보드',
     displayName: '대본 • 스토리보드',
     displaySubcategories: ['숏폼 스크립트', '광고 영상 콘셉트', '애니메이션 장면', '스토리보드'],
     subcategories: ['숏폼 스크립트', '광고 영상 콘셉트', '애니메이션 장면', '스토리보드'],
@@ -49,7 +49,7 @@ export const categoryData = [
   },
   {
     id: 4,
-    name: '코딩/개발',
+    name: '코딩 / 개발',
     displayName: '코딩 • 개발',
     displaySubcategories: ['코드 자동화', '디버깅 • 리팩토링', 'API 설계', 'SQL 쿼리', '테스트 케이스'],
     subcategories: ['코드 자동화', '디버깅 / 리팩토링', 'API 설계', 'SQL 쿼리', '테스트 케이스'],
@@ -57,7 +57,7 @@ export const categoryData = [
   },
   {
     id: 5,
-    name: '비즈니스/마케팅',
+    name: '비즈니스 / 마케팅',
     displayName: '비즈니스 • 마케팅',
     displaySubcategories: ['마케팅 캠페인 기획', 'SNS 콘텐츠 아이디어', '시장조사 • 분석', '이메일 • 세일즈 카피'],
     subcategories: ['마케팅 캠페인 기획', 'SNS 콘텐츠 아이디어', '시장조사 / 분석', '이메일 / 세일즈 카피'],
@@ -65,7 +65,7 @@ export const categoryData = [
   },
   {
     id: 6,
-    name: '학습/과제',
+    name: '학습 / 과제',
     displayName: '학습 • 과제',
     displaySubcategories: ['학습 • 과제 요약', '문제 풀이', '개념 • 설명', '외국어 학습'],
     subcategories: ['학습 / 과제 요약', '문제 풀이', '개념 / 설명', '외국어 학습'],
@@ -73,7 +73,7 @@ export const categoryData = [
   },
   {
     id: 7,
-    name: '생활/엔터테인먼트',
+    name: '생활 / 엔터테인먼트',
     displayName: '생활 • 엔터테인먼트',
     displaySubcategories: ['여행 • 일정', '요리 • 레시피', '게임 • 시나리오', '퀴즈 • 심리테스트', '상담'],
     subcategories: ['여행 / 일정', '요리 / 레시피', '게임 / 시나리오', '퀴즈 / 심리테스트', '상담'],
@@ -81,7 +81,7 @@ export const categoryData = [
   },
   {
     id: 8,
-    name: '음악/오디오',
+    name: '음악 / 오디오',
     displayName: '음악 • 오디오',
     displaySubcategories: ['배경음악', '사운드 이펙트', '작곡 • 편곡 보조', '나레이션 • 보이스'],
     subcategories: ['배경음악', '사운드 이펙트', '작곡 / 편곡 보조', '나레이션 / 보이스'],
