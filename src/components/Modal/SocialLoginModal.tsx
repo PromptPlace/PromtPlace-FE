@@ -1,6 +1,6 @@
 import PromptPlaceLogo from '@assets/logo/text/text-logo-login.svg';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useLayoutEffect } from 'react';
 import exitIcon from '@assets/icon-exit.svg';
 import LoginView from './components/loginView';
 import SignupView from './components/signupView';
@@ -31,6 +31,28 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
   const [changePasswordEmail, setChangePasswordEmail] = useState<string>('');
   const [tempToken, setTempToken] = useState<string>('');
   //메인 모달
+
+  const [scale, setScale] = useState(1);
+  const BASE_WIDTH = 656; // 👈 모달의 기본 너비(w-[656px])
+  const BASE_HEIGHT = 850;
+
+  // 3. (✅ 추가) 윈도우 크기에 따라 scale 값을 계산하는 로직
+  useLayoutEffect(() => {
+    const handleResize = () => {
+      const widthScale = (window.innerWidth - 40) / BASE_WIDTH;
+      const heightScale = (window.innerHeight - 40) / BASE_HEIGHT;
+      const base = Math.min(1, widthScale, heightScale); // 둘 중 더 작은 쪽 기준
+      const newScale = Math.pow(base, 1.5); // ← 이 수치만 조절하면 됨
+      setScale(newScale);
+    };
+
+    // 처음 마운트될 때와 윈도우 크기가 바뀔 때 실행
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    // 컴포넌트가 사라질 때 이벤트 리스너 제거
+    return () => window.removeEventListener('resize', handleResize);
+  }, []); // [] 빈 배열: 처음 한 번만 실행
 
   //뷰 렌더링함수
   const renderView = () => {
@@ -95,11 +117,13 @@ const SocialLoginModal = ({ isOpen, onClose }: SocialLoginModalProps) => {
 
   if (!isOpen) return null;
   return (
-    <div onClick={onClose} className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-110  max-lg:p-[0px]">
-      <div onClick={(e) => e.stopPropagation()} className="relative flex  justify-center items-center w-[656px] max-h-[850px]  py-[48px]  flex-col px-[56px] py-[48] rounded-[16px]  bg-white shadow-gradient ">
-        <button
-          className="flex max-lg:hidden absolute top-[48px] right-[56px] gap-[4px] py-[3px] h-[22px]"
-          onClick={onClose}>
+    <div onClick={onClose} className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-110">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative flex  justify-center items-center max-w-[656px] max-h-[850px]  py-[48px]  flex-col px-[56px] py-[48] rounded-[16px]  bg-white shadow-gradient 
+      origin-center"
+        style={{ transform: `scale(${scale})` }}>
+        <button className="flex absolute top-[48px] right-[56px] gap-[4px] py-[3px] h-[22px]" onClick={onClose}>
           <img src={exitIcon} alt="나가기" className="h-[20px] w-[16px] text-gray-700" />
           <p className="custom-body2 text-gray-700">나가기</p>
         </button>
