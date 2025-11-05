@@ -131,7 +131,7 @@ const ChangePasswordView = ({ setView, tempToken, email }: LoginViewProps) => {
           )}
         </div>
         <div className="flex flex-col mb-[40px]">
-          <label className="custom-h5 mb-[12px] text-black" htmlFor="repeat-password">
+          <label className="custom-h5 mb-[12px] mt-[12.5px] text-black" htmlFor="repeat-password">
             비밀번호 확인
           </label>
           <div className="relative w-full">

@@ -157,7 +157,7 @@ const SignupView = ({ setView, email, setEmail, tempToken, setTempToken }: Login
         </div>
         <p className="text-alert custom-button2 mt-[4px] min-h-5">{emailError}</p>
         <div className="flex flex-col mb-[40px]">
-          <label className="custom-h5 mb-[12px] text-black">인증번호 입력</label>
+          <label className="custom-h5 mb-[12px] mt-[12.5px] text-black">인증번호 입력</label>
           <div className="relative w-full">
             <input
               id="verificationCode"
