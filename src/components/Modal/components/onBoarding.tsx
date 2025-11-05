@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PrimaryButton from '@components/Button/PrimaryButton';
 import type { ModalView } from '@/types/LoginPage/auth';
-
+import {postInitialSetup} from '@/apis/Login/auth';
 interface LoginViewProps {
   setView: (view: ModalView) => void;
 }
@@ -15,9 +15,16 @@ const OnBoardingView = ({ setView }: LoginViewProps) => {
 
   const isDisabled = nickName === '' || nickName.length > 10 || introduce === '';
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // 여기에 이메일/비밀번호 로그인 로직 추가
+    try {
+      const data = await postInitialSetup({ nickname: nickName, intro:introduce });
+      console.log(data);
+      setView('close');
+    } catch (error) {
+      setError('초기 설정에 실패했습니다. 다시 시도해주세요.');
+      console.error('초기 설정 오류:', error);
+    }
   };
 
   return (
@@ -47,7 +54,7 @@ const OnBoardingView = ({ setView }: LoginViewProps) => {
             <input
               id="introduce"
               placeholder="자유롭게 소개를 적어보세요."
-              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px]"
+              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white "
               value={introduce}
               onChange={(e) => setIntroduce(e.target.value)}
             />
@@ -61,8 +68,9 @@ const OnBoardingView = ({ setView }: LoginViewProps) => {
           text="시작하기"
           textColor="white"
           disable={isDisabled}
-          onClick={() => {}}
+        onClick={() => {}}
         />
+        <div className="mt-[90px]"></div>
       </form>
     </div>
   );
