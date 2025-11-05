@@ -198,7 +198,7 @@ const PromptCreateImgPage = () => {
               <div className="max-w-[1245px] w-full bg-white rounded-[16px]  p-[24px]">
                 <div className="h-[80px] w-full mb-[16px]">
                   <p className="text-[16px] font-medium pb-[12px]">프롬프트 제목</p>
-                  <div className="w-full py-[12px] px-[16px]">
+                  <div className="w-full py-[12px] px-[16px] h-[46px]  bg-gray50 rounded-[8px]">
                     <input
                       name="title"
                       className="w-full text-[14px] font-light placeholder:text-gray400 outline-none"
@@ -319,7 +319,7 @@ const PromptCreateImgPage = () => {
                       ))}
                     </div>
                   </div>
-                  <div className="w-full h-[46px] py-[12px] px-[16px] ">
+                  <div className="w-full h-[46px] py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
                     <input
                       value={modelver}
                       onChange={(e) => setModelver(e.target.value)}
@@ -415,7 +415,7 @@ const PromptCreateImgPage = () => {
                     <p className="text-[16px] font-medium pb-[4px]">한줄 소개</p>
                     <p className="text-[12px] font-light text-gray700">프롬프트에 대한 한줄 소개를 작성해주세요.</p>
                   </div>
-                  <div className="h-[45px] w-full py-[12px] px-[16px] ">
+                  <div className="h-[45px] w-full py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
                     <input
                       className="w-full h-[22px] text-[14px] font-light placeholder:text-gray-400 resize-none outline-none"
                       placeholder={`예) SNS 광고에 활용 가능한 카피 문구 생성 프롬프트입니다!`}
@@ -432,7 +432,7 @@ const PromptCreateImgPage = () => {
                       프롬프트에 대한 상세 설명, 활용법 등을 자유롭게 작성해주세요.
                     </p>
                   </div>
-                  <div className="h-[262px] w-full py-[12px] px-[16px] ">
+                  <div className="h-[262px] w-full py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
                     <textarea
                       className="w-full h-[240px] text-[14px] font-light placeholder:text-gray-400 resize-none outline-none"
                       placeholder={`예) [ ]부분은 직접 채워서 사용하세요
@@ -487,7 +487,7 @@ const PromptCreateImgPage = () => {
             <div className="max-w-[1245px] w-full bg-white rounded-[16px]  p-[24px]">
               <div className="h-[80px] w-full mb-[16px]">
                 <p className="text-[16px] font-medium pb-[12px]">프롬프트 제목</p>
-                <div className="w-full py-[12px] px-[16px]">
+                <div className="w-full py-[12px] px-[16px] h-[46px] bg-gray50 rounded-[8px]">
                   <input
                     name="title"
                     className="w-full text-[14px] font-light placeholder:text-gray400 outline-none"
@@ -606,7 +606,7 @@ const PromptCreateImgPage = () => {
                     ))}
                   </div>
                 </div>
-                <div className="w-full h-[46px] py-[12px] px-[16px] ">
+                <div className="w-full h-[46px] py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
                   <input
                     value={modelver}
                     onChange={(e) => setModelver(e.target.value)}
@@ -701,7 +701,7 @@ const PromptCreateImgPage = () => {
                   <p className="text-[16px] font-medium pb-[4px]">한줄 소개</p>
                   <p className="text-[12px] font-light text-gray700">프롬프트에 대한 한줄 소개를 작성해주세요.</p>
                 </div>
-                <div className="h-[45px] w-full py-[12px] px-[16px] ">
+                <div className="h-[45px] w-full py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
                   <input
                     className="w-full h-[22px] text-[14px] font-light placeholder:text-gray-400 resize-none outline-none"
                     placeholder={`예) SNS 광고에 활용 가능한 카피 문구 생성 프롬프트입니다!`}
@@ -718,7 +718,7 @@ const PromptCreateImgPage = () => {
                     프롬프트에 대한 상세 설명, 활용법 등을 자유롭게 작성해주세요.
                   </p>
                 </div>
-                <div className="h-[262px] w-full py-[12px] px-[16px] ">
+                <div className="h-[262px] w-full py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
                   <textarea
                     className="w-full h-[240px] text-[14px] font-light placeholder:text-gray-400 resize-none outline-none"
                     placeholder={`예) [ ]부분은 직접 채워서 사용하세요
@@ -775,7 +775,7 @@ const PromptCreateImgPage = () => {
             <div className="max-w-[1245px] w-full bg-white rounded-[16px]  p-[24px]">
               <div className="h-[80px] w-full mb-[16px]">
                 <p className="text-[16px] font-medium pb-[12px]">프롬프트 제목</p>
-                <div className="w-full py-[12px] px-[16px]">
+                <div className="w-full py-[12px] px-[16px] h-[43px]  bg-gray50 rounded-[8px]">
                   <input
                     name="title"
                     className="w-full text-[14px] font-light placeholder:text-gray400 outline-none"
@@ -894,7 +894,7 @@ const PromptCreateImgPage = () => {
                     ))}
                   </div>
                 </div>
-                <div className="w-full h-[46px] py-[12px] px-[16px] ">
+                <div className="w-full h-[46px] py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
                   <input
                     value={modelver}
                     onChange={(e) => setModelver(e.target.value)}
@@ -991,7 +991,7 @@ const PromptCreateImgPage = () => {
                   <p className="text-[16px] font-medium pb-[4px]">한줄 소개</p>
                   <p className="text-[12px] font-light text-gray700">프롬프트에 대한 한줄 소개를 작성해주세요.</p>
                 </div>
-                <div className="h-[45px] w-full py-[12px] px-[16px] ">
+                <div className="h-[45px] w-full py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
                   <input
                     className="w-full h-[22px] text-[14px] font-light placeholder:text-gray-400 resize-none outline-none"
                     placeholder={`예) SNS 광고에 활용 가능한 카피 문구 생성 프롬프트입니다!`}
@@ -1008,7 +1008,7 @@ const PromptCreateImgPage = () => {
                     프롬프트에 대한 상세 설명, 활용법 등을 자유롭게 작성해주세요.
                   </p>
                 </div>
-                <div className="h-[262px] w-full py-[12px] px-[16px] ">
+                <div className="h-[262px] w-full py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
                   <textarea
                     className="w-full h-[240px] text-[14px] font-light placeholder:text-gray-400 resize-none outline-none"
                     placeholder={`예) [ ]부분은 직접 채워서 사용하세요
@@ -1022,7 +1022,7 @@ const PromptCreateImgPage = () => {
             </div>
           </div>
           {/**프롬프트 본문 */}
-          <div className=" w-full bg-white rounded-[16px] p-[24px] mt-[20px]">
+          <div className=" w-full bg-white rounded-[16px] p-[24px] mt-[20px] ">
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
