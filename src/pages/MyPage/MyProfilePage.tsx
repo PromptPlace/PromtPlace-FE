@@ -6,7 +6,7 @@ import ProfileView from './components/ProfileView';
 import ProfileEditView from './components/ProfileEditView';
 import { useAuth } from '@/context/AuthContext';
 import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
-import PromptList from './components/PromptList';
+import LikedPrompts from './components/LikedPrompts';
 import DownloadedPromptPage from './components/DownloadedPromptPage';
 import AuthoredPromptPage from './components/AuthoredPromptPage';
 
@@ -28,17 +28,7 @@ const MyProfilePage = () => {
       <ProfileCard mypage={true} />
       <MyProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       <main>
-        {
-          activeTab === 'prompt' && (
-            <div className="flex flex-col items-center mt-[24px]">
-              <img src={prepareIcon} alt="준비중 아이콘" className="w-[80px] h-[80px] mb-[24px]" />
-              <p className="custom-h3 text-gray-500">아직 오픈하지 않은 페이지예요!</p>
-              <p className="custom-body3 text-gray-500 mt-[8px]">정식 출시 때 만나요 :)</p>
-            </div>
-          )
-
-          //<PromptList />
-        }
+        {activeTab === 'prompt' && <LikedPrompts />}
         {activeTab === 'dashboard' && (
           <div className="flex flex-col items-center mt-[24px]">
             <img src={prepareIcon} alt="준비중 아이콘" className="w-[80px] h-[80px] mb-[24px]" />
