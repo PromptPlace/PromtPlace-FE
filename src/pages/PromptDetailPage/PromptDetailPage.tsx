@@ -169,8 +169,6 @@ const PromptDetailPage = () => {
         <PromptAuthorAndReview
           user={prompt.user}
           currentUserId={currentUserId}
-          follow={follow}
-          onToggleFollow={handleToggleFollow}
           reviews={reviews}
           setReviews={setReviews}
           reviewCount={reviewCount}
