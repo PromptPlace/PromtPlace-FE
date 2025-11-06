@@ -21,7 +21,9 @@ import usePatchSNS from '@/hooks/mutations/ProfilePage/usePatchSNS';
 
 interface ProfileEditViewProps {
   userData?: ResponseMemberDto;
-  setActiveTab: React.Dispatch<React.SetStateAction<'prompt' | 'dashboard' | 'profile' | 'profileEdit'>>;
+  setActiveTab: React.Dispatch<
+    React.SetStateAction<'prompt' | 'dashboard' | 'profile' | 'profileEdit' | 'authored' | 'downloaded'>
+  >;
 }
 
 const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
@@ -72,7 +74,7 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
     if (email.includes('@naver.com')) return 'NAVER';
     return null;
   };
-const socialType = getProviderFromEmail(userData?.data.email || '');
+  const socialType = getProviderFromEmail(userData?.data.email || '');
 
   const [nickname, setNickname] = useState(userData?.data.nickname || '');
   //sns 아이디 및 접속 가능한 URL도 상태로 관리 필요
