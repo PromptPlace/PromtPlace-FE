@@ -12,22 +12,22 @@ const PromptList = () => {
   return (
     <div>
       <section>
-        <h2>작성한 프롬프트</h2>
+       {/*<AuthoredPromptCard>*/}
         <Link to="/profile/written">더보기 &gt;</Link>
       </section>
 
       <section>
         <h2>다운받은 프롬프트</h2>
+        {/*}
         {downloadedData?.data.map((prompt) => (
-          <DownloadedPromptCard/>
+          <DownloadedPromptCard key={prompt.prompt_id} prompt={prompt} />
         ))}
         <Link to="/profile/downloaded">더보기 &gt;</Link>
+        */}
       </section>
 
       <section>
         <h2>찜한 프롬프트</h2>
-    
-         <div> 찜한 프롬프트</div>
 
       </section>
     </div>
