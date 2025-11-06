@@ -79,7 +79,7 @@ const PromptCard = ({ prompt }: PromptCardProps) => {
           <div className="text-gray-400 ">{new Date(prompt.created_at).toLocaleDateString('ko-KR')}</div>
         </div>
 
-        <div className="font-medium font-[custom-h3]">{prompt.title}</div>
+        <div className="font-medium font-[custom-h3] has-[44px]:">{prompt.title}</div>
 
         <div className="flex items-center justify-start gap-[12px] text-gray-400 font-[12px] font-[custom-button2] leading-4">
           <div className="flex items-center justify-start gap-[6px]">
