@@ -33,6 +33,25 @@ export interface NewAuthoredPromptsApiResponse {
   };
 }
 
+export interface NewDownloadedPromptDTO {
+  message: string;
+  prompt_id: number;
+  title: string;
+  models: string[];
+  imageUrls: string[] | null;
+  price: number;
+  has_review: boolean;
+  is_recent_review: boolean;
+  nickname: string;
+  statusCode: number;
+}
+
+export interface NewDownloadedPromptsApiResponse {
+  message: string;
+  statusCode: number;
+  data: NewDownloadedPromptDTO[];
+}
+
 export interface DownloadedPromptDTO {
   prompt_id: number;
   title: string;
