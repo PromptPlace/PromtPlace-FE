@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FollowButton from '@components/Button/FollowButton';
 import ReviewList from './ReviewList';
 import defaultProfile from '../assets/profile.png';
@@ -7,6 +7,11 @@ import person from '../../../assets/icon-person-blue.svg';
 import { useNavigate } from 'react-router-dom';
 import RatingTitle from '@components/RatingTitle';
 import type { ReactElement } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
+import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
+import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
+import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 
 import InstaIcon from '@assets/icon-instagram-logo.svg';
 import YoutubeIcon from '@assets/icon-youtube-logo.svg';
@@ -33,8 +38,8 @@ interface PromptAuthorAndReviewProps {
   };
 
   currentUserId?: number | null;
-  follow: boolean;
-  onToggleFollow: () => void;
+  // follow: boolean;
+  // onToggleFollow: () => void;
   reviews: Review[];
   setReviews: React.Dispatch<React.SetStateAction<Review[]>>;
   reviewCount: number;
@@ -46,8 +51,8 @@ interface PromptAuthorAndReviewProps {
 const PromptAuthorAndReview = ({
   user,
   currentUserId,
-  follow,
-  onToggleFollow,
+  // follow,
+  // onToggleFollow,
   reviews,
   setReviews,
   reviewCount,
@@ -56,10 +61,53 @@ const PromptAuthorAndReview = ({
   reviewRatingAvg,
 }: PromptAuthorAndReviewProps) => {
   const navigate = useNavigate();
+  const { user: me } = useAuth();
+  const myId = me.user_id;
+  const member_id = user?.user_id;
 
   const avg = Math.max(0, Math.min(5, Number(reviewRatingAvg) || 0));
 
   const [showModal, setShowModal] = useState(false);
+
+  const { data: myFollowingData, isLoading: isFollowingLoading } = useGetFollowing({ member_id: myId });
+
+  const [isToggling, setIsToggling] = useState(false);
+
+  const [isFollow, setIsFollow] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!myFollowingData?.data || !member_id) return;
+    const followed = myFollowingData.data.some((f: any) => f.following_id === member_id);
+    setIsFollow(followed);
+  }, [myFollowingData, member_id]);
+
+  // ✅ mutate 훅
+  const { mutate: mutateFollow } = usePatchFollow({ member_id });
+  const { mutate: mutateUnFollow } = useDeleteFollow({ member_id });
+
+  const { handleShowLoginModal } = useShowLoginModal();
+
+  const ready = !!member_id && !!myId && !isFollowingLoading;
+  const isMyself = currentUserId === member_id || myId === member_id;
+
+  const handleFollow = () => {
+    if (!ready || isToggling) return;
+    if (isMyself) return;
+
+    handleShowLoginModal(() => {
+      setIsToggling(true);
+      try {
+        if (isFollow) {
+          mutateUnFollow({ member_id });
+        } else {
+          mutateFollow({ member_id });
+        }
+        setIsFollow((prev) => !prev);
+      } finally {
+        setIsToggling(false);
+      }
+    });
+  };
 
   const getSNSIcons = () => {
     if (!user.sns_list?.length) return null;
@@ -135,7 +183,9 @@ const PromptAuthorAndReview = ({
           <div className="flex flex-col">
             <p className="text-base md:text-lg font-semibold">{user?.nickname ?? 'Unknown'}</p>
             <div className="flex items-center gap-[20px] mt-1">
-              {currentUserId !== user?.user_id && <FollowButton follow={follow} onClick={onToggleFollow} />}
+              {currentUserId !== user?.user_id && myId !== user?.user_id && (
+                <FollowButton follow={isFollow} onClick={handleFollow} />
+              )}
               {getSNSIcons()}
             </div>
           </div>
