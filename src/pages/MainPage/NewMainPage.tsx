@@ -5,6 +5,7 @@ import Filter from './components/Filter';
 import useGetPromptList from '@/hooks/queries/MainPage/useGetPromptList';
 import useGetSearchPromptList from '@/hooks/queries/MainPage/useGetSearchList';
 import PromptGrid from '@/components/PromptGrid';
+import PromptMobileCard from '@/pages/HomePage/components/PromptMobileCard';
 import type { Prompt } from '@/types/MainPage/prompt';
 import { categoryData } from './components/categoryData';
 
@@ -174,7 +175,7 @@ const NewMainPage = () => {
   };
 
   return (
-    <div className="px-[102px]">
+    <div className="max-mypage:[40px] max-phone:px-[20px] px-[102px] ">
       <div className="py-[40px]">
         <p className="text-3xl text-gray-950 leading-10">프롬프트 보기</p>
         <p className="mt-[12px] text-gray-950 text-base font-light ">
@@ -206,7 +207,17 @@ const NewMainPage = () => {
           </span>
         </div>
 
-        <PromptGrid prompts={displayedPrompts} />
+        {/* 데스크톱/태블릿: 그리드 형태 */}
+        <div className="max-phone:hidden">
+          <PromptGrid prompts={displayedPrompts} />
+        </div>
+
+        {/* 모바일: 리스트 형태 */}
+        <div className="hidden max-phone:flex flex-col gap-[8px]">
+          {displayedPrompts.map((prompt) => (
+            <PromptMobileCard key={prompt.prompt_id} prompt={prompt} />
+          ))}
+        </div>
 
         {hasNext && (
           <div className="flex justify-center mt-[134px]">
