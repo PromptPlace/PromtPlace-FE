@@ -96,7 +96,7 @@ const PromptTipPage = () => {
         <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
       )}
       <div className="hidden min-[1026px]:block">
-        <div className="min-h-screen px-[40px] py-[64px]">
+        <div className="min-h-screen py-[64px]">
           {/* 헤더 */}
           <div className="flex flex-col items-start ml-[102px]">
             <div className="mb-[56px]">
@@ -234,7 +234,7 @@ const PromptTipPage = () => {
 
       {/* 481px ~ 1025px: 태블릿 */}
       <div className="hidden min-[481px]:block min-[1026px]:hidden">
-        <div className="min-h-screen px-[40px] py-[64px]">
+        <div className="min-h-screen py-[64px]">
           {/* 헤더 */}
           <div className="flex flex-col items-start ml-[40px]">
             <div className="mb-[56px]">
@@ -369,16 +369,17 @@ const PromptTipPage = () => {
       </div>
 
       {/* 480px 이하: 모바일 */}
-      <div className="block min-[480px]:hidden">
-        <div className="min-h-screen px-[40px] py-[64px]">
+      <div className="block min-[481px]:hidden">
+        <div className="min-h-screen py-[64px]">
           {/* 헤더 */}
           <div className="flex flex-col items-start ml-[20px]">
-            <div className="mb-[56px]">
+            <div className="mb-[40px]">
               <h1 className="text-[24px] font-medium text-black mb-[12px]">AI 꿀팁</h1>
               <p className="text-[14px] font-light text-black">
-                AI 꿀팁에서는 전문가처럼 쓰는 프롬프트 팁부터
+                AI 꿀팁에서는 전문가처럼 쓰는
                 <br />
-                일상 속 AI 활용법, 꼭 알아야 할 AI 트렌드까지 확인할 수 있어요!
+                프롬프트 팁부터 일상 속 AI 활용법,
+                <br />꼭 알아야 할 AI 트렌드까지 확인할 수 있어요!
               </p>
             </div>
           </div>
