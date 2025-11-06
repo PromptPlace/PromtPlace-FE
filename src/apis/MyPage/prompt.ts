@@ -4,7 +4,8 @@ import type {
   DownloadedPromptDTO,
   LikedPromptDTO,
   AuthoredPromptsApiResponse,
-  NewAuthoredPromptsApiResponse
+  NewAuthoredPromptsApiResponse,
+  NewDownloadedPromptsApiResponse
 } from '@/types/MyPage/prompt';
 import type { PaginationDto } from '@/types/MyPage/common.ts';
 
@@ -52,3 +53,7 @@ export const getMyPrompts = async ({ pageParam = 0 }): Promise<NewAuthoredPrompt
   const { data } = await axiosInstance.get(`/api/members/me/prompts?cursor=${pageParam}&limit=10`);
   return data;
 };
+export const getMyDownloadedPrompts = async (): Promise<NewDownloadedPromptsApiResponse> => {
+  const { data } = await axiosInstance.get(`/api/prompts/downloads`);
+  return data;
+}
