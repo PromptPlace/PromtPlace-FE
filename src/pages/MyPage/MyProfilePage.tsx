@@ -6,6 +6,7 @@ import ProfileView from './components/ProfileView';
 import ProfileEditView from './components/ProfileEditView';
 import { useAuth } from '@/context/AuthContext';
 import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
+import LikedPrompts from './components/LikedPrompts';
 
 const MyProfilePage = () => {
   const { user } = useAuth();
@@ -17,7 +18,7 @@ const MyProfilePage = () => {
       <ProfileCard mypage={true} />
       <MyProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       <main>
-        {activeTab === 'prompt' && <div>프롬프트 탭 내용</div>}
+        {activeTab === 'prompt' && <LikedPrompts />}
         {activeTab === 'dashboard' && (
           <div className="flex flex-col items-center mt-[24px]">
             <img src={prepareIcon} alt="준비중 아이콘" className="w-[80px] h-[80px] mb-[24px]" />
