@@ -64,7 +64,7 @@ const Filter = ({ onModelChange, onSortChange, onReset }: FilterProps) => {
             }}>
             <div className="w-20 h-5 text-base leading-6 text-text-on-white">모델</div>
             <div className="inline-flex justify-start items-center gap-2 cursor-pointer">
-              <div className="max-w-[104px] h-5 text-xs font-light leading-4 text-text-on-white truncate">
+              <div className="lg:max-w-[136px] md:max-w-[136px] sm:max-w-[113px] h-5 text-xs font-light leading-4 text-text-on-white truncate">
                 {selectedModel.length > 0 ? selectedModel.join(', ') : 'AI 모델 선택'}
               </div>
               {/* 아래 화살표 아이콘 */}

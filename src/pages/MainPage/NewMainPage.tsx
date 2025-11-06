@@ -90,7 +90,6 @@ const NewMainPage = () => {
     const selectedCategoryData = categoryData.find((cat) => cat.name === selectedCategoryName);
     const allowedSubcategories = selectedCategoryData?.subcategories || [];
 
-
     // '전체'일 때는 대분류의 모든 서브카테고리를 포함
     if (selectedSubcategory === '전체') {
       filteredPrompts = filteredPrompts.filter((prompt) =>
@@ -187,13 +186,7 @@ const NewMainPage = () => {
         <CategorySection
           onCategorySelect={handleCategorySelect}
           onSubcategorySelect={handleSubcategorySelect}
-          initialCategoryId={
-            categoryIdFromUrl
-              ? Number(categoryIdFromUrl)
-              : searchQuery
-                ? null
-                : 1
-          }
+          initialCategoryId={categoryIdFromUrl ? Number(categoryIdFromUrl) : searchQuery ? null : 1}
         />
       </div>
 
