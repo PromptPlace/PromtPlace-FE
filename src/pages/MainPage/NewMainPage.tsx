@@ -176,7 +176,7 @@ const NewMainPage = () => {
           <span className="text-gray-950 text-base font-light leading-6 tracking-tight">개의 프롬프트가 있습니다.</span>
         </div>
 
-        <div className="max-phone:hidden ">
+        <div className="max-phone:hidden overflow-x-scroll hide-scrollbar">
           <PromptGrid prompts={displayedPrompts} />
         </div>
 
