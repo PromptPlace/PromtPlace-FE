@@ -92,7 +92,7 @@ const PromptNoticePage = () => {
         <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
       )}
       <div className="hidden min-[1026px]:block">
-        <div className="min-h-screen px-[40px] py-[64px]">
+        <div className="min-h-screen py-[64px]">
           {/* 헤더 */}
           <div className="flex flex-col items-start ml-[102px]">
             <div className="mb-[56px]">
@@ -116,7 +116,7 @@ const PromptNoticePage = () => {
           )}
 
           {/* 공지 리스트 */}
-          <div className="flex flex-col items-center bg-white rounded-[12px] px-[12px] py-[16px] mx-[40px] mb-[72px]">
+          <div className="flex flex-col items-center bg-white rounded-[12px] px-[12px] py-[16px] mx-[102px] mb-[72px]">
             {!loading && notices.length > 0 && (
               <div className="w-full">
                 {notices.map((notice) => (
@@ -209,7 +209,7 @@ const PromptNoticePage = () => {
 
       {/* 481px ~ 1025px: 태블릿 */}
       <div className="hidden min-[481px]:block min-[1026px]:hidden">
-        <div className="min-h-screen px-[40px] py-[64px]">
+        <div className="min-h-screen py-[64px]">
           {/* 헤더 */}
           <div className="flex flex-col items-start ml-[40px]">
             <div className="mb-[56px]">
@@ -322,7 +322,7 @@ const PromptNoticePage = () => {
       </div>
 
       {/* 480px 이하: 모바일 */}
-      <div className="block min-[480px]:hidden">
+      <div className="block min-[481px]:hidden">
         <div className="min-h-screen px-[20px] py-[64px]">
           {/* 헤더 */}
           <div className="flex flex-col items-start">
