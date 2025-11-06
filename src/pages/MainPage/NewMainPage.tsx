@@ -175,7 +175,7 @@ const NewMainPage = () => {
   };
 
   return (
-    <div className="max-mypage:[40px] max-phone:px-[20px] px-[102px] ">
+    <div className="max-mypage:pl-[40px] max-phone:pl-[20px] pl-[102px] ">
       <div className="py-[40px]">
         <p className="text-3xl text-gray-950 leading-10">프롬프트 보기</p>
         <p className="mt-[12px] text-gray-950 text-base font-light ">
