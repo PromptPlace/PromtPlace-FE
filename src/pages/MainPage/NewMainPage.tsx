@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import CategorySection from './components/CategorySection';
 import Filter from './components/Filter';
 import useGetPromptList from '@/hooks/queries/MainPage/useGetPromptList';
 import useGetSearchPromptList from '@/hooks/queries/MainPage/useGetSearchList';
 import PromptGrid from '@/components/PromptGrid';
-import PromptMobileCard from '@/pages/MainPage/components/MobilePromptCard';
 import type { Prompt } from '@/types/MainPage/prompt';
 import { categoryData } from './components/categoryData';
+import PromptMobileCard from '../HomePage/components/PromptMobileCard';
 
 const NewMainPage = () => {
   const [searchParams] = useSearchParams();
@@ -170,13 +170,13 @@ const NewMainPage = () => {
         <Filter onModelChange={handleModelChange} onSortChange={handleSortChange} onReset={handleReset} />
       </div>
 
-      <div className="mt-[56px]">
+      <div className="mt-[56px] pr-[102px] max-phone:pr-[20px] max-mypage:pr-[40px]">
         <div className="self-stretch justify-center mb-[32px]">
           <span className="text-primary text-base font-medium leading-6">{totalCount}</span>
           <span className="text-gray-950 text-base font-light leading-6 tracking-tight">개의 프롬프트가 있습니다.</span>
         </div>
 
-        <div className="max-phone:hidden">
+        <div className="max-phone:hidden ">
           <PromptGrid prompts={displayedPrompts} />
         </div>
 
