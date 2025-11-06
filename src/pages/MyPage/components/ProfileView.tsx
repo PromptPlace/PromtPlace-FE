@@ -15,7 +15,9 @@ import clsx from 'clsx';
 
 interface ProfileViewProps {
   userData?: ResponseMemberDto;
-  setActiveTab: React.Dispatch<React.SetStateAction<'prompt' | 'dashboard' | 'profile' | 'profileEdit'>>;
+  setActiveTab: React.Dispatch<
+    React.SetStateAction<'prompt' | 'dashboard' | 'profile' | 'profileEdit' | 'authored' | 'downloaded'>
+  >;
 }
 
 const ProfileView = ({ userData, setActiveTab }: ProfileViewProps) => {
@@ -58,7 +60,6 @@ const ProfileView = ({ userData, setActiveTab }: ProfileViewProps) => {
         return null;
     }
   };
-
 
   const getProviderFromEmail = (email: string) => {
     if (email.includes('@google.com')) return 'GOOGLE';
