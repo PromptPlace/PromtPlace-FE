@@ -43,7 +43,7 @@ const Search = () => {
         </div>
       </div>
 
-      <div className="self-stretch lg:mt-[176px] md:mt-[144px] sm:mt-[104px] flex flex-col justify-center items-center gap-6 z-10">
+      <div className="self-stretch mt-[176px] max-mypage:mt-[144px] max-phone:!mt-[104px] flex flex-col justify-center items-center gap-6 z-10">
         <div className="self-stretch flex flex-col justify-center items-center gap-5">
           <div className="px-4 py-2 bg-secondary rounded-[50px] inline-flex justify-center items-center gap-2">
             <div className="text-center justify-center text-primary text-xs font-medium font-['S-Core_Dream'] leading-4">

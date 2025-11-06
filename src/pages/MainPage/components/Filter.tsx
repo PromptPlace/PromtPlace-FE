@@ -52,9 +52,9 @@ const Filter = ({ onModelChange, onSortChange, onReset }: FilterProps) => {
   };
 
   return (
-    <div className="inline-flex justify-start items-center gap-10">
+    <div className="inline-flex justify-start items-center gap-10 max-phone:gap-[8px]">
       {/* 모델 섹션 */}
-      <div className="flex justify-start items-center gap-6">
+      <div className="flex justify-start items-center gap-6 max-phone:gap-[8px]">
         {/* 모델 */}
         <div className="relative inline-flex flex-col justify-start items-start gap-2">
           <div
@@ -62,9 +62,9 @@ const Filter = ({ onModelChange, onSortChange, onReset }: FilterProps) => {
               setModelIsOpen(!modelIsOpen);
               setFilterIsOpen(false);
             }}>
-            <div className="w-20 h-5 text-base leading-6 text-text-on-white">모델</div>
+            <div className="w-20 h-5 text-base max-phone:text-[14px] leading-6 text-text-on-white">모델</div>
             <div className="inline-flex justify-start items-center gap-2 cursor-pointer">
-              <div className="lg:max-w-[136px] md:max-w-[136px] sm:max-w-[113px] h-5 text-xs font-light leading-4 text-text-on-white truncate">
+              <div className="max-w-[136px] max-phone:max-w-[113px] h-5 text-xs max-phone:text-[10px] font-light leading-4 text-text-on-white truncate">
                 {selectedModel.length > 0 ? selectedModel.join(', ') : 'AI 모델 선택'}
               </div>
               {/* 아래 화살표 아이콘 */}
@@ -87,9 +87,9 @@ const Filter = ({ onModelChange, onSortChange, onReset }: FilterProps) => {
               setFilterIsOpen(!filterIsOpen);
               setModelIsOpen(false);
             }}>
-            <div className="w-12 h-5 text-base leading-6 text-text-on-white">필터</div>
+            <div className="w-12 h-5 text-base max-phone:text-[14px] leading-6 text-text-on-white">필터</div>
             <div className="inline-flex justify-start items-center gap-2 cursor-pointer">
-              <div className="min-w-28 text-xs font-light leading-4 text-text-on-white">
+              <div className="min-w-28 text-xs font-light max-phone:text-[10px] leading-4 text-text-on-white">
                 {selectedSort || '조회순, 별점순 등 선택'}
               </div>
               <div className="w-3.5 h-3.5 relative flex items-center justify-center">
