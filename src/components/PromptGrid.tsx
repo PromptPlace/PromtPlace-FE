@@ -13,7 +13,7 @@
 import type { Prompt } from '@/types/MainPage/prompt';
 import React from 'react';
 import PromptCard from './PromptCard';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Box } from '@mui/material';
 
 const customTheme = createTheme({
@@ -41,7 +41,6 @@ const PromptGrid = ({ prompts }: { prompts: Prompt[] }) => {
             lg: 'repeat(4, 1fr)',
             xl: 'repeat(5, 1fr)',
           },
-
           gap: {
             xs: '20px',
             sm: '24px',
