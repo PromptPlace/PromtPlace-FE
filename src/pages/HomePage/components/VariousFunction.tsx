@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import arrow from '@/assets/icon-prompt-upload.svg';
 
 type GuideType = 'tip' | 'notice';
 
@@ -122,12 +123,12 @@ const VariousFunction = () => {
               각종 AI, 프롬프트 작성 꿀팁을 확인하세요!
             </p>
 
-            <button
-              type="button"
-              onClick={() => navigate('/guide/tip')}
-              className="flex items-center bg-[#FFFEFB] gap-2 text-sm text-[#030712] border border-[#E5E7EB] rounded-full px-4 py-2 hover:bg-gray-100 transition">
-              바로가기 <span>→</span>
-            </button>
+            <Link
+              to="/guide/tip"
+              className="flex gap-[20px] border-[1px] border-gray-200 rounded-[24px] bg-white custom-button1 text-text-on-white py-[12px] pl-[24px] pr-[13.5px] w-[128px]">
+              <p>바로가기</p>
+              <img src={arrow} alt="Arrow Icon" className="w-[12px] h-[18px]" />
+            </Link>
 
             <div className="mt-[40px] bg-white rounded-[12px] py-4 px-6 text-sm">
               {tips.length === 0 ? (
@@ -159,12 +160,12 @@ const VariousFunction = () => {
               프롬프트 플레이스의 공지사항을 확인해보세요!
             </p>
 
-            <button
-              type="button"
-              onClick={() => navigate('/guide/notice')}
-              className="flex items-center gap-2 text-sm text-[#030712] bg-[#FFFEFB] border border-[#E5E7EB] rounded-full px-4 py-2 hover:bg-gray-100 transition">
-              바로가기 <span>→</span>
-            </button>
+            <Link
+              to="/guide/notice"
+              className="flex gap-[20px] border-[1px] border-gray-200 rounded-[24px] bg-white custom-button1 text-text-on-white py-[12px] pl-[24px] pr-[13.5px] w-[128px]">
+              <p>바로가기</p>
+              <img src={arrow} alt="Arrow Icon" className="w-[12px] h-[18px]" />
+            </Link>
 
             <div className="mt-[40px] bg-white p-4 rounded-[12px] text-sm">
               {notices.length === 0 ? (

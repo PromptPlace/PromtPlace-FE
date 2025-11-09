@@ -81,7 +81,6 @@ const PromptAuthorAndReview = ({
     setIsFollow(followed);
   }, [myFollowingData, member_id]);
 
-  // ✅ mutate 훅
   const { mutate: mutateFollow } = usePatchFollow({ member_id });
   const { mutate: mutateUnFollow } = useDeleteFollow({ member_id });
 
@@ -223,10 +222,12 @@ const PromptAuthorAndReview = ({
             </span>
           </div>
 
-          <div className="flex items-center gap-4">
-            <RatingTitle star={avg} />
-            <span className="text-[#999898] font-medium text-[14px] md:text-[16px]">{avg.toFixed(1)}점</span>
-          </div>
+          {reviewCount > 0 && (
+            <div className="flex items-center gap-4">
+              <RatingTitle star={avg} />
+              <span className="text-[#999898] font-medium text-[14px] md:text-[16px]">{avg.toFixed(1)}점</span>
+            </div>
+          )}
         </div>
 
         <ReviewList
