@@ -5,9 +5,15 @@ interface CategorySectionProps {
   onCategorySelect?: (categoryId: number | null, categoryName: string | null) => void;
   onSubcategorySelect?: (subcategory: string | null) => void;
   initialCategoryId?: number | null;
+  isSearchMode?: boolean; // 검색 모드 여부
 }
 
-const CategorySection = ({ onCategorySelect, onSubcategorySelect, initialCategoryId = 1 }: CategorySectionProps) => {
+const CategorySection = ({
+  onCategorySelect,
+  onSubcategorySelect,
+  initialCategoryId = 1,
+  isSearchMode = false,
+}: CategorySectionProps) => {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(initialCategoryId);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(initialCategoryId ? '전체' : null);
 
@@ -37,6 +43,9 @@ const CategorySection = ({ onCategorySelect, onSubcategorySelect, initialCategor
   };
 
   const handleSelectSubcategory = (subcategory: string) => {
+    // 검색 모드일 때는 서브카테고리 선택 비활성화
+    if (isSearchMode) return;
+
     const newSubcategory = selectedSubcategory === subcategory ? '전체' : subcategory;
     setSelectedSubcategory(newSubcategory);
     onSubcategorySelect?.(newSubcategory);
@@ -46,7 +55,7 @@ const CategorySection = ({ onCategorySelect, onSubcategorySelect, initialCategor
     <div className="overflow-hidden scroll-m-0">
       {/* 데스크톱/태블릿: 아이콘 카드 형태 */}
       <div
-        className="w-full max-w-[1185px] mx-auto flex overflow-x-scroll gap-[20px] justify-start snap-x snap-mandatory px-0 hide-scrollbar max-phone:hidden"
+        className="w-full max-w-[1185px] flex overflow-x-scroll gap-[20px] justify-start items-start snap-x snap-mandatory px-0 hide-scrollbar max-phone:hidden"
         style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
         {categoryData.map((category) => (
           <div className="flex flex-col flex-shrink-0 snap-start" key={category.id}>
@@ -88,7 +97,7 @@ const CategorySection = ({ onCategorySelect, onSubcategorySelect, initialCategor
         </div>
       </div>
 
-      {selectedCategory !== null && (
+      {selectedCategory !== null && !isSearchMode && (
         <>
           {/* 데스크톱/태블릿: 대분류 제목 + 밑줄 스타일 */}
           <div
