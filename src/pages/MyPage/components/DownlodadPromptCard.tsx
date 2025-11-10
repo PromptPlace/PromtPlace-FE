@@ -2,6 +2,7 @@ import type { NewDownloadedPromptDTO } from '@/types/MyPage/prompt';
 import { useDeleteReview } from '@/hooks/mutations/MyPage/review';
 import icon from '@/assets/icon-review.svg';
 import { useNavigate } from 'react-router-dom';
+import PrimaryButton from '@/components/Button/PrimaryButton';
 
 interface DownloadedPromptCardProps {
   prompt: NewDownloadedPromptDTO;
@@ -21,7 +22,7 @@ const DownloadedPromptCard = ({ prompt }: DownloadedPromptCardProps) => {
   const imageUrl = prompt.imageUrls && prompt.imageUrls.length > 0 ? prompt.imageUrls[0] : '/default-prompt-image.svg';
   const price = prompt.price === 0 ? '무료' : `${prompt.price}원`;
   return (
-    <>
+    <div className="w-full bg-white p-[24px] mb-[20px]">
       {' '}
       <div className="w-full bg-white pr-[24px] mb-[20px]">
         <div className="flex">
@@ -29,29 +30,29 @@ const DownloadedPromptCard = ({ prompt }: DownloadedPromptCardProps) => {
             <img src={imageUrl} alt="프롬프트 이미지" className="w-[80px] h-[80px] rounded-[8px]" />
             <Link to={`/prompt/${prompt.prompt_id}`}>
               <p className="custom-h3 text-black">{prompt.title}</p>
-              <p className="custom-h5 text-black">{price}</p>
             </Link>
           </div>
         </div>
       </div>
       {prompt.has_review === false ? (
         <div>
-          <div className="flex items-center  py-[12px]">
+          <div className="flex items-center">
             <img src={icon} alt="리뷰 아이콘" className="mr-[8px]" />
             <div className="flex flex-col gap-[4px]">
               <p className="custom-h4 text-black">리뷰 작성하기</p>
               <p className="custom-body2 text-gray-700">프롬프트 제작자와 다른 사용자에게 도움 될 수 있어요.</p>
             </div>
           </div>
-          <button className="w-full px-[20px] py-[12px] bg-primary text-primary rounded-[12px] mt-[12px] border-[0.8px] border-primary custom-button1">
+          <button
+            className="w-full px-[20px] py-[12px] bg-white text-primary rounded-[12px] mt-[12px] border-[0.8px] border-primary custom-button1"
+            onClick={() => handleWriteReviewClick(prompt.prompt_id)}>
             리뷰 작성하기
           </button>
         </div>
       ) : (
         <div className="flex flex-col gap-[8px] px-[28px]">리뷰</div>
       )}
-      ;
-    </>
+    </div>
   );
 };
 export default DownloadedPromptCard;
