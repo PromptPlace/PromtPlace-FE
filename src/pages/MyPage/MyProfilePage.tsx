@@ -9,7 +9,7 @@ import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
 import LikedPrompts from './components/LikedPrompts';
 import DownloadedPromptPage from './components/DownloadedPromptPage';
 import AuthoredPromptPage from './components/AuthoredPromptPage';
-
+import PromptList from './components/PromptList';
 // MyProfilePage 컴포넌트
 //PromptLIst 컴포넌트를 이용해 작성한 프롬프트, 다운받은 프롬프트, 찜한 프롬프트를 한번에 보여줌
 //AuthoredPromptPage, DownloadedPromptPage 를 각각 컴포넌트로 구현하여 작성한 프롬프트 전체 목록과 다운로드한 프롬프트 전체 목록을 보여줌
@@ -28,7 +28,7 @@ const MyProfilePage = () => {
       <ProfileCard mypage={true} />
       <MyProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       <main>
-        {activeTab === 'prompt' && <LikedPrompts />}
+        {activeTab === 'prompt' && <PromptList setActiveTab={setActiveTab} />}
         {activeTab === 'dashboard' && (
           <div className="flex flex-col items-center mt-[24px]">
             <img src={prepareIcon} alt="준비중 아이콘" className="w-[80px] h-[80px] mb-[24px]" />
