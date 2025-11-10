@@ -6,15 +6,22 @@ import Portal from './Portal';
 import kebabMenu from '@/assets/icon-kebabMenu.svg';
 import { useState, useRef, useEffect } from 'react';
 import Rating from '@/components/Rating';
-
+import usePatchDeletePrompts from '@/hooks/mutations/ProfilePage/usePatchDeletePrompts';
+import { useAuth } from '@/context/AuthContext';
+import type { RequestDeletePromptDto } from '@/types/ProfilePage/profile';
+import { useNavigate } from 'react-router-dom';
 interface AuthoredPromptCardProps {
   prompt: NewAuthoredPromptDTO;
-  DeletePrompt: (prompt_id: number) => void;
-  EditPrompt: (prompt_id: number) => void;
 }
 
 //여기는 하나의 프롬프트만 받아오면 됨
-const AuthoredPromptCard = ({ prompt, DeletePrompt, EditPrompt }: AuthoredPromptCardProps) => {
+const AuthoredPromptCard = ({ prompt }: AuthoredPromptCardProps) => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { mutate: DeletePrompt,} = usePatchDeletePrompts({ member_id: user.user_id });
+const handleDeleteAuthoredPrompts = ({ prompt_id }: RequestDeletePromptDto) => {
+    DeletePrompt({ prompt_id });
+  };
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const buttonRef = useRef<HTMLButtonElement>(null); // 버튼의 위치를 얻기 위한 ref
@@ -70,15 +77,25 @@ const AuthoredPromptCard = ({ prompt, DeletePrompt, EditPrompt }: AuthoredPrompt
       }
     };
 
+
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isDropdownOpen]);
 
+    const handleEditAuthoredPrompt = (prompt_id: number) => {
+    const promptId = prompt_id;
+    const targetUrl = `/mypage/edit/${promptId}`;
+
+    // 3. 생성된 URL로 페이지를 이동시킵니다.
+    navigate(targetUrl);
+  };
+
   const imageUrl = prompt.image_url ? prompt.image_url : logo;
   return (
-    <div className="w-full bg-white pr-[24px] mb-[20px]">
+    <div className="w-full bg-white pr-[24px]">
       <div className="flex justify-between">
         <div className="flex gap-[24px] items-center">
           <img src={imageUrl} alt="프롬프트 이미지" className="w-[80px] h-[80px] rounded-[8px]" />
@@ -96,13 +113,13 @@ const AuthoredPromptCard = ({ prompt, DeletePrompt, EditPrompt }: AuthoredPrompt
             <p className="custom-button1">{prompt.downloads}</p>
           </div>
 
-          <div className="flex items-center justify-center h-[72px] max-lg:h-auto shrink-0 w-[115px] max-lg:w-auto py-[10px] max-lg:py-[0px]  ">
+          <div className="flex items-center justify-center h-[72px] max-lg:h-auto shrink-0 max-lg:w-auto py-[10px] max-lg:py-[0px]  ">
             <div className="relative" ref={anchorRef}>
               <button
                 ref={buttonRef}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className={`flex items-center justify-center h-[28px] w-[28px] rounded-[50px]  ${isDropdownOpen ? 'bg-secondary-pressed' : 'bg-transparent'}`}>
-                <img src={kebabMenu} alt="케밥 메뉴" className="max-lg:w-[16px] max-lg:h-[16px]" />
+                <img src={kebabMenu} alt="케밥 메뉴" className="w-[16px] h-[16px]" />
               </button>
               {isDropdownOpen && (
                 <Portal>
@@ -112,7 +129,7 @@ const AuthoredPromptCard = ({ prompt, DeletePrompt, EditPrompt }: AuthoredPrompt
                     style={{ top: `${menuPosition.top}px`, left: `${menuPosition.left}px` }}>
                     <button
                       onClick={() => {
-                        DeletePrompt(prompt.prompt_id);
+                        handleDeleteAuthoredPrompts({ prompt_id: prompt.prompt_id });
                         setIsDropdownOpen(false);
                       }}
                       className="block  px-[16px] max-lg:px-[12px] py-[8px] max-lg:py-[4px] text-[16px] max-lg:text-[10px] border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary active:bg-secondary-pressed rounded-t-[4px]">
@@ -120,7 +137,7 @@ const AuthoredPromptCard = ({ prompt, DeletePrompt, EditPrompt }: AuthoredPrompt
                     </button>
                     <button
                       onClick={() => {
-                        EditPrompt(prompt.prompt_id);
+                        handleEditAuthoredPrompt(prompt.prompt_id);
                         setIsDropdownOpen(false);
                       }}
                       className="block px-[16px] max-lg:px-[12px] py-[8px] max-lg:py-[4px] text-[16px] max-lg:text-[10px] text-text-on-background bg-secondary active:bg-secondary-pressed rounded-b-[4px]">
