@@ -193,7 +193,13 @@
     transform: scale(1.38);
   }
 
-  .slick-slide.slick-active.slick-center.slick-current button {
+  .slick-slide.slick-active.slick-center.slick-current,
+  .slick-slide.slick-center.slick-cloned {
+    transform: scale(1.38);
+  }
+
+  .slick-slide.slick-active.slick-center.slick-current button,
+  .slick-slide.slick-center.slick-cloned button {
     width: calc(186px / 1.38) !important;
     height: calc(45px / 1.38) !important;
     right: calc(40px / 1.38) !important;
@@ -202,23 +208,27 @@
     padding: calc(12px / 1.38) calc(12px / 1.38) calc(12px / 1.38) calc(24px / 1.38) !important;
   }
 
-  .slick-slide.slick-active.slick-center.slick-current a {
+  .slick-slide.slick-active.slick-center.slick-current a,
+  .slick-slide.slick-center.slick-cloned a {
     font-size: calc(14px / 1.38) !important;
   }
 
-  .slick-slide.slick-active.slick-center.slick-current svg {
+  .slick-slide.slick-active.slick-center.slick-current svg,
+  .slick-slide.slick-center.slick-cloned svg {
     width: calc(18px / 1.38);
   }
 
   @media (max-width: 1024px) {
-    .slick-slide.slick-active.slick-center.slick-current button {
+    .slick-slide.slick-active.slick-center.slick-current button,
+    .slick-slide.slick-center.slick-cloned button {
       right: calc(16px / 1.38) !important;
       bottom: calc(16px / 1.38) !important;
     }
   }
 
   @media (max-width: 481px) {
-    .slick-slide.slick-active.slick-center.slick-current div button {
+    .slick-slide.slick-active.slick-center.slick-current div button,
+    .slick-slide.slick-center.slick-cloned div button {
       width: calc(113px / 1.38) !important;
       height: calc(25px / 1.38) !important;
       right: calc(13.71px / 1.38) !important;
@@ -229,13 +239,15 @@
   }
 
   @media (max-width: 481px) {
-    .slick-slide.slick-active.slick-center.slick-current a {
+    .slick-slide.slick-active.slick-center.slick-current a,
+    .slick-slide.slick-center.slick-cloned a {
       font-size: calc(8px / 1.38) !important;
     }
   }
 
   @media (max-width: 481px) {
-    .slick-slide.slick-active.slick-center.slick-current svg {
+    .slick-slide.slick-active.slick-center.slick-current svg,
+    .slick-slide.slick-center.slick-cloned svg {
       width: calc(10px / 1.38) !important;
     }
   }
