@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import PrimaryButton from '@components/Button/PrimaryButton';
 import type { ModalView } from '@/types/LoginPage/auth';
-import {postInitialSetup} from '@/apis/Login/auth';
+import { postInitialSetup } from '@/apis/Login/auth';
+import { useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@/context/AuthContext';
 interface LoginViewProps {
   setView: (view: ModalView) => void;
 }
@@ -15,11 +17,15 @@ const OnBoardingView = ({ setView }: LoginViewProps) => {
 
   const isDisabled = nickName === '' || nickName.length > 10 || introduce === '';
 
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const data = await postInitialSetup({ nickname: nickName, intro:introduce });
+      const data = await postInitialSetup({ nickname: nickName, intro: introduce });
       console.log(data);
+      queryClient.invalidateQueries({ queryKey: ['member', user.user_id] }); // 온보딩 정보 반영되도록
       setView('close');
     } catch (error) {
       setError('초기 설정에 실패했습니다. 다시 시도해주세요.');
@@ -68,7 +74,7 @@ const OnBoardingView = ({ setView }: LoginViewProps) => {
           text="시작하기"
           textColor="white"
           disable={isDisabled}
-        onClick={() => {}}
+          onClick={() => {}}
         />
         <div className="mt-[90px]"></div>
       </form>

@@ -13,7 +13,10 @@ const HomePage = () => {
       <div className="flex justify-center items-center">
         <Search />
       </div>
-      <ImageSlide />
+
+      <div className="w-full">
+        <ImageSlide />
+      </div>
       <RecommnedPrompts />
       <VariousFunction />
       <CreatePrompt />

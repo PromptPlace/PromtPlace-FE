@@ -11,7 +11,7 @@ const RecommnedPrompts = () => {
   return (
     <div className="mt-[104px] mb-[72px] max-phone:mb-[56px]">
       <div className="px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
-        <p className="custom-h2 max-phone:text-[20px]">관리자가 추천하는 프롬프트 TOP8</p>
+        <p className="custom-h2 max-phone:text-[20px]">운영자가 추천하는 프롬프트 TOP8</p>
       </div>
 
       <div className="max-phone:hidden mt-[40px] max-phone:mt-[20px] overflow-x-auto pl-[102px] pb-[24px] max-lg:pl-[40px] max-phone:px-[20px]">

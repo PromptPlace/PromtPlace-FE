@@ -45,7 +45,7 @@ const ImageSlide = () => {
     centerPadding: `${centerPadding}px`,
     infinite: true,
     slidesToShow: 1,
-    autoplay: true,
+    // autoplay: true,
     speed: 2000,
     autoplaySpeed: 3500,
   };
@@ -75,7 +75,11 @@ const ImageSlide = () => {
       else if (window.innerWidth <= 1023) width = 380;
 
       setCenterWidth(width);
-      setCenterPadding((window.innerWidth - width) / 2);
+      if (window.innerWidth >= 1920) {
+        setCenterPadding((1920 - width) / 2);
+      } else {
+        setCenterPadding((window.innerWidth - width) / 2);
+      }
     };
 
     updateSettings();

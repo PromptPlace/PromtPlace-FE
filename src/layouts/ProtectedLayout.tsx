@@ -12,21 +12,18 @@ const ProtectedLayout = () => {
     return <Navigate to={'/'} replace />;
   }
   return (
-    <>
+    <div className="max-w-[1920px] w-full m-auto">
       <ScrollToTop />
       <Navbar />
+
       <div className="bg-background" style={{ minHeight: 'calc(100vh - 140px)' }}>
         <Suspense fallback={null}>
           <Outlet />
         </Suspense>
       </div>
 
-      {/* <div className="phone:hidden max-phone:block">
-        <TabBar />
-      </div> */}
-
       <Footer />
-    </>
+    </div>
   );
 };
 
