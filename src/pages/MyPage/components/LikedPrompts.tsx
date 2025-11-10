@@ -7,8 +7,6 @@ const LikedPrompts = () => {
 
   return (
     <div className="flex flex-col gap-[40px]">
-      <p className="custom-h2 max-phone:text-[20px]">찜한 프롬프트</p>
-
       <div className="max-phone:hidden mt-[40px] max-phone:mt-[20px] overflow-x-auto pb-[24px]">
         <div className="grid grid-cols-4 overflow-x-auto gap-[20px] min-w-[1236px] ">
           {/* @ts-expect-error: prompt가 없을 수도 있어서 발생하는 타입 오류 */}
