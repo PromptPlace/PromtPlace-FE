@@ -105,8 +105,12 @@ const PromptAuthorAndReview = ({
 
   useEffect(() => {
     if (reviewsData) {
-      setReviews(reviewsData);
-      setReviewCount(reviewsData.length);
+      const mapped = reviewsData.map((r) => ({
+        ...r,
+        writer_profile_image_url: r.writer_image_url ?? null,
+      }));
+      setReviews(mapped);
+      setReviewCount(mapped.length);
     }
   }, [reviewsData]);
 
