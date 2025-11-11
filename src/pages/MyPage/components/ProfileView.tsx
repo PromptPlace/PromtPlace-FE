@@ -107,7 +107,7 @@ const ProfileView = ({ userData, setActiveTab }: ProfileViewProps) => {
             <p
               className={clsx(
                 snsData?.data[0] ? 'text-text-on-white' : 'text-gray-400',
-                'custom-body2 px-[16px] py-[12px] max-phone:text-[12px]',
+                'custom-body2 px-[16px] py-[12px] max-phone:text-[12px] break-words',
               )}>
               {snsData?.data[0] ? snsData?.data[snsData.data.length - 1].user_sns_id : '아직 작성하지 않았어요!'}
             </p>
@@ -116,7 +116,7 @@ const ProfileView = ({ userData, setActiveTab }: ProfileViewProps) => {
             <p
               className={clsx(
                 snsData?.data[0] ? 'text-text-on-white' : 'text-gray-400',
-                'custom-body2 px-[16px] py-[12px] max-phone:text-[12px]',
+                'custom-body2 px-[16px] py-[12px] max-phone:text-[12px] break-words',
               )}>
               {snsData?.data[0] ? snsData?.data[snsData.data.length - 1].url : '아직 작성하지 않았어요!'}
             </p>

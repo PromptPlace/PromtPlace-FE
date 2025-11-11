@@ -45,7 +45,7 @@ const ImageSlide = () => {
     centerPadding: `${centerPadding}px`,
     infinite: true,
     slidesToShow: 1,
-    // autoplay: true,
+    autoplay: true,
     speed: 2000,
     autoplaySpeed: 3500,
   };
@@ -88,7 +88,11 @@ const ImageSlide = () => {
   }, []);
 
   return (
-    <Slider {...settings} prevArrow={<PrevArrow />} nextArrow={<NextArrow />} className="mt-[104px]">
+    <Slider
+      {...settings}
+      prevArrow={<PrevArrow />}
+      nextArrow={<NextArrow />}
+      className="mt-[64px] max-mypage:mt-[32px]">
       {SLIDES.map((slide) => (
         <ImageBox key={slide.id} url={slide.url} to={slide.to} />
       ))}

@@ -136,7 +136,7 @@ const Navbar = () => {
               <img
                 src={data?.data.profile_image || UserIcon}
                 alt="프로필 이미지"
-                className="w-[40px] object-cover self-center max-phone:w-[32px] max-phone:h-[32px]"
+                className="w-[40px] h-[40px] rounded-full object-cover self-center max-phone:w-[32px] max-phone:h-[32px]"
                 onClick={() => navigate(`/mypage/profile`)}
               />
             </div>
