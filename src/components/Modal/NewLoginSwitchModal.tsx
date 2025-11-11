@@ -2,7 +2,6 @@ import PromptPlaceLogo from '@assets/logo/text/text-logo-login.svg';
 import { Link } from 'react-router-dom';
 import { useState, useLayoutEffect, useEffect } from 'react';
 import exitIcon from '@assets/icon-exit.svg';
-import LoginView from './components/loginView';
 import SignupView from './components/signupView';
 import ForgotPasswordView from './components/forgotPassword';
 import ChangePasswordView from './components/changePassword';
@@ -10,6 +9,7 @@ import InitPasswordView from './components/initPassword';
 import AgreeTermsView from './components/agreeTerms';
 import type { ModalView } from '@/types/LoginPage/auth';
 import OnBoardingView from './components/onBoarding';
+import LoginSwitchView from './components/loginSwitchView';
 /**
  * TODO:
  * - 소셜 로그인 버튼 hover/click 효과 추후 반영 필요
@@ -24,7 +24,7 @@ interface SocialLoginModalProps {
   initialView?: ModalView;
 }
 
-const SocialLoginModal = ({ isOpen, onClose, initialView = 'login' }: SocialLoginModalProps) => {
+const NewLoginSwitchModal = ({ isOpen, onClose, initialView = 'login' }: SocialLoginModalProps) => {
   const [view, setView] = useState<ModalView>(initialView);
   const [signupEmail, setsignUpEmail] = useState<string>('');
   const [signupPassword, setsignUpPassword] = useState<string>('');
@@ -66,7 +66,7 @@ const SocialLoginModal = ({ isOpen, onClose, initialView = 'login' }: SocialLogi
   const renderView = () => {
     switch (view) {
       case 'login':
-        return <LoginView setView={setView} />;
+        return <LoginSwitchView setView={setView} />;
       case 'signup':
         return (
           <SignupView
@@ -119,7 +119,7 @@ const SocialLoginModal = ({ isOpen, onClose, initialView = 'login' }: SocialLogi
       //   return <SignupEmailView setView={setView} />;
       // ... (다른 뷰 케이스들) ...
       default:
-        return <LoginView setView={setView} />;
+        return <LoginSwitchView setView={setView} />;
     }
   };
 
@@ -156,4 +156,4 @@ const SocialLoginModal = ({ isOpen, onClose, initialView = 'login' }: SocialLogi
     </div>
   );
 };
-export default SocialLoginModal;
+export default NewLoginSwitchModal;
