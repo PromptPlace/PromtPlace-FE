@@ -11,11 +11,11 @@ interface PromptReview {
 }
 
 export interface NewAuthoredPromptDTO {
+  downloads: number;
   prompt_id: number;
   title: string;
   image_url: string | null;
   views: number;
-  downloads: number;
   reviews: {
     has_more: boolean;
     data: PromptReview[];
@@ -27,23 +27,32 @@ export interface NewAuthoredPromptsApiResponse {
   statusCode: number;
   data: {
     prompts: NewAuthoredPromptDTO[];
-    nextCursor: number | null;
-    has_more: boolean;
-    limit: number;
+
+    pagination: {
+      nextCursor: number | null;
+      has_more: boolean;
+      limit: number;
+    };
   };
 }
 
 export interface NewDownloadedPromptDTO {
   message: string;
+  statusCode: number;
   prompt_id: number;
   title: string;
+  description: string;
+  price: number;
   models: string[];
   imageUrls: string[] | null;
-  price: number;
   has_review: boolean;
   is_recent_review: boolean;
-  nickname: string;
-  statusCode: number;
+  userNickname: string;
+  userProfileImageUrl: string | null;
+  userReview: {
+    content: string;
+    rating: number;
+  } | null;
 }
 
 export interface NewDownloadedPromptsApiResponse {

@@ -127,7 +127,7 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
             </button>
           </div>
 
-          {error === 'valid' && <p className="text-primary custom-h5 mt-[4px]">사용 가능한 비밀번호예요.</p>}
+          {error === 'valid' && <p className="text-primary custom-button2 mt-[4px]">사용 가능한 비밀번호예요.</p>}
           {error === 'invalid' && (
             <p className="text-alert custom-button2 mt-[4px]">
               영문, 숫자, 특수문자 조합으로 8자 이상의 비밀번호를 입력해주세요.
@@ -163,7 +163,7 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
           {errorRepeat === 'mismatch' && (
             <p className="text-alert custom-button2 mt-[4px]">비밀번호가 달라요! 확인해 보시겠어요?</p>
           )}
-          {errorRepeat === 'match' && <p className="text-primary custom-h5 mt-[4px]">동일한 비밀번호예요.</p>}
+          {errorRepeat === 'match' && <p className="text-primary custom-button2 mt-[4px]">동일한 비밀번호예요.</p>}
         </div>
         <PrimaryButton
           buttonType="full"
@@ -176,8 +176,12 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
       </form>
       <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
         {/* 수정필요  Link가 아닌 signup, find-password가 렌더링 되도록*/}
-        <button className="text-black" onClick={() => setView('login')}>로그인하기</button>
-        <button className="text-black" onClick={() => setView('signup')}>회원가입하기</button>
+        <button className="text-black" onClick={() => setView('login')}>
+          로그인하기
+        </button>
+        <button className="text-black" onClick={() => setView('signup')}>
+          회원가입하기
+        </button>
       </nav>
     </div>
   );

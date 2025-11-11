@@ -3,6 +3,10 @@ import { useDeleteReview } from '@/hooks/mutations/MyPage/review';
 import icon from '@/assets/icon-review.svg';
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '@/components/Button/PrimaryButton';
+import Rating from '@/components/Rating';
+import logo from '@/assets/logo/app/app-logo-default.svg';
+import defaultProfile from '@/assets/icon-profile-image-default.svg';
+import defaultlogo from '@/assets/logo/app/app-logo-default.svg';
 
 interface DownloadedPromptCardProps {
   prompt: NewDownloadedPromptDTO;
@@ -13,13 +17,24 @@ import { Link } from 'react-router-dom';
 const DownloadedPromptCard = ({ prompt }: DownloadedPromptCardProps) => {
   const navigate = useNavigate();
 
+  const { mutate: deleteReviewMutation } = useDeleteReview();
+
+  const handleDeleteReview = (review_id: number) => {
+    deleteReviewMutation(review_id);
+  };
+
   const handleWriteReviewClick = (prompt_id: number) => {
     const promptId = prompt_id;
     const targetUrl = `/prompt/${promptId}?open_review=true`;
     navigate(targetUrl);
   };
 
-  const imageUrl = prompt.imageUrls && prompt.imageUrls.length > 0 ? prompt.imageUrls[0] : '/default-prompt-image.svg';
+  const handleEditReview = () => {
+    const targetUrl = `/prompt/${prompt.prompt_id}?open_review=true`;
+    navigate(targetUrl);
+  };
+
+  const imageUrl = prompt.imageUrls && prompt.imageUrls.length > 0 ? prompt.imageUrls[0] : defaultlogo;
   const price = prompt.price === 0 ? '무료' : `${prompt.price}원`;
   return (
     <div className="w-full bg-white p-[24px] mb-[20px]">
@@ -50,7 +65,35 @@ const DownloadedPromptCard = ({ prompt }: DownloadedPromptCardProps) => {
           </button>
         </div>
       ) : (
-        <div className="flex flex-col gap-[8px] px-[28px]">리뷰</div>
+        //30일 이내에 작성한 리뷰일 경우에만 수정할 수 있도록 바꾸어야 함
+        <div className="flex flex-col gap-[8px] px-[28px]">
+          <div className="flex justify-between">
+            <div className="flex items-center gap-[3.5px]">
+              <img
+                src={prompt.userProfileImageUrl ? prompt.userProfileImageUrl : defaultProfile}
+                alt="작성자 프로필 이미지"
+                className="w-[24px] h-[24px] rounded-[50px]"
+              />
+              <span className="custom-body3">{prompt.userNickname}</span>
+            </div>
+            <span className="w-[80px] h-[16px]">
+              <Rating star={prompt.userReview?.rating} />
+            </span>
+          </div>
+          <div className="custom-body3">{prompt.userReview?.content}</div>
+          <div className="flex gap-[8px] mt-[12px]">
+            <button
+              className="flex-1 py-[12px] bg-white text-alert rounded-[12px]  border-[0.8px] border-alert custom-button1"
+              onClick={() => handleDeleteReview(0)}>
+              삭제하기
+            </button>
+            <button
+              className="flex-1 py-[12px] bg-white text-primary rounded-[12px]  border-[0.8px] border-primary custom-button1"
+              onClick={() => handleEditReview()}>
+              수정하기
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

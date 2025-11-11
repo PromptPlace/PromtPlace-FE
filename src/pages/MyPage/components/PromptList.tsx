@@ -52,7 +52,7 @@ const PromptList = ({ setActiveTab }: PromptListProps) => {
               {DownloadedPromptsNum}
             </div>
           </div>
-          {DownloadedPromptsNum > 0 && (
+          {DownloadedPromptsNum > 6 && (
             <button onClick={() => setActiveTab('downloaded')} className="custom-button2 text-gray-500">
               더보기 &gt;
             </button>

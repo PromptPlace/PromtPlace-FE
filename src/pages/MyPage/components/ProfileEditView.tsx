@@ -209,9 +209,7 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
 
           <div className="flex flex-col gap-[12px]">
             <label className="custom-h5 block max-phone:text-[14px]">소개말</label>
-            <p className="custom-body3 text-gray-700 mb-[8px] max-phone:text-[12px]">
-              프롬프트를 입력한 AI의 답변 일부를 작성해주세요.
-            </p>
+            <p className="custom-body3 text-gray-700 mb-[8px] max-phone:text-[12px]">자유롭게 소개말을 작성해주세요.</p>
             <input
               id="intros"
               type="text"
