@@ -17,12 +17,17 @@ const Filter = ({ onModelChange, onSortChange, onReset }: FilterProps) => {
   const [filterIsOpen, setFilterIsOpen] = useState(false);
   const [selectedSort, setSelectedSort] = useState<string>('');
 
-  const modalRef = React.useRef<HTMLDivElement | null>(null);
+  const modelRef = React.useRef<HTMLDivElement | null>(null);
+  const filterRef = React.useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if ((modelIsOpen || filterIsOpen) && modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      // 모델 드롭다운 외부 클릭 시 닫기
+      if (modelIsOpen && modelRef.current && !modelRef.current.contains(event.target as Node)) {
         setModelIsOpen(false);
+      }
+      // 필터 드롭다운 외부 클릭 시 닫기
+      if (filterIsOpen && filterRef.current && !filterRef.current.contains(event.target as Node)) {
         setFilterIsOpen(false);
       }
     };
@@ -56,7 +61,7 @@ const Filter = ({ onModelChange, onSortChange, onReset }: FilterProps) => {
       {/* 모델 섹션 */}
       <div className="flex justify-start items-center gap-6 max-phone:gap-[8px]">
         {/* 모델 */}
-        <div className="relative inline-flex flex-col justify-start items-start gap-2">
+        <div ref={modelRef} className="relative inline-flex flex-col justify-start items-start gap-2">
           <div
             onClick={() => {
               setModelIsOpen(!modelIsOpen);
@@ -74,14 +79,14 @@ const Filter = ({ onModelChange, onSortChange, onReset }: FilterProps) => {
             </div>
           </div>
           {modelIsOpen && (
-            <div ref={modalRef} className="absolute top-[60px] left-0 w-96 z-[9999]">
+            <div className="absolute top-[60px] left-0 w-96 z-[9999]">
               <ModelModal selectedModels={selectedModel} onConfirm={handleModelSelect} />
             </div>
           )}
         </div>
 
         {/* 필터 */}
-        <div className="relative inline-flex flex-col justify-start items-start gap-2">
+        <div ref={filterRef} className="relative inline-flex flex-col justify-start items-start gap-2">
           <div
             onClick={() => {
               setFilterIsOpen(!filterIsOpen);
@@ -98,7 +103,7 @@ const Filter = ({ onModelChange, onSortChange, onReset }: FilterProps) => {
             </div>
           </div>
           {filterIsOpen && (
-            <div ref={modalRef} className="absolute top-[60px] left-0 w-96 z-[9999]">
+            <div className="absolute top-[60px] left-0 w-96 z-[9999]">
               <SortModal selectedSort={selectedSort} onSelect={handleSortSelect} />
             </div>
           )}

@@ -5,6 +5,7 @@ interface CategorySectionProps {
   onCategorySelect?: (categoryId: number | null, categoryName: string | null) => void;
   onSubcategorySelect?: (subcategory: string | null) => void;
   initialCategoryId?: number | null;
+  initialSubcategory?: string | null;
   isSearchMode?: boolean; // 검색 모드 여부
 }
 
@@ -12,17 +13,20 @@ const CategorySection = ({
   onCategorySelect,
   onSubcategorySelect,
   initialCategoryId = 1,
+  initialSubcategory = '전체',
   isSearchMode = false,
 }: CategorySectionProps) => {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(initialCategoryId);
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(initialCategoryId ? '전체' : null);
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(
+    initialCategoryId ? initialSubcategory : null,
+  );
 
   // 초기 카테고리 및 서브카테고리
   useEffect(() => {
     if (initialCategoryId !== null && initialCategoryId !== undefined) {
       const categoryName = categoryData.find((cat) => cat.id === initialCategoryId)?.name || null;
       onCategorySelect?.(initialCategoryId, categoryName);
-      onSubcategorySelect?.('전체'); // 초기 서브카테고리는 "전체"
+      onSubcategorySelect?.(initialSubcategory); // URL에서 받은 서브카테고리 사용
     } else {
       // 초기값이 null이면 선택 없음
       onCategorySelect?.(null, null);
