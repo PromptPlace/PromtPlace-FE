@@ -132,7 +132,7 @@ const handleDeleteAuthoredPrompts = ({ prompt_id }: RequestDeletePromptDto) => {
                         handleDeleteAuthoredPrompts({ prompt_id: prompt.prompt_id });
                         setIsDropdownOpen(false);
                       }}
-                      className="block  px-[16px] max-lg:px-[12px] py-[8px] max-lg:py-[4px] text-[16px] max-lg:text-[10px] border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary active:bg-secondary-pressed rounded-t-[4px]">
+                      className="block custom-h3 px-[15px] max-lg:px-[12px] py-[8px] max-lg:py-[4px]  border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary active:bg-secondary-pressed active:text-black rounded-t-[4px]">
                       삭제하기
                     </button>
                     <button
@@ -140,7 +140,7 @@ const handleDeleteAuthoredPrompts = ({ prompt_id }: RequestDeletePromptDto) => {
                         handleEditAuthoredPrompt(prompt.prompt_id);
                         setIsDropdownOpen(false);
                       }}
-                      className="block px-[16px] max-lg:px-[12px] py-[8px] max-lg:py-[4px] text-[16px] max-lg:text-[10px] text-text-on-background bg-secondary active:bg-secondary-pressed rounded-b-[4px]">
+                      className="block custom-h3 px-[15px] max-lg:px-[12px] py-[8px] max-lg:py-[4px] text-[16px] max-lg:text-[10px] text-text-on-background bg-secondary active:bg-secondary-pressed active:text-black rounded-b-[4px]">
                       수정하기
                     </button>
                   </div>
