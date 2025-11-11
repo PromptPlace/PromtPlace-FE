@@ -7,6 +7,7 @@ import TagButton from '@components/Button/TagButton';
 import IconButton from '@components/Button/IconButton';
 import { useNavigate } from 'react-router-dom';
 import { categoryData } from '@/pages/MainPage/components/categoryData';
+import usePromptDownload from '@/hooks/mutations/PromptDetailPage/usePromptDownload';
 
 import updateIcon from '../assets/updatebutton.png';
 import deleteIcon from '../assets/deletebutton.png';
@@ -110,17 +111,17 @@ const PromptDetailCard = ({
 
   const mainCategoryName = useMemo(() => {
     const list = Array.isArray(data?.categories) ? data!.categories : [];
-    
+
     const names = list
       .map((c: any) => {
         // 여러 경로 시도
         const mainCatName =
           c?.category?.mainCategory?.name || c?.mainCategory?.name || c?.category?.main_category?.name || null;
-        
+
         return mainCatName;
       })
       .filter(Boolean);
-    
+
     const result = Array.from(new Set(names))[0] ?? '—';
     return result;
   }, [JSON.stringify(data?.categories)]);
@@ -128,15 +129,15 @@ const PromptDetailCard = ({
   // 메인 카테고리 이름을 기준으로 categoryData에서 프론트엔드 ID 찾기
   const mainCategoryLinkId = useMemo(() => {
     if (!mainCategoryName || mainCategoryName === '—') return null;
-    
+
     // 공백을 정규화하여 비교 (서버: "글쓰기/문서 작성", 프론트: "글쓰기 / 문서 작성")
     const normalizedServerName = mainCategoryName.replace(/\s*\/\s*/g, ' / ').trim();
-    
+
     const category = categoryData.find((cat) => {
       const normalizedCatName = cat.name.replace(/\s*\/\s*/g, ' / ').trim();
       return normalizedCatName === normalizedServerName;
     });
-    
+
     return category?.id ?? null;
   }, [mainCategoryName]);
 
@@ -166,6 +167,11 @@ const PromptDetailCard = ({
       ),
     );
   }, [tags]);
+
+  const { mutate: downloadPrompt, isPending } = usePromptDownload();
+  const handleDownload = () => {
+    downloadPrompt(promptId);
+  };
 
   return (
     <>
@@ -217,7 +223,9 @@ const PromptDetailCard = ({
               </div>
 
               <div className="mt-5 flex items-center">
-                <h1 className="font-medium text-[32px] text-[#030712] leading-tight truncate">{title}</h1>
+                <h1 className="font-medium text-[32px] text-[#030712] leading-tight break-words whitespace-normal">
+                  {title}
+                </h1>
               </div>
 
               <p className="mt-[16px] font-light text-[16px] leading-[22px] text-[#030712]">{oneLiner}</p>
