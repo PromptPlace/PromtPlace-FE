@@ -12,7 +12,7 @@ import type { ResponseMemberDto } from '@/types/ProfilePage/profile';
 import ProfileIcon from '@assets/header/mypage.svg?react';
 import useGetSNS from '@/hooks/queries/ProfilePage/useGetSNS';
 import clsx from 'clsx';
-import NewLoginSwitchModal from '@/components/Modal/newLoginSwitchModal';
+import NewLoginSwitchModal from '@/components/Modal/NewLoginSwitchModal';
 
 interface ProfileViewProps {
   userData?: ResponseMemberDto;
