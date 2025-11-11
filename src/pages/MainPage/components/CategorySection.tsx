@@ -21,19 +21,24 @@ const CategorySection = ({
     initialCategoryId ? initialSubcategory : null,
   );
 
-  // 초기 카테고리 및 서브카테고리
+  // URL 파라미터가 변경될 때마다 카테고리와 서브카테고리 업데이트
   useEffect(() => {
     if (initialCategoryId !== null && initialCategoryId !== undefined) {
+      setSelectedCategory(initialCategoryId);
+      setSelectedSubcategory(initialSubcategory);
+      
       const categoryName = categoryData.find((cat) => cat.id === initialCategoryId)?.name || null;
       onCategorySelect?.(initialCategoryId, categoryName);
       onSubcategorySelect?.(initialSubcategory); // URL에서 받은 서브카테고리 사용
     } else {
       // 초기값이 null이면 선택 없음
+      setSelectedCategory(null);
+      setSelectedSubcategory(null);
       onCategorySelect?.(null, null);
       onSubcategorySelect?.(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // 마운트 시 한 번만 실행
+  }, [initialCategoryId, initialSubcategory]); // URL 파라미터 변경 시 실행
 
   const handleSelectCategory = (categoryId: number) => {
     const newCategoryId = selectedCategory === categoryId ? null : categoryId;

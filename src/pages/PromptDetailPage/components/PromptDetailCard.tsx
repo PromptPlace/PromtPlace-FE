@@ -6,6 +6,7 @@ import ModelButton from '@components/Button/ModelButton';
 import TagButton from '@components/Button/TagButton';
 import IconButton from '@components/Button/IconButton';
 import { useNavigate } from 'react-router-dom';
+import { categoryData } from '@/pages/MainPage/components/categoryData';
 
 import updateIcon from '../assets/updatebutton.png';
 import deleteIcon from '../assets/deletebutton.png';
@@ -107,18 +108,37 @@ const PromptDetailCard = ({
   const [liked, setLiked] = useState(false);
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
-  const firstCategory = useMemo(() => {
-    const list = Array.isArray(data?.categories) ? data!.categories : [];
-    return list.find((c: any) => c?.category?.mainCategory?.name) ?? null;
-  }, [data?.categories]);
-
   const mainCategoryName = useMemo(() => {
     const list = Array.isArray(data?.categories) ? data!.categories : [];
-    const names = list.map((c: any) => c?.category?.mainCategory?.name).filter(Boolean);
-    return Array.from(new Set(names))[0] ?? '—';
+    
+    const names = list
+      .map((c: any) => {
+        // 여러 경로 시도
+        const mainCatName =
+          c?.category?.mainCategory?.name || c?.mainCategory?.name || c?.category?.main_category?.name || null;
+        
+        return mainCatName;
+      })
+      .filter(Boolean);
+    
+    const result = Array.from(new Set(names))[0] ?? '—';
+    return result;
   }, [JSON.stringify(data?.categories)]);
 
-  const mainCategoryLinkId = firstCategory?.category?.category_id ?? null;
+  // 메인 카테고리 이름을 기준으로 categoryData에서 프론트엔드 ID 찾기
+  const mainCategoryLinkId = useMemo(() => {
+    if (!mainCategoryName || mainCategoryName === '—') return null;
+    
+    // 공백을 정규화하여 비교 (서버: "글쓰기/문서 작성", 프론트: "글쓰기 / 문서 작성")
+    const normalizedServerName = mainCategoryName.replace(/\s*\/\s*/g, ' / ').trim();
+    
+    const category = categoryData.find((cat) => {
+      const normalizedCatName = cat.name.replace(/\s*\/\s*/g, ' / ').trim();
+      return normalizedCatName === normalizedServerName;
+    });
+    
+    return category?.id ?? null;
+  }, [mainCategoryName]);
 
   const normalizeCategoryName = (name: string) =>
     name
@@ -130,6 +150,7 @@ const PromptDetailCard = ({
     if (!mainCategoryLinkId || !mainCategoryName) return;
 
     const prettyName = normalizeCategoryName(mainCategoryName);
+    // 서브카테고리는 항상 '전체'로 설정
     const qs = `categoryId=${mainCategoryLinkId}&categoryName=${encodeURIComponent(prettyName)}`;
 
     navigate(`/prompt?${qs}`);
