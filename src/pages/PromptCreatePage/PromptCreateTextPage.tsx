@@ -10,6 +10,7 @@ import TagButton from '@/components/Button/TagButton';
 import TextModal from '@/components/Modal/TextModal';
 
 import useCreatePromptText from '@/hooks/mutations/PromptCreatePage/useCreateText';
+import { useNavigate } from 'react-router-dom';
 
 interface PostText {
   title: String;
@@ -26,6 +27,8 @@ interface PostText {
 }
 
 const PromptCreateTextPage = () => {
+  const navigate = useNavigate();
+
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
 
@@ -54,6 +57,8 @@ const PromptCreateTextPage = () => {
 
   //모달
   const [modalInitialTab, setModalInitialTab] = useState<'model' | 'category'>('model');
+
+  const [isUploaded, setIsUploaded] = useState<boolean>(false); //업로드 되었는지 여부
 
   //API 연동 관련
   const { mutateAsync: createPrompt, isPending } = useCreatePromptText();
@@ -85,24 +90,13 @@ const PromptCreateTextPage = () => {
 
   // 업로드 버튼 클릭
   const handleUploadClick = async () => {
+    //이미 업로드 된 것인지 검사
+    if (isUploaded) return;
+
     //유효성 검증
     if (!validateForm()) {
       return;
     }
-
-    console.log('=== 입력된 값 확인 ===');
-    console.log('제목:', title);
-    console.log('프롬프트 내용:', content);
-    console.log('선택된 모델:', selectedModels);
-    console.log('모델 버전:', modelver);
-    console.log('카테고리:', categories);
-    console.log('가격 타입:', priceType);
-    console.log('가격:', cost);
-    console.log('결과 미리보기:', previewText);
-    console.log('한줄 소개:', discriptionText);
-    console.log('상세 설명:', howToUseText);
-    console.log('====================');
-
     try {
       // 프롬프트 업로드
       const res = await createPrompt({
@@ -123,8 +117,19 @@ const PromptCreateTextPage = () => {
       const prompt_ID = res.data.prompt_id;
 
       // 성공
-      setModalText('업로드가 완료되었어요!');
-      setAlertModal(true);
+      if (prompt_ID) {
+        setIsUploaded(true);
+        setModalText('업로드가 완료되었어요!');
+        setAlertModal(true);
+
+        setTimeout(() => {
+          navigate(`/prompt/${prompt_ID}`);
+        }, 1000);
+      } else {
+        // 실패 처리
+        setModalText('업로드가 실패했습니다');
+        setAlertModal(true);
+      }
     } catch (err) {
       console.error(err);
       setModalText('업로드가 실패했습니다');
@@ -291,12 +296,12 @@ const PromptCreateTextPage = () => {
                       ))}
                     </div>
                   </div>
-                  <div className="w-full h-[46px] py-[12px] px-[16px] bg-gray50 rounded-[8px]">
+                  <div className="w-full h-[46px] py-[8px] px-[16px] bg-gray50 rounded-[8px] items-center">
                     <input
                       value={modelver}
                       onChange={(e) => setModelver(e.target.value)}
                       maxLength={30} //글자 제한
-                      className="h-[46px] w-full text-[14px]  font-light outline-none"
+                      className="w-full text-[14px] font-light outline-none"
                       placeholder="예) ChatGPT 5, Gemini 2.5 pro"
                     />
                   </div>
@@ -372,7 +377,8 @@ const PromptCreateTextPage = () => {
             <div className="max-w-[1240px] w-full mt-[40px] mb-[88px]">
               <button
                 className="w-full h-[65px] flex justify-center items-center gap-[16px] bg-primary rounded-[16px] py-[20px]"
-                onClick={handleUploadClick}>
+                onClick={handleUploadClick}
+                disabled={isUploaded}>
                 <img src={UploadIcon} alt="업로드 버튼" className="w-[24px] h-[24px]" />
                 <p className="text-[24px] font-medium text-white">업로드 버튼</p>
               </button>
@@ -525,7 +531,7 @@ const PromptCreateTextPage = () => {
                     ))}
                   </div>
                 </div>
-                <div className="w-full h-[46px] py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
+                <div className="w-full h-[46px] py-[8px] px-[16px]  bg-gray50 rounded-[8px] items-center">
                   <input
                     value={modelver}
                     onChange={(e) => setModelver(e.target.value)}
@@ -608,16 +614,23 @@ const PromptCreateTextPage = () => {
                     placeholder:text-text-on-background placeholder:text-[14px] placeholder:font-light overflow-y-auto"
             />
           </div>
+
+          <div className="h-[30px] pt-[15px]">
+            {validationError && <p className=" text-[16px] font-medium text-alert">{validationError}</p>}
+          </div>
           {/**업로드 버튼 */}
-          <div className="w-full mt-[40px] mb-[88px] ">
+          <div className="w-full mt-[30px] mb-[88px] ">
             <button
               className="w-full h-[65px] flex justify-center items-center gap-[16px] bg-primary rounded-[16px] py-[20px]"
-              onClick={handleUploadClick}>
+              onClick={handleUploadClick}
+              disabled={isUploaded}>
               <img src={UploadIcon} alt="업로드 버튼" className="w-[24px] h-[24px]" />
               <p className="text-[24px] font-medium text-white">업로드 버튼</p>
             </button>
           </div>
         </div>
+        {/* TextModal */}
+        {alertModal && <TextModal text={'업로드가 완료되었어요!'} onClick={() => setAlertModal(false)} size="sm" />}
       </div>
 
       {/* 724px 이하: 모바일 */}
@@ -761,7 +774,7 @@ const PromptCreateTextPage = () => {
                     ))}
                   </div>
                 </div>
-                <div className="w-full h-[46px] py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
+                <div className="w-full h-[46px] py-[8px] px-[16px]  bg-gray50 rounded-[8px] items-center">
                   <input
                     value={modelver}
                     onChange={(e) => setModelver(e.target.value)}
@@ -844,16 +857,22 @@ const PromptCreateTextPage = () => {
                     placeholder:text-text-on-background placeholder:text-[14px] placeholder:font-light overflow-y-auto"
             />
           </div>
+          <div className="h-[20px] pt-[15px]">
+            {validationError && <p className="text-[16px] font-medium text-alert">{validationError}</p>}
+          </div>
           {/**업로드 버튼 */}
-          <div className="w-full mt-[40px] mb-[88px] ">
+          <div className="w-full mt-[30px] mb-[88px] ">
             <button
               className="w-full h-[65px] flex justify-center items-center gap-[16px] bg-primary rounded-[16px] py-[20px]"
-              onClick={handleUploadClick}>
+              onClick={handleUploadClick}
+              disabled={isUploaded}>
               <img src={UploadIcon} alt="업로드 버튼" className="w-[24px] h-[24px]" />
               <p className="text-[24px] font-medium text-white">업로드 버튼</p>
             </button>
           </div>
         </div>
+        {/* TextModal */}
+        {alertModal && <TextModal text={'업로드가 완료되었어요!'} onClick={() => setAlertModal(false)} size="sm" />}
       </div>
     </>
   );
