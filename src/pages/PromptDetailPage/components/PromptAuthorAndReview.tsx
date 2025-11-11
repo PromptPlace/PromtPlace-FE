@@ -17,6 +17,8 @@ import useCreateReview from '@/hooks/mutations/PromptDetailPage/useCreateReview'
 import type { AxiosError } from 'axios';
 import useGetDownloadedPrompts from '@/hooks/queries/PromptDetailPage/useGetMyDownloadedPrompts';
 import { useQueryClient } from '@tanstack/react-query';
+import useGetPromptReviews from '@/hooks/queries/PromptDetailPage/useGetAllPromptReviews';
+import useUpdateReview from '@/hooks/mutations/PromptDetailPage/useUpdateReview';
 
 import InstaIcon from '@assets/icon-instagram-logo.svg';
 import YoutubeIcon from '@assets/icon-youtube-logo.svg';
@@ -72,6 +74,9 @@ const PromptAuthorAndReview = ({
   const queryClient = useQueryClient();
   const { data: downloadedPrompts } = useGetDownloadedPrompts();
   const isDownloaded = downloadedPrompts?.data?.some((item) => item.prompt_id === promptId);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingReviewId, setEditingReviewId] = useState<number | null>(null);
+  const { data: reviewsData } = useGetPromptReviews(promptId);
 
   const avg = Math.max(0, Math.min(5, Number(reviewRatingAvg) || 0));
   const [showModal, setShowModal] = useState(false);
@@ -86,6 +91,7 @@ const PromptAuthorAndReview = ({
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
   const { mutateAsync: createMutate, isPending } = useCreateReview();
+  const { mutateAsync: updateReview } = useUpdateReview();
 
   useEffect(() => {
     if (!myFollowingData?.data || !member_id) return;
@@ -93,8 +99,52 @@ const PromptAuthorAndReview = ({
     setIsFollow(followed);
   }, [myFollowingData, member_id]);
 
+  useEffect(() => {
+    if (!isEditing) window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [isEditing]);
+
+  useEffect(() => {
+    if (reviewsData) {
+      setReviews(reviewsData);
+      setReviewCount(reviewsData.length);
+    }
+  }, [reviewsData]);
+
   const ready = !!member_id && !!myId && !isFollowingLoading;
   const isMyself = currentUserId === member_id || myId === member_id;
+
+  const startEditing = (review: Review) => {
+    setIsEditing(true);
+    setEditingReviewId(review.review_id);
+    setRating(review.rating);
+    setReviewText(review.content);
+  };
+
+  const hasWrittenReview = reviews.some((review) => review.writer_id === myId);
+
+  const handleUpdateReview = async () => {
+    if (!editingReviewId) return;
+
+    try {
+      const res = await updateReview({
+        reviewId: editingReviewId,
+        body: {
+          rating,
+          content: reviewText.trim(),
+        },
+      });
+
+      setReviews((prev) => prev.map((r) => (r.review_id === editingReviewId ? { ...r, ...res.data } : r)));
+
+      setIsEditing(false);
+      setEditingReviewId(null);
+      setRating(0);
+      setReviewText('');
+      alert('리뷰가 수정되었습니다!');
+    } catch {
+      alert('리뷰 수정에 실패했습니다. 잠시 후 다시 시도해주세요.');
+    }
+  };
 
   const handleFollow = () => {
     if (!ready || isToggling) return;
@@ -162,7 +212,6 @@ const PromptAuthorAndReview = ({
 
     return icons.length ? icons : null;
   };
-
   const handleCreateReview = async () => {
     if (!rating || !reviewText.trim()) {
       alert('별점과 리뷰 내용을 모두 입력해주세요.');
@@ -170,13 +219,15 @@ const PromptAuthorAndReview = ({
     }
 
     try {
-      const res = await createMutate({
+      await createMutate({
         promptId,
         body: { content: reviewText.trim(), rating },
       });
 
-      setReviews((prev) => [res.data, ...prev]);
-      setReviewCount((prev) => prev + 1);
+      await queryClient.invalidateQueries({
+        queryKey: ['reviews', 'all', promptId],
+      });
+
       setReviewText('');
       setRating(0);
       alert('리뷰가 등록되었습니다!');
@@ -238,12 +289,14 @@ const PromptAuthorAndReview = ({
       {/* 리뷰 카드 */}
       <div className="bg-[#FFFEFB] rounded-[16px] py-[32px] px-[16px] w-full lg:w-[70%] xl:w-[65%] overflow-visible relative">
         <section>
-          {isDownloaded && (
+          {isDownloaded && (!hasWrittenReview || isEditing) && (
             <div className="px-6 mb-6">
               <div className="flex items-start gap-3 mb-1">
                 <img src={star} alt="별 아이콘" className="w-[36px] h-[35px]" />
                 <div>
-                  <h2 className="text-[24px] font-semibold text-[#030712] mb-2">리뷰를 작성해주세요!</h2>
+                  <h2 className="text-[24px] font-semibold text-[#030712] mb-2">
+                    {isEditing ? '리뷰를 수정해주세요!' : '리뷰를 작성해주세요!'}
+                  </h2>
                   <p className="text-gray-700 text-[16px] mb-5 font-light">
                     프롬프트 제작자와 다른 사용자에게 도움 될 수 있어요.
                   </p>
@@ -270,18 +323,18 @@ const PromptAuthorAndReview = ({
               <div className="flex items-center mt-5">
                 <button
                   type="button"
-                  onClick={handleCreateReview}
+                  onClick={isEditing ? handleUpdateReview : handleCreateReview}
                   disabled={isPending || !rating || !reviewText.trim()}
                   className={`w-full h-[49px] rounded-[12px] border text-[16px] font-medium transition-colors duration-200 ${
                     isPending || !rating || !reviewText.trim()
                       ? 'border-gray-300 text-gray-400 bg-gray-100 cursor-not-allowed'
                       : 'border-[#2563EB] text-[#2563EB] hover:bg-blue-50'
                   }`}>
-                  {isPending ? '작성 중…' : '리뷰 올리기'}
+                  {isPending ? (isEditing ? '수정 중…' : '작성 중…') : isEditing ? '리뷰 수정하기' : '리뷰 올리기'}
                 </button>
               </div>
             </div>
-          )}{' '}
+          )}
         </section>
 
         {/* 상단 요약 */}
@@ -309,6 +362,7 @@ const PromptAuthorAndReview = ({
           title={title}
           onClose={() => {}}
           currentUserId={currentUserId ?? undefined}
+          onEditReview={startEditing}
         />
       </div>
 

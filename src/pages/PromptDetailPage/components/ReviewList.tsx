@@ -1,14 +1,11 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import Rating from '@components/Rating';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import DualModal from '@components/Modal/DualModal';
 import TextModal from '@components/Modal/TextModal';
-import UpdateModal from './UpdateModal';
 import defaultProfile from '@/assets/icon-profile-gray.svg';
 import useDeleteReview from '@/hooks/mutations/PromptDetailPage/useDeleteReview';
-import useUpdateReview from '@/hooks/mutations/PromptDetailPage/useUpdateReview';
-import { canEditReview } from '@/utils/reviewUtils';
-import { useAuth } from '@/context/AuthContext'; // ✅ 추가
+import { useAuth } from '@/context/AuthContext';
 
 export interface Review {
   review_id: number;
@@ -29,6 +26,7 @@ interface ReviewListProps {
   onClose: () => void;
   title: string;
   currentUserId?: number;
+  onEditReview: (review: Review) => void;
 }
 
 const ReviewList = ({
@@ -39,20 +37,16 @@ const ReviewList = ({
   title,
   currentUserId,
   setReviewCount,
+  onEditReview,
 }: ReviewListProps) => {
   const [openMenuIdx, setOpenMenuIdx] = useState<number | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDeleteSuccessModal, setShowDeleteSuccessModal] = useState(false);
   const [showExpiredModal, setShowExpiredModal] = useState(false);
   const [selectedReviewIdx, setSelectedReviewIdx] = useState<number | null>(null);
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const { mutateAsync: deleteMutate } = useDeleteReview();
-  const { mutateAsync: updateMutate } = useUpdateReview();
-
   const { user: me } = useAuth();
   const viewerId = me?.user_id ?? currentUserId ?? null;
-
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
   const toggleMenu = (idx: number) => {
@@ -78,37 +72,7 @@ const ReviewList = ({
 
   const onClickEdit = (idx: number) => {
     setOpenMenuIdx(null);
-    setSelectedReviewIdx(idx);
-    setSelectedReview(reviews[idx]);
-    setShowUpdateModal(true);
-  };
-
-  const handleSave = async (newRating: number, newComment: string) => {
-    if (selectedReviewIdx === null) return;
-    const target = reviews[selectedReviewIdx];
-
-    try {
-      const res = await updateMutate({
-        reviewId: target.review_id,
-        body: { rating: newRating, content: newComment },
-      });
-
-      const updated = [...reviews];
-      updated[selectedReviewIdx] = {
-        ...updated[selectedReviewIdx],
-        rating: res.data.rating ?? newRating,
-        content: res.data.content ?? newComment,
-        created_at: res.data.updated_at ?? new Date().toISOString(),
-      };
-
-      setReviews(updated);
-      setSelectedReview(updated[selectedReviewIdx]);
-      setShowUpdateModal(false);
-      setSelectedReviewIdx(null);
-      setOpenMenuIdx(null);
-    } catch {
-      alert('리뷰 수정에 실패했습니다.');
-    }
+    onEditReview(reviews[idx]);
   };
 
   return (
@@ -126,11 +90,7 @@ const ReviewList = ({
         `}</style>
 
         {reviews.map((review, idx) => (
-          <div
-            key={review.review_id}
-            className={`relative group mb-6 transition-all duration-200 ${
-              openMenuIdx === idx ? 'pb-8 min-h-[120px]' : 'pb-0 min-h-[120px]'
-            }`}>
+          <div key={review.review_id} className="relative group mb-6 transition-all duration-200 pb-0 min-h-[120px]">
             <div className="flex gap-3 items-start h-full">
               <img
                 src={review.writer_profile_image_url || defaultProfile}
@@ -161,9 +121,7 @@ const ReviewList = ({
             </div>
 
             {openMenuIdx === idx && (
-              <div
-                className="absolute top-8 right-0 bg-secondary
-                text-gray-700 rounded-md shadow-md z-[100] w-[100px]">
+              <div className="absolute top-8 right-0 bg-secondary text-gray-700 rounded-md shadow-md z-[100] w-[100px]">
                 <ul className="text-[16px]">
                   <li
                     className="px-4 py-[6px] active:bg-secondary-pressed hover:text-black cursor-pointer rounded-t-md"
@@ -215,26 +173,12 @@ const ReviewList = ({
         />
       )}
 
-      {/* 결과 모달 */}
       {showDeleteSuccessModal && (
         <TextModal text="리뷰가 삭제되었습니다." onClick={() => setShowDeleteSuccessModal(false)} size="sm" />
       )}
 
       {showExpiredModal && (
         <TextModal text="지금은 리뷰를 삭제할 수 없습니다." onClick={() => setShowExpiredModal(false)} size="sm" />
-      )}
-
-      {showUpdateModal && selectedReview && (
-        <UpdateModal
-          isOpen={showUpdateModal}
-          key={selectedReview.review_id}
-          onClose={() => setShowUpdateModal(false)}
-          title={title}
-          rating={selectedReview.rating}
-          initialReviewText={selectedReview.content}
-          onSave={handleSave}
-          reviewId={selectedReview.review_id}
-        />
       )}
     </div>
   );
