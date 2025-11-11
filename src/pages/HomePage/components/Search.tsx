@@ -24,21 +24,42 @@ const Search = () => {
     }
   };
 
-  const handleCategoryClick = (categoryId: number, categoryName: string) => {
-    // 카테고리 ID와 이름을 쿼리 파라미터로 전달
-    navigate(`/prompt?categoryId=${categoryId}&categoryName=${encodeURIComponent(categoryName)}`);
+  const handleCategoryClick = (categoryId: number, categoryName: string, subcategory?: string) => {
+    // 카테고리 ID, 이름, 서브카테고리를 쿼리 파라미터로 전달
+    const params = new URLSearchParams({
+      categoryId: categoryId.toString(),
+      categoryName: categoryName,
+    });
+
+    if (subcategory) {
+      params.append('subcategory', subcategory);
+    }
+
+    navigate(`/prompt?${params.toString()}`);
   };
 
   return (
     <div className="w-full mx-auto flex flex-col justify-center items-center gap-8 relative">
       <div className="absolute w-full h-[564px] bg-gradient-to-b from-white/40 to-white z-0 top-0 left-0">
         {/* 왼쪽 배경 blob */}
-        <div className="absolute w-44 h-44 lg:left-[106px] lg:mt-[157px] lg:w-[180px] lg:h-[180px] sm:left-[20px] sm:top-[64px] pointer-events-none">
+        <div
+          className="absolute 
+        w-[100px] h-[100px] left-[48px] top-[92px]
+        lg:w-[180px] lg:w-[180px] lg:left-[106px] lg:mt-[157px] 
+        max-mypage:w-[100px] max-mypage:h-[100px] max-mypage:left-[16px] max-mypage:top-[92px]
+        max-phone:w-[80px] max-phone:h-[80px] max-phone:left-[20px] max-phone:top-[64px]
+        sm:left-[20px] sm:top-[64px] pointer-events-none">
           <img src={leftblob} />
         </div>
 
         {/* 오른쪽 배경 blob */}
-        <div className="absolute right-[72px] top-[104px] w-48 h-48 pointer-events-none">
+        <div
+          className="absolute
+        w-[120px] h-[120px] right-[32px] top-[72px]
+        lg:w-[200px] lg:w-[200px] lg:right-[21px] lg:top-[104px] 
+        max-mypage:w-[120px] max-mypage:h-[120px] max-mypage:right-[15px] max-mypage:top-[72px]
+        max-phone:w-[64px] max-phone:h-[64px] max-phone:right-[5px] max-phone:top-[309px]
+        pointer-events-none">
           <img src={rightblob} />
         </div>
       </div>
@@ -64,7 +85,7 @@ const Search = () => {
               placeholder="원하는 프롬프트를 검색해보세요."
               className="flex-1 justify-start text-text-on-background text-sm font-light font-['S-Core_Dream'] leading-6 tracking-tight outline-none bg-transparent"
             />
-            <img onClick={handleSearch} src={search} className="w-5 h-5 transition"></img>
+            <img onClick={handleSearch} src={search} className="w-5 h-5 transition cursor-pointer"></img>
           </div>
         </div>
       </div>
@@ -81,7 +102,9 @@ const Search = () => {
             </div>
           </div>
           <div className="flex justify-start items-start gap-3 max-mypage:flex-wrap max-mypage:justify-center max-phone:justify-start max-mypage:self-stretch">
-            <div className="px-3 py-1.5 bg-secondary rounded-full flex justify-center items-center gap-2">
+            <div
+              onClick={() => handleCategoryClick(6, '학습 / 과제', '학습 / 과제 요약')}
+              className="px-3 py-1.5 bg-secondary rounded-full flex justify-center items-center gap-2 cursor-pointer hover:bg-primary-hover/10 transition">
               <div className="w-4 h-4 relative overflow-hidden">
                 <img src={workbook} className="w-3 h-3.5 left-[3px] top-[2.25px] absolute"></img>
               </div>
@@ -89,7 +112,9 @@ const Search = () => {
                 학습•과제 요약
               </div>
             </div>
-            <div className="px-3 py-1.5 bg-secondary rounded-full flex justify-center items-center gap-2">
+            <div
+              onClick={() => handleCategoryClick(5, '비즈니스 / 마케팅', '시장조사 / 분석')}
+              className="px-3 py-1.5 bg-secondary rounded-full flex justify-center items-center gap-2 cursor-pointer hover:bg-primary-hover/10 transition">
               <div className="w-4 h-4 relative overflow-hidden">
                 <img src={marketing} className="w-3.5 h-3.5 left-[2px] top-[2px] absolute"></img>
               </div>
@@ -97,7 +122,9 @@ const Search = () => {
                 시장조사•분석
               </div>
             </div>
-            <div className="px-3 py-1.5 bg-secondary rounded-full flex justify-center items-center gap-2">
+            <div
+              onClick={() => handleCategoryClick(1, '글쓰기 / 문서 작성', '광고 / 카피라이팅')}
+              className="px-3 py-1.5 bg-secondary rounded-full flex justify-center items-center gap-2 cursor-pointer hover:bg-primary-hover/10 transition">
               <div className="w-4 h-4 relative overflow-hidden">
                 <img src={script} className="w-3 h-3.5 left-[3.19px] top-[1.69px] absolute"></img>
                 <div className="w-[2.77px] h-1 left-[11.81px] top-[1.95px] absolute bg-blue-500"></div>

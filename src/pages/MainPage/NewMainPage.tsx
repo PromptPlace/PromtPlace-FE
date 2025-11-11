@@ -14,19 +14,21 @@ const NewMainPage = () => {
   const searchQuery = searchParams.get('search') || '';
   const categoryIdFromUrl = searchParams.get('categoryId');
   const categoryNameFromUrl = searchParams.get('categoryName');
+  const subcategoryFromUrl = searchParams.get('subcategory');
 
   //useMemo로 렌더 시점에 동기적으로 초기값 결정
   const initialCategoryName = useMemo(() => {
     if (categoryNameFromUrl) return categoryNameFromUrl;
     if (searchQuery) return null;
-    return '글쓰기/문서 작성';
+    return '글쓰기 / 문서 작성';
   }, [categoryNameFromUrl, searchQuery]);
 
   const initialSubcategory = useMemo(() => {
+    if (subcategoryFromUrl) return subcategoryFromUrl;
     if (categoryNameFromUrl) return '전체';
     if (searchQuery) return null;
     return '전체';
-  }, [categoryNameFromUrl, searchQuery]);
+  }, [categoryNameFromUrl, searchQuery, subcategoryFromUrl]);
 
   const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(initialCategoryName);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(initialSubcategory);
@@ -62,7 +64,6 @@ const NewMainPage = () => {
   );
 
   const prompts: Prompt[] = searchQuery ? (searchData?.data ? searchData.data.prompts : []) : normalData?.data || [];
-
   let filteredPrompts = prompts;
 
   // 카테고리 필터링
@@ -126,13 +127,7 @@ const NewMainPage = () => {
   };
 
   const handleReset = () => {
-    if (searchQuery) {
-      setSelectedCategoryName(null);
-      setSelectedSubcategory(null);
-    } else {
-      setSelectedCategoryName('글쓰기/문서 작성');
-      setSelectedSubcategory('전체');
-    }
+    // 카테고리는 유지하고, 모델 필터와 정렬만 초기화
     setSelectedModels([]);
     setSelectedSort('');
     setDisplayCount(20);
@@ -156,6 +151,7 @@ const NewMainPage = () => {
           onCategorySelect={handleCategorySelect}
           onSubcategorySelect={handleSubcategorySelect}
           initialCategoryId={categoryIdFromUrl ? Number(categoryIdFromUrl) : searchQuery ? null : 1}
+          initialSubcategory={subcategoryFromUrl || '전체'}
           isSearchMode={!!searchQuery}
         />
       </div>
