@@ -196,7 +196,7 @@ const PromptAuthorAndReview = ({
           </p>
         )}
 
-        <div className="mt-5 flex gap-2 flex-col sm:flex-row">
+        <div className="mt-5 flex gap-2 flex-row w-full">
           <button
             className="flex-1 h-[48px] border border-gray-400 rounded-[12px] text-[14px] text-gray-700 flex items-center justify-center gap-3 hover:bg-gray-100 transition"
             onClick={() => setShowModal(true)}>
@@ -204,7 +204,7 @@ const PromptAuthorAndReview = ({
             문의하기
           </button>
           <button
-            className="flex-1 h-[48px] border border-primary rounded-[12px]  text-[14px] text-[#2563EB] flex items-center justify-center gap-3 hover:bg-blue-50 transition"
+            className="flex-1 h-[48px] border border-primary rounded-[12px] text-[14px] text-[#2563EB] flex items-center justify-center gap-3 hover:bg-blue-50 transition"
             onClick={() => navigate(`/profile/${user?.user_id}`)}>
             <img src={person} alt="프로필 보기" className="w-4 h-4" />
             프로필 보기
