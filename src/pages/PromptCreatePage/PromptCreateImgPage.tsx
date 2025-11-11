@@ -13,8 +13,11 @@ import TagButton from '@/components/Button/TagButton';
 import TextModal from '@/components/Modal/TextModal';
 import useCreatePromptText from '@/hooks/mutations/PromptCreatePage/useCreateText';
 import useCreatePromptWithImage from '@/hooks/mutations/PromptCreatePage/useCreateImg';
+import { useNavigate } from 'react-router-dom';
 
 const PromptCreateImgPage = () => {
+  const navigate = useNavigate();
+
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
 
@@ -40,6 +43,8 @@ const PromptCreateImgPage = () => {
   const [previewText, setPreviewText] = useState<string>('');
   const [discriptionText, setDescriptionText] = useState<string>(''); //한줄 소개
   const [howToUseText, setHowToUseText] = useState<string>('');
+
+  const [isUploaded, setIsUploaded] = useState<boolean>(false); //업로드 되었는지 여부 - 중복 업로드 방지용
 
   // 이미지 업로드
 
@@ -111,22 +116,13 @@ const PromptCreateImgPage = () => {
 
   // 업로드 버튼 클릭 핸들러
   const handleUploadClick = async () => {
+    //0. 이미 업로드 된 것인지 검사
+    if (isUploaded) return;
+
     // 1. 유효성 검증
     if (!validateForm()) {
       return;
     }
-
-    console.log('=== 입력된 값 확인 ===');
-    console.log('제목:', title);
-    console.log('프롬프트 내용:', content);
-    console.log('선택된 모델:', selectedModels);
-    console.log('모델 버전:', modelver);
-    console.log('카테고리:', categories);
-    console.log('결과 미리보기:', previewText);
-    console.log('한줄 소개:', discriptionText);
-    console.log('상세 설명:', howToUseText);
-    console.log('업로드 이미지 개수:', files.length);
-    console.log('====================');
 
     try {
       // 2. 프롬프트와 이미지 업로드
@@ -151,8 +147,19 @@ const PromptCreateImgPage = () => {
       const prompt_ID = result.prompt_id;
 
       // 3. 성공 처리
-      setModalText('업로드가 완료되었어요!');
-      setAlertModal(true);
+      if (prompt_ID) {
+        setIsUploaded(true);
+        setModalText('업로드가 완료되었어요!');
+        setAlertModal(true);
+
+        setTimeout(() => {
+          navigate(`/prompt/${prompt_ID}`);
+        }, 1000);
+      } else {
+        // 실패 처리
+        setModalText('업로드가 실패했습니다');
+        setAlertModal(true);
+      }
     } catch (err) {
       console.error(err);
       setModalText('업로드가 실패했습니다.');
@@ -168,7 +175,7 @@ const PromptCreateImgPage = () => {
           <div className="max-w-[1236px] w-full h-full">
             <div className="mt-[64px]">
               <p className="text-black text-[32px] font-medium tracking-[-0.01em] leading-[140%]">
-                텍스트 결과 프롬프트 업로드
+                이미지 결과 프롬프트 업로드
               </p>
             </div>
             <div className="mt-[12px] h-[93px] flex justify-between items-start">
@@ -319,7 +326,7 @@ const PromptCreateImgPage = () => {
                       ))}
                     </div>
                   </div>
-                  <div className="w-full h-[46px] py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
+                  <div className="w-full h-[46px] py-[8px] px-[16px]  bg-gray50 rounded-[8px] items-center">
                     <input
                       value={modelver}
                       onChange={(e) => setModelver(e.target.value)}
@@ -453,7 +460,8 @@ const PromptCreateImgPage = () => {
             <div className="max-w-[1240px] w-full mt-[40px] mb-[88px]">
               <button
                 className="w-full h-[65px] flex justify-center items-center gap-[16px] bg-primary rounded-[16px] py-[20px]"
-                onClick={handleUploadClick}>
+                onClick={handleUploadClick}
+                disabled={isUploaded}>
                 <img src={UploadIcon} alt="업로드 버튼" className="w-[24px] h-[24px]" />
                 <p className="text-[24px] font-medium text-white">업로드 버튼</p>
               </button>
@@ -469,7 +477,7 @@ const PromptCreateImgPage = () => {
         <div className="flex flex-col justify-center px-[40px]">
           <div className="mt-[64px]">
             <p className="text-black text-[32px] font-medium tracking-[-0.01em] leading-[140%]">
-              텍스트 결과 프롬프트 업로드
+              이미지 결과 프롬프트 업로드
             </p>
           </div>
           <div className="mt-[12px] flex justify-between items-start">
@@ -606,7 +614,7 @@ const PromptCreateImgPage = () => {
                     ))}
                   </div>
                 </div>
-                <div className="w-full h-[46px] py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
+                <div className="w-full h-[46px] py-[8px] px-[16px]  bg-gray50 rounded-[8px] items-center">
                   <input
                     value={modelver}
                     onChange={(e) => setModelver(e.target.value)}
@@ -741,16 +749,22 @@ const PromptCreateImgPage = () => {
                     placeholder:text-text-on-background placeholder:text-[14px] placeholder:font-light overflow-y-auto"
             />
           </div>
+          <div className="h-[20px] pt-[15px]">
+            {validationError && <p className="text-[16px] font-medium text-alert">{validationError}</p>}
+          </div>
           {/**업로드 버튼 */}
-          <div className="w-full mt-[40px] mb-[88px] ">
+          <div className="w-full mt-[30px] mb-[88px] ">
             <button
               className="w-full h-[65px] flex justify-center items-center gap-[16px] bg-primary rounded-[16px] py-[20px]"
-              onClick={handleUploadClick}>
+              onClick={handleUploadClick}
+              disabled={isUploaded}>
               <img src={UploadIcon} alt="업로드 버튼" className="w-[24px] h-[24px]" />
               <p className="text-[24px] font-medium text-white">업로드 버튼</p>
             </button>
           </div>
         </div>
+        {/* TextModal */}
+        {alertModal && <TextModal text={'업로드가 완료되었어요!'} onClick={() => setAlertModal(false)} size="sm" />}
       </div>
 
       {/* 724px 이하: 모바일 */}
@@ -758,7 +772,7 @@ const PromptCreateImgPage = () => {
         <div className="flex flex-col justify-center px-[40px]">
           <div className="mt-[64px]">
             <p className="text-black text-[32px] font-medium tracking-[-0.05em] leading-[140%]">
-              텍스트 결과 프롬프트 업로드
+              이미지 결과 프롬프트 업로드
             </p>
           </div>
           <div className="mt-[12px]">
@@ -894,7 +908,7 @@ const PromptCreateImgPage = () => {
                     ))}
                   </div>
                 </div>
-                <div className="w-full h-[46px] py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
+                <div className="w-full h-[46px] py-[8px] px-[16px]  bg-gray50 rounded-[8px] items-center">
                   <input
                     value={modelver}
                     onChange={(e) => setModelver(e.target.value)}
@@ -1031,16 +1045,22 @@ const PromptCreateImgPage = () => {
                     placeholder:text-text-on-background placeholder:text-[14px] placeholder:font-light overflow-y-auto"
             />
           </div>
+          <div className="h-[20px] pt-[15px]">
+            {validationError && <p className="text-[16px] font-medium text-alert">{validationError}</p>}
+          </div>
           {/**업로드 버튼 */}
-          <div className="w-full mt-[40px] mb-[88px] ">
+          <div className="w-full mt-[30px] mb-[88px] ">
             <button
               className="w-full h-[65px] flex justify-center items-center gap-[16px] bg-primary rounded-[16px] py-[20px]"
-              onClick={handleUploadClick}>
+              onClick={handleUploadClick}
+              disabled={isUploaded}>
               <img src={UploadIcon} alt="업로드 버튼" className="w-[24px] h-[24px]" />
               <p className="text-[24px] font-medium text-white">업로드 버튼</p>
             </button>
           </div>
         </div>
+        {/* TextModal */}
+        {alertModal && <TextModal text={'업로드가 완료되었어요!'} onClick={() => setAlertModal(false)} size="sm" />}
       </div>
     </>
   );
