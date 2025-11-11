@@ -43,6 +43,7 @@ const ForgotPasswordView = ({ setView, setTempToken, email, setEmail }: LoginVie
       onError: (error) => {
         setEmailError('이메일 인증 요청에 실패했습니다. 다시 시도해주세요.');
         console.error('이메일 인증 요청 실패:', error);
+        setEmailStatus('default');
       },
     });
   };
@@ -141,28 +142,28 @@ const ForgotPasswordView = ({ setView, setTempToken, email, setEmail }: LoginVie
               type="email"
               id="email"
               placeholder="예) abc1234@gmail.com"
-              className="bg-background px-[16px] py-[12px] placeholder:text-gray-400 text-text-on-white custom-body2 mb-[20px] rounded-[8px]"
+              className="bg-background px-[16px]  py-[12px] placeholder:text-gray-400 text-text-on-white custom-body2 rounded-[8px]"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="absolute right-[16px] top-[32px]">{renderEmailAccessory({ emailStatus })}</div>
         </div>
-        {emailError && <p className="text-alert custom-h5 mt-[4px]">{emailError}</p>}
+        {emailError && <p className="text-alert custom-button2 mt-[4px]">{emailError}</p>}
         <div className="flex flex-col mb-[40px]">
           <label className="custom-h5 block mb-[12px] mt-[12.5px] text-black">인증번호 입력</label>
           <div className="relative w-full">
             <input
               id="verificationCode"
               placeholder="숫자 여섯 자리를 입력해 주세요"
-              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px] rounded-[8px]"
+              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white  rounded-[8px]"
               value={authCode}
               onChange={(e) => setAuthCode(e.target.value)}
             />
             <div className="absolute right-[16px] top-[8px]">{renderCodeAccessory({ codeStatus })}</div>
           </div>
 
-          <p className={`${codeStatus === 'verified' ? 'text-primary' : 'text-alert'} custom-h5 mt-[4px] min-h-5`}>
+          <p className={`${codeStatus === 'verified' ? 'text-primary' : 'text-alert'} custom-button2 mt-[4px] min-h-5`}>
             {verificationCodeError}
           </p>
         </div>
