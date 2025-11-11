@@ -4,7 +4,7 @@ import ReviewList from './ReviewList';
 import defaultProfile from '../assets/profile.png';
 import mail from '../../../assets/icon-mail-black.svg';
 import person from '../../../assets/icon-person-blue.svg';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import RatingTitle from '@components/RatingTitle';
 import type { ReactElement } from 'react';
 import { useAuth } from '@/context/AuthContext';
@@ -12,11 +12,17 @@ import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
 import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
 import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
+import EditableRating from '../components/EditableRating';
+import useCreateReview from '@/hooks/mutations/PromptDetailPage/useCreateReview';
+import type { AxiosError } from 'axios';
+import useGetDownloadedPrompts from '@/hooks/queries/PromptDetailPage/useGetMyDownloadedPrompts';
+import { useQueryClient } from '@tanstack/react-query';
 
 import InstaIcon from '@assets/icon-instagram-logo.svg';
 import YoutubeIcon from '@assets/icon-youtube-logo.svg';
 import XIcon from '@assets/icon-x-logo.svg';
 import TextModal from '@components/Modal/TextModal';
+import star from '../assets/star.png';
 
 interface Review {
   review_id: number;
@@ -38,8 +44,6 @@ interface PromptAuthorAndReviewProps {
   };
 
   currentUserId?: number | null;
-  // follow: boolean;
-  // onToggleFollow: () => void;
   reviews: Review[];
   setReviews: React.Dispatch<React.SetStateAction<Review[]>>;
   reviewCount: number;
@@ -51,8 +55,6 @@ interface PromptAuthorAndReviewProps {
 const PromptAuthorAndReview = ({
   user,
   currentUserId,
-  // follow,
-  // onToggleFollow,
   reviews,
   setReviews,
   reviewCount,
@@ -61,30 +63,35 @@ const PromptAuthorAndReview = ({
   reviewRatingAvg,
 }: PromptAuthorAndReviewProps) => {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const promptId = Number(id);
   const { user: me } = useAuth();
   const myId = me.user_id;
   const member_id = user?.user_id;
 
+  const queryClient = useQueryClient();
+  const { data: downloadedPrompts } = useGetDownloadedPrompts();
+  const isDownloaded = downloadedPrompts?.data?.some((item) => item.prompt_id === promptId);
+
   const avg = Math.max(0, Math.min(5, Number(reviewRatingAvg) || 0));
-
   const [showModal, setShowModal] = useState(false);
-
-  const { data: myFollowingData, isLoading: isFollowingLoading } = useGetFollowing({ member_id: myId });
-
+  const [isFollow, setIsFollow] = useState<boolean>(false);
   const [isToggling, setIsToggling] = useState(false);
 
-  const [isFollow, setIsFollow] = useState<boolean>(false);
+  const { data: myFollowingData, isLoading: isFollowingLoading } = useGetFollowing({ member_id: myId });
+  const { mutate: mutateFollow } = usePatchFollow({ member_id });
+  const { mutate: mutateUnFollow } = useDeleteFollow({ member_id });
+  const { handleShowLoginModal } = useShowLoginModal();
+
+  const [rating, setRating] = useState(0);
+  const [reviewText, setReviewText] = useState('');
+  const { mutateAsync: createMutate, isPending } = useCreateReview();
 
   useEffect(() => {
     if (!myFollowingData?.data || !member_id) return;
     const followed = myFollowingData.data.some((f: any) => f.following_id === member_id);
     setIsFollow(followed);
   }, [myFollowingData, member_id]);
-
-  const { mutate: mutateFollow } = usePatchFollow({ member_id });
-  const { mutate: mutateUnFollow } = useDeleteFollow({ member_id });
-
-  const { handleShowLoginModal } = useShowLoginModal();
 
   const ready = !!member_id && !!myId && !isFollowingLoading;
   const isMyself = currentUserId === member_id || myId === member_id;
@@ -96,11 +103,8 @@ const PromptAuthorAndReview = ({
     handleShowLoginModal(() => {
       setIsToggling(true);
       try {
-        if (isFollow) {
-          mutateUnFollow({ member_id });
-        } else {
-          mutateFollow({ member_id });
-        }
+        if (isFollow) mutateUnFollow({ member_id });
+        else mutateFollow({ member_id });
         setIsFollow((prev) => !prev);
       } finally {
         setIsToggling(false);
@@ -110,7 +114,6 @@ const PromptAuthorAndReview = ({
 
   const getSNSIcons = () => {
     if (!user.sns_list?.length) return null;
-
     const seen = new Set<string>();
     const icons: ReactElement[] = [];
 
@@ -137,34 +140,54 @@ const PromptAuthorAndReview = ({
       seen.add(key);
 
       const lower = url.toLowerCase();
-
-      if (lower.includes('instagram.com')) {
+      if (lower.includes('instagram.com'))
         icons.push(
           <a key={`ig-${idx}`} href={url} target="_blank" rel="noopener noreferrer">
             <img src={InstaIcon} alt="Instagram" className="w-5 h-5" />
           </a>,
         );
-        return;
-      }
-      if (lower.includes('youtube.com') || lower.includes('youtu.be')) {
+      else if (lower.includes('youtube.com') || lower.includes('youtu.be'))
         icons.push(
           <a key={`yt-${idx}`} href={url} target="_blank" rel="noopener noreferrer">
             <img src={YoutubeIcon} alt="YouTube" className="w-5 h-5" />
           </a>,
         );
-        return;
-      }
-      if (lower.includes('x.com') || lower.includes('twitter.com')) {
+      else if (lower.includes('x.com') || lower.includes('twitter.com'))
         icons.push(
           <a key={`x-${idx}`} href={url} target="_blank" rel="noopener noreferrer">
             <img src={XIcon} alt="X" className="w-5 h-5" />
           </a>,
         );
-        return;
-      }
     });
 
     return icons.length ? icons : null;
+  };
+
+  const handleCreateReview = async () => {
+    if (!rating || !reviewText.trim()) {
+      alert('별점과 리뷰 내용을 모두 입력해주세요.');
+      return;
+    }
+
+    try {
+      const res = await createMutate({
+        promptId,
+        body: { content: reviewText.trim(), rating },
+      });
+
+      setReviews((prev) => [res.data, ...prev]);
+      setReviewCount((prev) => prev + 1);
+      setReviewText('');
+      setRating(0);
+      alert('리뷰가 등록되었습니다!');
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response?.status === 401) {
+        alert('로그인이 필요합니다.');
+      } else {
+        alert('리뷰 작성에 실패했습니다. 잠시 후 다시 시도해주세요.');
+      }
+    }
   };
 
   return (
@@ -211,8 +234,56 @@ const PromptAuthorAndReview = ({
           </button>
         </div>
       </div>
+
       {/* 리뷰 카드 */}
-      <div className="bg-[#FFFEFB] rounded-[16px] py-[32px] px-[16px] w-full lg:w-[70%] xl:w-[65%]">
+      <div className="bg-[#FFFEFB] rounded-[16px] py-[32px] px-[16px] w-full lg:w-[70%] xl:w-[65%] overflow-visible relative">
+        <section>
+          {isDownloaded && (
+            <div className="px-6 mb-6">
+              <div className="flex items-start gap-3 mb-1">
+                <img src={star} alt="별 아이콘" className="w-[36px] h-[35px]" />
+                <div>
+                  <h2 className="text-[24px] font-semibold text-[#030712] mb-2">리뷰를 작성해주세요!</h2>
+                  <p className="text-gray-700 text-[16px] mb-5 font-light">
+                    프롬프트 제작자와 다른 사용자에게 도움 될 수 있어요.
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-[16px] font-medium text-[#030712] mb-6">별점을 눌러 만족도를 알려주세요.</p>
+
+              <div className="flex justify-center mb-6">
+                <EditableRating star={rating} onChange={setRating} />
+              </div>
+
+              <p className="text-[16px] font-medium text-[#030712] mb-6">해당 프롬프트에 대한 생각을 남겨주세요.</p>
+
+              <textarea
+                className="w-full bg-gray-50 border-none rounded-[12px] p-3 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-blue-500"
+                placeholder="이 프롬프트를 사용해본 소감을 남겨주세요."
+                rows={10}
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                disabled={isPending}
+              />
+
+              <div className="flex items-center mt-5">
+                <button
+                  type="button"
+                  onClick={handleCreateReview}
+                  disabled={isPending || !rating || !reviewText.trim()}
+                  className={`w-full h-[49px] rounded-[12px] border text-[16px] font-medium transition-colors duration-200 ${
+                    isPending || !rating || !reviewText.trim()
+                      ? 'border-gray-300 text-gray-400 bg-gray-100 cursor-not-allowed'
+                      : 'border-[#2563EB] text-[#2563EB] hover:bg-blue-50'
+                  }`}>
+                  {isPending ? '작성 중…' : '리뷰 올리기'}
+                </button>
+              </div>
+            </div>
+          )}{' '}
+        </section>
+
         {/* 상단 요약 */}
         <div className="flex flex-col mb-4 px-6">
           <div className="flex items-center gap-2 mb-4">

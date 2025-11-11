@@ -8,6 +8,7 @@ import defaultProfile from '@/assets/icon-profile-gray.svg';
 import useDeleteReview from '@/hooks/mutations/PromptDetailPage/useDeleteReview';
 import useUpdateReview from '@/hooks/mutations/PromptDetailPage/useUpdateReview';
 import { canEditReview } from '@/utils/reviewUtils';
+import { useAuth } from '@/context/AuthContext'; // ✅ 추가
 
 export interface Review {
   review_id: number;
@@ -30,19 +31,6 @@ interface ReviewListProps {
   currentUserId?: number;
 }
 
-const getViewerId = (): number | null => {
-  if (typeof window === 'undefined') return null;
-  const raw = localStorage.getItem('user');
-  if (!raw) return null;
-  try {
-    const parsed = JSON.parse(raw) as { user_id?: unknown };
-    const id = typeof parsed.user_id === 'number' ? parsed.user_id : Number(parsed.user_id);
-    return Number.isFinite(id) ? id : null;
-  } catch {
-    return null;
-  }
-};
-
 const ReviewList = ({
   reviews,
   setReviews,
@@ -61,6 +49,10 @@ const ReviewList = ({
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const { mutateAsync: deleteMutate } = useDeleteReview();
   const { mutateAsync: updateMutate } = useUpdateReview();
+
+  const { user: me } = useAuth();
+  const viewerId = me?.user_id ?? currentUserId ?? null;
+
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
   const toggleMenu = (idx: number) => {
@@ -72,11 +64,6 @@ const ReviewList = ({
     const now = Date.now();
     return now - createdTime <= 30 * 24 * 60 * 60 * 1000;
   };
-
-  const viewerId = useMemo<number | null>(
-    () => (Number.isFinite(currentUserId) ? (currentUserId as number) : getViewerId()),
-    [currentUserId],
-  );
 
   const onClickDelete = (idx: number) => {
     setOpenMenuIdx(null);
@@ -139,8 +126,12 @@ const ReviewList = ({
         `}</style>
 
         {reviews.map((review, idx) => (
-          <div key={review.review_id} className="relative group">
-            <div className="flex gap-3 mb-4 last:mb-0">
+          <div
+            key={review.review_id}
+            className={`relative group mb-6 transition-all duration-200 ${
+              openMenuIdx === idx ? 'pb-8 min-h-[120px]' : 'pb-0 min-h-[120px]'
+            }`}>
+            <div className="flex gap-3 items-start h-full">
               <img
                 src={review.writer_profile_image_url || defaultProfile}
                 alt="프로필"
@@ -152,10 +143,13 @@ const ReviewList = ({
                     <p className="font-semibold text-[14px] sm:text-[16px]">{review.writer_nickname}</p>
                     <Rating star={review.rating} />
                   </div>
-                  {canEditReview(review, currentUserId) && (
+
+                  {review.writer_id === viewerId && (
                     <button
                       onClick={() => toggleMenu(idx)}
-                      className={`rounded-full p-1 transition-colors duration-150 ${openMenuIdx === idx ? 'bg-secondary-pressed' : 'hover:bg-gray-200'}`}>
+                      className={`rounded-full p-1 transition-colors duration-150 ${
+                        openMenuIdx === idx ? 'bg-gray-200' : 'hover:bg-gray-100'
+                      }`}>
                       <BsThreeDotsVertical className="text-lg text-gray-500" />
                     </button>
                   )}
@@ -167,7 +161,9 @@ const ReviewList = ({
             </div>
 
             {openMenuIdx === idx && (
-              <div className="absolute top-8 right-0 bg-secondary text-text-on-background rounded-md shadow-md z-20 w-[91px] h-[72px]">
+              <div
+                className="absolute top-8 right-0 bg-secondary
+                text-gray-700 rounded-md shadow-md z-[100] w-[100px]">
                 <ul className="text-[16px]">
                   <li
                     className="px-4 py-[6px] active:bg-secondary-pressed hover:text-black cursor-pointer rounded-t-md"
@@ -182,11 +178,13 @@ const ReviewList = ({
                 </ul>
               </div>
             )}
+
             {idx !== reviews.length - 1 && <div className="h-[1px] bg-[#CCCCCC] w-full my-4" />}
           </div>
         ))}
       </div>
 
+      {/* 삭제 모달 */}
       {showDeleteModal && (
         <DualModal
           text={isAdmin ? '리뷰를 삭제 조치하시겠습니까?' : '리뷰를 삭제하시겠습니까?'}
@@ -217,6 +215,7 @@ const ReviewList = ({
         />
       )}
 
+      {/* 결과 모달 */}
       {showDeleteSuccessModal && (
         <TextModal text="리뷰가 삭제되었습니다." onClick={() => setShowDeleteSuccessModal(false)} size="sm" />
       )}

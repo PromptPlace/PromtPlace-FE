@@ -7,6 +7,7 @@ import TagButton from '@components/Button/TagButton';
 import IconButton from '@components/Button/IconButton';
 import { useNavigate } from 'react-router-dom';
 import { categoryData } from '@/pages/MainPage/components/categoryData';
+import usePromptDownload from '@/hooks/mutations/PromptDetailPage/usePromptDownload';
 
 import updateIcon from '../assets/updatebutton.png';
 import deleteIcon from '../assets/deletebutton.png';
@@ -166,6 +167,11 @@ const PromptDetailCard = ({
       ),
     );
   }, [tags]);
+
+  const { mutate: downloadPrompt, isPending } = usePromptDownload();
+  const handleDownload = () => {
+    downloadPrompt(promptId);
+  };
 
   return (
     <>
