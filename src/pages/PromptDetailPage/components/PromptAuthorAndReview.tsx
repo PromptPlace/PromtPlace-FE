@@ -249,17 +249,21 @@ const PromptAuthorAndReview = ({
     <section className="flex flex-col lg:flex-row gap-[40px] mt-8 w-full max-w-[1236px] xl:px-0 mx-auto">
       {/* 작성자 프로필 카드 */}
       <div className="bg-[#FFFEFB] rounded-[16px] p-6 pt-[32px] w-full lg:w-[30%] xl:w-[35%] self-start">
-        <p className="text-sm md:text-base custom-button1 text-gray-500 mb-2">제작자 프로필</p>
+        <p className="text-[14px] md:text-xs font-['S-Core_Dream'] custom-button1 font-medium text-text-on-white mb-3">
+          제작자 프로필
+        </p>
 
         <div className="flex items-center gap-4">
           <img
             src={user?.profileImage ?? defaultProfile}
             alt="profile"
-            className="w-[49px] h-[49px] rounded-[12px] border border-gray-300 object-cover"
+            className="w-[60px] h-[60px] rounded-[12px] border border-gray-300 object-cover"
           />
           <div className="flex flex-col">
-            <p className="text-base md:text-lg font-semibold">{user?.nickname ?? 'Unknown'}</p>
-            <div className="flex items-center gap-[20px] mt-1">
+            <p className="text-[18px] md:text-lg text-text-on-white font-['S-Core_Dream'] custom-h4 font-medium">
+              {user?.nickname ?? 'Unknown'}
+            </p>
+            <div className="flex items-center gap-[20px] mt-2">
               {currentUserId !== user?.user_id && myId !== user?.user_id && (
                 <FollowButton follow={isFollow} onClick={handleFollow} />
               )}
@@ -269,7 +273,7 @@ const PromptAuthorAndReview = ({
         </div>
 
         {user.intro && (
-          <p className="ml-15 mt-4 text-sm md:text-base custom-body2 text-gray-600 leading-[22px] break-keep">
+          <p className="ml-19 mt-4 text-[14px] md:text-sm custom-body2 text-[#000000] font-light break-keep custom-b2 ">
             {user.intro}
           </p>
         )}
