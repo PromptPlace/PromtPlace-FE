@@ -19,6 +19,7 @@ import useGetDownloadedPrompts from '@/hooks/queries/PromptDetailPage/useGetMyDo
 import { useQueryClient } from '@tanstack/react-query';
 import useGetPromptReviews from '@/hooks/queries/PromptDetailPage/useGetAllPromptReviews';
 import useUpdateReview from '@/hooks/mutations/PromptDetailPage/useUpdateReview';
+import { useLocation } from 'react-router-dom';
 
 import InstaIcon from '@assets/icon-instagram-logo.svg';
 import YoutubeIcon from '@assets/icon-youtube-logo.svg';
@@ -77,6 +78,7 @@ const PromptAuthorAndReview = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editingReviewId, setEditingReviewId] = useState<number | null>(null);
   const { data: reviewsData } = useGetPromptReviews(promptId);
+  const location = useLocation();
 
   const avg = Math.max(0, Math.min(5, Number(reviewRatingAvg) || 0));
   const [showModal, setShowModal] = useState(false);
@@ -113,6 +115,21 @@ const PromptAuthorAndReview = ({
       setReviewCount(mapped.length);
     }
   }, [reviewsData]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const isEditMode = params.get('edit_review') === 'true';
+    if (isEditMode) {
+      const myReview = reviews.find((r) => r.writer_id === myId);
+      if (myReview) {
+        setIsEditing(true);
+        setEditingReviewId(myReview.review_id);
+        setRating(myReview.rating);
+        setReviewText(myReview.content);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+  }, [location.search, reviews]);
 
   const ready = !!member_id && !!myId && !isFollowingLoading;
   const isMyself = currentUserId === member_id || myId === member_id;
