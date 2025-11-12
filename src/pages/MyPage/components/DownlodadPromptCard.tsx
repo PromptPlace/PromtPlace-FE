@@ -30,7 +30,7 @@ const DownloadedPromptCard = ({ prompt }: DownloadedPromptCardProps) => {
   };
 
   const handleEditReview = () => {
-    const targetUrl = `/prompt/${prompt.prompt_id}?open_review=true`;
+    const targetUrl = `/prompt/${prompt.prompt_id}?edit_review=true`;
     navigate(targetUrl);
   };
 
