@@ -186,7 +186,7 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
             {userData?.data.intros ? (
               userData.data.intros
             ) : (
-              <p className="custom-body3 text-gray400">아직 소개를 작성하지 않았아요.</p>
+              <p className="custom-body3 text-gray400">아직 소개를 작성하지 않았어요.</p>
             )}
           </div>
 

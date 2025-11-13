@@ -5,6 +5,8 @@
 interface ImportMetaEnv {
   readonly VITE_SERVER_API_URL: string;
   readonly VITE_GTM_ID: string;
+  readonly VITE_KAKAO_JAVASCRIPT_KEY: string;
+  readonly VITE_CHANNEL_PUBLIC_ID: string;
 }
 
 interface ImportMeta {
