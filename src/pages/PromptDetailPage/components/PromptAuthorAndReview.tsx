@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import FollowButton from '@components/Button/FollowButton';
 import ReviewList from './ReviewList';
-import defaultProfile from '../assets/profile.png';
+import defaultProfile from '../assets/profile.svg';
 import mail from '../../../assets/icon-mail-black.svg';
 import person from '../../../assets/icon-person-blue.svg';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -94,6 +94,8 @@ const PromptAuthorAndReview = ({
   const [reviewText, setReviewText] = useState('');
   const { mutateAsync: createMutate, isPending } = useCreateReview();
   const { mutateAsync: updateReview } = useUpdateReview();
+
+  const profileSrc = user?.profileImage && user.profileImage.trim().length > 0 ? user.profileImage : defaultProfile;
 
   useEffect(() => {
     if (!myFollowingData?.data || !member_id) return;
@@ -272,9 +274,9 @@ const PromptAuthorAndReview = ({
 
         <div className="flex items-center gap-4">
           <img
-            src={user?.profileImage ?? defaultProfile}
+            src={profileSrc}
             alt="profile"
-            className="w-[60px] h-[60px] rounded-[12px] border border-gray-300 object-cover"
+            className="w-[60px] h-[60px] rounded-full border border-gray-300 object-cover"
           />
           <div className="flex flex-col">
             <p className="text-[18px] md:text-lg text-text-on-white font-['S-Core_Dream'] custom-h4 font-medium">
