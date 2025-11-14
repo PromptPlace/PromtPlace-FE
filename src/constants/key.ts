@@ -10,3 +10,9 @@ export const QUERY_KEY = {
   prompterList: 'prompterList',
   searchpromptList: 'searchpromptList',
 };
+
+export const SESSION_STORAGE_KEY = {
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  user: 'user',
+};

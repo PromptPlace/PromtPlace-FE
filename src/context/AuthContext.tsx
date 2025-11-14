@@ -1,5 +1,6 @@
-import { LOCAL_STORAGE_KEY } from '@constants/key';
+import { LOCAL_STORAGE_KEY,SESSION_STORAGE_KEY } from '@constants/key';
 import { useLocalStorage } from '@hooks/useLocalStorage';
+import { useSessionStorage } from '@/hooks/useSessionStorage';
 import { createContext, useContext, useState, type PropsWithChildren } from 'react';
 import { postGoogleAuthCode, postNaverAuthCode } from '@apis/Login/auth.ts';
 import type { User, loginResponseData } from '@/types/LoginPage/auth.ts';
@@ -39,19 +40,19 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     getItem: getUserFromStorage,
     setItem: setUserInStorage,
     removeItem: removeUserFromStorage,
-  } = useLocalStorage(LOCAL_STORAGE_KEY.user);
+  } = useSessionStorage(SESSION_STORAGE_KEY.user);
 
   const {
     getItem: getAccessTokenFromStorage,
     setItem: setAccessTokenInStorage,
     removeItem: removeAccessTokenFromStorage,
-  } = useLocalStorage(LOCAL_STORAGE_KEY.accessToken);
+  } = useSessionStorage(SESSION_STORAGE_KEY.accessToken);
 
   const {
     getItem: getRefreshTokenFromStorage,
     setItem: setRefreshTokenInStorage,
     removeItem: removeRefreshTokenFromStorage,
-  } = useLocalStorage(LOCAL_STORAGE_KEY.refreshToken);
+  } = useSessionStorage(SESSION_STORAGE_KEY.refreshToken);
 
   const [user, setUser] = useState<User>(() => getUserFromStorage() || defaultUser);
   console.log('AuthProvider user:', user.user_id);

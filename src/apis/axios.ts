@@ -1,4 +1,4 @@
-import { LOCAL_STORAGE_KEY } from '@/constants/key';
+import { LOCAL_STORAGE_KEY,SESSION_STORAGE_KEY } from '@/constants/key';
 import axios from 'axios';
 
 export const axiosInstance = axios.create({
@@ -7,7 +7,7 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const item = localStorage.getItem(LOCAL_STORAGE_KEY.accessToken);
+    const item = sessionStorage.getItem(SESSION_STORAGE_KEY.accessToken);
     const accessToken = item ? JSON.parse(item) : null;
 
     console.log('axios 인터셉터:', {
