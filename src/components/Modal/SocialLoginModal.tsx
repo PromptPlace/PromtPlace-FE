@@ -1,4 +1,5 @@
 import PromptPlaceLogo from '@assets/logo/text/text-logo-login.svg';
+import PromptPlacePavicon from '@assets/logo/app/app-logo-gradient.svg';
 import { Link } from 'react-router-dom';
 import { useState, useLayoutEffect, useEffect } from 'react';
 import exitIcon from '@assets/icon-exit.svg';
@@ -43,15 +44,21 @@ const SocialLoginModal = ({ isOpen, onClose, initialView = 'login' }: SocialLogi
   const BASE_WIDTH = 656; // 👈 모달의 기본 너비(w-[656px])
   const BASE_HEIGHT = 850;
   const MIN_SCALE = 0.6;
+  const BREAKPOINT_LG = 1024;
   // 3. (✅ 추가) 윈도우 크기에 따라 scale 값을 계산하는 로직
   useLayoutEffect(() => {
     const handleResize = () => {
-      const widthScale = (window.innerWidth - 40) / BASE_WIDTH;
-      const heightScale = (window.innerHeight - 40) / BASE_HEIGHT;
-      const base = Math.min(1, widthScale, heightScale); // 둘 중 더 작은 쪽 기준
-      const newScale = Math.pow(base, 1.5); // ← 이 수치만 조절하면 됨
-      const finalScale = Math.max(newScale, MIN_SCALE);
-      setScale(finalScale);
+      const currentWidth = window.innerWidth;
+      if (currentWidth > BREAKPOINT_LG) {
+        const widthScale = (window.innerWidth - 40) / BASE_WIDTH;
+        const heightScale = (window.innerHeight - 40) / BASE_HEIGHT;
+        const base = Math.min(1, widthScale, heightScale); // 둘 중 더 작은 쪽 기준
+        const newScale = Math.pow(base, 1.5); // ← 이 수치만 조절하면 됨
+        const finalScale = Math.max(newScale, MIN_SCALE);
+        setScale(finalScale);
+      } else {
+        setScale(1);
+      }
     };
 
     // 처음 마운트될 때와 윈도우 크기가 바뀔 때 실행
@@ -128,14 +135,25 @@ const SocialLoginModal = ({ isOpen, onClose, initialView = 'login' }: SocialLogi
     <div onClick={onClose} className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-110">
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative flex  justify-center items-center max-w-[656px] max-h-[850px]  py-[48px]  flex-col px-[56px] rounded-[16px]  bg-white shadow-gradient 
-      origin-center"
+        className="relative flex  justify-center items-center lg:max-w-[656px] lg:max-h-[850px]  py-[48px]  flex-col px-[56px] max-lg:px-[40px] max-phone:px-[20px] rounded-[16px]  bg-white shadow-gradient 
+      origin-center max-lg:w-full max-lg:h-full max-lg:rounded-none "
         style={{ transform: `scale(${scale})` }}>
-        <button className="flex absolute top-[48px] right-[56px] gap-[4px] py-[3px] h-[22px]" onClick={onClose}>
+        <button className="flex  gap-[4px] py-[3px] h-[22px] self-end" onClick={onClose}>
           <img src={exitIcon} alt="나가기" className="h-[20px] w-[16px] text-gray-700" />
           <p className="custom-body2 text-gray-700">나가기</p>
         </button>
-        <img src={PromptPlaceLogo} alt="PromptPlace 로고" className="mb-[40px] mt-[40px]" />
+
+        <img
+          src={PromptPlaceLogo}
+          alt="PromptPlace 로고"
+          className="max-phone:hidden mb-[40px] mt-[40px] max-lg:mt-[72px]"
+        />
+        {/*이미지 왼쪽 정렬*/}
+        <img
+          src={PromptPlacePavicon}
+          alt="PromptPlace 파비콘"
+          className="hidden max-phone:block max-phone:self-start w-[48px] h-[48px] mb-[40px] mt-[72px]"
+        />
 
         {renderView()}
 
