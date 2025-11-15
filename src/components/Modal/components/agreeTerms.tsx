@@ -120,18 +120,25 @@ const AgreeTermsView = ({ setView, email, password, tempToken }: LoginViewProps)
           />
         </section>
       </div>
-      <PrimaryButton
-        buttonType="full"
+
+      <button
         type="submit"
-        text="회원가입하기"
-        textColor="white"
-        disable={isDisabled}
         onClick={handleSubmit}
-      />
+        disabled={isDisabled}
+        className={`flex items-center justify-center shadow-button hover:shadow-button-hover
+       transition-all ease-in-out duration-300 w-full custom-h4 border-none px-[20px]! py-[20px]! rounded-[12px]
+       bg-primary text-white
+        ${isDisabled && 'border-gray400! text-gray400! bg-gray300! hover:bg-gray300! active:bg-gray300! cursor-not-allowed'}`}>
+        회원가입하기
+      </button>
 
       <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
-        <button className="text-black" onClick={() => setView('login')}>로그인하기</button>
-        <button className="text-black" onClick={() => setView('forgotPassword')}>비밀번호 찾기</button>
+        <button className="text-black" onClick={() => setView('login')}>
+          로그인하기
+        </button>
+        <button className="text-black" onClick={() => setView('forgotPassword')}>
+          비밀번호 찾기
+        </button>
       </nav>
     </form>
   );

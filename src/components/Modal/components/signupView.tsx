@@ -1,4 +1,4 @@
-import { useState, useEffect,} from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PrimaryButton from '@components/Button/PrimaryButton';
 import type { ModalView } from '@/types/LoginPage/auth';
@@ -6,7 +6,6 @@ import useRequestSignupEmailCode from '@/hooks/mutations/LoginPage/useRequestSig
 import useVerifySignupAuthcode from '@/hooks/mutations/LoginPage/useVerifySignupAuthCode';
 import Timer from './Timer';
 import type { signupVerifyCodeResponse } from '@/types/LoginPage/auth';
-
 
 interface LoginViewProps {
   setView: (view: ModalView) => void;
@@ -173,18 +172,25 @@ const SignupView = ({ setView, email, setEmail, tempToken, setTempToken }: Login
             {verificationCodeError}
           </p>
         </div>
-        <PrimaryButton
-          buttonType="full"
+
+        <button
           type="submit"
-          text="다음"
-          textColor="white"
-          disable={isDisabled}
           onClick={() => setView('initPassword')}
-        />
+          disabled={isDisabled}
+          className={`flex items-center justify-center shadow-button hover:shadow-button-hover
+       transition-all ease-in-out duration-300 w-full custom-h4 border-none px-[20px]! py-[20px]! rounded-[12px]
+       bg-primary text-white
+        ${isDisabled && 'border-gray400! text-gray400! bg-gray300! hover:bg-gray300! active:bg-gray300! cursor-not-allowed'}`}>
+          다음
+        </button>
       </form>
       <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
-        <button className="text-black" onClick={() => setView('login')}>로그인하기</button>
-        <button className="text-black" onClick={() => setView('forgotPassword')}>비밀번호 찾기</button>
+        <button className="text-black" onClick={() => setView('login')}>
+          로그인하기
+        </button>
+        <button className="text-black" onClick={() => setView('forgotPassword')}>
+          비밀번호 찾기
+        </button>
       </nav>
     </div>
   );
