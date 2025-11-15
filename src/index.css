@@ -272,3 +272,24 @@
   background: #999898;
   border-radius: 15px;
 }
+
+/* safari keychain 숨기기*/
+input::-webkit-credentials-auto-fill-button {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Edge keychain 숨기기 */
+input::-webkit-password-managers-internal-fill-button {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Internet Explorer keychain 숨기기 */
+input::-ms-reveal {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
