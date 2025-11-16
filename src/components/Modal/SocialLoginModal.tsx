@@ -152,7 +152,7 @@ const SocialLoginModal = ({ isOpen, onClose, initialView = 'login' }: SocialLogi
         <img
           src={PromptPlacePavicon}
           alt="PromptPlace 파비콘"
-          className="hidden max-phone:block max-phone:self-start w-[48px] h-[48px] mb-[40px] mt-[72px] max-phone:mt-[32px]"
+          className="hidden max-phone:block max-phone:self-start w-[48px] h-[48px] mb-[32px] mt-[32px]"
         />
 
         {renderView()}
