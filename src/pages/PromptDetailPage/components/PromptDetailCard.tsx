@@ -460,7 +460,7 @@ const PromptDetailCard = ({
               <p className="font-medium text-[24px]">{isFree ? '무료' : `${price.toLocaleString()}원`}</p>
               {isPaid && !isFree && <span className="text-sm text-green-600">구매 완료</span>}
               <span className="text-[12px] font-light text-[#374151] mb-[8px]">
-                * 다운로드를 하고 프롬프트를 사용해보세요!
+                ※ 다운로드를 하고 프롬프트를 사용해보세요!
               </span>
 
               <div className="flex items-center gap-5 mt-2 lg:mt-0">
