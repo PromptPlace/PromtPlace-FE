@@ -311,7 +311,7 @@ const PromptDetailCard = ({
                     <ModelButton key={`${m}-${i}`} text={m} />
                   ))}
                 </div>
-                <div className="inline-flex items-center gap-2 text-[12px] whitespace-nowrap bg-gray-50 rounded-[8px] px-3 py-2">
+                <div className="hidden md:inline-flex items-center gap-2 text-[12px] whitespace-nowrap bg-gray-50 rounded-[8px] px-3 py-2">
                   <span className="text-[#374151] font-light">AI 모델의 버전은?</span>
                   <span className={`font-medium ${hasModelVersion ? 'text-[#030712]' : 'text-on-white'}`}>
                     {modelVersionDisplay}
@@ -326,6 +326,14 @@ const PromptDetailCard = ({
               </div>
 
               <p className="mt-[16px] font-light text-[16px] leading-[22px] text-[#030712]">{oneLiner}</p>
+
+              {/* 모바일 모델버전 표시부분 */}
+              <div className="my-[16px] inline-flex md:hidden items-center gap-2 text-[12px] bg-gray-50 rounded-[8px] px-3 py-2">
+                <span className="text-[#374151] font-light">AI 모델의 버전은?</span>
+                <span className={`font-medium ${hasModelVersion ? 'text-[#030712]' : 'text-on-white'}`}>
+                  {modelVersionDisplay}
+                </span>
+              </div>
 
               <div className="mt-[12px] flex justify-between items-center flex-wrap font-medium">
                 {/* 왼쪽 영역 */}
