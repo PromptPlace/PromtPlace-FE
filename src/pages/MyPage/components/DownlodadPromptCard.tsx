@@ -3,7 +3,7 @@ import useDeleteReview from '@/hooks/mutations/PromptDetailPage/useDeleteReview'
 import icon from '@/assets/icon-review.svg';
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '@/components/Button/PrimaryButton';
-import Rating from '@/components/Rating';
+import Rating from './Rating';
 import logo from '@/assets/logo/app/app-logo-default.svg';
 import defaultProfile from '@/assets/icon-profile-image-default.svg';
 import defaultlogo from '@/assets/logo/app/app-logo-default.svg';
@@ -54,7 +54,7 @@ const DownloadedPromptCard = ({ prompt }: DownloadedPromptCardProps) => {
         </div>
       </div>
       {prompt.has_review === false ? (
-        <div>
+        <div className="ml-[80px]">
           <div className="flex items-center">
             <img src={icon} alt="리뷰 아이콘" className="mr-[8px]" />
             <div className="flex flex-col gap-[4px]">
@@ -70,7 +70,7 @@ const DownloadedPromptCard = ({ prompt }: DownloadedPromptCardProps) => {
         </div>
       ) : (
         //30일 이내에 작성한 리뷰일 경우에만 수정할 수 있도록 바꾸어야 함
-        <div className="flex flex-col gap-[8px] px-[28px]">
+        <div className="flex flex-col gap-[8px] px-[28px] ml-[80px]">
           <div className="flex justify-between">
             <div className="flex items-center gap-[3.5px]">
               <img
