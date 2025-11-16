@@ -1,4 +1,4 @@
-import { Prompt } from '../MainPage/prompt';
+import type { Prompt } from '../MainPage/prompt';
 
 export interface ApiResponse<T> {
   message: string;

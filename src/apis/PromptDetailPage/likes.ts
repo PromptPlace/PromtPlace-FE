@@ -1,6 +1,6 @@
 import { axiosInstance } from '@/apis/axios';
 import type { AxiosResponse } from 'axios';
-import type { NewLikedPromptDTO } from '@/types/MyPage/prompt';
+import type { NewLikedPromptResponse } from '@/types/MyPage/prompt';
 import type { CommonResponse } from '@/types/common';
 
 type Msg = { message: string; statusCode?: number };
@@ -24,7 +24,7 @@ export const getMyLikedPrompts = async (): Promise<LikedPromptRow[]> => {
 }
 
 export const getMyLikedPrompts = async () => {
-  const { data } = await axiosInstance.get<CommonResponse<NewLikedPromptDTO>>('/api/prompts/likes');
+  const { data } = await axiosInstance.get<NewLikedPromptResponse>('/api/prompts/likes');
   //받은 데이터를 LikedPromptRow[] 형태로 변환
   return (
     data.data.data.map((item) => ({

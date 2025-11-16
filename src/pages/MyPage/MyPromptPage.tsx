@@ -329,9 +329,7 @@ const MyPromptPage = () => {
   });
   console.log('다운로드한 프롬프트 데이터:', downloadedPromptsData);
 
-  const { data: likedPromptsData } = useGetLikedPrompts({
-    enabled: activeTab === 'liked',
-  });
+  const { data: likedPromptsData } = useGetLikedPrompts();
 
   // 프롬프트 삭제 함수
   const { mutate: mutateDeletePrompts } = usePatchDeletePrompts({ member_id: user.user_id });
@@ -376,6 +374,7 @@ const MyPromptPage = () => {
 
   const promptsToDisplay = getPromptsForCurrentTab();
   console.log('promptsToDisplay:', promptsToDisplay);
+  const dummylength = 10; //삭제 예정
 
   return (
     <div className="flex justify-center pt-[92px] max-lg:pt-[12px] min-h-screen bg-background">
@@ -398,19 +397,9 @@ const MyPromptPage = () => {
             onSelect={(value) => setActiveTab(value as 'authored' | 'downloaded' | 'liked')}
           />
         </div>
-        {promptsToDisplay.length > 0 ? (
+        {dummylength > 0 ? (
           <div className=" bg-white">
             <div className="mr-[8px] overflow-y-auto overflow-x-hidden max-h-[368px] min-w-[1080px]">
-              {promptsToDisplay.map((prompt) => (
-                <PromptCard
-                  key={prompt.prompt_id}
-                  type={activeTab}
-                  promptData={prompt}
-                  DeletePrompt={() => handleDeleteAuthoredPrompts({ prompt_id: prompt.prompt_id })}
-                  EditPrompt={() => EditAuthoredPrompt(prompt.prompt_id)}
-                  DeleteLike={() => DeleteLikedPrompt(prompt.prompt_id)}
-                />
-              ))}
               <div ref={ref} />
             </div>
           </div>
