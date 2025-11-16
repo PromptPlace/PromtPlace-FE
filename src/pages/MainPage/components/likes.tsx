@@ -16,8 +16,19 @@ const Likes = ({ prompt_id }: { prompt_id: number }) => {
   const qc = useQueryClient();
 
   // 내 찜한 프롬프트 Set 쿼리
-  const { data: likedSet } = useMyLikedPrompts(true); // true: 활성화(혹은 조건에 맞게)
-  const [liked, setLiked] = useState(false);
+  const { data: likedSet } = useMyLikedPrompts(!!accessToken); // true: 활성화(혹은 조건에 맞게)
+  //const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(() => {
+    // 3. (✅ 수정) TanStack Query 캐시에 이미 likedSet 데이터가 있으면
+    //    그 값으로 초기 상태를 설정합니다.
+    if (likedSet && Number.isFinite(prompt_id)) {
+      return likedSet.has(prompt_id);
+    }
+    console.log('초기 liked 상태 설정됨 ', prompt_id, likedSet);
+    // 캐시가 없으면(이 사이트에 처음 접속했으면) false로 설정합니다.
+    return false;
+  });
+  console.log('likedset 목록:', likedSet);
 
   // 쿼리 데이터와 동기화
   useEffect(() => {
