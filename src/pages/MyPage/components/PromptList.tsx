@@ -4,8 +4,6 @@ import { useGetMyPrompts } from '@/hooks/queries/MyPage/useGetMyPrompt';
 import LikedPrompts from './LikedPrompts';
 import useGetMyDownloadedPrompts from '@/hooks/queries/MyPage/useGetMyDownloadedPrompts.tsx';
 
-
-
 interface PromptListProps {
   setActiveTab: (tab: 'prompt' | 'dashboard' | 'profile' | 'profileEdit' | 'authored' | 'downloaded') => void;
 }
@@ -20,7 +18,7 @@ const PromptList = ({ setActiveTab }: PromptListProps) => {
 
   return (
     <div className="w-full grid grid-cols-2 gap-[40px] mt-[64px]">
-      <section>
+      <section className="max-lg:col-span-2">
         <div className="flex justify-between mb-[20px]">
           {/*<AuthoredPromptCard>*/}
           <div className="flex gap-[20px]">
@@ -43,7 +41,7 @@ const PromptList = ({ setActiveTab }: PromptListProps) => {
           ))}
       </section>
 
-      <section>
+      <section className="max-lg:col-span-2">
         <div className="flex justify-between mb-[20px]">
           {/*<AuthoredPromptCard>*/}
           <div className="flex gap-[20px]">
