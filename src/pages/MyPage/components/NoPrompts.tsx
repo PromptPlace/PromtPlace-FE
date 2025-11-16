@@ -6,7 +6,7 @@ export const NoAuthoredPrompts = () => {
   const navigate = useNavigate();
 
   const handleCreatePrompt = () => {
-    navigate('/prompt/create');
+    navigate('/create');
   };
   return (
     <div className="w-[272px] h-[300px] flex flex-col justify-center items-center gap-[12px]">

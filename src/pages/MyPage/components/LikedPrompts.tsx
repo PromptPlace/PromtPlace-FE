@@ -4,6 +4,7 @@ import PromptMobileCard from '@/pages/HomePage/components/PromptMobileCard';
 
 const LikedPrompts = () => {
   const { data: likedPromptsData } = useGetLikedPrompts();
+  console.log('찜한 프롬프트 데이터:', likedPromptsData);
 
   return (
     <div className="flex flex-col gap-[40px]">
