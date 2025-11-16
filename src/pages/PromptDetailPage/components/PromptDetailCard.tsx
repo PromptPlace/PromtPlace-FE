@@ -8,6 +8,9 @@ import IconButton from '@components/Button/IconButton';
 import { useNavigate } from 'react-router-dom';
 import { categoryData } from '@/pages/MainPage/components/categoryData';
 import usePromptDownload from '@/hooks/mutations/PromptDetailPage/usePromptDownload';
+import usePromptLike from '@/hooks/mutations/PromptDetailPage/usePromptLike';
+import usePromptUnlike from '@/hooks/mutations/PromptDetailPage/usePromptUnlike';
+import useMyLikedPrompts from '@/hooks/queries/PromptDetailPage/useMyLikedPrompts';
 
 import updateIcon from '../assets/updatebutton.png';
 import deleteIcon from '../assets/deletebutton.png';
@@ -112,6 +115,33 @@ const PromptDetailCard = ({
 
   const [liked, setLiked] = useState(false);
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
+
+  const { data: likedSet } = useMyLikedPrompts();
+
+  const { mutate: likeMutate, isPending: isLiking } = usePromptLike();
+
+  const { mutate: unlikeMutate, isPending: isUnliking } = usePromptUnlike();
+
+  useEffect(() => {
+    if (!likedSet || !Number.isFinite(promptId)) return;
+    setLiked(likedSet.has(promptId));
+  }, [likedSet, promptId]);
+
+  const handleToggleLike = () => {
+    if (!Number.isFinite(promptId)) return;
+    if (isLiking || isUnliking) return;
+
+    const next = !liked;
+    setLiked(next);
+
+    const mutateFn = next ? likeMutate : unlikeMutate;
+
+    mutateFn(promptId, {
+      onError: () => {
+        setLiked((prev) => !prev);
+      },
+    });
+  };
 
   const mainCategoryName = useMemo(() => {
     const list = Array.isArray(data?.categories) ? data!.categories : [];
@@ -283,7 +313,7 @@ const PromptDetailCard = ({
                 </div>
                 <div className="inline-flex items-center gap-2 text-[12px] whitespace-nowrap bg-gray-50 rounded-[8px] px-3 py-2">
                   <span className="text-[#374151] font-light">AI 모델의 버전은?</span>
-                  <span className={`font-medium ${hasModelVersion ? 'text-[#030712]' : 'text-gray-500'}`}>
+                  <span className={`font-medium ${hasModelVersion ? 'text-[#030712]' : 'text-on-white'}`}>
                     {modelVersionDisplay}
                   </span>
                 </div>
@@ -435,7 +465,7 @@ const PromptDetailCard = ({
                 />
                 <button
                   className="w-[49px] h-[49px] rounded-[12px] bg-[#FFFEFB] border-[1px] border-[#D1D5DB] flex items-center justify-center"
-                  onClick={() => setLiked((v) => !v)}
+                  onClick={handleToggleLike}
                   aria-label="좋아요">
                   <img src={liked ? heartOnClick : heartNone} alt="like" className="w-[28px] h-[28px]" />
                 </button>

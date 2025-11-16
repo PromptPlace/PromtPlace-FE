@@ -13,23 +13,24 @@ export const unlikePrompt = (promptId: number): Promise<AxiosResponse<Msg>> =>
 
 export type LikedPromptRow = { prompt_id: number; title: string };
 
-{
-  /*
+// export const getMyLikedPrompts = async () => {
+//   const { data } = await axiosInstance.get<NewLikedPromptResponse>('/api/prompts/likes');
+//   //받은 데이터를 LikedPromptRow[] 형태로 변환
+//   return (
+//     data.data.data.map((item) => ({
+//       prompt_id: item.prompt_id,
+//       title: item.title,
+//     })) ?? []
+//   );
+// };
+
 export const getMyLikedPrompts = async (): Promise<LikedPromptRow[]> => {
-  const { data } = await axiosInstance.get<{ data: LikedPromptRow[] }>('/api/prompts/likes');
-  return data.data ?? [];
-};
-
-*/
-}
-
-export const getMyLikedPrompts = async () => {
   const { data } = await axiosInstance.get<NewLikedPromptResponse>('/api/prompts/likes');
-  //받은 데이터를 LikedPromptRow[] 형태로 변환
-  return (
-    data.data.data.map((item) => ({
-      prompt_id: item.prompt_id,
-      title: item.title,
-    })) ?? []
-  );
+
+  const rows = data.data?.data?.map((item) => ({
+    prompt_id: item.prompt_id,
+    title: item.title,
+  }));
+
+  return rows ?? [];
 };
