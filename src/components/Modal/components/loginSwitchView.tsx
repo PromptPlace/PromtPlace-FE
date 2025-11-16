@@ -163,7 +163,7 @@ const LoginSwitchView = ({ setView }: LoginViewProps) => {
           로그인하기
         </button>
       </form>
-      <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
+      <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 max-phone:text-[14px] mb-[40px]">
         {/* 수정필요  Link가 아닌 signup, find-password가 렌더링 되도록*/}
         <button className="text-black" onClick={() => setView('signup')}>
           회원가입하기
