@@ -8,6 +8,9 @@ import IconButton from '@components/Button/IconButton';
 import { useNavigate } from 'react-router-dom';
 import { categoryData } from '@/pages/MainPage/components/categoryData';
 import usePromptDownload from '@/hooks/mutations/PromptDetailPage/usePromptDownload';
+import usePromptLike from '@/hooks/mutations/PromptDetailPage/usePromptLike';
+import usePromptUnlike from '@/hooks/mutations/PromptDetailPage/usePromptUnlike';
+import useMyLikedPrompts from '@/hooks/queries/PromptDetailPage/useMyLikedPrompts';
 
 import updateIcon from '../assets/updatebutton.png';
 import deleteIcon from '../assets/deletebutton.png';
@@ -112,6 +115,33 @@ const PromptDetailCard = ({
 
   const [liked, setLiked] = useState(false);
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
+
+  const { data: likedSet } = useMyLikedPrompts();
+
+  const { mutate: likeMutate, isPending: isLiking } = usePromptLike();
+
+  const { mutate: unlikeMutate, isPending: isUnliking } = usePromptUnlike();
+
+  useEffect(() => {
+    if (!likedSet || !Number.isFinite(promptId)) return;
+    setLiked(likedSet.has(promptId));
+  }, [likedSet, promptId]);
+
+  const handleToggleLike = () => {
+    if (!Number.isFinite(promptId)) return;
+    if (isLiking || isUnliking) return;
+
+    const next = !liked;
+    setLiked(next);
+
+    const mutateFn = next ? likeMutate : unlikeMutate;
+
+    mutateFn(promptId, {
+      onError: () => {
+        setLiked((prev) => !prev);
+      },
+    });
+  };
 
   const mainCategoryName = useMemo(() => {
     const list = Array.isArray(data?.categories) ? data!.categories : [];
@@ -281,9 +311,9 @@ const PromptDetailCard = ({
                     <ModelButton key={`${m}-${i}`} text={m} />
                   ))}
                 </div>
-                <div className="inline-flex items-center gap-2 text-[12px] whitespace-nowrap bg-gray-50 rounded-[8px] px-3 py-2">
+                <div className="hidden md:inline-flex items-center gap-2 text-[12px] whitespace-nowrap bg-gray-50 rounded-[8px] px-3 py-2">
                   <span className="text-[#374151] font-light">AI 모델의 버전은?</span>
-                  <span className={`font-medium ${hasModelVersion ? 'text-[#030712]' : 'text-gray-500'}`}>
+                  <span className={`font-medium ${hasModelVersion ? 'text-[#030712]' : 'text-on-white'}`}>
                     {modelVersionDisplay}
                   </span>
                 </div>
@@ -296,6 +326,14 @@ const PromptDetailCard = ({
               </div>
 
               <p className="mt-[16px] font-light text-[16px] leading-[22px] text-[#030712]">{oneLiner}</p>
+
+              {/* 모바일 모델버전 표시부분 */}
+              <div className="my-[16px] inline-flex md:hidden items-center gap-2 text-[12px] bg-gray-50 rounded-[8px] px-3 py-2">
+                <span className="text-[#374151] font-light">AI 모델의 버전은?</span>
+                <span className={`font-medium ${hasModelVersion ? 'text-[#030712]' : 'text-on-white'}`}>
+                  {modelVersionDisplay}
+                </span>
+              </div>
 
               <div className="mt-[12px] flex justify-between items-center flex-wrap font-medium">
                 {/* 왼쪽 영역 */}
@@ -422,7 +460,7 @@ const PromptDetailCard = ({
               <p className="font-medium text-[24px]">{isFree ? '무료' : `${price.toLocaleString()}원`}</p>
               {isPaid && !isFree && <span className="text-sm text-green-600">구매 완료</span>}
               <span className="text-[12px] font-light text-[#374151] mb-[8px]">
-                * 다운로드를 하고 프롬프트를 사용해보세요!
+                ※ 다운로드를 하고 프롬프트를 사용해보세요!
               </span>
 
               <div className="flex items-center gap-5 mt-2 lg:mt-0">
@@ -435,7 +473,7 @@ const PromptDetailCard = ({
                 />
                 <button
                   className="w-[49px] h-[49px] rounded-[12px] bg-[#FFFEFB] border-[1px] border-[#D1D5DB] flex items-center justify-center"
-                  onClick={() => setLiked((v) => !v)}
+                  onClick={handleToggleLike}
                   aria-label="좋아요">
                   <img src={liked ? heartOnClick : heartNone} alt="like" className="w-[28px] h-[28px]" />
                 </button>

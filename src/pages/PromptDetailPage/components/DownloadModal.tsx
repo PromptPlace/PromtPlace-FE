@@ -80,14 +80,12 @@ const DownloadModal = ({ isOpen, onClose, title, content, price, isFree, isPaid,
           ${step === 'paid' ? 'max-lg:h-[100px]' : 'max-lg:h-[334px]'}
         `}>
         {/* 닫기 */}
-        <button
-          onClick={onClose}
-          className="lg:block hidden absolute top-[20px] right-[20px] w-[24px] h-[24px] hover:opacity-60">
+        <button onClick={onClose} className="lg:block hidden absolute top-[20px] right-[20px] w-[24px] h-[24px]">
           <img src={CloseIcon} alt="닫기" className="w-full h-full object-contain" />
         </button>
         <button
           onClick={onClose}
-          className="lg:hidden absolute top-[20px] right-[20px] max-lg:w-[10px] max-lg:h-[10px] hover:opacity-60 max-lg:top-[12px] max-lg:right-[12px]">
+          className="lg:hidden absolute top-[20px] right-[20px] max-lg:w-[10px] max-lg:h-[10px] max-lg:top-[12px] max-lg:right-[12px]">
           <img src={CloseIcon} alt="닫기" className="w-full h-full object-contain" />
         </button>
 
