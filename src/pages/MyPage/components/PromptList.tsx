@@ -4,7 +4,7 @@ import { useGetMyPrompts } from '@/hooks/queries/MyPage/useGetMyPrompt';
 import LikedPrompts from './LikedPrompts';
 import useGetMyDownloadedPrompts from '@/hooks/queries/MyPage/useGetMyDownloadedPrompts.tsx';
 import { NoAuthoredPrompts, NoDownloadedPrompts, NoLikedPrompts } from './NoPrompts';
-
+import { useGetLikedPrompts } from '@/hooks/queries/MyPage/useGetPrompts';
 interface PromptListProps {
   setActiveTab: (tab: 'prompt' | 'dashboard' | 'profile' | 'profileEdit' | 'authored' | 'downloaded') => void;
 }
@@ -13,9 +13,13 @@ const PromptList = ({ setActiveTab }: PromptListProps) => {
   // (useQuery 등으로 writtenData, downloadedData, likedData를 가져옴)
   const { data: downloadedData } = useGetMyDownloadedPrompts();
   const { data: authoredData } = useGetMyPrompts();
+  const { data: likedPromptsData } = useGetLikedPrompts();
 
   const AuthoredPromptsNum = authoredData?.prompts.length || 0;
   const DownloadedPromptsNum = downloadedData?.data.length || 0;
+  const LikedPromptsNum = likedPromptsData?.data.data.length || 0;
+  console.log('찜한 프롬프트 수:', LikedPromptsNum);
+  console.log('찜한 프롬프트 데이터 2차검증:', likedPromptsData);
 
   return (
     <div className="w-full grid grid-cols-2 gap-[40px] mt-[64px]">
@@ -75,9 +79,19 @@ const PromptList = ({ setActiveTab }: PromptListProps) => {
         )}
       </section>
 
-      <section className="col-span-2 mt-[56px]">
-        <p className="custom-h2 text-black">찜한 프롬프트</p>
+      <section className="col-span-2 mt-[56px] flex flex-col">
+        <div className="flex gap-[20px]">
+          <p className="custom-h2 text-black">찜한 프롬프트</p>
+          <div className="rounded-[50px] h-[32px] border-[0.8px] px-[10px] py-[5px] bg-white text-gray-500 border-gray-400 custom-h5">
+            {LikedPromptsNum}
+          </div>
+        </div>
         <LikedPrompts />
+        {LikedPromptsNum === 0 && (
+          <div className="self-center mt-[92px] max-phone:mt-[84px]">
+            <NoLikedPrompts />
+          </div>
+        )}
       </section>
     </div>
   );
