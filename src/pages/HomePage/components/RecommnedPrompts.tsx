@@ -5,7 +5,7 @@ import PromptMobileCard from './PromptMobileCard';
 const RecommnedPrompts = () => {
   const { data } = useGetPromptList();
 
-  const top8Lists = [2119, 2118, 2120, 2135, 2134, 2136, 2133, 2132, 2190, 2157, 2156];
+  const top8Lists = [2230, 2217, 2134, 2136, 2214, 2229, 2215, 2190];
   const displayData = data?.data.filter((prompt) => top8Lists.includes(prompt.prompt_id)).slice(0, 8);
 
   return (
