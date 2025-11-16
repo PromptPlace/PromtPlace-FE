@@ -18,6 +18,7 @@ import usePostSNS from '@/hooks/mutations/ProfilePage/usePostSNS';
 import usePostEditIntro from '@/hooks/mutations/ProfilePage/usePostEditIntro';
 import usePatchEditIntro from '@/hooks/mutations/ProfilePage/usePatchEditIntro';
 import usePatchSNS from '@/hooks/mutations/ProfilePage/usePatchSNS';
+import useDeleteSNS from '@/hooks/mutations/ProfilePage/useDeleteSNS';
 
 interface ProfileEditViewProps {
   userData?: ResponseMemberDto;
@@ -96,6 +97,8 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
   const { mutate: mutatePostSNS } = usePostSNS({ member_id: user.user_id });
   // 회원 SNS 수정
   const { mutate: mutatePatchSNS } = usePatchSNS({ member_id: user.user_id });
+  // 회원 SNS 삭제
+  const { mutate: mutateDeleteSNS } = useDeleteSNS({ member_id: user.user_id });
 
   // 회원 한줄 소개 작성 및 수정
   const { mutate: mutateIntro } = usePostEditIntro({ member_id: user.user_id });
@@ -108,6 +111,10 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
 
     if (snsData?.data.length === 0) {
       mutatePostSNS({ url: snsUrl, description: '', user_sns_id: snsId });
+      console.log('post실행', snsId);
+    } else if (snsData?.data.length !== 0 && snsUrl === '') {
+      const lastSNSId = snsData!.data[snsData!.data.length - 1]!.sns_id;
+      mutateDeleteSNS({ sns_id: lastSNSId });
     } else if (snsData?.data.length !== 0 && snsData?.data) {
       mutatePatchSNS({
         url: snsUrl,
