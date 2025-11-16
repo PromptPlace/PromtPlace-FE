@@ -135,7 +135,7 @@ const SocialLoginModal = ({ isOpen, onClose, initialView = 'login' }: SocialLogi
     <div onClick={onClose} className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-110">
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative flex  justify-center items-center lg:max-w-[656px] lg:max-h-[850px]  py-[48px]  flex-col px-[56px] max-lg:px-[40px] max-phone:px-[20px] rounded-[16px]  bg-white shadow-gradient 
+        className="relative flex justify-center items-center lg:max-w-[656px] lg:max-h-[850px]  py-[48px]  flex-col px-[56px] max-lg:px-[40px] max-phone:px-[20px] rounded-[16px]  bg-white shadow-gradient 
       origin-center max-lg:w-full max-lg:h-full max-lg:rounded-none "
         style={{ transform: `scale(${scale})` }}>
         <button className="flex  gap-[4px] py-[3px] h-[22px] self-end" onClick={onClose}>
@@ -152,7 +152,7 @@ const SocialLoginModal = ({ isOpen, onClose, initialView = 'login' }: SocialLogi
         <img
           src={PromptPlacePavicon}
           alt="PromptPlace 파비콘"
-          className="hidden max-phone:block max-phone:self-start w-[48px] h-[48px] mb-[40px] mt-[72px]"
+          className="hidden max-phone:block max-phone:self-start w-[48px] h-[48px] mb-[40px] mt-[72px] max-phone:mt-[32px]"
         />
 
         {renderView()}

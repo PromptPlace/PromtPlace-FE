@@ -106,12 +106,16 @@ const LoginView = ({ setView }: LoginViewProps) => {
     <div className="flex flex-col items-center w-full">
       {' '}
       <div className="w-full">
-        <p className=" custom-h2 mb-[8px] text-black">로그인하기</p>
-        <p className=" custom-h3 mb-[24px] text-black">로그인하고 더 많은 혜택을 누려보세요!</p>
+        <p className="max-phone:hidden custom-h2 mb-[8px] text-black">로그인하기</p>
+        <p className="hidden max-phone:block custom-h4 mb-[8px] text-black">로그인하기</p>
+        <p className=" custom-h3 max-phone:hidden mb-[24px] text-black">로그인하고 더 많은 혜택을 누려보세요!</p>
+        <p className="hidden max-phone:block custom-body2 mb-[24px] text-black">
+          로그인하고 더 많은 혜택을 누려보세요!
+        </p>
       </div>
       <form className="flex flex-col w-full" onSubmit={handleSubmit}>
         <div className="flex flex-col">
-          <label className="custom-h5 mb-[12px] text-black">이메일</label>
+          <label className="custom-h5 max-phone:text-[14px] mb-[12px] text-black">이메일</label>
           <input
             type="email"
             id="email"
@@ -122,7 +126,7 @@ const LoginView = ({ setView }: LoginViewProps) => {
           />
         </div>
         <div className="flex flex-col mb-[40px]">
-          <label className="custom-h5 mb-[12px] mt-[12.5px]  text-black" htmlFor="password">
+          <label className="custom-h5 max-phone:text-[14px] mb-[12px] mt-[12.5px]  text-black" htmlFor="password">
             비밀번호
           </label>
           <div className="relative w-full mb-[12px]">
@@ -160,7 +164,7 @@ const LoginView = ({ setView }: LoginViewProps) => {
           로그인하기
         </button>
       </form>
-      <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
+      <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 max-phone:text-[14px] mb-[40px]">
         {/* 수정필요  Link가 아닌 signup, find-password가 렌더링 되도록*/}
         <button className="text-black" onClick={() => setView('signup')}>
           회원가입하기

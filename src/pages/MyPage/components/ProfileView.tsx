@@ -153,11 +153,13 @@ const ProfileView = ({ userData, setActiveTab }: ProfileViewProps) => {
             <div>
               <label className="custom-h5 block mb-[12px]">계정 바꾸기</label>
               <div className="flex justify-between custom-body2 text-text-on-white px-[16px] py-[12px]">
-                <div className="flex gap-[12px]">
+                <div className="flex flex-1 gap-[12px] break-words min-w-0">
                   {getProviderIcon(socialType as 'GOOGLE' | 'KAKAO' | 'NAVER')}
-                  {userData?.data.email}
+                  <span className="break-all">{userData?.data.email}</span>
                 </div>
-                <PrimaryButton buttonType="square" text="변경하기" onClick={switchAccount} />
+                <div className="flex shrink-0 max-h-[42px] max-phone:max-h-[27px]">
+                  <PrimaryButton buttonType="square" text="변경하기" onClick={switchAccount} />
+                </div>
               </div>
             </div>
             <div>
