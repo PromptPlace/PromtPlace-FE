@@ -5,7 +5,7 @@ import logo from '@/assets/logo/app/app-logo-default.svg';
 import Portal from './Portal';
 import kebabMenu from '@/assets/icon-kebabMenu.svg';
 import { useState, useRef, useEffect } from 'react';
-import Rating from '@/components/Rating';
+import Rating from './Rating';
 import usePatchDeletePrompts from '@/hooks/mutations/ProfilePage/usePatchDeletePrompts';
 import { useAuth } from '@/context/AuthContext';
 import type { RequestDeletePromptDto } from '@/types/ProfilePage/profile';
@@ -18,8 +18,8 @@ interface AuthoredPromptCardProps {
 const AuthoredPromptCard = ({ prompt }: AuthoredPromptCardProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { mutate: DeletePrompt,} = usePatchDeletePrompts({ member_id: user.user_id });
-const handleDeleteAuthoredPrompts = ({ prompt_id }: RequestDeletePromptDto) => {
+  const { mutate: DeletePrompt } = usePatchDeletePrompts({ member_id: user.user_id });
+  const handleDeleteAuthoredPrompts = ({ prompt_id }: RequestDeletePromptDto) => {
     DeletePrompt({ prompt_id });
   };
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -41,7 +41,7 @@ const handleDeleteAuthoredPrompts = ({ prompt_id }: RequestDeletePromptDto) => {
         const rect = buttonRef.current.getBoundingClientRect();
         const isDesktop = getIsDesktop();
 
-        const dropdownWidth = isDesktop ? 90 : 70;
+        const dropdownWidth = isDesktop ? 90 : 90;
         const verticalOffset = isDesktop ? 2 : 0;
 
         setMenuPosition({
@@ -77,15 +77,13 @@ const handleDeleteAuthoredPrompts = ({ prompt_id }: RequestDeletePromptDto) => {
       }
     };
 
-
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isDropdownOpen]);
 
-    const handleEditAuthoredPrompt = (prompt_id: number) => {
+  const handleEditAuthoredPrompt = (prompt_id: number) => {
     const promptId = prompt_id;
     const targetUrl = `/mypage/edit/${promptId}`;
 
@@ -99,16 +97,28 @@ const handleDeleteAuthoredPrompts = ({ prompt_id }: RequestDeletePromptDto) => {
       <div className="flex justify-between">
         <div className="flex gap-[24px] items-center">
           <img src={imageUrl} alt="프롬프트 이미지" className="w-[80px] h-[80px] rounded-[8px]" />
-          <Link to={`/prompt/${prompt.prompt_id}`}>
-            <p className="custom-h3 text-text-on-white">{prompt.title}</p>
-          </Link>
+          <div className="flex flex-col py-[16px]">
+            <Link to={`/prompt/${prompt.prompt_id}`}>
+              <p className="custom-h3 text-text-on-white break-words">{prompt.title}</p>
+            </Link>
+            <div className="lg:hidden flex gap-[16px] mt-[20px] max-phone:mt-[12px]">
+              <div className=" flex flex-col items-center">
+                <p className="custom-body3">조회수</p>
+                <p className="custom-button1">{prompt.views}</p>
+              </div>
+              <div className=" flex flex-col items-center">
+                <p className="custom-body3">다운로드 수</p>
+                <p className="custom-button1">{prompt.downloads}</p>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="flex items-center gap-[16px]">
-          <div className="flex flex-col items-center">
+          <div className="max-lg:hidden flex flex-col items-center min-w-[35px]">
             <p className="custom-body3">조회수</p>
             <p className="custom-button1">{prompt.views}</p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="max-lg:hidden flex flex-col items-center min-w-[61px]">
             <p className="custom-body3">다운로드 수</p>
             <p className="custom-button1">{prompt.downloads}</p>
           </div>
@@ -125,14 +135,14 @@ const handleDeleteAuthoredPrompts = ({ prompt_id }: RequestDeletePromptDto) => {
                 <Portal>
                   <div
                     ref={dropdownRef}
-                    className="fixed mt-[11px] w-[91px] max-lg:w-[61px] bg-white rounded-md z-10 shadow-[0_4px_8px_0_rgba(0,0,0,0.12)]"
+                    className="fixed mt-[11px] min-w-[91px] bg-white rounded-md z-10 shadow-[0_4px_8px_0_rgba(0,0,0,0.12)]"
                     style={{ top: `${menuPosition.top}px`, left: `${menuPosition.left}px` }}>
                     <button
                       onClick={() => {
                         handleDeleteAuthoredPrompts({ prompt_id: prompt.prompt_id });
                         setIsDropdownOpen(false);
                       }}
-                      className="block custom-h3 px-[15px] max-lg:px-[12px] py-[8px] max-lg:py-[4px]  border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary active:bg-secondary-pressed active:text-black rounded-t-[4px]">
+                      className="block custom-h3 px-[15px]  py-[8px]  border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary active:bg-secondary-pressed active:text-black rounded-t-[4px]">
                       삭제하기
                     </button>
                     <button
@@ -140,7 +150,7 @@ const handleDeleteAuthoredPrompts = ({ prompt_id }: RequestDeletePromptDto) => {
                         handleEditAuthoredPrompt(prompt.prompt_id);
                         setIsDropdownOpen(false);
                       }}
-                      className="block custom-h3 px-[15px] max-lg:px-[12px] py-[8px] max-lg:py-[4px] text-[16px] max-lg:text-[10px] text-text-on-background bg-secondary active:bg-secondary-pressed active:text-black rounded-b-[4px]">
+                      className="block custom-h3 px-[15px]  py-[8px] text-[16px]  text-text-on-background bg-secondary active:bg-secondary-pressed active:text-black rounded-b-[4px]">
                       수정하기
                     </button>
                   </div>
