@@ -68,14 +68,16 @@ const OnBoardingView = ({ setView }: LoginViewProps) => {
 
           {error && <p className="text-alert custom-h5 mt-[4px]">{error}</p>}
         </div>
-        <PrimaryButton
-          buttonType="full"
+        <button
           type="submit"
-          text="시작하기"
-          textColor="white"
-          disable={isDisabled}
-          onClick={() => {}}
-        />
+          onClick={handleSubmit}
+          disabled={isDisabled}
+          className={`flex items-center justify-center shadow-button hover:shadow-button-hover
+       transition-all ease-in-out duration-300 w-full custom-h4 border-none px-[20px]! py-[20px]! rounded-[12px]
+       bg-primary text-white
+        ${isDisabled && 'border-gray400! text-gray400! bg-gray300! hover:bg-gray300! active:bg-gray300! cursor-not-allowed'}`}>
+          시작하기
+        </button>
         <div className="mt-[90px]"></div>
       </form>
     </div>

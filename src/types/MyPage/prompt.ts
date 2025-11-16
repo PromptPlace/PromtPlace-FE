@@ -50,6 +50,7 @@ export interface NewDownloadedPromptDTO {
   userNickname: string;
   userProfileImageUrl: string | null;
   userReview: {
+    review_id: number;
     content: string;
     rating: number;
   } | null;
