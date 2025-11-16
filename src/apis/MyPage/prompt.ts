@@ -3,6 +3,7 @@ import type {
   ApiResponse,
   DownloadedPromptDTO,
   LikedPromptDTO,
+  NewLikedPromptResponse,
   AuthoredPromptsApiResponse,
   NewAuthoredPromptsApiResponse,
   NewDownloadedPromptsApiResponse
@@ -15,8 +16,8 @@ export const getDownloadedPrompts = async (): Promise<ApiResponse<DownloadedProm
   return data;
 };
 
-export const getLikedPrompts = async (): Promise<ApiResponse<LikedPromptDTO>> => {
-  const { data } = await axiosInstance.get<ApiResponse<LikedPromptDTO>>('/api/prompts/likes');
+export const getLikedPrompts = async () => {
+  const { data } = await axiosInstance.get<NewLikedPromptResponse>('/api/prompts/likes');
   return data;
 };
 
