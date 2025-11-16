@@ -1,3 +1,5 @@
+import type { Prompt } from '../MainPage/prompt';
+
 export interface ApiResponse<T> {
   message: string;
   statusCode: number;
@@ -77,6 +79,16 @@ export interface LikedPromptDTO {
   title: string;
   models: string[];
   tags: string[];
+}
+
+export interface NewLikedPromptResponse {
+  data: {
+    data: Prompt[];
+    message: string;
+    statusCode: number;
+  };
+  message: string;
+  statusCode: number;
 }
 
 export interface AuthoredPromptData {

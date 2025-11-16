@@ -25,10 +25,9 @@ export const useGetDownloadedPrompts = (options?: UseGetDownloadedPromptsOptions
   });
 };
 
-export const useGetLikedPrompts = (options?: UseGetLikedPromptsOptions) => {
-  return useQuery<ApiResponse<LikedPromptDTO>, AxiosError>({
+export const useGetLikedPrompts = () => {
+  return useQuery({
     queryKey: QUERY_KEY.likedPrompts,
     queryFn: getLikedPrompts,
-    ...options,
   });
 };
