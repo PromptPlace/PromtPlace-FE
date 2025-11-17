@@ -3,8 +3,13 @@ import textIcon from '@/assets/icon-result-text.svg';
 import imageIcon from '@/assets/icon-result-image.svg';
 import imageResult from '@/assets/icon-prompt-result-instance.svg';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
+import SocialLoginModal from '@/components/Modal/SocialLoginModal';
+import { useState } from 'react';
 
 const CreatePrompt = () => {
+  const { accessToken } = useAuth();
+  const [loginModalShow, setLoginModalShow] = useState(false);
   return (
     <div className="w-full px-[102px] max-lg:px-[40px] max-phone:px-[20px] pt-[56px] max-phone:pt-[40px] pb-[96px] max-phone:pb-[64px] bg-white">
       <div className="flex gap-[40px] px-[40px] max-phone:px-[16px] py-[64px] max-phone:py-[32px] max-lg:flex-col">
@@ -15,12 +20,21 @@ const CreatePrompt = () => {
               나만의 AI 프롬프트를 업로드하고 판매하세요!
             </p>
           </div>
-          <Link
-            to="/create"
-            className="flex gap-[20px] border-[1px] border-gray-200 rounded-[24px] bg-white custom-button1 text-text-on-white py-[12px] pl-[24px] pr-[13.5px] w-[128px]">
-            <p>바로가기</p>
-            <img src={arrow} alt="Arrow Icon" className="w-[12px] h-[18px]" />
-          </Link>
+          {accessToken ? (
+            <Link
+              to="/create"
+              className="flex gap-[20px] border-[1px] border-gray-200 rounded-[24px] bg-white custom-button1 text-text-on-white py-[12px] pl-[24px] pr-[13.5px] w-[128px]">
+              <p>바로가기</p>
+              <img src={arrow} alt="Arrow Icon" className="w-[12px] h-[18px]" />
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setLoginModalShow(true)} // 👈 로그인 모달 켜기
+              className="flex gap-[20px] border-[1px] border-gray-200 rounded-[24px] bg-white custom-button1 text-text-on-white py-[12px] pl-[24px] pr-[13.5px] w-[128px]">
+              바로가기
+            </button>
+          )}
         </section>
 
         <section className="flex flex-col gap-[20px] w-full">
@@ -64,6 +78,9 @@ const CreatePrompt = () => {
           </div>
         </section>
       </div>
+      {loginModalShow && (
+        <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
+      )}
     </div>
   );
 };
