@@ -52,7 +52,7 @@ export const categoryData = [
     name: '코딩 / 개발',
     displayName: '코딩 • 개발',
     displaySubcategories: ['코드 자동화', '디버깅 • 리팩토링', 'API 설계', 'SQL 쿼리', '테스트 케이스'],
-    subcategories: ['코드 자동화', '디버깅 / 리팩토링', 'API 설계', 'SQL 쿼리', '테스트 케이스'],
+    subcategories: ['코드 자동화', '디버깅/리팩토링', 'API 설계', 'SQL 쿼리', '테스트 케이스'],
     image: develop,
   },
   {
@@ -60,7 +60,7 @@ export const categoryData = [
     name: '비즈니스 / 마케팅',
     displayName: '비즈니스 • 마케팅',
     displaySubcategories: ['마케팅 캠페인 기획', 'SNS 콘텐츠 아이디어', '시장조사 • 분석', '이메일 • 세일즈 카피'],
-    subcategories: ['마케팅 캠페인 기획', 'SNS 콘텐츠 아이디어', '시장조사 / 분석', '이메일 / 세일즈 카피'],
+    subcategories: ['마케팅 캠페인 기획', 'SNS 콘텐츠 아이디어', '시장조사/분석', '이메일 / 세일즈 카피'],
     image: marketing,
   },
   {
@@ -68,7 +68,7 @@ export const categoryData = [
     name: '학습 / 과제',
     displayName: '학습 • 과제',
     displaySubcategories: ['학습 • 과제 요약', '문제 풀이', '개념 • 설명', '외국어 학습'],
-    subcategories: ['학습 / 과제 요약', '문제 풀이', '개념 / 설명', '외국어 학습'],
+    subcategories: ['학습 / 과제 요약', '문제 풀이', '개념 설명', '외국어 학습'],
     image: workbook,
   },
   {
@@ -84,7 +84,7 @@ export const categoryData = [
     name: '음악 / 오디오',
     displayName: '음악 • 오디오',
     displaySubcategories: ['배경음악', '사운드 이펙트', '작곡 • 편곡 보조', '나레이션 • 보이스'],
-    subcategories: ['배경음악', '사운드 이펙트', '작곡 / 편곡 보조', '나레이션 / 보이스'],
+    subcategories: ['배경음악', '사운드 이펙트', '작곡/편곡 보조', '나레이션 / 보이스'],
     image: music,
   },
   {
