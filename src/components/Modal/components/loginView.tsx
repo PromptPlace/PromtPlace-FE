@@ -16,7 +16,7 @@ interface LoginViewProps {
 const SocialButton = ({ icon, onClick }: { icon: string; text: string; onClick: () => void }) => (
   <button
     onClick={onClick}
-    className="w-[56px] h-[56px]  border-[0.5px] border-text-on-white rounded-[50px] px-[16px] py-[16px] flex items-center shadow-[0_1px_3px_0_rgba(0,0,0,0.08)]
+    className="w-[56px] h-[56px] max-phone:w-[40px] max-phone:h-[40px] border-[0.5px] border-text-on-white rounded-[50px] px-[16px] py-[16px] max-phone:px-[12px] max-phone:py-[12px] flex items-center shadow-[0_1px_3px_0_rgba(0,0,0,0.08)]
     hover:bg-secondary hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.12)] 
     active:bg-secondary-pressed">
     <img src={icon} alt="소셜 로고" className="w-[24px] max-lg:w-[20px] h-[24px] max-lg:h-[20px]" />
