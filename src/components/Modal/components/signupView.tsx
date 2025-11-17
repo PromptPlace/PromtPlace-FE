@@ -35,6 +35,7 @@ const SignupView = ({ setView, email, setEmail, tempToken, setTempToken }: Login
   const handleSendCode = () => {
     // 인증번호 발송 로직
     setEmailStatus('sending');
+    setEmailError('');
     requestSignupEmailCode(email, {
       onSuccess: () => {
         setEmailStatus('sent');
@@ -42,6 +43,7 @@ const SignupView = ({ setView, email, setEmail, tempToken, setTempToken }: Login
       },
       onError: (error) => {
         setEmailError('이미 가입한 이메일이에요! 다시 확인해주세요.');
+        setEmailStatus('default');
         console.error('이메일 인증 요청 실패:', error);
       },
     });
@@ -161,8 +163,8 @@ const SignupView = ({ setView, email, setEmail, tempToken, setTempToken }: Login
           <div className="absolute right-[16px] top-[32px]">{renderEmailAccessory({ emailStatus })}</div>
         </div>
         <p className="text-alert custom-button2 mt-[4px] min-h-5">{emailError}</p>
-        <div className="flex flex-col mb-[40px]">
-          <label className="custom-h5 max-phone:text-[14px] mb-[12px] mt-[12.5px] text-black">인증번호 입력</label>
+        <div className="flex flex-col mb-[40px] max-phone:mb-[28.5px]">
+          <label className="custom-h5 max-phone:text-[14px] mb-[12px] mt-[16.5px] text-black">인증번호 입력</label>
           <div className="relative w-full">
             <input
               id="verificationCode"
@@ -184,7 +186,7 @@ const SignupView = ({ setView, email, setEmail, tempToken, setTempToken }: Login
           onClick={() => setView('initPassword')}
           disabled={isDisabled}
           className={`flex items-center justify-center shadow-button hover:shadow-button-hover
-       transition-all ease-in-out duration-300 w-full custom-h4 border-none px-[20px]! py-[20px]! rounded-[12px]
+       transition-all ease-in-out duration-300 w-full custom-h4 max-phone:text-[16px] border-none px-[20px]! py-[20px]! rounded-[12px]
        bg-primary text-white
         ${isDisabled && 'border-gray400! text-gray400! bg-gray300! hover:bg-gray300! active:bg-gray300! cursor-not-allowed'}`}>
           다음

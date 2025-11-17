@@ -36,13 +36,15 @@ const OnBoardingView = ({ setView }: LoginViewProps) => {
   return (
     <div className="flex flex-col items-center w-full">
       {' '}
-      <div className="w-full">
-        <p className=" custom-h2 max-phone:text-[20px] mb-[8px] text-black">시작하기 전에, 닉네임과 소개말을 작성해주세요!</p>
-        <p className=" custom-h3 max-phone:text-[14px] mb-[24px] text-black">마이페이지에 작성될 정보에요.</p>
+      <div className="w-full mb-[60px] max-phone:mb-[24px]">
+        <p className=" custom-h2 max-phone:text-[20px] mb-[8px] text-black">
+          시작하기 전에, 닉네임과 소개말을 작성해주세요!
+        </p>
+        <p className=" custom-h3 max-phone:text-[14px] text-black">마이페이지에 작성될 정보에요.</p>
       </div>
       <form className="flex flex-col w-full" onSubmit={handleSubmit}>
         <div className="flex flex-col">
-          <label className="custom-h5 mb-[12px] text-black">닉네임</label>
+          <label className="block custom-h5 mb-[12px] text-black">닉네임</label>
           <input
             type="text"
             id="nickname"
@@ -52,8 +54,8 @@ const OnBoardingView = ({ setView }: LoginViewProps) => {
             onChange={(e) => setNickName(e.target.value)}
           />
         </div>
-        <div className="flex flex-col mb-[40px]">
-          <label className="custom-h5 mb-[12px] text-black" htmlFor="introduce">
+        <div className="flex flex-col mb-[40px] max-phone:mb-[32px]">
+          <label className="block custom-h5 mb-[12px] text-black" htmlFor="introduce">
             소개말
           </label>
           <div className="relative w-full">
@@ -73,12 +75,22 @@ const OnBoardingView = ({ setView }: LoginViewProps) => {
           onClick={handleSubmit}
           disabled={isDisabled}
           className={`flex items-center justify-center shadow-button hover:shadow-button-hover
-       transition-all ease-in-out duration-300 w-full custom-h4 border-none px-[20px]! py-[20px]! rounded-[12px]
+       transition-all ease-in-out duration-300 w-full custom-h4 max-phone:text-[16px] border-none px-[20px]! py-[20px]! rounded-[12px]
        bg-primary text-white
         ${isDisabled && 'border-gray400! text-gray400! bg-gray300! hover:bg-gray300! active:bg-gray300! cursor-not-allowed'}`}>
           시작하기
         </button>
-        <div className="mt-[90px]"></div>
+        <div className="mt-[90px] max-phone:hidden"></div>
+        <nav
+          aria-label="계정 보조 메뉴"
+          className="hidden max-phone:block flex mt-[28px] gap-[32px] custom-h5 text-[14px] mb-[32px]">
+          <button className="text-black" onClick={() => setView('login')}>
+            로그인하기
+          </button>
+          <button className="text-black" onClick={() => setView('forgotPassword')}>
+            비밀번호 찾기
+          </button>
+        </nav>
       </form>
     </div>
   );
