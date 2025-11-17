@@ -16,7 +16,7 @@ const PromptMobileCard = ({ prompt }: PromptMobileCardProps) => {
         {prompt.images?.[0]?.image_url ? (
           <img src={prompt.images[0].image_url} alt="프롬프트 이미지" />
         ) : (
-          <p className="text-text-on-white text-[6px] font-light leading-[9.6px] tracking-[0.12px] absolute top-[8px] px-[10px] pb-[8px] line-clamp-9">
+          <p className="text-text-on-white text-[6px] font-light leading-[9.6px] tracking-[0.12px] absolute top-[8px] px-[10px] pb-[8px] line-clamp-9 w-full">
             {prompt.prompt_result}
           </p>
         )}
