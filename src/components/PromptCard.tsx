@@ -94,10 +94,16 @@ const PromptCard = ({ prompt }: PromptCardProps) => {
         <div className="text-lg leading-6">{prompt.is_free ? '무료' : `${prompt.price.toLocaleString()}원`}</div>
         <div className="text-xs font-light w-[246px] h-[51px]">{prompt.description}</div>
         <div className="w-[246px] h-[41px] gap-[8px]">
-          <div className="justify-start flex">
-            <Stars star={prompt.review_rating_avg} />
-          </div>
-          <div className="text-xs font-light text-gray-400 w-full h-[17px] truncate"></div>
+          {prompt.review_count === 0 ? (
+            <div></div>
+          ) : (
+            <div>
+              <div className="justify-start flex">
+                <Stars star={prompt.review_rating_avg} />
+              </div>
+              <div className="text-xs font-light text-gray-400 w-full h-[17px] truncate"></div>
+            </div>
+          )}
         </div>
       </div>
     </div>
