@@ -60,7 +60,7 @@ export const categoryData = [
     name: '비즈니스 / 마케팅',
     displayName: '비즈니스 • 마케팅',
     displaySubcategories: ['마케팅 캠페인 기획', 'SNS 콘텐츠 아이디어', '시장조사 • 분석', '이메일 • 세일즈 카피'],
-    subcategories: ['마케팅 캠페인 기획', 'SNS 콘텐츠 아이디어', '시장조사/분석', '이메일 / 세일즈 카피'],
+    subcategories: ['마케팅 캠페인 기획', 'SNS 콘텐츠 아이디어', '시장조사/분석', '이메일/세일즈 카피'],
     image: marketing,
   },
   {
@@ -76,7 +76,7 @@ export const categoryData = [
     name: '생활 / 엔터테인먼트',
     displayName: '생활 • 엔터테인먼트',
     displaySubcategories: ['여행 • 일정', '요리 • 레시피', '게임 • 시나리오', '퀴즈 • 심리테스트', '상담'],
-    subcategories: ['여행 / 일정', '요리 / 레시피', '게임 / 시나리오', '퀴즈 / 심리테스트', '상담'],
+    subcategories: ['여행 / 일정', '요리 / 레시피', '게임 / 시나리오', '취미 / 심리테스트', '상담'],
     image: game,
   },
   {
@@ -84,7 +84,7 @@ export const categoryData = [
     name: '음악 / 오디오',
     displayName: '음악 • 오디오',
     displaySubcategories: ['배경음악', '사운드 이펙트', '작곡 • 편곡 보조', '나레이션 • 보이스'],
-    subcategories: ['배경음악', '사운드 이펙트', '작곡/편곡 보조', '나레이션 / 보이스'],
+    subcategories: ['배경음악', '사운드 이펙트', '작곡/편곡 보조', '나레이션/보이스'],
     image: music,
   },
   {
