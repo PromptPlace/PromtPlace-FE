@@ -133,11 +133,11 @@ const ForgotPasswordView = ({ setView, setTempToken, email, setEmail }: LoginVie
       {' '}
       <div className="w-full">
         <p className="max-phone:hidden custom-h2 mb-[24px] text-black">비밀번호 찾기</p>
-        <p className="hidden max-phone:block custom-h4 mb-[8px] text-black">비밀번호 찾기</p>
+        <p className="hidden max-phone:block custom-h4 mb-[60px] text-black">비밀번호 찾기</p>
       </div>
       <form className="flex flex-col w-full" onSubmit={handleSubmit}>
         <div className="relative">
-          <label className="custom-h5 max-phone:text-[14px] mb-[12px] mt-[12.5px] text-black">이메일</label>
+          <label className="block custom-h5 max-phone:text-[14px] mb-[12px] mt-[12.5px] text-black">이메일</label>
           <div className="flex flex-col">
             <input
               type="email"
@@ -148,11 +148,13 @@ const ForgotPasswordView = ({ setView, setTempToken, email, setEmail }: LoginVie
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div className="absolute right-[16px] top-[32px]">{renderEmailAccessory({ emailStatus })}</div>
+          <div className="absolute right-[16px] top-[54px]">{renderEmailAccessory({ emailStatus })}</div>
         </div>
-        {emailError && <p className="text-alert custom-button2 mt-[4px]">{emailError}</p>}
-        <div className="flex flex-col mb-[40px]">
-          <label className="custom-h5 max-phone:text-[14px] block mb-[12px] mt-[12.5px] text-black">인증번호 입력</label>
+        <p className="text-alert custom-button2 mt-[4px] min-h-5">{emailError}</p>
+        <div className="flex flex-col mb-[40px] max-phone:mb-[28.5px]">
+          <label className="custom-h5 max-phone:text-[14px] block mb-[12px] mt-[16.5px] text-black">
+            인증번호 입력
+          </label>
           <div className="relative w-full">
             <input
               id="verificationCode"
@@ -176,13 +178,15 @@ const ForgotPasswordView = ({ setView, setTempToken, email, setEmail }: LoginVie
           }}
           disabled={isDisabled}
           className={`flex items-center justify-center shadow-button hover:shadow-button-hover
-       transition-all ease-in-out duration-300 w-full custom-h4 border-none px-[20px]! py-[20px]! rounded-[12px]
+       transition-all ease-in-out duration-300 w-full custom-h4 max-phone:text-[16px] border-none px-[20px]! py-[20px]! rounded-[12px]
        bg-primary text-white
         ${isDisabled && 'border-gray400! text-gray400! bg-gray300! hover:bg-gray300! active:bg-gray300! cursor-not-allowed'}`}>
           다음
         </button>
       </form>
-      <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 max-phone:text-[14px] mb-[40px]">
+      <nav
+        aria-label="계정 보조 메뉴"
+        className="flex mt-[28px] gap-[32px] custom-h5 max-phone:text-[14px] mb-[40px] max-phone:mb-[32px]">
         <button className="text-black" onClick={() => setView('login')}>
           로그인하기
         </button>

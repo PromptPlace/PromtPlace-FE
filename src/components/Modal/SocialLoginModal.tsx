@@ -158,7 +158,7 @@ const SocialLoginModal = ({ isOpen, onClose, initialView = 'login' }: SocialLogi
         {renderView()}
 
         <footer>
-          <p className="custom-h3 text-gray-700">
+          <p className="custom-h3 max-phone:text-[14px] text-gray-700">
             로그인 또는 회원가입 시 서비스의{' '}
             <Link to="/terms" className="underline decoration-1">
               이용약관

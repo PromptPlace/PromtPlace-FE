@@ -172,8 +172,7 @@ const AuthoredPromptCard = ({ prompt }: AuthoredPromptCardProps) => {
             </div>
             <div className="custom-body3">{review.content}</div>
           </div>
-          //리뷰 개수 4개 이상일때 리뷰 더보기 버튼
-          {prompt.reviews.data.length > 4 && review === prompt.reviews.data[2] && (
+          {prompt.reviews.data.length > 3 && review === prompt.reviews.data[2] && (
             <div className="flex justify-end pr-[28px] mb-[12px]">
               <Link to={`/prompt/${prompt.prompt_id}`}>
                 <button className="custom-button2 text-gray-500">리뷰 더 보기 ({prompt.reviews.data.length})</button>
