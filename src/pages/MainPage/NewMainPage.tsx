@@ -101,6 +101,8 @@ const NewMainPage = () => {
     }
   });
 
+  console.log(prompts);
+
   const displayedPrompts = sortedPrompts.slice(0, displayCount);
   const hasNext = sortedPrompts.length > displayCount;
   const totalCount = sortedPrompts.length;
@@ -138,7 +140,7 @@ const NewMainPage = () => {
   return (
     <div className="max-mypage:pl-[40px] max-phone:pl-[20px] pl-[102px] ">
       {!searchQuery && (
-        <div className="py-[40px]">
+        <div className="py-[64px]">
           <p className="text-3xl text-gray-950 leading-10">프롬프트 보기</p>
           <p className="mt-[12px] text-gray-950 text-base font-light">
             다양한 '프롬프트'가 있는 '플레이스'에서 나를 위한 프롬프트를 찾아보세요!
