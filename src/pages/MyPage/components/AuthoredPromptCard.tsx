@@ -145,6 +145,7 @@ const AuthoredPromptCard = ({ prompt }: AuthoredPromptCardProps) => {
                       className="block custom-h3 px-[15px]  py-[8px]  border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary active:bg-secondary-pressed active:text-black rounded-t-[4px]">
                       삭제하기
                     </button>
+                    {/*
                     <button
                       onClick={() => {
                         handleEditAuthoredPrompt(prompt.prompt_id);
@@ -153,6 +154,7 @@ const AuthoredPromptCard = ({ prompt }: AuthoredPromptCardProps) => {
                       className="block custom-h3 px-[15px]  py-[8px] text-[16px]  text-text-on-background bg-secondary active:bg-secondary-pressed active:text-black rounded-b-[4px]">
                       수정하기
                     </button>
+                    */}
                   </div>
                 </Portal>
               )}
