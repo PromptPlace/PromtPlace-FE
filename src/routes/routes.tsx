@@ -1,4 +1,3 @@
-import MyProfilePage from '@/pages/MyPage/MyProfilePage';
 import React from 'react';
 
 export const lazyRoutes = {

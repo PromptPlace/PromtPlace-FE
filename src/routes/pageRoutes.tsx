@@ -3,7 +3,6 @@ import { lazyRoutes } from './routes';
 import HomeLayout from '@/layouts/HomeLayout';
 import ProtectedLayout from '@/layouts/ProtectedLayout';
 import AdminLayout from '@/layouts/AdminLayout';
-import TestPage from '@/pages/TestPage';
 
 export const publicRoutes: RouteObject[] = [
   {
@@ -22,7 +21,7 @@ export const publicRoutes: RouteObject[] = [
       { path: 'guide/notice', element: <lazyRoutes.PromptNoticePage /> },
       { path: 'guide/notice/:id', element: <lazyRoutes.PromptNoticeDetailPage /> },
       { path: 'profile/:id', element: <lazyRoutes.ProfilePage /> },
-      { path: '/test', element: <TestPage /> },
+      // { path: '/test', element: <TestPage /> },
       { path: 'mypage', element: <lazyRoutes.MyPage /> },
       { path: '/auth/callback', element: <lazyRoutes.SocialLoginCallbackPage /> },
       // { path: 'guide/tip', element: <lazyRoutes.PromptGuidePage type="tip" /> },
