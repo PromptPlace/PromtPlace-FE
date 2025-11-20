@@ -71,7 +71,7 @@ const EditableRating = ({ star, onChange }: EditableRatingProps) => {
               onClick={(e) => handleClick(i, e)}
               onMouseMove={(e) => handleMouseMove(i, e)}
               onMouseLeave={handleMouseLeave}
-              className="w-[40px] h-[40px] max-lg:w-[12px] max-lg:h-[12px] cursor-pointer select-none"
+              className="w-[40px] h-[40px] cursor-pointer select-none"
             />
           );
         })}

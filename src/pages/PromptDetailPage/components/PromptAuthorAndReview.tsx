@@ -235,16 +235,19 @@ const PromptAuthorAndReview = ({
 
     return icons.length ? icons : null;
   };
+
   const handleCreateReview = async () => {
-    if (!rating || !reviewText.trim()) {
-      alert('별점과 리뷰 내용을 모두 입력해주세요.');
+    if (!rating) {
+      alert('별점을 선택해주세요.');
       return;
     }
+
+    const trimmedContent = reviewText.trim();
 
     try {
       await createMutate({
         promptId,
-        body: { content: reviewText.trim(), rating },
+        body: { content: trimmedContent, rating },
       });
 
       await queryClient.invalidateQueries({
@@ -351,7 +354,7 @@ const PromptAuthorAndReview = ({
                 <button
                   type="button"
                   onClick={isEditing ? handleUpdateReview : handleCreateReview}
-                  disabled={isPending || !rating || !reviewText.trim()}
+                  disabled={isPending || !rating}
                   className={`w-full h-[49px] rounded-[12px] border text-[16px] font-medium transition-colors duration-200 ${
                     isPending || !rating || !reviewText.trim()
                       ? 'border-gray-300 text-gray-400 bg-gray-100 cursor-not-allowed'
