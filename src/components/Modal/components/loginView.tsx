@@ -27,6 +27,7 @@ const SocialButton = ({ icon, onClick }: { icon: string; text: string; onClick: 
 const CALLBACK_URL = new URL('auth/callback', window.location.origin).toString();
 
 const handleGoogleLogin = () => {
+  sessionStorage.setItem('prevPath', window.location.pathname + window.location.search);
   // 1. 필요한 정보들을 정의합니다.
   const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   // 2. 모든 파라미터를 조합하여 Google 인증 URL을 생성합니다.
@@ -38,6 +39,7 @@ const handleGoogleLogin = () => {
 
 const handleNaverLogin = () => {
   const NAVER_CLIENT_ID = import.meta.env.VITE_NAVER_CLIENT_ID;
+  sessionStorage.setItem('prevPath', window.location.pathname + window.location.search);
   sessionStorage.setItem('login_provider', 'naver');
   const STATE = crypto.randomUUID(); // CSRF 방지를 위한 임의 문자열
   sessionStorage.setItem('naver_state', STATE);

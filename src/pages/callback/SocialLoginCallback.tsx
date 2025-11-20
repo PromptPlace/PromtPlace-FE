@@ -45,6 +45,8 @@ const SocialCallbackPage = () => {
       // 2. 만약 authCode가 존재한다면, 로그인 절차를 진행합니다.
       try {
         // 3. 기존에 구현해둔 login 함수를 호출합니다!
+        const prevPath = sessionStorage.getItem('prevPath') || '/';
+        sessionStorage.removeItem('prevPath');
         await login(provider, authCode);
 
         sessionStorage.removeItem('login_provider');
@@ -52,8 +54,8 @@ const SocialCallbackPage = () => {
           sessionStorage.removeItem('naver_state');
         }
 
-        // 4. 로그인 성공 시, 메인 페이지로 이동시킵니다.
-        navigate(-1);
+        // 4. 로그인 성공 시, 메인 페이지로 이동시킵니다.-> 그대로 머무도록 수정
+        navigate(prevPath);
       } catch (error) {
         // 백엔드에서 에러가 발생한 경우
         console.error('로그인 처리 중 에러 발생:', error);
