@@ -143,6 +143,7 @@ export type Pagination = {
 
 export type ResponsePromptsDto = CommonResponse<Prompt[]> & {
   pagination: Pagination;
+  total_prompts: number;
 };
 
 // 프롬프트 삭제

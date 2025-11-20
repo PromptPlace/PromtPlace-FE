@@ -27,15 +27,13 @@ export interface NewAuthoredPromptDTO {
 export interface NewAuthoredPromptsApiResponse {
   message: string;
   statusCode: number;
-  data: {
-    prompts: NewAuthoredPromptDTO[];
-
-    pagination: {
-      nextCursor: number | null;
-      has_more: boolean;
-      limit: number;
-    };
+  data: NewAuthoredPromptDTO[];
+  pagination: {
+    nextCursor: number | null;
+    has_more: boolean;
+    limit: number;
   };
+  total_prompts: number;
 }
 
 export interface NewDownloadedPromptDTO {
