@@ -45,7 +45,7 @@ const PromptList = () => {
     {} as Record<string, Prompt[]>,
   ); // 카테고리별 프롬프트
 
-  const promptCount = promptsData ? promptsData?.pages?.reduce((acc, page) => acc + (page?.data?.length ?? 0), 0) : 0;
+  const promptCount = promptsData ? promptsData?.pages[0].total_prompts : 0;
 
   return (
     <div className="mt-[56px]">

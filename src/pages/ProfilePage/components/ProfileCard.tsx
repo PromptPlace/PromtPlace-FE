@@ -89,7 +89,7 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
     })) || [];
 
   // 올린 프롬프트 개수
-  const promptCount = promptsData ? promptsData?.pages?.reduce((acc, page) => acc + (page?.data?.length ?? 0), 0) : 0;
+  const promptCount = promptsData ? promptsData?.pages[0].total_prompts : 0;
 
   useEffect(() => {
     if (isMyProfile && !mypage) {

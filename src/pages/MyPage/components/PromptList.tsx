@@ -15,7 +15,7 @@ const PromptList = ({ setActiveTab }: PromptListProps) => {
   const { data: authoredData } = useGetMyPrompts();
   const { data: likedPromptsData } = useGetLikedPrompts();
 
-  const AuthoredPromptsNum = authoredData?.prompts.length || 0;
+  const AuthoredPromptsNum = authoredData?.pages[0].total_prompts || 0;
   const DownloadedPromptsNum = downloadedData?.data.length || 0;
   const LikedPromptsNum = likedPromptsData?.data.data.length || 0;
   console.log('찜한 프롬프트 수:', LikedPromptsNum);
@@ -38,7 +38,8 @@ const PromptList = ({ setActiveTab }: PromptListProps) => {
             </button>
           )}
         </div>
-        {authoredData?.prompts
+        {authoredData?.pages
+          .flatMap((page) => page.data)
           .filter(Boolean)
           .slice(0, 6)
           .map((prompt) => (
