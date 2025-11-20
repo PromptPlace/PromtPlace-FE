@@ -143,37 +143,37 @@ const PromptDetailCard = ({
     });
   };
 
-  const mainCategoryName = useMemo(() => {
+  const mainCategoryNames = useMemo(() => {
     const list = Array.isArray(data?.categories) ? data!.categories : [];
 
     const names = list
       .map((c: any) => {
-        // 여러 경로 시도
         const mainCatName =
           c?.category?.mainCategory?.name || c?.mainCategory?.name || c?.category?.main_category?.name || null;
-
         return mainCatName;
       })
-      .filter(Boolean);
+      .filter((name: string | null): name is string => !!name && name.trim().length > 0);
 
-    const result = Array.from(new Set(names))[0] ?? '—';
-    return result;
-  }, [JSON.stringify(data?.categories)]);
+    return Array.from(new Set(names));
+  }, [data?.categories]);
 
-  // 메인 카테고리 이름을 기준으로 categoryData에서 프론트엔드 ID 찾기
-  const mainCategoryLinkId = useMemo(() => {
-    if (!mainCategoryName || mainCategoryName === '—') return null;
+  const mainCategoryLinkItems = useMemo<MainCategoryLinkItem[]>(
+    () =>
+      mainCategoryNames.map((name) => {
+        const normalizedServerName = name.replace(/\s*\/\s*/g, ' / ').trim();
 
-    // 공백을 정규화하여 비교 (서버: "글쓰기/문서 작성", 프론트: "글쓰기 / 문서 작성")
-    const normalizedServerName = mainCategoryName.replace(/\s*\/\s*/g, ' / ').trim();
+        const category = categoryData.find((cat) => {
+          const normalizedCatName = cat.name.replace(/\s*\/\s*/g, ' / ').trim();
+          return normalizedCatName === normalizedServerName;
+        });
 
-    const category = categoryData.find((cat) => {
-      const normalizedCatName = cat.name.replace(/\s*\/\s*/g, ' / ').trim();
-      return normalizedCatName === normalizedServerName;
-    });
-
-    return category?.id ?? null;
-  }, [mainCategoryName]);
+        return {
+          id: category?.id ?? null,
+          name,
+        };
+      }),
+    [mainCategoryNames],
+  );
 
   const normalizeCategoryName = (name: string) =>
     name
@@ -181,15 +181,19 @@ const PromptDetailCard = ({
       .replace(/\s+/g, ' ')
       .trim();
 
-  const handleMainCategoryClick = () => {
-    if (!mainCategoryLinkId || !mainCategoryName) return;
+  const handleMainCategoryClick = (item: MainCategoryLinkItem) => {
+    const prettyName = normalizeCategoryName(item.name);
 
-    const prettyName = normalizeCategoryName(mainCategoryName);
-    // 서브카테고리는 항상 '전체'로 설정
-    const qs = `categoryId=${mainCategoryLinkId}&categoryName=${encodeURIComponent(prettyName)}`;
+    if (item.id !== null) {
+      const qs = `categoryId=${item.id}&categoryName=${encodeURIComponent(prettyName)}`;
+      navigate(`/prompt?${qs}`);
+      return;
+    }
 
+    const qs = `categoryName=${encodeURIComponent(prettyName)}`;
     navigate(`/prompt?${qs}`);
   };
+
   const displayTags = useMemo(() => {
     const arr = Array.isArray(tags) ? tags : [];
     return Array.from(
@@ -275,20 +279,24 @@ const PromptDetailCard = ({
       <div className="w-full max-w-[1236px] mx-auto flex flex-col gap-6">
         <div className="flex flex-col gap-6 ">
           <div className="flex items-center justify-between font-light">
-            {mainCategoryLinkId ? (
-              <button
-                type="button"
-                onClick={handleMainCategoryClick}
-                className="inline-flex items-center gap-1 text-[14px] text-[#030712]
+            {mainCategoryLinkItems.length > 0 ? (
+              <div className="flex flex-wrap gap-[20px]">
+                {mainCategoryLinkItems.map((cat) => (
+                  <button
+                    key={`${cat.name}-${cat.id ?? 'none'}`}
+                    type="button"
+                    onClick={() => handleMainCategoryClick(cat)}
+                    className="inline-flex items-center gap-1 text-[14px] text-[#030712]
           px-3 py-2 hover:bg-gray-100 transition cursor-pointer"
-                aria-label={`메인 카테고리 ${mainCategoryName}로 이동`}>
-                {mainCategoryName}
-                <img src={arrowRightBlack} alt="" className="w-[16px] h-[16px]" />
-              </button>
+                    aria-label={`메인 카테고리 ${cat.name}로 이동`}>
+                    {cat.name}
+                    <img src={arrowRightBlack} alt="" className="w-[16px] h-[16px]" />
+                  </button>
+                ))}
+              </div>
             ) : (
               <span className="text-[14px] text-[#030712]">—</span>
             )}
-
             <button
               type="button"
               className="text-[14px] text-gray-400 underline flex items-center gap-1"
