@@ -42,6 +42,11 @@ interface Props {
   onDownload: () => void;
 }
 
+type MainCategoryLinkItem = {
+  id: number | null;
+  name: string;
+};
+
 const PromptDetailCard = ({
   title,
   views,
