@@ -286,22 +286,31 @@ const PromptDetailCard = ({
           <div className="flex items-center justify-between font-light">
             {mainCategoryLinkItems.length > 0 ? (
               <div className="flex flex-wrap gap-[20px]">
-                {mainCategoryLinkItems.map((cat) => (
-                  <button
-                    key={`${cat.name}-${cat.id ?? 'none'}`}
-                    type="button"
-                    onClick={() => handleMainCategoryClick(cat)}
-                    className="inline-flex items-center gap-1 text-[14px] text-[#030712]
+                {mainCategoryLinkItems.map((cat) => {
+                  // 표시용 이름: "A / B" → "A • B"
+                  const displayName = cat.name
+                    .replace(/\s*\/\s*/g, ' • ')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+
+                  return (
+                    <button
+                      key={`${cat.name}-${cat.id ?? 'none'}`}
+                      type="button"
+                      onClick={() => handleMainCategoryClick(cat)}
+                      className="inline-flex items-center gap-1 text-[14px] text-[#030712]
           px-3 py-2 hover:bg-gray-100 transition cursor-pointer"
-                    aria-label={`메인 카테고리 ${cat.name}로 이동`}>
-                    {cat.name}
-                    <img src={arrowRightBlack} alt="" className="w-[16px] h-[16px]" />
-                  </button>
-                ))}
+                      aria-label={`메인 카테고리 ${displayName}로 이동`}>
+                      {displayName}
+                      <img src={arrowRightBlack} alt="" className="w-[16px] h-[16px]" />
+                    </button>
+                  );
+                })}
               </div>
             ) : (
               <span className="text-[14px] text-[#030712]">—</span>
             )}
+
             <button
               type="button"
               className="text-[14px] text-gray-400 underline flex items-center gap-1"
