@@ -53,7 +53,7 @@ const SocialCallbackPage = () => {
         }
 
         // 4. 로그인 성공 시, 메인 페이지로 이동시킵니다.
-        navigate('/');
+        navigate(-1);
       } catch (error) {
         // 백엔드에서 에러가 발생한 경우
         console.error('로그인 처리 중 에러 발생:', error);
