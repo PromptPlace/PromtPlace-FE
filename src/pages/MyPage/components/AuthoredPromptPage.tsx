@@ -1,6 +1,8 @@
 import { useGetMyPrompts } from '@/hooks/queries/MyPage/useGetMyPrompt';
 import AuthoredPromptCard from './AuthoredPromptCard';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useInView } from 'react-intersection-observer';
 
 const AuthoredPromptPage = () => {
   const {
@@ -9,9 +11,19 @@ const AuthoredPromptPage = () => {
     hasNextPage, // 다음 페이지가 있는지 (getNextPageParam이 undefined가 아닐 때 true)
     isLoading,
     isError,
+    isFetching,
   } = useGetMyPrompts();
 
+  //
   const navigate = useNavigate();
+
+  const { ref, inView } = useInView({ threshold: 0 });
+
+  useEffect(() => {
+    if (inView && !isFetching && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, isFetching, hasNextPage, fetchNextPage]);
 
   return (
     <div className="mt-[64px] w-full">
@@ -25,6 +37,8 @@ const AuthoredPromptPage = () => {
         {data?.prompts.map((prompt) => (
           <AuthoredPromptCard key={prompt.prompt_id} prompt={prompt} />
         ))}
+
+        <div ref={ref}></div>
       </div>
     </div>
   );
