@@ -17,15 +17,7 @@ export const useGetMyPrompts = () => {
     initialPageParam: 0,
 
     getNextPageParam: (lastPage) => {
-      return lastPage?.data?.pagination?.has_more ? lastPage.data.pagination.nextCursor : undefined;
-    },
-
-    select: (data) => {
-      console.log('useGetMyPrompts data:', data);
-      return {
-        prompts: data.pages.flatMap((page) => page?.data?.prompts || []),
-        pageParams: data.pageParams,
-      };
+      return lastPage?.pagination?.has_more ? lastPage.pagination.nextCursor : undefined;
     },
   });
 };
