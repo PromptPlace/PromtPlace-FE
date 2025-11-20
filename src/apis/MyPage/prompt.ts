@@ -51,7 +51,7 @@ export const unlikePrompt = async (promptId: number) => {
 
 export const getMyPrompts = async ({ pageParam = 0 }): Promise<NewAuthoredPromptsApiResponse> => {
   // pageParam을 쿼리 스트링으로 사용합니다.
-  const { data } = await axiosInstance.get(`/api/members/me/prompts?cursor=${pageParam}&limit=10`);
+  const { data } = await axiosInstance.get(`/api/members/me/prompts?cursor=${pageParam}&limit=50`);
   return data;
 };
 export const getMyDownloadedPrompts = async (): Promise<NewDownloadedPromptsApiResponse> => {
