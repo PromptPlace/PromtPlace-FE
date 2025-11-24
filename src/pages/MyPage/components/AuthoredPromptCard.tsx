@@ -94,7 +94,7 @@ const AuthoredPromptCard = ({ prompt }: AuthoredPromptCardProps) => {
 
   const imageUrl = prompt.image_url ? prompt.image_url : logo;
   return (
-    <div className="w-full bg-white p-[24px]">
+    <div className="w-full">
       <div className="flex justify-between pr-[24px]">
         <div className="flex gap-[24px] items-center">
           <img src={imageUrl} alt="프롬프트 이미지" className="w-[80px] h-[80px] rounded-[8px]" />
@@ -182,10 +182,10 @@ const AuthoredPromptCard = ({ prompt }: AuthoredPromptCardProps) => {
               </div>
               <div className="custom-body3 text-gray-700">{review.content}</div>
             </div>
-            {prompt.reviews.data.length > 1 && review === prompt.reviews.data[1] && (
+            {prompt.reviews.data.length > 3 && (
               <div className="flex justify-end pr-[20px] mt-[8px]">
                 <Link to={`/prompt/${prompt.prompt_id}`}>
-                  <button className="custom-button2 text-gray-500">리뷰 더 보기 ({prompt.reviews.data.length})</button>
+                  <button className="custom-button2 text-gray-500">리뷰 더 보기</button>
                 </Link>
               </div>
             )}
