@@ -10,6 +10,7 @@ import usePatchDeletePrompts from '@/hooks/mutations/ProfilePage/usePatchDeleteP
 import { useAuth } from '@/context/AuthContext';
 import type { RequestDeletePromptDto } from '@/types/ProfilePage/profile';
 import { useNavigate } from 'react-router-dom';
+import default_icon from '@/assets/icon-profile-image-default.svg';
 interface AuthoredPromptCardProps {
   prompt: NewAuthoredPromptDTO;
 }
@@ -93,8 +94,8 @@ const AuthoredPromptCard = ({ prompt }: AuthoredPromptCardProps) => {
 
   const imageUrl = prompt.image_url ? prompt.image_url : logo;
   return (
-    <div className="w-full bg-white pr-[24px]">
-      <div className="flex justify-between">
+    <div className="w-full">
+      <div className="flex justify-between pr-[24px]">
         <div className="flex gap-[24px] items-center">
           <img src={imageUrl} alt="프롬프트 이미지" className="w-[80px] h-[80px] rounded-[8px]" />
           <div className="flex flex-col py-[16px]">
@@ -162,27 +163,35 @@ const AuthoredPromptCard = ({ prompt }: AuthoredPromptCardProps) => {
           </div>
         </div>
       </div>
-
-      {prompt.reviews.data.slice(0, 3).map((review) => (
-        <div>
-          <div className="flex flex-col gap-[8px] px-[28px]">
-            <div className="flex justify-between">
-              <span className="custom-body3">{review.nickname}</span>
-              <span className="w-[80px] h-[16px]">
-                <Rating star={review.rating} />
-              </span>
+      <div className="flex flex-col gap-[16px]">
+        {prompt.reviews.data.slice(0, 3).map((review) => (
+          <div>
+            <div className="flex flex-col gap-[8px] px-[28px]">
+              <div className="flex justify-between">
+                <div className="flex items-center gap-[8px]">
+                  <img
+                    src={review.profile_image_url ? review.profile_image_url : default_icon}
+                    alt="리뷰어 프로필 이미지"
+                    className="w-[24px] h-[24px] rounded-[50px]"
+                  />
+                  <span className="custom-body3">{review.nickname}</span>
+                </div>
+                <span className="w-[80px] h-[16px]">
+                  <Rating star={review.rating} />
+                </span>
+              </div>
+              <div className="custom-body3 text-gray-700">{review.content}</div>
             </div>
-            <div className="custom-body3">{review.content}</div>
+            {prompt.reviews.data.length > 3 && (
+              <div className="flex justify-end pr-[20px] mt-[8px]">
+                <Link to={`/prompt/${prompt.prompt_id}`}>
+                  <button className="custom-button2 text-gray-500">리뷰 더 보기</button>
+                </Link>
+              </div>
+            )}
           </div>
-          {prompt.reviews.data.length > 3 && review === prompt.reviews.data[2] && (
-            <div className="flex justify-end pr-[28px] mb-[12px]">
-              <Link to={`/prompt/${prompt.prompt_id}`}>
-                <button className="custom-button2 text-gray-500">리뷰 더 보기 ({prompt.reviews.data.length})</button>
-              </Link>
-            </div>
-          )}
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

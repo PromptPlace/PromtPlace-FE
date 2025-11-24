@@ -8,6 +8,7 @@ export interface ApiResponse<T> {
 
 interface PromptReview {
   nickname: string;
+  profile_image_url: string | null;
   content: string;
   rating: number;
 }
