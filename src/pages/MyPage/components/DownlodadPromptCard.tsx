@@ -41,14 +41,15 @@ const DownloadedPromptCard = ({ prompt }: DownloadedPromptCardProps) => {
   const imageUrl = prompt.imageUrls && prompt.imageUrls.length > 0 ? prompt.imageUrls[0] : defaultlogo;
   const price = prompt.price === 0 ? '무료' : `${prompt.price}원`;
   return (
-    <div className="w-full bg-white p-[24px] mb-[20px]">
+    <div className="w-full bg-white p-[24px]">
       {' '}
       <div className="w-full bg-white pr-[24px] mb-[20px]">
         <div className="flex">
           <div className="flex gap-[24px] items-center">
             <img src={imageUrl} alt="프롬프트 이미지" className="w-[80px] h-[80px] rounded-[8px]" />
             <Link to={`/prompt/${prompt.prompt_id}`}>
-              <p className="custom-h3 text-black">{prompt.title}</p>
+              <p className="custom-h3 text-black mb-[8px]">{prompt.title}</p>
+              <p className="custom-h5 text-black">{price}</p>
             </Link>
           </div>
         </div>
