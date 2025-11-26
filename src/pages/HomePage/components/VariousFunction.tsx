@@ -3,6 +3,9 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import arrow from '@/assets/icon-prompt-upload.svg';
 
+import { useAuth } from '@/context/AuthContext';
+import SocialLoginModal from '@components/Modal/SocialLoginModal';
+
 type GuideType = 'tip' | 'notice';
 
 interface Post {
@@ -71,6 +74,9 @@ const VariousFunction = () => {
   const [tips, setTips] = useState<Post[]>([]);
   const [notices, setNotices] = useState<Post[]>([]);
 
+  const { accessToken } = useAuth();
+  const [loginModalShow, setLoginModalShow] = useState(false);
+
   useEffect(() => {
     const base = import.meta.env.VITE_SERVER_API_URL as string;
 
@@ -95,6 +101,11 @@ const VariousFunction = () => {
   }, []);
 
   const onClickItem = (type: GuideType, id: number) => {
+    if (!accessToken) {
+      setLoginModalShow(true);
+      return;
+    }
+
     navigate(`/guide/${type}/${id}`, { state: { type } });
   };
 
@@ -104,94 +115,100 @@ const VariousFunction = () => {
   };
 
   return (
-    <div className="w-full bg-white px-[102px] pt-[64px] max-phone:pt-[48px] max-lg:px-[40px] max-phone:px-[20px]">
-      <div className="w-full max-w-[1440px] mx-auto">
-        <h2 className="text-[24px] font-medium text-[#1F2937] mb-[28px] max-phone:hidden">
-          프롬프트 플레이스의 다양한 기능
-        </h2>
-        <h2 className="text-[20px] font-medium text-[#1F2937] mb-[28px] phone:hidden">
-          프롬프트 플레이스의
-          <br />
-          다양한 기능
-        </h2>
+    <>
+      <div className="w-full bg-white px-[102px] pt-[64px] max-phone:pt-[48px] max-lg:px-[40px] max-phone:px-[20px]">
+        <div className="w-full max-w-[1440px] mx-auto">
+          <h2 className="text-[24px] font-medium text-[#1F2937] mb-[28px] max-phone:hidden">
+            프롬프트 플레이스의 다양한 기능
+          </h2>
+          <h2 className="text-[20px] font-medium text-[#1F2937] mb-[28px] phone:hidden">
+            프롬프트 플레이스의
+            <br />
+            다양한 기능
+          </h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_478px] gap-[32px] items-start">
-          {/* 왼쪽: AI 꿀팁 */}
-          <section className="bg-[#F3F4F6] rounded-[12px] p-[40px] max-phone:py-[40px] max-phone:px-[20px] text-left w-full">
-            <h3 className="text-[32px] max-lg:text-[24px] font-medium mb-1 max-lg:mb-[8px]">AI 꿀팁</h3>
-            <p className="text-[16px] font-light max-lg:text-[14px] max-phone:text-[12px] text-[#030712] mb-[20px]">
-              각종 AI, 프롬프트 작성 꿀팁을 확인하세요!
-            </p>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_478px] gap-[32px] items-start">
+            {/* 왼쪽: AI 꿀팁 */}
+            <section className="bg-[#F3F4F6] rounded-[12px] p-[40px] max-phone:py-[40px] max-phone:px-[20px] text-left w-full">
+              <h3 className="text-[32px] max-lg:text-[24px] font-medium mb-1 max-lg:mb-[8px]">AI 꿀팁</h3>
+              <p className="text-[16px] font-light max-lg:text-[14px] max-phone:text-[12px] text-[#030712] mb-[20px]">
+                각종 AI, 프롬프트 작성 꿀팁을 확인하세요!
+              </p>
 
-            <Link
-              to="/guide/tip"
-              className="flex gap-[20px] border-[1px] border-gray-200 rounded-[24px] bg-white custom-button1 text-text-on-white py-[12px] pl-[24px] pr-[13.5px] w-[128px]">
-              <p>바로가기</p>
-              <img src={arrow} alt="Arrow Icon" className="w-[12px] h-[18px]" />
-            </Link>
+              <Link
+                to="/guide/tip"
+                className="flex gap-[20px] border-[1px] border-gray-200 rounded-[24px] bg-white custom-button1 text-text-on-white py-[12px] pl-[24px] pr-[13.5px] w-[128px]">
+                <p>바로가기</p>
+                <img src={arrow} alt="Arrow Icon" className="w-[12px] h-[18px]" />
+              </Link>
 
-            <div className="mt-[40px] bg-white rounded-[12px] py-4 px-6 text-sm">
-              {tips.length === 0 ? (
-                <p className="text-[#9CA3AF] text-[12px] font-light">게시글이 없습니다.</p>
-              ) : (
-                <ul className="space-y-3">
-                  {tips.map((p) => (
-                    <li key={p.id} className="cursor-pointer" onClick={() => onClickItem('tip', p.id)}>
-                      <p className="text-[#9CA3AF] text-[12px] font-light">{p.createdAt}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        {isNewPost(p.rawDate) && (
-                          <span className="w-5 h-5 bg-[#F87171] text-[#FFFEFB] text-[12px] font-medium rounded-full flex items-center justify-center">
-                            N
-                          </span>
-                        )}
-                        <p className="font-medium text-[14px] hover:underline mt-1">{p.title}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </section>
+              <div className="mt-[40px] bg-white rounded-[12px] py-4 px-6 text-sm">
+                {tips.length === 0 ? (
+                  <p className="text-[#9CA3AF] text-[12px] font-light">게시글이 없습니다.</p>
+                ) : (
+                  <ul className="space-y-3">
+                    {tips.map((p) => (
+                      <li key={p.id} className="cursor-pointer" onClick={() => onClickItem('tip', p.id)}>
+                        <p className="text-[#9CA3AF] text-[12px] font-light">{p.createdAt}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          {isNewPost(p.rawDate) && (
+                            <span className="w-5 h-5 bg-[#F87171] text-[#FFFEFB] text-[12px] font-medium rounded-full flex items-center justify-center">
+                              N
+                            </span>
+                          )}
+                          <p className="font-medium text-[14px] hover:underline mt-1">{p.title}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </section>
 
-          {/* 오른쪽: 공지사항 */}
-          <section className="bg-[#F3F4F6] rounded-[12px] p-[40px] max-phone:py-[40px] max-phone:px-[20px] text-left w-full h-full">
-            <h3 className="text-[32px] max-lg:text-[24px] font-medium mb-1 max-lg:mb-[8px]">공지사항</h3>
-            <p className="text-[16px] font-light max-lg:text-[14px] max-phone:text-[12px] text-[#030712] mb-4">
-              프롬프트 플레이스의 공지사항을 확인해보세요!
-            </p>
+            {/* 오른쪽: 공지사항 */}
+            <section className="bg-[#F3F4F6] rounded-[12px] p-[40px] max-phone:py-[40px] max-phone:px-[20px] text-left w-full h-full">
+              <h3 className="text-[32px] max-lg:text-[24px] font-medium mb-1 max-lg:mb-[8px]">공지사항</h3>
+              <p className="text-[16px] font-light max-lg:text-[14px] max-phone:text-[12px] text-[#030712] mb-4">
+                프롬프트 플레이스의 공지사항을 확인해보세요!
+              </p>
 
-            <Link
-              to="/guide/notice"
-              className="flex gap-[20px] border-[1px] border-gray-200 rounded-[24px] bg-white custom-button1 text-text-on-white py-[12px] pl-[24px] pr-[13.5px] w-[128px]">
-              <p>바로가기</p>
-              <img src={arrow} alt="Arrow Icon" className="w-[12px] h-[18px]" />
-            </Link>
+              <Link
+                to="/guide/notice"
+                className="flex gap-[20px] border-[1px] border-gray-200 rounded-[24px] bg-white custom-button1 text-text-on-white py-[12px] pl-[24px] pr-[13.5px] w-[128px]">
+                <p>바로가기</p>
+                <img src={arrow} alt="Arrow Icon" className="w-[12px] h-[18px]" />
+              </Link>
 
-            <div className="mt-[40px] bg-white p-4 rounded-[12px] text-sm">
-              {notices.length === 0 ? (
-                <p className="text-[#9CA3AF] text-[12px] font-light">게시글이 없습니다.</p>
-              ) : (
-                <ul className="space-y-3">
-                  {notices.map((p) => (
-                    <li key={p.id} className="cursor-pointer" onClick={() => onClickItem('notice', p.id)}>
-                      <p className="text-[#9CA3AF] text-[12px] font-light">{p.createdAt}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        {isNewPost(p.rawDate) && (
-                          <span className="w-5 h-5 bg-[#F87171] text-[#FFFEFB] text-[12px] font-medium rounded-full flex items-center justify-center">
-                            N
-                          </span>
-                        )}
-                        <p className="font-medium text-[14px] hover:underline mt-1">{p.title}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </section>
+              <div className="mt-[40px] bg-white p-4 rounded-[12px] text-sm">
+                {notices.length === 0 ? (
+                  <p className="text-[#9CA3AF] text-[12px] font-light">게시글이 없습니다.</p>
+                ) : (
+                  <ul className="space-y-3">
+                    {notices.map((p) => (
+                      <li key={p.id} className="cursor-pointer" onClick={() => onClickItem('notice', p.id)}>
+                        <p className="text-[#9CA3AF] text-[12px] font-light">{p.createdAt}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          {isNewPost(p.rawDate) && (
+                            <span className="w-5 h-5 bg-[#F87171] text-[#FFFEFB] text-[12px] font-medium rounded-full flex items-center justify-center">
+                              N
+                            </span>
+                          )}
+                          <p className="font-medium text-[14px] hover:underline mt-1">{p.title}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </section>
+          </div>
         </div>
       </div>
-    </div>
+
+      {loginModalShow && (
+        <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
+      )}
+    </>
   );
 };
 
