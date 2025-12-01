@@ -64,6 +64,13 @@ const MyPageInfo = () => {
     }
   };
 
+  const getProviderFromEmail = (email: string) => {
+    if (email.includes('@google.com')) return 'GOOGLE';
+    if (email.includes('@kakao.com')) return 'KAKAO';
+    if (email.includes('@naver.com')) return 'NAVER';
+    return null;
+  };
+  const socialType = getProviderFromEmail(userData?.data.email || '');
   return (
     <div className="flex justify-center pt-[92px] max-lg:pt-[12px] min-h-screen bg-background ">
       <div className="w-full max-lg:px-[20px]">
@@ -94,7 +101,7 @@ const MyPageInfo = () => {
           <div>
             <label className="custom-h5 block mb-[12px]">가입한 계정</label>
             <div className="flex gap-[12px] custom-body2 text-text-on-white px-[16px] py-[12px]">
-              {getProviderIcon(user.social_type)}
+              {getProviderIcon(socialType as 'GOOGLE' | 'KAKAO' | 'NAVER')}
               {userData?.data.email}
             </div>
           </div>
@@ -102,7 +109,7 @@ const MyPageInfo = () => {
             <label className="custom-h5 block mb-[12px]">계정 바꾸기</label>
             <div className="flex justify-between custom-body2 text-text-on-white px-[16px] py-[12px]">
               <div className="flex gap-[12px]">
-                {getProviderIcon(user.social_type)}
+                {getProviderIcon(socialType as 'GOOGLE' | 'KAKAO' | 'NAVER')}
                 {userData?.data.email}
               </div>
               <PrimaryButton buttonType="square" text="변경하기" onClick={() => {}} />

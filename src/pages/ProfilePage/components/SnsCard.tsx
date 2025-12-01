@@ -150,7 +150,7 @@ const SnsCard = ({
                       onClick={() => {
                         if (!editDescription.trim() || !editUrl.trim()) return;
                         setEdit(false);
-                        handleUpdateSns({ sns_id, url: editUrl, description: editDescription });
+                        handleUpdateSns({ sns_id, url: editUrl, description: editDescription, user_sns_id: '' });
                       }}
                     />
                   </div>
@@ -212,7 +212,7 @@ const SnsCard = ({
                           onClick={() => {
                             if (!editDescription.trim() || !editUrl.trim()) return;
                             setEdit(false);
-                            handleUpdateSns({ sns_id, url: editUrl, description: editDescription });
+                            handleUpdateSns({ sns_id, url: editUrl, description: editDescription, user_sns_id: '' });
                           }}
                         />
                       </div>

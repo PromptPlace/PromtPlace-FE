@@ -54,17 +54,17 @@ const ImageSlide = () => {
     {
       id: 1,
       url: Slide1,
-      to: '#',
+      to: '/prompt/2131',
     },
     {
       id: 2,
       url: Slide2,
-      to: '#',
+      to: '/prompt/2130',
     },
     {
       id: 3,
       url: Slide3,
-      to: '#',
+      to: '/prompt/2129',
     },
   ];
 
@@ -75,7 +75,11 @@ const ImageSlide = () => {
       else if (window.innerWidth <= 1023) width = 380;
 
       setCenterWidth(width);
-      setCenterPadding((window.innerWidth - width) / 2);
+      if (window.innerWidth >= 1920) {
+        setCenterPadding((1920 - width) / 2);
+      } else {
+        setCenterPadding((window.innerWidth - width) / 2);
+      }
     };
 
     updateSettings();
@@ -84,7 +88,11 @@ const ImageSlide = () => {
   }, []);
 
   return (
-    <Slider {...settings} prevArrow={<PrevArrow />} nextArrow={<NextArrow />} className="mt-[104px]">
+    <Slider
+      {...settings}
+      prevArrow={<PrevArrow />}
+      nextArrow={<NextArrow />}
+      className="mt-[64px] max-mypage:mt-[32px]">
       {SLIDES.map((slide) => (
         <ImageBox key={slide.id} url={slide.url} to={slide.to} />
       ))}

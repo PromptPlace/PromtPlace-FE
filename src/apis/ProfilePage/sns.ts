@@ -20,10 +20,12 @@ export const patchSNS = async ({
   sns_id,
   url,
   description,
+  user_sns_id,
 }: { sns_id: number } & RequestPatchSNSDto): Promise<ResponsePatchSNSDto> => {
   const { data } = await axiosInstance.patch(`/api/members/sns/${sns_id}`, {
     url,
     description,
+    user_sns_id,
   });
 
   return data;
@@ -37,10 +39,11 @@ export const deleteSNS = async ({ sns_id }: { sns_id: number }): Promise<Respons
 };
 
 // 회원 SNS 작성
-export const postSNS = async ({ url, description }: RequestPostSNS): Promise<RequestPostSNS> => {
+export const postSNS = async ({ url, description, user_sns_id }: RequestPostSNS): Promise<RequestPostSNS> => {
   const { data } = await axiosInstance.post('/api/members/sns', {
     url,
     description,
+    user_sns_id,
   });
 
   return data;

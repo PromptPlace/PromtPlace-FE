@@ -1,23 +1,20 @@
 import clsx from 'clsx';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const LINKS = [
     {
-      to: '#',
+      to: '/guide/notice/22',
       label: '이용약관',
     },
     {
-      to: '#',
+      to: '/guide/notice/23',
       label: '개인정보처리방침',
     },
     {
-      to: '#',
+      to: '/guide/notice/21',
       label: '운영정책',
-    },
-    {
-      to: '#',
-      label: '고객센터',
     },
   ];
 
@@ -43,6 +40,21 @@ const Footer = () => {
       content: 'promptplace.official@gmail.com',
     },
   ];
+
+  useEffect(() => {
+    if (!window.Kakao) return;
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init(import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY);
+    }
+  }, []);
+
+  // 카카오톡 채널 채팅
+  const handleFollowChannel = () => {
+    window.Kakao.Channel.chat({
+      channelPublicId: `${import.meta.env.VITE_CHANNEL_PUBLIC_ID}`,
+    });
+  };
+
   return (
     <footer className="bg-background mt-[168px] px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
       <nav className="pt-[32px] pb-[16px] flex gap-[20px]">
@@ -57,6 +69,11 @@ const Footer = () => {
             {link.label}
           </Link>
         ))}
+        <div
+          onClick={handleFollowChannel}
+          className="relative cursor-pointer py-[12px] custom-h4 text-gray700 max-lg:text-[16px] max-phone:text-[14px] max-lg:px-[0px]">
+          고객센터
+        </div>
       </nav>
 
       <div className="grid grid-cols-3 max-lg:grid-cols-2 max-sm:grid-cols-1 grid-flow-end gap-x-[20px] gap-y-[8px] w-max">

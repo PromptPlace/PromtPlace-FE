@@ -28,7 +28,7 @@ const PromptCard = ({ id, title, model, tags, isMyProfile, handleDeletePrompts }
 
   // 찜한 프롬프트 목록
   const { data: likedList } = useGetLikedPrompts();
-  const isLike = likedList?.data.some((data) => data.prompt_id === id);
+  const isLike = likedList?.data.data.some((data) => data.prompt_id === id);
 
   const [isDotsClicked, setIsDotsClicked] = useState(false);
 

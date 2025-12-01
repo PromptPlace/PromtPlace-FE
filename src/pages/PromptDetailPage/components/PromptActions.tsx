@@ -317,6 +317,7 @@ const PromptActions = ({
         setReviewCount={setReviewCount}
         onClose={() => setShowReviews(false)}
         currentUserId={currentUserId}
+        onEditReview={() => {}}
       />
     );
   }

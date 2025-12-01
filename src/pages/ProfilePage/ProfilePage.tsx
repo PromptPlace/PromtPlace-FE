@@ -300,8 +300,8 @@ const ProfilePage = () => {
   };
 
   // 회원 SNS 수정
-  const handleUpdateSns = ({ sns_id, url, description }: { sns_id: number } & RequestPatchSNSDto) => {
-    mutatePatchSNS({ sns_id, url, description });
+  const handleUpdateSns = ({ sns_id, url, description, user_sns_id }: { sns_id: number } & RequestPatchSNSDto) => {
+    mutatePatchSNS({ sns_id, url, description, user_sns_id });
   };
 
   useEffect(() => {
@@ -661,8 +661,8 @@ const ProfilePage = () => {
                 <div className="pr-[8px] bg-white max-lg:bg-transparent max-lg:p-0">
                   <div className="w-full max-h-[368px] overflow-y-auto">
                     {promptsData?.pages.map((page, pageIdx) =>
-                      page.data.prompts.map((prompt, idx) => {
-                        const last = pageIdx === promptsData.pages.length - 1 && idx === page.data.prompts.length - 1;
+                      page.data.map((prompt, idx) => {
+                        const last = pageIdx === promptsData.pages.length - 1 && idx === page.data.length - 1;
                         return (
                           <div ref={last ? ref : undefined} key={prompt.prompt_id}>
                             <PromptCard
@@ -670,7 +670,7 @@ const ProfilePage = () => {
                               id={prompt.prompt_id}
                               title={prompt.title}
                               model={prompt.models}
-                              tags={prompt.tags}
+                              tags={[]}
                               isMyProfile={isMyProfile}
                               handleDeletePrompts={() => {
                                 handleDeletePrompts({ prompt_id: prompt.prompt_id });

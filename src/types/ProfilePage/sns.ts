@@ -17,7 +17,7 @@ export type ResponseSNSDto = CommonResponse<SNS[]>;
 export type RequestPatchSNSDto = {
   url: string;
   description: string;
-  // user_sns_id: string;
+  user_sns_id: string;
 };
 
 export type ResponsePatchSNSDto = {

@@ -3,7 +3,10 @@ import type {
   ApiResponse,
   DownloadedPromptDTO,
   LikedPromptDTO,
+  NewLikedPromptResponse,
   AuthoredPromptsApiResponse,
+  NewAuthoredPromptsApiResponse,
+  NewDownloadedPromptsApiResponse
 } from '@/types/MyPage/prompt';
 import type { PaginationDto } from '@/types/MyPage/common.ts';
 
@@ -13,8 +16,8 @@ export const getDownloadedPrompts = async (): Promise<ApiResponse<DownloadedProm
   return data;
 };
 
-export const getLikedPrompts = async (): Promise<ApiResponse<LikedPromptDTO>> => {
-  const { data } = await axiosInstance.get<ApiResponse<LikedPromptDTO>>('/api/prompts/likes');
+export const getLikedPrompts = async () => {
+  const { data } = await axiosInstance.get<NewLikedPromptResponse>('/api/prompts/likes');
   return data;
 };
 
@@ -45,3 +48,13 @@ export const getAuthoredPrompts = async ({
 export const unlikePrompt = async (promptId: number) => {
   await axiosInstance.delete(`/api/prompts/${promptId}/likes`);
 };
+
+export const getMyPrompts = async ({ pageParam = 0 }): Promise<NewAuthoredPromptsApiResponse> => {
+  // pageParam을 쿼리 스트링으로 사용합니다.
+  const { data } = await axiosInstance.get(`/api/members/me/prompts?cursor=${pageParam}&limit=10`);
+  return data;
+};
+export const getMyDownloadedPrompts = async (): Promise<NewDownloadedPromptsApiResponse> => {
+  const { data } = await axiosInstance.get(`/api/prompts/downloads`);
+  return data;
+}

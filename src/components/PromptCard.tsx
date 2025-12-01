@@ -5,6 +5,7 @@ import Rating from './Rating';
 import Likes from '@/pages/MainPage/components/likes';
 import { useNavigate } from 'react-router-dom';
 import type { Prompt } from '@/types/MainPage/prompt';
+import Stars from './Stars';
 
 interface PromptCardProps {
   prompt: Prompt;
@@ -44,20 +45,20 @@ const PromptCard = ({ prompt }: PromptCardProps) => {
         ) : (
           <p
             className={`
-        absolute left-6 right-6 top-6 text-sm text-gray-600 tracking-tight text-center
+        absolute left-6 right-6 top-6 text-sm text-gray-600 tracking-tight text-left font-[custom-body2]
         ${isWrapped ? 'line-clamp-8' : 'line-clamp-9'}
       `}>
-            {prompt.description}
+            {prompt.prompt_result}
           </p>
         )}
 
         {/* 모델 칩 컨테이너 */}
         <div ref={chipContainerRef} className="absolute left-[16px] bottom-4 flex flex-wrap gap-2 z-10">
           {prompt.models.map((model, index) => (
-            <div
-              key={index}
-              className="px-2 py-0.5 bg-overlay/40 rounded inline-flex justify-center items-center gap-2.5">
-              <span className="text-white text-[10px] font-medium leading-4 line-clamp-1">{model.model.name}</span>
+            <div key={index} className="px-2 py-0.5 bg-overlay rounded inline-flex justify-center items-center gap-2.5">
+              <span className="text-white text-[10px] font-medium leading-4 line-clamp-1 font-[custom-button3]">
+                {model?.model?.name}
+              </span>
             </div>
           ))}
         </div>
@@ -74,28 +75,36 @@ const PromptCard = ({ prompt }: PromptCardProps) => {
         className="w-full h-[270px] px-6 py-5 inline-flex flex-col justify-start gap-3 bg-white rounded-b-lg cursor-pointer"
         onClick={() => navigate(`/prompt/${prompt.prompt_id}`)}>
         <div className="text-xs font-light leading-4 inline-flex justify-between items-start self-stretch">
-          <div>{prompt.user.nickname}</div>
-          <div>{new Date(prompt.created_at).toLocaleDateString('ko-KR')}</div>
+          <div>{prompt?.user?.nickname}</div>
+          <div className="text-gray-400 ">{new Date(prompt.created_at).toLocaleDateString('ko-KR')}</div>
         </div>
 
-        <div className="font-medium">{prompt.title}</div>
+        <div className="font-medium font-[custom-h3] has-[44px]:">{prompt.title}</div>
 
-        <div className="flex items-center justify-start gap-[12px] text-gray-400 font-xs leading-4">
+        <div className="flex items-center justify-start gap-[12px] text-gray-400 font-[12px] font-[custom-button2] leading-4">
           <div className="flex items-center justify-start gap-[6px]">
             <img src={iconEye} alt="views" className="w-4 h-4" /> {prompt.views}
           </div>
 
-          <div className="flex items-center justify-start gap-[6px]">
+          <div className="flex items-center justify-start gap-[6px] font-[custom-button-2]">
             <img src={iconDownload} alt="downloads" className="w-4 h-4" /> {prompt.downloads}
           </div>
         </div>
 
         <div className="text-lg leading-6">{prompt.is_free ? '무료' : `${prompt.price.toLocaleString()}원`}</div>
-        <div className="text-xs font-light h-[51px] truncate">{prompt.prompt_result}</div>
-        <div className="self-start">
-          <Rating star={prompt.review_rating_avg} />
+        <div className="text-xs font-light w-[246px] h-[51px]">{prompt.description}</div>
+        <div className="w-[246px] h-[41px] gap-[8px]">
+          {prompt.review_count === 0 ? (
+            <div></div>
+          ) : (
+            <div>
+              <div className="justify-start flex">
+                <Stars star={prompt.review_rating_avg} />
+              </div>
+              <div className="text-xs font-light text-gray-400 w-full h-[17px] truncate"></div>
+            </div>
+          )}
         </div>
-        {/* <div className="text-xs font-light text-gray-400 w-full truncate">{prompt.promptReview}</div> */}
       </div>
     </div>
   );

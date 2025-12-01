@@ -11,6 +11,10 @@ import type {
   resetPasswordVerifyCodeRequest,
   resetPasswordRequest,
   resetPasswordResponse,
+  signinRequest,
+  signinResponse,
+  initialSetupRequest,
+  initialSetupResponse,
 } from '../../types/LoginPage/auth.ts';
 
 export const postGoogleAuthCode = async (authCode: string) => {
@@ -53,7 +57,7 @@ export const postSignup = async (data: signupRequest) => {
 };
 
 export const postResetPasswordEmailAuthCode = async (email: string) => {
-  const { data } = await axiosInstance.post<resetPasswordEmailVerifyResponse>('/api/auth/password/reset', {
+  const { data } = await axiosInstance.post<resetPasswordEmailVerifyResponse>('/api/auth/password/send-code', {
     email,
   });
   console.log('Reset password email verify response:', data);
@@ -67,7 +71,19 @@ export const postResetPasswordVerifyCode = async (data: resetPasswordVerifyCodeR
 };
 
 export const postResetPassword = async (data: resetPasswordRequest) => {
-  const response = await axiosInstance.post<resetPasswordResponse>('/api/auth/password/update', data);
+  const response = await axiosInstance.post<resetPasswordResponse>('/api/auth/password/reset', data);
   console.log('Reset password response:', response.data);
+  return response.data;
+};
+
+export const postSignin = async (data: signinRequest) => {
+  const response = await axiosInstance.post<signinResponse>('/api/auth/signin', data);
+  console.log('Signin response:', response.data);
+  return response.data;
+}
+
+export const postInitialSetup = async (data: initialSetupRequest) => {
+  const response = await axiosInstance.post<initialSetupResponse>('/api/auth/signin/initial-setup', data);
+  console.log('Initial setup response:', response.data);
   return response.data;
 };

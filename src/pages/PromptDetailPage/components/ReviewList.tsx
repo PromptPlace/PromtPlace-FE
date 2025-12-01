@@ -1,13 +1,11 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import Rating from '@components/Rating';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import DualModal from '@components/Modal/DualModal';
 import TextModal from '@components/Modal/TextModal';
-import UpdateModal from './UpdateModal';
 import defaultProfile from '@/assets/icon-profile-gray.svg';
 import useDeleteReview from '@/hooks/mutations/PromptDetailPage/useDeleteReview';
-import useUpdateReview from '@/hooks/mutations/PromptDetailPage/useUpdateReview';
-import { canEditReview } from '@/utils/reviewUtils';
+import { useAuth } from '@/context/AuthContext';
 
 export interface Review {
   review_id: number;
@@ -28,20 +26,8 @@ interface ReviewListProps {
   onClose: () => void;
   title: string;
   currentUserId?: number;
+  onEditReview: (review: Review) => void;
 }
-
-const getViewerId = (): number | null => {
-  if (typeof window === 'undefined') return null;
-  const raw = localStorage.getItem('user');
-  if (!raw) return null;
-  try {
-    const parsed = JSON.parse(raw) as { user_id?: unknown };
-    const id = typeof parsed.user_id === 'number' ? parsed.user_id : Number(parsed.user_id);
-    return Number.isFinite(id) ? id : null;
-  } catch {
-    return null;
-  }
-};
 
 const ReviewList = ({
   reviews,
@@ -51,16 +37,16 @@ const ReviewList = ({
   title,
   currentUserId,
   setReviewCount,
+  onEditReview,
 }: ReviewListProps) => {
   const [openMenuIdx, setOpenMenuIdx] = useState<number | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDeleteSuccessModal, setShowDeleteSuccessModal] = useState(false);
   const [showExpiredModal, setShowExpiredModal] = useState(false);
   const [selectedReviewIdx, setSelectedReviewIdx] = useState<number | null>(null);
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const { mutateAsync: deleteMutate } = useDeleteReview();
-  const { mutateAsync: updateMutate } = useUpdateReview();
+  const { user: me } = useAuth();
+  const viewerId = me?.user_id ?? currentUserId ?? null;
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
   const toggleMenu = (idx: number) => {
@@ -72,11 +58,6 @@ const ReviewList = ({
     const now = Date.now();
     return now - createdTime <= 30 * 24 * 60 * 60 * 1000;
   };
-
-  const viewerId = useMemo<number | null>(
-    () => (Number.isFinite(currentUserId) ? (currentUserId as number) : getViewerId()),
-    [currentUserId],
-  );
 
   const onClickDelete = (idx: number) => {
     setOpenMenuIdx(null);
@@ -91,37 +72,7 @@ const ReviewList = ({
 
   const onClickEdit = (idx: number) => {
     setOpenMenuIdx(null);
-    setSelectedReviewIdx(idx);
-    setSelectedReview(reviews[idx]);
-    setShowUpdateModal(true);
-  };
-
-  const handleSave = async (newRating: number, newComment: string) => {
-    if (selectedReviewIdx === null) return;
-    const target = reviews[selectedReviewIdx];
-
-    try {
-      const res = await updateMutate({
-        reviewId: target.review_id,
-        body: { rating: newRating, content: newComment },
-      });
-
-      const updated = [...reviews];
-      updated[selectedReviewIdx] = {
-        ...updated[selectedReviewIdx],
-        rating: res.data.rating ?? newRating,
-        content: res.data.content ?? newComment,
-        created_at: res.data.updated_at ?? new Date().toISOString(),
-      };
-
-      setReviews(updated);
-      setSelectedReview(updated[selectedReviewIdx]);
-      setShowUpdateModal(false);
-      setSelectedReviewIdx(null);
-      setOpenMenuIdx(null);
-    } catch {
-      alert('리뷰 수정에 실패했습니다.');
-    }
+    onEditReview(reviews[idx]);
   };
 
   return (
@@ -139,8 +90,8 @@ const ReviewList = ({
         `}</style>
 
         {reviews.map((review, idx) => (
-          <div key={review.review_id} className="relative group">
-            <div className="flex gap-3 mb-4 last:mb-0">
+          <div key={review.review_id} className="relative group mb-6 transition-all duration-200 pb-0 min-h-[120px]">
+            <div className="flex gap-3 items-start h-full">
               <img
                 src={review.writer_profile_image_url || defaultProfile}
                 alt="프로필"
@@ -152,10 +103,13 @@ const ReviewList = ({
                     <p className="font-semibold text-[14px] sm:text-[16px]">{review.writer_nickname}</p>
                     <Rating star={review.rating} />
                   </div>
-                  {canEditReview(review, currentUserId) && (
+
+                  {review.writer_id === viewerId && (
                     <button
                       onClick={() => toggleMenu(idx)}
-                      className={`rounded-full p-1 transition-colors duration-150 ${openMenuIdx === idx ? 'bg-secondary-pressed' : 'hover:bg-gray-200'}`}>
+                      className={`rounded-full p-1 transition-colors duration-150 ${
+                        openMenuIdx === idx ? 'bg-gray-200' : 'hover:bg-gray-100'
+                      }`}>
                       <BsThreeDotsVertical className="text-lg text-gray-500" />
                     </button>
                   )}
@@ -167,7 +121,7 @@ const ReviewList = ({
             </div>
 
             {openMenuIdx === idx && (
-              <div className="absolute top-8 right-0 bg-secondary text-text-on-background rounded-md shadow-md z-20 w-[91px] h-[72px]">
+              <div className="absolute top-8 right-0 bg-secondary text-gray-700 rounded-md shadow-md z-[100] w-[100px]">
                 <ul className="text-[16px]">
                   <li
                     className="px-4 py-[6px] active:bg-secondary-pressed hover:text-black cursor-pointer rounded-t-md"
@@ -182,11 +136,13 @@ const ReviewList = ({
                 </ul>
               </div>
             )}
+
             {idx !== reviews.length - 1 && <div className="h-[1px] bg-[#CCCCCC] w-full my-4" />}
           </div>
         ))}
       </div>
 
+      {/* 삭제 모달 */}
       {showDeleteModal && (
         <DualModal
           text={isAdmin ? '리뷰를 삭제 조치하시겠습니까?' : '리뷰를 삭제하시겠습니까?'}
@@ -223,19 +179,6 @@ const ReviewList = ({
 
       {showExpiredModal && (
         <TextModal text="지금은 리뷰를 삭제할 수 없습니다." onClick={() => setShowExpiredModal(false)} size="sm" />
-      )}
-
-      {showUpdateModal && selectedReview && (
-        <UpdateModal
-          isOpen={showUpdateModal}
-          key={selectedReview.review_id}
-          onClose={() => setShowUpdateModal(false)}
-          title={title}
-          rating={selectedReview.rating}
-          initialReviewText={selectedReview.content}
-          onSave={handleSave}
-          reviewId={selectedReview.review_id}
-        />
       )}
     </div>
   );

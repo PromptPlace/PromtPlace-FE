@@ -16,8 +16,15 @@ const Likes = ({ prompt_id }: { prompt_id: number }) => {
   const qc = useQueryClient();
 
   // 내 찜한 프롬프트 Set 쿼리
-  const { data: likedSet } = useMyLikedPrompts(true); // true: 활성화(혹은 조건에 맞게)
-  const [liked, setLiked] = useState(false);
+  const { data: likedSet } = useMyLikedPrompts(!!accessToken); //  로그인 상태에서만 활성화
+  //const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(() => {
+    if (likedSet && Number.isFinite(prompt_id)) {
+      return likedSet.has(prompt_id);
+    }
+    // 캐시가 없으면false로 설정
+    return false;
+  });
 
   // 쿼리 데이터와 동기화
   useEffect(() => {

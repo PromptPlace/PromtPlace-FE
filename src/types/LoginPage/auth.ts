@@ -1,5 +1,42 @@
 import type { CommonResponse } from '../common';
 
+
+
+export interface initialSetupRequest {
+  nickname: string;
+  intro: string;
+}
+
+export interface initialSetupResponseData {
+  message: string;
+  data:{
+    user_id: number;
+    nickname: string;
+  }
+}
+export type initialSetupResponse = CommonResponse<initialSetupResponseData>;
+
+
+export interface signinRequest {
+  email: string;
+  password: string;
+}
+
+export interface signinResponseData {
+  message: string;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+    user: {
+      user_id: number;
+      email: string;
+      role: 'USER' | 'ADMIN';
+      isInitialSetupRequired: boolean;
+    };
+  };
+}
+export type signinResponse = CommonResponse<signinResponseData>;
+
 export interface signupEmailVerifyData {
   message: string;
 }
@@ -86,14 +123,9 @@ export type signupResponse = CommonResponse<signupResponseData>;
 
 export interface User {
   user_id: number;
-  name: string;
-  nickname: string;
   email: string;
-  social_type: 'GOOGLE' | 'NAVER' | 'KAKAO';
-  status: boolean;
+  status?: boolean;
   role: 'USER' | 'ADMIN';
-  create_at: string;
-  updated_at: string;
 }
 
 // 로그인 성공 시 data 객체의 타입 정의
@@ -117,6 +149,7 @@ export type ModalView =
   | 'agreeTerms'
   | 'onboarding'
   | 'changePassword'
-  | 'forgotPassword';
+  | 'forgotPassword'
+  | 'close';
 export type EmailStatus = 'default' | 'pending' | 'verified' | 'error';
 export type CodeStatus = 'idle' | 'request' | 'verified' | 'error';

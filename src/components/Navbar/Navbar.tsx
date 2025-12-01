@@ -10,7 +10,7 @@ import ArrowIcon from '@assets/header/icon-arrow_fill.svg';
 import NotificationIcon from '@assets/header/icon-notification.svg';
 import NotificationAlarmIcon from '@assets/header/icon-notification_new.svg';
 import MessageIcon from '@assets/header/icon-message.svg';
-import MessageAlarmIcon from '@assets/header/icon-message_new.svg';
+// import MessageAlarmIcon from '@assets/header/icon-message_new.svg';
 import UserIcon from '@assets/header/mypage.svg';
 
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
@@ -23,6 +23,7 @@ import useGetNewNotification from '@/hooks/queries/Navbar/useGetNewNotification'
 
 const Navbar = () => {
   const [loginModalShow, setLoginModalShow] = useState(false);
+  const [signupModalShow, setSignupModalShow] = useState(false);
   const [isNavModalShow, setIsNavModalShow] = useState(false);
   const [isNotificationModalShow, setIsNotificationModalShow] = useState(false);
   const [isMessageModalShow, setIsMessageModalShow] = useState(false);
@@ -96,7 +97,7 @@ const Navbar = () => {
                 background="primary"
                 text="회원가입"
                 onClick={() => {
-                  alert('회원가입 연결 예정');
+                  setSignupModalShow(true);
                 }}
               />
             </div>
@@ -127,7 +128,7 @@ const Navbar = () => {
               </div>
 
               <img
-                src={data?.data.has_unread_messages ? MessageAlarmIcon : MessageIcon}
+                src={data?.data.has_unread_messages ? MessageIcon : MessageIcon}
                 alt="메세지 알림"
                 className="self-center max-phone:w-[16px] max-phone:h-[16px]"
                 onClick={() => setIsMessageModalShow((prev) => !prev)}
@@ -135,7 +136,7 @@ const Navbar = () => {
               <img
                 src={data?.data.profile_image || UserIcon}
                 alt="프로필 이미지"
-                className="w-[40px] object-cover self-center max-phone:w-[32px] max-phone:h-[32px]"
+                className="w-[40px] h-[40px] rounded-full object-cover self-center max-phone:w-[32px] max-phone:h-[32px]"
                 onClick={() => navigate(`/mypage/profile`)}
               />
             </div>
@@ -183,6 +184,15 @@ const Navbar = () => {
 
       {loginModalShow && (
         <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
+      )}
+
+      {signupModalShow && (
+        <SocialLoginModal
+          isOpen={signupModalShow}
+          onClose={() => setSignupModalShow(false)}
+          onClick={() => {}}
+          initialView="signup"
+        />
       )}
 
       {isMessageModalShow && (

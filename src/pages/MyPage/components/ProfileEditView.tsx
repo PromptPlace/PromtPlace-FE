@@ -17,10 +17,14 @@ import useImgUpload from '@/hooks/useImgUpload';
 import usePostSNS from '@/hooks/mutations/ProfilePage/usePostSNS';
 import usePostEditIntro from '@/hooks/mutations/ProfilePage/usePostEditIntro';
 import usePatchEditIntro from '@/hooks/mutations/ProfilePage/usePatchEditIntro';
+import usePatchSNS from '@/hooks/mutations/ProfilePage/usePatchSNS';
+import useDeleteSNS from '@/hooks/mutations/ProfilePage/useDeleteSNS';
 
 interface ProfileEditViewProps {
   userData?: ResponseMemberDto;
-  setActiveTab: React.Dispatch<React.SetStateAction<'prompt' | 'dashboard' | 'profile' | 'profileEdit'>>;
+  setActiveTab: React.Dispatch<
+    React.SetStateAction<'prompt' | 'dashboard' | 'profile' | 'profileEdit' | 'authored' | 'downloaded'>
+  >;
 }
 
 const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
@@ -64,11 +68,22 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
     }
   };
 
+  //이메일 파싱해서 어느 소셜 계정인지 구분 필요
+  const getProviderFromEmail = (email: string) => {
+    if (email.includes('@google.com')) return 'GOOGLE';
+    if (email.includes('@kakao.com')) return 'KAKAO';
+    if (email.includes('@naver.com')) return 'NAVER';
+    return null;
+  };
+  const socialType = getProviderFromEmail(userData?.data.email || '');
+
   const [nickname, setNickname] = useState(userData?.data.nickname || '');
   //sns 아이디 및 접속 가능한 URL도 상태로 관리 필요
   const [intros, setIntros] = useState(userData?.data.intros || '');
-  const [snsUrl, setSnsUrl] = useState(snsData?.data[snsData.data.length - 1].url || '');
-  const [snsId, setSnsId] = useState(snsData?.data[snsData.data.length - 1].user_sns_id || '');
+
+  const lastSNS = snsData?.data?.length ? snsData.data[snsData.data.length - 1] : undefined;
+  const [snsUrl, setSnsUrl] = useState(lastSNS?.url || '');
+  const [snsId, setSnsId] = useState(lastSNS?.user_sns_id || '');
 
   // 회원 정보 수정
   const { mutate } = usePatchEditMember({ member_id: user.user_id });
@@ -80,6 +95,10 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
 
   // 회원 SNS 작성
   const { mutate: mutatePostSNS } = usePostSNS({ member_id: user.user_id });
+  // 회원 SNS 수정
+  const { mutate: mutatePatchSNS } = usePatchSNS({ member_id: user.user_id });
+  // 회원 SNS 삭제
+  const { mutate: mutateDeleteSNS } = useDeleteSNS({ member_id: user.user_id });
 
   // 회원 한줄 소개 작성 및 수정
   const { mutate: mutateIntro } = usePostEditIntro({ member_id: user.user_id });
@@ -89,7 +108,21 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
     // 프로필 수정 제출 로직 구현 필요
     console.log('프로필 수정 제출:', { nickname, intros });
     mutate({ nickname }); // nickname 수정
-    mutatePostSNS({ url: snsUrl, description: '', user_sns_id: snsId }); // SNS 작성
+
+    if (snsData?.data.length === 0) {
+      mutatePostSNS({ url: snsUrl, description: '', user_sns_id: snsId });
+      console.log('post실행', snsId);
+    } else if (snsData?.data.length !== 0 && snsUrl === '') {
+      const lastSNSId = snsData!.data[snsData!.data.length - 1]!.sns_id;
+      mutateDeleteSNS({ sns_id: lastSNSId });
+    } else if (snsData?.data.length !== 0 && snsData?.data) {
+      mutatePatchSNS({
+        url: snsUrl,
+        description: '',
+        user_sns_id: snsId,
+        sns_id: snsData?.data[snsData?.data?.length - 1].sns_id,
+      });
+    }
 
     if (!userData?.data.intros) {
       mutateIntro({ intro: intros });
@@ -102,7 +135,7 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
     <div className="flex justify-center pt-[56px] max-lg:pt-[12px] min-h-screen bg-background">
       <div className="flex flex-col w-full max-lg:px-[20px]">
         <button
-          className="self-end custom-button1 w-[237px] px-[91px] py-[12px] rounded-[12px] bg-primary text-white text-[14px] max-phone:py-[12px] max-phone:px-[20px] max-phone:text-[12px] max-phone:max-w-[143px] max-phone:w-full"
+          className="self-end custom-button1 w-[237px] py-[12px] rounded-[12px] bg-primary text-white text-[14px] max-phone:py-[12px] max-phone:text-[12px] max-phone:max-w-[143px] max-phone:w-full"
           onClick={() => {
             setActiveTab('profile');
             handleProfileSubmit();
@@ -165,7 +198,7 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
               id="snsId"
               type="text"
               className="custom-body2 text-text-on-white w-full rounded-[8px] bg-gray-50 px-[16px] py-[12px] placeholder:text-gray-400"
-              placeholder={snsData?.data[snsData.data.length - 1].user_sns_id || '예) @promptplace'}
+              placeholder={lastSNS?.user_sns_id || '예) @promptplace'}
               value={snsId}
               onChange={(e) => setSnsId(e.target.value)}
             />
@@ -175,9 +208,7 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
               id="snsUrl"
               type="text"
               className="custom-body2 text-text-on-white w-full rounded-[8px] bg-gray-50 px-[16px] py-[12px] placeholder:text-gray-400"
-              placeholder={
-                snsData?.data[snsData.data.length - 1].url || '예) https://www.instagram.com/designking_01/#'
-              }
+              placeholder={lastSNS?.url || '예) https://www.instagram.com/designking_01/#'}
               value={snsUrl}
               onChange={(e) => setSnsUrl(e.target.value)}
             />
@@ -185,9 +216,7 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
 
           <div className="flex flex-col gap-[12px]">
             <label className="custom-h5 block max-phone:text-[14px]">소개말</label>
-            <p className="custom-body3 text-gray-700 mb-[8px] max-phone:text-[12px]">
-              프롬프트를 입력한 AI의 답변 일부를 작성해주세요.
-            </p>
+            <p className="custom-body3 text-gray-700 mb-[8px] max-phone:text-[12px]">자유롭게 소개말을 작성해주세요.</p>
             <input
               id="intros"
               type="text"
@@ -204,7 +233,7 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
           <div>
             <label className="custom-h5 block mb-[12px]">가입한 계정</label>
             <div className="flex gap-[12px] custom-body2 text-text-on-white px-[16px] py-[12px]">
-              {getProviderIcon(user.social_type)}
+              {getProviderIcon(socialType as 'GOOGLE' | 'KAKAO' | 'NAVER')}
               {userData?.data.email}
             </div>
           </div>
@@ -212,7 +241,7 @@ const ProfileEditView = ({ userData, setActiveTab }: ProfileEditViewProps) => {
             <label className="custom-h5 block mb-[12px]">계정 바꾸기</label>
             <div className="flex justify-between custom-body2 text-text-on-white px-[16px] py-[12px]">
               <div className="flex gap-[12px]">
-                {getProviderIcon(user.social_type)}
+                {getProviderIcon(socialType as 'GOOGLE' | 'KAKAO' | 'NAVER')}
                 {userData?.data.email}
               </div>
               <PrimaryButton buttonType="square" text="변경하기" onClick={() => {}} />

@@ -14,10 +14,10 @@ const PromptMobileCard = ({ prompt }: PromptMobileCardProps) => {
     <div className="bg-white rounded-[8px] flex h-[109px] overflow-hidden">
       <div className="w-[109px] relative bg-secondary text-text-on-white text-[6px] font-light leading-[9.6px] tracking-[0.12px]">
         {prompt.images?.[0]?.image_url ? (
-          <img src={prompt.images[0].image_url} alt="프롬프트 이미지" />
+          <img src={prompt.images[0].image_url} alt="프롬프트 이미지" className="object-cover w-full h-full" />
         ) : (
-          <p className="text-text-on-white text-[6px] font-light leading-[9.6px] tracking-[0.12px] absolute top-[8px] px-[10px] pb-[8px] line-clamp-9">
-            {prompt.description}
+          <p className="text-text-on-white text-[6px] font-light leading-[9.6px] tracking-[0.12px] absolute top-[8px] px-[10px] pb-[8px] line-clamp-9 w-full">
+            {prompt.prompt_result}
           </p>
         )}
 
@@ -31,8 +31,8 @@ const PromptMobileCard = ({ prompt }: PromptMobileCardProps) => {
         onClick={() => navigate(`/prompt/${prompt.prompt_id}`)}
         className="px-[12px] py-[16px] flex flex-col gap-[8px] justify-between flex-1">
         <div className="flex flex-col gap-[4px] text-text-on-white text-[10px]  leading-[14px] tracking-[-0.1px]">
-          <div className="font-light">{prompt.user.nickname}</div>
-          <div className="font-bold">{prompt.title}</div>
+          <div className="font-light">{prompt?.user?.nickname}</div>
+          <div className="font-bold">{prompt?.title}</div>
         </div>
 
         <div className="flex justify-between">

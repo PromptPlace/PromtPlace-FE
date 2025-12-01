@@ -89,13 +89,11 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
     })) || [];
 
   // 올린 프롬프트 개수
-  const promptCount = promptsData
-    ? promptsData?.pages?.reduce((acc, page) => acc + (page?.data?.prompts?.length ?? 0), 0)
-    : 0;
+  const promptCount = promptsData ? promptsData?.pages[0].total_prompts : 0;
 
   useEffect(() => {
     if (isMyProfile && !mypage) {
-      navigate('/mypage');
+      navigate('/mypage/profile');
     }
   }, [isMyProfile, navigate, mypage]);
 
@@ -185,7 +183,11 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
           </div>
 
           <div className="custom-body1 h-[102px] max-lg:h-[130px] max-phone:h-[208px] overflow-y-scroll max-phone:ml-[40px]">
-            {userData?.data.intros}
+            {userData?.data.intros ? (
+              userData.data.intros
+            ) : (
+              <p className="custom-body3 text-gray400">아직 소개를 작성하지 않았어요.</p>
+            )}
           </div>
 
           {!isMyProfile && (

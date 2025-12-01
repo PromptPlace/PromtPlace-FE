@@ -1,9 +1,11 @@
-import { LOCAL_STORAGE_KEY } from '@constants/key';
+import { LOCAL_STORAGE_KEY,SESSION_STORAGE_KEY } from '@constants/key';
 import { useLocalStorage } from '@hooks/useLocalStorage';
+import { useSessionStorage } from '@/hooks/useSessionStorage';
 import { createContext, useContext, useState, type PropsWithChildren } from 'react';
 import { postGoogleAuthCode, postNaverAuthCode } from '@apis/Login/auth.ts';
 import type { User, loginResponseData } from '@/types/LoginPage/auth.ts';
 import { axiosInstance } from '@/apis/axios.ts';
+import { postSignin } from '@apis/Login/auth.ts';
 
 /**
  * TODO:
@@ -16,14 +18,9 @@ import { axiosInstance } from '@/apis/axios.ts';
 
 export const defaultUser: User = {
   user_id: -1,
-  name: 'Guest',
-  nickname: '게스트',
   email: '',
-  social_type: 'NAVER',
   status: true, // 'ACTIVE' or 'INACTIVE'로 변경 필요
   role: 'USER',
-  create_at: new Date().toISOString(),
-  updated_at: new Date().toISOString(),
 };
 
 interface AuthContextType {
@@ -31,6 +28,7 @@ interface AuthContextType {
   accessToken: string | null;
   refreshToken: string | null;
   login: (provider: 'google' | 'kakao' | 'naver', authCode: string) => Promise<void>;
+  loginEmail: (email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
   switchAccount: () => Promise<void>;
 }
@@ -42,19 +40,19 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     getItem: getUserFromStorage,
     setItem: setUserInStorage,
     removeItem: removeUserFromStorage,
-  } = useLocalStorage(LOCAL_STORAGE_KEY.user);
+  } = useSessionStorage(SESSION_STORAGE_KEY.user);
 
   const {
     getItem: getAccessTokenFromStorage,
     setItem: setAccessTokenInStorage,
     removeItem: removeAccessTokenFromStorage,
-  } = useLocalStorage(LOCAL_STORAGE_KEY.accessToken);
+  } = useSessionStorage(SESSION_STORAGE_KEY.accessToken);
 
   const {
     getItem: getRefreshTokenFromStorage,
     setItem: setRefreshTokenInStorage,
     removeItem: removeRefreshTokenFromStorage,
-  } = useLocalStorage(LOCAL_STORAGE_KEY.refreshToken);
+  } = useSessionStorage(SESSION_STORAGE_KEY.refreshToken);
 
   const [user, setUser] = useState<User>(() => getUserFromStorage() || defaultUser);
   console.log('AuthProvider user:', user.user_id);
@@ -126,6 +124,32 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
+  const loginEmail = async (email: string, password: string) => {
+    try {
+      const data = await postSignin({ email, password });
+      const loginData = data.data.data;
+      const { accessToken, refreshToken, user } = loginData;
+
+      setAccessToken(accessToken);
+      setRefreshToken(refreshToken);
+      setAccessTokenInStorage(accessToken);
+      setRefreshTokenInStorage(refreshToken);
+
+      const minimalUser: User = {
+        user_id: user.user_id,
+        email: user.email,
+        role: user.role,
+      };
+
+      setUser(minimalUser);
+      setUserInStorage(minimalUser);
+      return user.isInitialSetupRequired;
+    } catch (error) {
+      console.error('[이메일 로그인] 백엔드 인증 과정 실패', error);
+      throw error;
+    }
+  };
+
   const switchAccount = async () => {
     try {
       await axiosInstance.get('/api/auth/logout');
@@ -143,7 +167,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, accessToken, refreshToken, login, logout, switchAccount }}>
+    <AuthContext.Provider value={{ user, accessToken, refreshToken, login, loginEmail, logout, switchAccount }}>
       {children}
     </AuthContext.Provider>
   );

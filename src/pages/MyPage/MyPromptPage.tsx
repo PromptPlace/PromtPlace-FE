@@ -329,9 +329,7 @@ const MyPromptPage = () => {
   });
   console.log('다운로드한 프롬프트 데이터:', downloadedPromptsData);
 
-  const { data: likedPromptsData } = useGetLikedPrompts({
-    enabled: activeTab === 'liked',
-  });
+  const { data: likedPromptsData } = useGetLikedPrompts();
 
   // 프롬프트 삭제 함수
   const { mutate: mutateDeletePrompts } = usePatchDeletePrompts({ member_id: user.user_id });
@@ -349,13 +347,13 @@ const MyPromptPage = () => {
     // `flatMap`을 사용해 각 페이지의 'prompts' 배열을 하나의 배열로 합칩니다.
     return promptsResponse.pages.flatMap((page) =>
       // 각 페이지 내부의 prompts 배열을 순회하며 구조를 변경합니다.
-      page.data.prompts.map((prompt) => ({
+      page.data.map((prompt) => ({
         prompt_id: prompt.prompt_id,
         title: prompt.title,
         // models 배열에서 이름(name)만 추출해 새 배열을 만듭니다.
         models: prompt.models.map((item) => item.model.name),
         // tags 배열에서 이름(name)만 추출해 새 배열을 만듭니다.
-        tags: prompt.tags.map((item) => item.tag.name),
+        // tags: prompt.tags.map((item) => item.tag.name),
         // 'author_nickname'은 아래 "중요" 부분을 참고하세요.
       })),
     );
@@ -376,6 +374,7 @@ const MyPromptPage = () => {
 
   const promptsToDisplay = getPromptsForCurrentTab();
   console.log('promptsToDisplay:', promptsToDisplay);
+  const dummylength = 10; //삭제 예정
 
   return (
     <div className="flex justify-center pt-[92px] max-lg:pt-[12px] min-h-screen bg-background">
@@ -398,19 +397,9 @@ const MyPromptPage = () => {
             onSelect={(value) => setActiveTab(value as 'authored' | 'downloaded' | 'liked')}
           />
         </div>
-        {promptsToDisplay.length > 0 ? (
+        {dummylength > 0 ? (
           <div className=" bg-white">
             <div className="mr-[8px] overflow-y-auto overflow-x-hidden max-h-[368px] min-w-[1080px]">
-              {promptsToDisplay.map((prompt) => (
-                <PromptCard
-                  key={prompt.prompt_id}
-                  type={activeTab}
-                  promptData={prompt}
-                  DeletePrompt={() => handleDeleteAuthoredPrompts({ prompt_id: prompt.prompt_id })}
-                  EditPrompt={() => EditAuthoredPrompt(prompt.prompt_id)}
-                  DeleteLike={() => DeleteLikedPrompt(prompt.prompt_id)}
-                />
-              ))}
               <div ref={ref} />
             </div>
           </div>

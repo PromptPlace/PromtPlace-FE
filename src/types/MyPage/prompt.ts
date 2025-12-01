@@ -1,7 +1,66 @@
+import type { Prompt } from '../MainPage/prompt';
+
 export interface ApiResponse<T> {
   message: string;
   statusCode: number;
   data: T[];
+}
+
+interface PromptReview {
+  nickname: string;
+  profile_image_url: string | null;
+  content: string;
+  rating: number;
+}
+
+export interface NewAuthoredPromptDTO {
+  downloads: number;
+  prompt_id: number;
+  title: string;
+  image_url: string | null;
+  views: number;
+  reviews: {
+    has_more: boolean;
+    data: PromptReview[];
+  };
+}
+
+export interface NewAuthoredPromptsApiResponse {
+  message: string;
+  statusCode: number;
+  data: NewAuthoredPromptDTO[];
+  pagination: {
+    nextCursor: number | null;
+    has_more: boolean;
+    limit: number;
+  };
+  total_prompts: number;
+}
+
+export interface NewDownloadedPromptDTO {
+  message: string;
+  statusCode: number;
+  prompt_id: number;
+  title: string;
+  description: string;
+  price: number;
+  models: string[];
+  imageUrls: string[] | null;
+  has_review: boolean;
+  is_recent_review: boolean;
+  userNickname: string;
+  userProfileImageUrl: string | null;
+  userReview: {
+    review_id: number;
+    content: string;
+    rating: number;
+  } | null;
+}
+
+export interface NewDownloadedPromptsApiResponse {
+  message: string;
+  statusCode: number;
+  data: NewDownloadedPromptDTO[];
 }
 
 export interface DownloadedPromptDTO {
@@ -19,6 +78,16 @@ export interface LikedPromptDTO {
   title: string;
   models: string[];
   tags: string[];
+}
+
+export interface NewLikedPromptResponse {
+  data: {
+    data: Prompt[];
+    message: string;
+    statusCode: number;
+  };
+  message: string;
+  statusCode: number;
 }
 
 export interface AuthoredPromptData {

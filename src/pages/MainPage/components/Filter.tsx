@@ -15,14 +15,19 @@ const Filter = ({ onModelChange, onSortChange, onReset }: FilterProps) => {
   const [selectedModel, setSelectedModel] = useState<string[]>([]);
 
   const [filterIsOpen, setFilterIsOpen] = useState(false);
-  const [selectedSort, setSelectedSort] = useState<string>('조회순');
+  const [selectedSort, setSelectedSort] = useState<string>('');
 
-  const modalRef = React.useRef<HTMLDivElement | null>(null);
+  const modelRef = React.useRef<HTMLDivElement | null>(null);
+  const filterRef = React.useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if ((modelIsOpen || filterIsOpen) && modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      // 모델 드롭다운 외부 클릭 시 닫기
+      if (modelIsOpen && modelRef.current && !modelRef.current.contains(event.target as Node)) {
         setModelIsOpen(false);
+      }
+      // 필터 드롭다운 외부 클릭 시 닫기
+      if (filterIsOpen && filterRef.current && !filterRef.current.contains(event.target as Node)) {
         setFilterIsOpen(false);
       }
     };
@@ -47,25 +52,25 @@ const Filter = ({ onModelChange, onSortChange, onReset }: FilterProps) => {
 
   const handleReset = () => {
     setSelectedModel([]);
-    setSelectedSort('조회순');
+    setSelectedSort('');
     onReset?.();
   };
 
   return (
-    <div className="inline-flex justify-start items-center gap-10">
+    <div className="inline-flex justify-start items-center gap-10 max-phone:gap-[8px]">
       {/* 모델 섹션 */}
-      <div className="flex justify-start items-center gap-6">
+      <div className="flex justify-start items-center gap-6 max-phone:gap-[8px]">
         {/* 모델 */}
-        <div className="relative inline-flex flex-col justify-start items-start gap-2">
+        <div ref={modelRef} className="relative inline-flex flex-col justify-start items-start gap-2">
           <div
             onClick={() => {
               setModelIsOpen(!modelIsOpen);
               setFilterIsOpen(false);
             }}>
-            <div className="w-20 h-5 text-base leading-6 text-text-on-white">모델</div>
+            <div className="w-20 h-5 text-base max-phone:text-[14px] leading-6 text-text-on-white">모델</div>
             <div className="inline-flex justify-start items-center gap-2 cursor-pointer">
-              <div className="w-24 h-5 text-xs font-light leading-4 text-text-on-white">
-                {selectedModel.length > 0 ? `${selectedModel.length}개 선택` : 'AI 모델 선택'}
+              <div className="max-w-[136px] max-phone:max-w-[113px] h-5 text-xs max-phone:text-[10px] font-light leading-4 text-text-on-white truncate">
+                {selectedModel.length > 0 ? selectedModel.join(', ') : 'AI 모델 선택'}
               </div>
               {/* 아래 화살표 아이콘 */}
               <div className="w-3.5 h-3.5 relative flex items-center justify-center">
@@ -74,29 +79,31 @@ const Filter = ({ onModelChange, onSortChange, onReset }: FilterProps) => {
             </div>
           </div>
           {modelIsOpen && (
-            <div ref={modalRef} className="absolute top-[60px] left-0 w-96 z-[9999]">
+            <div className="absolute top-[60px] left-0 w-96 z-[9999]">
               <ModelModal selectedModels={selectedModel} onConfirm={handleModelSelect} />
             </div>
           )}
         </div>
 
         {/* 필터 */}
-        <div className="relative inline-flex flex-col justify-start items-start gap-2">
+        <div ref={filterRef} className="relative inline-flex flex-col justify-start items-start gap-2">
           <div
             onClick={() => {
               setFilterIsOpen(!filterIsOpen);
               setModelIsOpen(false);
             }}>
-            <div className="w-12 h-5 text-base leading-6 text-text-on-white">필터</div>
+            <div className="w-12 h-5 text-base max-phone:text-[14px] leading-6 text-text-on-white">필터</div>
             <div className="inline-flex justify-start items-center gap-2 cursor-pointer">
-              <div className="min-w-28 text-xs font-light leading-4 text-text-on-white">{selectedSort}</div>
+              <div className="min-w-28 text-xs font-light max-phone:text-[10px] leading-4 text-text-on-white">
+                {selectedSort || '조회순, 별점순 등 선택'}
+              </div>
               <div className="w-3.5 h-3.5 relative flex items-center justify-center">
                 <img src={arrowDown} alt="arrow down" className="w-2.5 h-[5px]"></img>
               </div>
             </div>
           </div>
           {filterIsOpen && (
-            <div ref={modalRef} className="absolute top-[60px] left-0 w-96 z-[9999]">
+            <div className="absolute top-[60px] left-0 w-96 z-[9999]">
               <SortModal selectedSort={selectedSort} onSelect={handleSortSelect} />
             </div>
           )}

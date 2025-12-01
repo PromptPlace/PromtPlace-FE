@@ -7,16 +7,14 @@ import useResetPasswordRequest from '@/hooks/mutations/LoginPage/useResetPasswor
 
 interface LoginViewProps {
   setView: (view: ModalView) => void;
-  authCode: string;
+  tempToken: string;
+  email: string;
 }
 
 type PasswordStatus = 'default' | 'valid' | 'invalid';
 type RepeatPasswordStatus = 'default' | 'match' | 'mismatch';
 
-
-
-const ChangePasswordView = ({ setView, authCode }: LoginViewProps) => {
-  const [email, setEmail] = useState('');
+const ChangePasswordView = ({ setView, tempToken, email }: LoginViewProps) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showrepeatPassword, setShowRepeatPassword] = useState(false);
@@ -73,8 +71,9 @@ const ChangePasswordView = ({ setView, authCode }: LoginViewProps) => {
 
   const { mutate: resetPassword } = useResetPasswordRequest();
   const handlePasswordChange = () => {
+    console.log('비밀번호 변경 요청:', { email, password, repeatPassword, tempToken });
     resetPassword(
-      { email, newPassword: password, confirmPassword: repeatPassword, tempToken: authCode },
+      { email, newPassword: password, confirmPassword: repeatPassword, tempToken },
       {
         onSuccess: () => {
           // 비밀번호 변경 성공 시 처리
@@ -85,7 +84,7 @@ const ChangePasswordView = ({ setView, authCode }: LoginViewProps) => {
           // 비밀번호 변경 실패 시 처리
           console.error('비밀번호 변경 실패:', error);
         },
-      }
+      },
     );
   };
 
@@ -93,11 +92,12 @@ const ChangePasswordView = ({ setView, authCode }: LoginViewProps) => {
     <div className="flex flex-col items-center w-full">
       {' '}
       <div className="w-full">
-        <p className=" custom-h2 mb-[24px]">비밀번호 찾기</p>
+        <p className="max-phone:hidden custom-h2 mb-[24px] text-black">비밀번호 찾기</p>
+        <p className="hidden max-phone:block custom-h4 mb-[8px] text-black">비밀번호 찾기</p>
       </div>
       <form className="flex flex-col w-full" onSubmit={handleSubmit}>
         <div className="flex flex-col mb-[20px]">
-          <label className="custom-h5 mb-[12px]" htmlFor="password">
+          <label className="custom-h5 max-phone:text-[14px] mb-[12px] text-black" htmlFor="password">
             새로운 비밀번호
           </label>
           <div className="relative w-full">
@@ -105,7 +105,7 @@ const ChangePasswordView = ({ setView, authCode }: LoginViewProps) => {
               type={showPassword ? 'text' : 'password'}
               id="password"
               placeholder="비밀번호를 입력해주세요."
-              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px]"
+              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white rounded-[8px]"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -122,15 +122,17 @@ const ChangePasswordView = ({ setView, authCode }: LoginViewProps) => {
             </button>
           </div>
 
-          {error === 'valid' && <p className="text-primary custom-h5 mt-[4px]">사용 가능한 비밀번호예요.</p>}
+          {error === 'valid' && (
+            <p className="text-primary custom-button2 min-h-5 mt-[4px]">사용 가능한 비밀번호예요.</p>
+          )}
           {error === 'invalid' && (
-            <p className="text-alert custom-h5 mt-[4px]">
+            <p className="text-alert custom-button2 mt-[4px]">
               영문, 숫자, 특수문자 조합으로 8자 이상의 비밀번호를 입력해주세요.
             </p>
           )}
         </div>
-        <div className="flex flex-col mb-[40px]">
-          <label className="custom-h5 mb-[12px]" htmlFor="repeat-password">
+        <div className="flex flex-col mb-[40px] max-phone:mb-[28.5px]">
+          <label className="custom-h5 max-phone:text-[14px] mb-[12px] mt-[12.5px] text-black" htmlFor="repeat-password">
             비밀번호 확인
           </label>
           <div className="relative w-full">
@@ -138,7 +140,7 @@ const ChangePasswordView = ({ setView, authCode }: LoginViewProps) => {
               type={showrepeatPassword ? 'text' : 'password'}
               id="repeat-password"
               placeholder="비밀번호를 한번 더 입력해주세요."
-              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white mb-[12px]"
+              className="w-full bg-background px-[16px] py-[12px] custom-body2 placeholder:text-gray-400 text-text-on-white rounded-[8px]"
               value={repeatPassword}
               onChange={(e) => setRepeatPassword(e.target.value)}
             />
@@ -154,25 +156,36 @@ const ChangePasswordView = ({ setView, authCode }: LoginViewProps) => {
               />
             </button>
           </div>
-
-          {errorRepeat === 'mismatch' && (
-            <p className="text-alert custom-h5 mt-[4px]">비밀번호가 달라요! 확인해 보시겠어요?</p>
-          )}
-          {errorRepeat === 'match' && <p className="text-primary custom-h5 mt-[4px]">동일한 비밀번호예요</p>}
+          <p
+            className={`
+  custom-button2 mt-[4px] min-h-5
+  ${errorRepeat === 'match' ? 'text-primary' : 'text-alert'}
+  ${errorRepeat === 'default' ? 'invisible' : ''}
+`}>
+            {errorRepeat === 'match' && '동일한 비밀번호예요'}
+            {errorRepeat === 'mismatch' && '비밀번호가 달라요! 확인해 보시겠어요?'}
+          </p>
         </div>
-        <PrimaryButton
-          buttonType="full"
+
+        <button
           type="submit"
-          text="변경하기"
-          textColor="white"
-          disable={isDisabled}
           onClick={handlePasswordChange}
-        />
+          disabled={isDisabled}
+          className={`flex items-center justify-center shadow-button hover:shadow-button-hover
+       transition-all ease-in-out duration-300 w-full custom-h4 max-phone:text-[16px] border-none px-[20px]! py-[20px]! rounded-[12px]
+       bg-primary text-white
+        ${isDisabled && 'border-gray400! text-gray400! bg-gray300! hover:bg-gray300! active:bg-gray300! cursor-not-allowed'}`}>
+          변경하기
+        </button>
       </form>
-      <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 mb-[40px]">
+      <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 max-phone:text-[14px] mb-[40px] max-phone:mb-[32px]">
         {/* 수정필요  Link가 아닌 signup, find-password가 렌더링 되도록*/}
-        <button onClick={() => setView('login')}>로그인하기</button>
-        <button onClick={() => setView('signup')}>회원가입하기</button>
+        <button className="text-black" onClick={() => setView('login')}>
+          로그인하기
+        </button>
+        <button className="text-black" onClick={() => setView('signup')}>
+          회원가입하기
+        </button>
       </nav>
     </div>
   );

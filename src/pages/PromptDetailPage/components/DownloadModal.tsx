@@ -72,20 +72,20 @@ const DownloadModal = ({ isOpen, onClose, title, content, price, isFree, isPaid,
     <div className="bg-overlay fixed inset-0 z-50 flex items-center justify-center bg-opacity-40">
       <div
         className={`
-          relative bg-white rounded-[16px] shadow-lg overflow-y-auto max-lg:overflow-y-auto text-[#121212]
-          w-[1056px] h-[745px] px-[64px] py-[48px]  max-lg:px-[20px]  max-lg:py-[20px]
-    max-lg:w-[280px] 
+     relative bg-white rounded-[16px] shadow-lg overflow-y-auto text-[#121212]
+    w-full max-w-[1056px] h-auto max-h-[90vh]
+    px-[64px] py-[48px]
+    max-lg:w-[90vw] max-lg:max-w-[480px] max-lg:px-[24px] max-lg:py-[28px]
+
           ${step === 'paid' ? 'max-lg:h-[100px]' : 'max-lg:h-[334px]'}
         `}>
         {/* 닫기 */}
-        <button
-          onClick={onClose}
-          className="lg:block hidden absolute top-[20px] right-[20px] w-[24px] h-[24px] hover:opacity-60">
+        <button onClick={onClose} className="lg:block hidden absolute top-[20px] right-[20px] w-[24px] h-[24px]">
           <img src={CloseIcon} alt="닫기" className="w-full h-full object-contain" />
         </button>
         <button
           onClick={onClose}
-          className="lg:hidden absolute top-[20px] right-[20px] max-lg:w-[10px] max-lg:h-[10px] hover:opacity-60 max-lg:top-[12px] max-lg:right-[12px]">
+          className="lg:hidden absolute top-[20px] right-[20px] max-lg:w-[10px] max-lg:h-[10px] max-lg:top-[12px] max-lg:right-[12px]">
           <img src={CloseIcon} alt="닫기" className="w-full h-full object-contain" />
         </button>
 
