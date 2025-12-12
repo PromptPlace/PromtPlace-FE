@@ -1,4 +1,3 @@
-import IconButton from '@/components/Button/IconButton';
 import help from '@assets/promptCreate/icon-help.svg';
 import arrowdown from '@assets/promptCreate/icon_arrow.svg';
 import UploadIcon from '@assets/icon-upload.svg';
@@ -12,20 +11,6 @@ import TextModal from '@/components/Modal/TextModal';
 import useCreatePromptText from '@/hooks/mutations/PromptCreatePage/useCreateText';
 import { useNavigate } from 'react-router-dom';
 
-interface PostText {
-  title: String;
-  prompt: String;
-  prompt_result: String;
-  has_image: boolean;
-  description: String;
-  usage_guide: String;
-  price: number;
-  is_free: boolean;
-  model_version: String;
-  categories: string[];
-  models: string[];
-}
-
 const PromptCreateTextPage = () => {
   const navigate = useNavigate();
 
@@ -35,21 +20,13 @@ const PromptCreateTextPage = () => {
   const [uploadModal, setuploadModal] = useState<boolean>(false); // 세부 설정 모달
 
   const [alertModal, setAlertModal] = useState<boolean>(false); // 알림 모달
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [modalText, setModalText] = useState<string>(''); // 알림 모달 텍스트
-  const [showDualModal, setShowDualModal] = useState(false); // DualModal 띄움 여부
-
-  const [loading, setLoading] = useState(false);
 
   // 모달에서 작성되는 state
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [modelver, setModelver] = useState<string>('');
   const [categories, setCategories] = useState<string[]>([]);
-
-  const [priceType, setPriceType] = useState<'무료' | '유료' | null>('무료');
-  const [cost, setCost] = useState<number | null>(0);
-
-  // const [withImage, setWithImage] = useState<boolean>(false);
-  // const [files, setFiles] = useState<File[]>([]);
 
   const [previewText, setPreviewText] = useState<string>('');
   const [discriptionText, setDescriptionText] = useState<string>(''); //한줄 소개
@@ -61,7 +38,7 @@ const PromptCreateTextPage = () => {
   const [isUploaded, setIsUploaded] = useState<boolean>(false); //업로드 되었는지 여부
 
   //API 연동 관련
-  const { mutateAsync: createPrompt, isPending } = useCreatePromptText();
+  const { mutateAsync: createPrompt } = useCreatePromptText();
   //isPending : 현재 로딩 중인지 알려주는 boolean 값
 
   // 유효성 검증 함수
@@ -272,7 +249,7 @@ const PromptCreateTextPage = () => {
                 <div className="mb-[16px]">
                   <div className="flex justify-start gap-[12px] mb-[12px]">
                     <span
-                      className="w-[105px] h-[28px] px-[8px] flex justify-between items-center gap-[16px] 
+                      className="w-[105px] h-[28px] px-[8px] flex justify-between items-center gap-[16px]
                       cursor-pointer"
                       onClick={() => {
                         setModalInitialTab('model');
@@ -507,7 +484,7 @@ const PromptCreateTextPage = () => {
               <div className="mb-[16px]">
                 <div className="flex justify-start gap-[12px] mb-[12px]">
                   <span
-                    className="w-[105px] h-[28px] px-[8px] flex justify-between items-center gap-[16px] 
+                    className="w-[105px] h-[28px] px-[8px] flex justify-between items-center gap-[16px]
                       cursor-pointer"
                     onClick={() => {
                       setModalInitialTab('model');
@@ -750,7 +727,7 @@ const PromptCreateTextPage = () => {
               <div className="mb-[16px]">
                 <div className="flex justify-start gap-[12px] mb-[12px]">
                   <span
-                    className="w-[105px] h-[28px] px-[8px] flex justify-between items-center gap-[16px] 
+                    className="w-[105px] h-[28px] px-[8px] flex justify-between items-center gap-[16px]
                       cursor-pointer"
                     onClick={() => {
                       setModalInitialTab('model');
