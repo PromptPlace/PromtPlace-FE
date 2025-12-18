@@ -33,6 +33,7 @@ const ImageModels = [
   { id: 2, label: 'Nano Banana', url: 'https://nanobanana.io/' },
   { id: 3, label: 'Midjourney', url: 'https://www.midjourney.com/' },
   { id: 4, label: 'Stable Diffusion', url: 'https://stability.ai/' },
+  { id: 5, label: 'Firefly', url: 'https://firefly.adobe.com/' },
 ];
 
 const VideoModels = [
@@ -43,10 +44,16 @@ const VideoModels = [
   { id: 5, label: 'Luma Dream Machine', url: '' },
 ];
 
+const MusicModels = [
+  { id: 1, label: 'Suno', url: 'https://suno.com/' },
+  { id: 2, label: 'Udio', url: 'https://www.udio.com/' },
+];
+
 const Sections = [
   { title: '언어모델(LLM) 바로가기', models: LanguageModels },
   { title: '이미지 생성 모델 바로가기', models: ImageModels },
   { title: '동영상 생성 모델 바로가기', models: VideoModels },
+  { title: '음악 생성 모델 바로가기', models: MusicModels },
 ];
 
 const NavbarModal = ({ setIsNavModalShow }: NavbarModalProps) => {
