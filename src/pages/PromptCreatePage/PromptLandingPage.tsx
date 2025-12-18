@@ -12,9 +12,9 @@ const PromptLandingPage = () => {
     <>
       {/** Web 화면 */}
       <div className="hidden min-[1026px]:block">
-        <div className="h-screen flex justify-between gap-[72px] mt-[170px] mx-[120px]">
+        <div className="flex justify-between gap-[72px] mt-[170px] mx-[120px]">
           {/* 왼쪽 영역 */}
-          <div className="max-w-[527px] min-h-[575px] w-full  ">
+          <div className="max-w-[527px] min-h-[575px] w-full">
             <div className="flex justify-end">
               <img className="w-[150px] h-[130px]" src={twostars} alt="별 2개" />
             </div>
@@ -29,22 +29,20 @@ const PromptLandingPage = () => {
           </div>
 
           {/* 오른쪽 카드 */}
-          <div
-            className="max-w-[637px] max-h-[605px] w-full h-full rounded-[16px] bg-white flex flex-col justify-center 
-          items-center pt-[64px] px-[48px]">
-            <div className="max-w-[541px] h-[68px] w-full ">
+          <div className="max-w-[637px] h-[605px] w-full rounded-[16px] bg-white flex flex-col gap-[20px] justify-center items-center pt-[64px] px-[48px] pb-[40px]">
+            <div className="w-full flex flex-col gap-[12px]">
               <p className="text-[24px] font-medium text-black">어떤 프롬프트를 업로드 하시겠어요?</p>
-              <p className="text-[16px] font-light text-gray500">AI의 답변 목적을 선택해주세요.</p>
+              <p className="text-[16px] font-light text-gray500">AI의 답변 형태를 선택해주세요.</p>
             </div>
 
             {/* 텍스트 결과 옵션 */}
-            <div className="max-w-[541px] min-h-[154px] w-full flex justify-between items-center gap-[20px] p-[16px] mt-[20px]">
+            <div className="max-w-[541px] min-h-[154px] w-full flex justify-between items-center gap-[20px] p-[16px]">
               <div className="max-w-[234px] h-[122px] min-w-[172px] flex flex-col items-start ">
                 <div className="flex justify-start mb-[10px]">
                   <img className="w-[28px] h-[28px] mr-[8px]" src={iconText} alt="텍스트 아이콘" />
                   <p className="text-[18px] font-medium text-black">텍스트 결과</p>
                 </div>
-                <p className="text-[16px] font-light text-black">AI의 답변이 텍스트 형태에요.</p>
+                <p className="text-[16px] font-light text-black">AI의 답변이 텍스트 형태예요.</p>
               </div>
 
               <div className="max-w-[234px] h-[122px] min-w-[172px] w-full overflow-hidden relative">
@@ -61,7 +59,7 @@ const PromptLandingPage = () => {
             </div>
 
             {/* 이미지 결과 옵션 */}
-            <div className="max-w-[541px] h-[154px] w-full flex justify-between items-center gap-[20px] p-[16px] mt-[20px]">
+            <div className="max-w-[541px] h-[154px] w-full flex justify-between items-center gap-[20px] p-[16px]">
               <div className="flex flex-col items-start">
                 <div className="flex justify-start mb-[10px]">
                   <img className="w-[28px] h-[28px] mr-[8px]" src={iconImg} alt="이미지 아이콘" />
@@ -76,7 +74,7 @@ const PromptLandingPage = () => {
             </div>
 
             {/* 버튼들 */}
-            <div className="max-w-[541px] h-[154px] w-full flex justify-between gap-[20px] mt-[20px]">
+            <div className="max-w-[541px] h-[154px] w-full flex justify-between gap-[20px]">
               <button
                 className="max-w-[260px] h-[65px] w-full rounded-[12px] bg-sub2"
                 onClick={() => navigate('/create/text')}>
@@ -113,7 +111,7 @@ const PromptLandingPage = () => {
         {/* 하단 카드 */}
         <div className="flex justify-center ">
           <div
-            className="max-w-[637px] max-h-[605px] w-full h-full  flex flex-col justify-center 
+            className="max-w-[637px] max-h-[605px] w-full h-full  flex flex-col justify-center
           items-center pt-[64px] px-[48px]">
             <div className="max-w-[541px] h-[68px] w-full ">
               <p className="text-[24px] font-medium text-black">어떤 프롬프트를 업로드 하시겠어요?</p>
