@@ -118,7 +118,7 @@ const PromptCreateTextPage = () => {
     <>
       <div>
         <div className="flex justify-center lg:px-[102px] max-lg:flex-col max-lg:px-[40px]">
-          <div className="lg:max-w-[1236px] lg:w-full lg:h-full">
+          <div className="w-full lg:h-full">
             <div className="mt-[64px]">
               <p className="text-black text-[32px] font-medium tracking-[-0.01em] max-phone:tracking-[-0.05em] leading-[140%]">
                 텍스트 결과 프롬프트 업로드
@@ -356,7 +356,7 @@ const PromptCreateTextPage = () => {
             </div>
 
             {/**업로드 버튼 */}
-            <div className="lg:max-w-[1240px] w-full mt-[40px] max-lg:mt-[30px]">
+            <div className="w-full mt-[40px] max-lg:mt-[30px]">
               <button
                 className="w-full h-[65px] flex justify-center items-center gap-[16px] bg-primary rounded-[12px] py-[20px]"
                 onClick={handleUploadClick}

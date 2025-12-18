@@ -164,7 +164,7 @@ const PromptCreateImgPage = () => {
     <>
       <div>
         <div className="flex justify-center px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
-          <div className="max-w-[1236px] w-full h-full">
+          <div className="w-full h-full">
             <div className="mt-[64px] flex flex-col gap-[12px]">
               <p className="text-black custom-h1 max-phone:text-[24px]">이미지 결과 프롬프트 업로드</p>
               <p className="custom-h3 text-gray950 max-phone:text-[14px]">
@@ -464,7 +464,7 @@ const PromptCreateImgPage = () => {
             </div>
 
             {/**업로드 버튼 */}
-            <div className="lg:max-w-[1240px] w-full mt-[20px] max-lg:mt-[30px]">
+            <div className="w-full mt-[20px] max-lg:mt-[30px]">
               <button
                 className="w-full h-[65px] flex justify-center items-center gap-[16px] bg-primary rounded-[12px] py-[20px]"
                 onClick={handleUploadClick}

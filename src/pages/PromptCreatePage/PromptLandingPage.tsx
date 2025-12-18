@@ -10,7 +10,7 @@ const PromptLandingPage = () => {
   const navigate = useNavigate();
   return (
     <>
-      <div className="max-lg:bg-white pt-[170px] max-lg:pt-[64px] px-[120px] max-lg:px-[40px] max-phone:px-[20px] max-lg:min-h-[calc(100dvh-140px)] max-lg:pb-[227px]">
+      <div className="max-lg:bg-white pt-[170px] max-lg:pt-[64px] px-[120px] max-lg:px-[40px] max-phone:px-[20px] max-lg:min-h-[calc(100dvh-140px)]">
         <div className="flex justify-between gap-[72px] max-lg:flex-col max-lg:gap-[64px] max-phone:gap-[123px]">
           <div className="lg:max-w-[527px] lg:min-h-[575px] w-full max-lg:relative">
             <div className="flex justify-end">
