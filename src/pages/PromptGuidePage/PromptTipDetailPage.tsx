@@ -146,7 +146,7 @@ const PromptTipDetailPage = () => {
                 </div>
 
                 <div className="flex gap-[8px]">
-                  <p className="custom-body3 text-text-on-white max-phone:texxt-[10px]">공유 :</p>
+                  <p className="custom-body3 text-text-on-white max-phone:text-[10px]">공유 :</p>
 
                   <div className="flex justify-between items-center gap-[16px]">
                     <img
