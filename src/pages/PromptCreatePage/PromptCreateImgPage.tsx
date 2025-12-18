@@ -207,6 +207,7 @@ const PromptCreateImgPage = () => {
                       placeholder="예) SNS 광고 카피 문구 생성기"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
+                      maxLength={50}
                     />
                   </div>
                 </div>
