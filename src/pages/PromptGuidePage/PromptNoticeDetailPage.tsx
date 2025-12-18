@@ -132,7 +132,7 @@ const PromptNoticeDetailPage = () => {
               <div className="flex justify-between items-center max-lg:flex-col max-lg:items-start max-lg:gap-[16px]">
                 <div className="flex items-center gap-[12px]">
                   <div className="custom-body3 max-phone:text-[10px] border-r border-gray-400">
-                    <span className="custom-body3 max-phone:text-[10px] border-r border-gray-400">작성자 : </span>
+                    <span className="custom-body3 max-phone:text-[10px]">작성자 : </span>
                     <span className="text-gray500 pr-[8px]">프롬프트플레이스</span>
                   </div>
 
@@ -142,7 +142,7 @@ const PromptNoticeDetailPage = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-[8px]">
+                <div className="flex gap-[8px] items-center">
                   <p className="custom-body3 text-text-on-white max-phone:text-[10px]">공유 :</p>
 
                   <div className="flex justify-between items-center gap-[16px]">

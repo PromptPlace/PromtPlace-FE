@@ -122,7 +122,7 @@ const PromptTipDetailPage = () => {
         </div>
 
         <div className="flex flex-col items-center rounded-[12px] bg-white pt-[56px] px-[80px] pb-[32px] max-lg:px-[32px]">
-          <div className="w-full ">
+          <div className="w-full">
             {/**상단 */}
             <div className="w-full border-b-[1px] border-white-stroke pb-[34px] flex flex-col gap-[24px]">
               <div className="flex">
@@ -145,7 +145,7 @@ const PromptTipDetailPage = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-[8px]">
+                <div className="flex gap-[8px] items-center">
                   <p className="custom-body3 text-text-on-white max-phone:text-[10px]">공유 :</p>
 
                   <div className="flex justify-between items-center gap-[16px]">
