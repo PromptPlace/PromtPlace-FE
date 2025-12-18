@@ -162,46 +162,48 @@ const PromptCreateImgPage = () => {
 
   return (
     <>
-      {/* 1026 이상*/}
-      <div className="hidden min-[1026px]:block">
-        <div className="flex justify-center px-[102px]">
+      <div>
+        <div className="flex justify-center px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
           <div className="max-w-[1236px] w-full h-full">
-            <div className="mt-[64px]">
-              <p className="text-black text-[32px] font-medium tracking-[-0.01em] leading-[140%]">
-                이미지 결과 프롬프트 업로드
+            <div className="mt-[64px] flex flex-col gap-[12px]">
+              <p className="text-black custom-h1 max-phone:text-[24px]">이미지 결과 프롬프트 업로드</p>
+              <p className="custom-h3 text-gray950 max-phone:text-[14px]">
+                프롬프트와 프롬프트 정보를 입력하고 ‘업로드하기’를 눌러주세요{' '}
               </p>
             </div>
-            <div className="mt-[12px] h-[93px] flex justify-between items-start">
-              <p className="w-[527px]">프롬프트와 프롬프트 정보를 입력하고 ‘업로드하기’를 눌러주세요 </p>
-              <div className="flex flex-col w-[121px] h-[93px] items-end">
-                <div className="w-[114px] h-[49px] ">{/**bg-alert */}</div>
-                <span className="w-[121px] h-[24px] flex justify-between items-center mt-[20px] cursor-pointer">
-                  <img className="w-[24px] h-[24px]" src={help} alt="작성 꿀팁 보기" />
-                  <p className="text-black text-[14px] font-light leading-[16px]">작성 꿀팁 보기</p>
-                </span>
-              </div>
+
+            <div className="flex items-center justify-end gap-[8px] cursor-pointer mt-[20px]">
+              <img
+                className="w-[24px] h-[24px] max-phone:w-[16px] max-phone:h-[16px]"
+                src={help}
+                alt="작성 꿀팁 보기"
+              />
+              <p className="text-black text-[14px] font-light leading-[16px] border-b max-phone:text-[12px]">
+                작성 꿀팁 보기
+              </p>
             </div>
 
             {/**메인 작성 파트 */}
-            <div className="h-[1056px] mt-[20px] mb-[40px] flex justify-between gap-[20px] ">
+            <div className="mt-[20px] mb-[40px] flex justify-between gap-[20px] max-lg:flex-col-reverse">
               {/**좌측 본문 */}
-              <div className="max-w-[450px] w-full bg-white rounded-[16px] p-[24px]">
+              <div className="lg:max-w-[450px] w-full bg-white rounded-[16px] p-[24px] max-lg:w-full">
                 <textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="프롬프트를 작성해주세요."
                   className="w-full h-[1000px] flex-1 bg-transparent outline-none resize-none text-[14px] font-light
-                    placeholder:text-text-on-background placeholder:text-[14px] placeholder:font-light overflow-y-auto"
+                    placeholder:text-text-on-background placeholder:text-[14px] placeholder:font-light overflow-y-auto max-lg:h-[284px]"
                 />
               </div>
+
               {/**우측 본문 */}
-              <div className="max-w-[1245px] w-full bg-white rounded-[16px]  p-[24px]">
-                <div className="h-[80px] w-full mb-[16px]">
-                  <p className="text-[16px] font-medium pb-[12px]">프롬프트 제목</p>
+              <div className="max-w-[1245px] w-full bg-white rounded-[16px] p-[24px] flex flex-col gap-[16px]">
+                <div className="w-full flex flex-col gap-[12px]">
+                  <p className="custom-h5 max-phone:text-[14px]">프롬프트 제목</p>
                   <div className="w-full py-[12px] px-[16px] h-[46px]  bg-gray50 rounded-[8px]">
                     <input
                       name="title"
-                      className="w-full text-[14px] font-light placeholder:text-gray400 outline-none"
+                      className="w-full text-[14px] font-light placeholder:text-gray400 outline-none max-phone:placeholder:text-[12px] max-phone:text-[12px]"
                       placeholder="예) SNS 광고 카피 문구 생성기"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
@@ -209,152 +211,157 @@ const PromptCreateImgPage = () => {
                   </div>
                 </div>
 
-                <div className="mb-[12px]">
-                  <p className="text-[16px] font-medium pb-[4px]">기본 정보 입력</p>
-                  <p className="text-[12px] font-light pb-[4px] text-gray700">※ 모델 버전이 있는 경우 작성해주세요.</p>
-                  <p className="text-[12px] font-light text-gray700">
-                    ※ 모델과 카테고리는 최대 5개까지 선택 가능합니다.
-                  </p>
-                </div>
-
-                <div className="flex justify-start gap-[12px] mb-[12px]">
-                  <span
-                    className="w-[105px] h-[28px] px-[8px] flex justify-between items-center gap-[16px]
-                  cursor-pointer flex-shrink-0"
-                    onClick={() => {
-                      setModalInitialTab('category');
-                      setuploadModal(true);
-                    }}>
-                    <p className="text-[14px] font-light">카테고리</p>
-                    <img className="w-[16px] h-[16px] flex-shrink-0" src={arrowdown} alt="down-arrow" />
-                  </span>
-                  {/* 선택된 카테고리 표시 - 강제 줄바꿈 필요시  flex-wrap를 srcoll 대신 사용 */}
-                  <div className="flex gap-[8px] items-center overflow-x-scroll pb-[3px]">
-                    {categories.map((category) => {
-                      // DB 값 → 라벨 매핑 (FilterModal과 동일)
-                      const categoryLabels: Record<string, string> = {
-                        '보고서 / 레포트': '보고서•레포트',
-                        '사업계획서 / 기획안': '사업계획서•기획안',
-                        '논문 / 학술자료': '논문•학술자료',
-                        '자기소개서 / 이력서': '자기소개서•이력서',
-                        '광고 / 카피라이팅': '광고•카피라이팅',
-                        '시 / 소설': '시•소설',
-                        '숏폼 스크립트': '숏폼 스크립트',
-                        '광고 영상 콘셉트': '광고 영상 콘셉트',
-                        '애니메이션 장면': '애니메이션 장면',
-                        스토리보드: '스토리보드',
-                        '마케팅 캠페인 기획': '마케팅 캠페인 기획',
-                        'SNS 콘텐츠 아이디어': 'SNS 콘텐츠 아이디어',
-                        '시장조사/분석': '시장조사•분석',
-                        '이메일/세일즈 카피': '이메일•세일즈 카피',
-                        '여행 / 일정': '여행•일정',
-                        '요리 / 레시피': '요리•레시피',
-                        '게임 / 시나리오': '게임•시나리오',
-                        '취미 / 심리테스트': '퀴즈•심리테스트',
-                        상담: '상담',
-                        아이데이션: '아이데이션',
-                        브레인스토밍: '브레인스토밍',
-                        '비즈니스 아이디어': '비즈니스 아이디어',
-                        배경음악: '배경음악',
-                        '사운드 이펙트': '사운드 이펙트',
-                        '작곡/편곡 보조': '작곡•편곡 보조',
-                        '나레이션/보이스': '나레이션•보이스',
-                        일러스트: '일러스트',
-                        로고: '로고',
-                        '포스터 / 배너': '포스터•배너',
-                        '캐릭터 디자인': '캐릭터 디자인',
-                        '사진 리터칭': '사진 리터칭',
-                        '코드 자동화': '코드 자동화',
-                        '디버깅/리팩토링': '디버깅•리팩토링',
-                        'API 설계': 'API 설계',
-                        'SQL 쿼리': 'SQL 쿼리',
-                        '테스트 케이스': '테스트 케이스',
-                        '학습 / 과제 요약': '학습•과제 요약',
-                        '문제 풀이': '문제 풀이',
-                        '개념 설명': '개념 설명',
-                        '외국어 학습': '외국어 학습',
-                      };
-
-                      const label = categoryLabels[category] || category;
-
-                      return (
-                        <TagButton
-                          key={category}
-                          hasDelete={true}
-                          hasActive={false}
-                          text={label}
-                          onClick={() => {
-                            setCategories(categories.filter((c) => c !== category));
-                          }}
-                        />
-                      );
-                    })}
+                <div className="flex flex-col gap-[12px]">
+                  <div className="flex flex-col gap-[4px]">
+                    <p className="custom-h5 max-phone:text-[14px]">기본 정보 입력</p>
+                    <p className="text-[12px] font-light text-gray700 max-phone:text-[10px]">
+                      ※ 모델 버전이 있는 경우 작성해주세요.
+                    </p>
+                    <p className="text-[12px] font-light text-gray700 max-phone:text-[10px]">
+                      ※ 모델과 카테고리는 최대 5개까지 선택 가능합니다.
+                    </p>
                   </div>
-                </div>
 
-                <div className="mb-[16px]">
-                  <div className="flex justify-start gap-[12px] mb-[12px]">
-                    <span
-                      className="w-[105px] h-[28px] px-[8px] flex justify-between items-center gap-[16px]
-                      cursor-pointer"
+                  <div className="flex justify-start gap-[12px]">
+                    <div
+                      className="w-[102px] max-phone:w-[87px] h-[28px] px-[8px] flex justify-between items-center phone:gap-[16px]
+                  cursor-pointer flex-shrink-0 bg-gray50 rounded-[8px]"
                       onClick={() => {
-                        setModalInitialTab('model');
+                        setModalInitialTab('category');
                         setuploadModal(true);
                       }}>
-                      <p className="text-[14px] font-light">모델</p>
+                      <p className="text-[14px] font-light max-phone:text-[12px]">카테고리</p>
                       <img className="w-[16px] h-[16px] flex-shrink-0" src={arrowdown} alt="down-arrow" />
-                    </span>
-                    {/* 선택된 모델 표시 */}
+                    </div>
+                    {/* 선택된 카테고리 표시 - 강제 줄바꿈 필요시  flex-wrap를 srcoll 대신 사용 */}
                     <div className="flex gap-[8px] items-center overflow-x-scroll pb-[3px]">
-                      {selectedModels.map((model) => (
-                        <TagButton
-                          key={model}
-                          hasDelete={true}
-                          hasActive={false}
-                          text={model}
-                          onClick={() => {
-                            setSelectedModels(selectedModels.filter((m) => m !== model));
-                          }}
-                        />
-                      ))}
+                      {categories.map((category) => {
+                        // DB 값 → 라벨 매핑 (FilterModal과 동일)
+                        const categoryLabels: Record<string, string> = {
+                          '보고서 / 레포트': '보고서•레포트',
+                          '사업계획서 / 기획안': '사업계획서•기획안',
+                          '논문 / 학술자료': '논문•학술자료',
+                          '자기소개서 / 이력서': '자기소개서•이력서',
+                          '광고 / 카피라이팅': '광고•카피라이팅',
+                          '시 / 소설': '시•소설',
+                          '숏폼 스크립트': '숏폼 스크립트',
+                          '광고 영상 콘셉트': '광고 영상 콘셉트',
+                          '애니메이션 장면': '애니메이션 장면',
+                          스토리보드: '스토리보드',
+                          '마케팅 캠페인 기획': '마케팅 캠페인 기획',
+                          'SNS 콘텐츠 아이디어': 'SNS 콘텐츠 아이디어',
+                          '시장조사/분석': '시장조사•분석',
+                          '이메일/세일즈 카피': '이메일•세일즈 카피',
+                          '여행 / 일정': '여행•일정',
+                          '요리 / 레시피': '요리•레시피',
+                          '게임 / 시나리오': '게임•시나리오',
+                          '취미 / 심리테스트': '퀴즈•심리테스트',
+                          상담: '상담',
+                          아이데이션: '아이데이션',
+                          브레인스토밍: '브레인스토밍',
+                          '비즈니스 아이디어': '비즈니스 아이디어',
+                          배경음악: '배경음악',
+                          '사운드 이펙트': '사운드 이펙트',
+                          '작곡/편곡 보조': '작곡•편곡 보조',
+                          '나레이션/보이스': '나레이션•보이스',
+                          일러스트: '일러스트',
+                          로고: '로고',
+                          '포스터 / 배너': '포스터•배너',
+                          '캐릭터 디자인': '캐릭터 디자인',
+                          '사진 리터칭': '사진 리터칭',
+                          '코드 자동화': '코드 자동화',
+                          '디버깅/리팩토링': '디버깅•리팩토링',
+                          'API 설계': 'API 설계',
+                          'SQL 쿼리': 'SQL 쿼리',
+                          '테스트 케이스': '테스트 케이스',
+                          '학습 / 과제 요약': '학습•과제 요약',
+                          '문제 풀이': '문제 풀이',
+                          '개념 설명': '개념 설명',
+                          '외국어 학습': '외국어 학습',
+                        };
+
+                        const label = categoryLabels[category] || category;
+
+                        return (
+                          <TagButton
+                            key={category}
+                            hasDelete={true}
+                            hasActive={false}
+                            text={label}
+                            onClick={() => {
+                              setCategories(categories.filter((c) => c !== category));
+                            }}
+                          />
+                        );
+                      })}
                     </div>
                   </div>
-                  <div className="w-full h-[46px] py-[8px] px-[16px]  bg-gray50 rounded-[8px] items-center">
-                    <input
-                      value={modelver}
-                      onChange={(e) => setModelver(e.target.value)}
-                      maxLength={30} //글자 제한
-                      className="w-full text-[14px] font-light outline-none"
-                      placeholder="예) ChatGPT 5, Gemini 2.5 pro"
-                    />
+
+                  <div className="mt-[8px] flex flex-col gap-[12px]">
+                    <div className="flex justify-start gap-[12px]">
+                      <div
+                        className="w-[75px] max-phone:w-[64px] h-[28px] px-[8px] flex justify-between items-center phone:gap-[16px]
+                      cursor-pointer bg-gray50 rounded-[8px]"
+                        onClick={() => {
+                          setModalInitialTab('model');
+                          setuploadModal(true);
+                        }}>
+                        <p className="text-[14px] font-light max-phone:text-[12px]">모델</p>
+                        <img className="w-[16px] h-[16px] flex-shrink-0" src={arrowdown} alt="down-arrow" />
+                      </div>
+                      {/* 선택된 모델 표시 */}
+                      <div className="flex gap-[8px] items-center overflow-x-scroll pb-[3px]">
+                        {selectedModels.map((model) => (
+                          <TagButton
+                            key={model}
+                            hasDelete={true}
+                            hasActive={false}
+                            text={model}
+                            onClick={() => {
+                              setSelectedModels(selectedModels.filter((m) => m !== model));
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="w-full h-[46px] py-[8px] px-[16px]  bg-gray50 rounded-[8px] items-center">
+                      <input
+                        value={modelver}
+                        onChange={(e) => setModelver(e.target.value)}
+                        maxLength={30} //글자 제한
+                        className="w-full text-[14px] font-light outline-none max-phone:placeholder:text-[12px] max-phone:text-[12px]"
+                        placeholder="예) ChatGPT 5, Gemini 2.5 pro"
+                      />
+                    </div>
                   </div>
+
+                  <FilterModal
+                    isOpen={uploadModal}
+                    onClose={() => setuploadModal(false)}
+                    selectedModels={selectedModels}
+                    setSelectedModels={setSelectedModels}
+                    categories={categories}
+                    setCategories={setCategories}
+                    initialTab={modalInitialTab}
+                  />
                 </div>
 
-                <FilterModal
-                  isOpen={uploadModal}
-                  onClose={() => setuploadModal(false)}
-                  selectedModels={selectedModels}
-                  setSelectedModels={setSelectedModels}
-                  categories={categories}
-                  setCategories={setCategories}
-                  initialTab={modalInitialTab}
-                />
-
-                <div className="mb-[16px]">
-                  <div className="mb-[12px]">
-                    <p className="text-[16px] font-medium pb-[4px]">결과 미리보기</p>
-                    <p className="text-[12px] font-light text-gray700">
+                <div className="flex flex-col gap-[26px]">
+                  <div className="flex flex-col gap-[4px]">
+                    <p className="custom-h5 pb-[4px] max-phone:text-[14px]">결과 미리보기</p>
+                    <p className="text-[12px] font-light text-gray700 max-phone:text-[10px]">
                       프롬프트를 입력한 AI의 이미지를 업로드 해주세요.(최대 3개)
                     </p>
-                    <div className=" h-[22px] text-[12px] font-light text-gray700">{/** */}</div>
                   </div>
-                  <div className="h-[195px] flex items-start gap-[20px] ">
+
+                  <div className="flex items-start gap-[20px] max-lg:flex-col">
                     {/* 왼쪽: 업로드 버튼 */}
                     <div
-                      className="w-[195px] h-[195px] flex flex-col justify-center items-center gap-2 p-4
-  border-[1px] border-dashed border-primary bg-secondary rounded-[16px]">
+                      className="w-[195px] flex flex-col justify-center items-center gap-[16px] p-4
+  border-[1px] border-dashed border-primary bg-secondary rounded-[16px] max-lg:w-full">
                       <img src={imgUpload} alt="업로드" className="w-12 h-12" />
-                      <p className="text-[12px] text-gray-700 text-center">
+
+                      <p className="text-[12px] text-gray-700 text-center max-phone:text-[10px]">
                         이미지를 업로드해주세요
                         <br />
                         (최대 3개)
@@ -364,7 +371,7 @@ const PromptCreateImgPage = () => {
                         onClick={() => inputImgRef.current?.click()}
                         disabled={files.length >= 3} // 여기에 disabled 추가!
                         className="px-4 py-2 text-[12px] border border-primary rounded-[8px] bg-white
-    disabled:border-gray-400 disabled:text-gray-400 disabled:bg-gray-300 disabled:cursor-not-allowed">
+    disabled:border-gray-400 disabled:text-gray-400 disabled:bg-gray-300 disabled:cursor-not-allowed mt-[-4px] max-phone:text-[10px] max-phone:py-[6px]">
                         이미지 업로드
                       </button>
                       <input
@@ -379,22 +386,25 @@ const PromptCreateImgPage = () => {
                     </div>
 
                     {/* 오른쪽: 업로드된 이미지 목록 */}
-                    <div className="flex-1 flex flex-col gap-2">
+                    <div className="flex-1 flex flex-col gap-[12px] max-lg:w-full">
                       {files.map((file, idx) => (
                         <div
                           key={idx}
-                          className="h-[55px] flex items-center justify-between p-3 bg-white border border-gray-200 rounded-[16px]">
-                          <div className="flex items-center gap-3">
+                          className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-[16px]">
+                          <div className="flex items-center gap-[8px] flex-1 min-w-0">
                             {/* 썸네일 이미지 */}
-                            <div className="w-[30px] h-[30px] p-[3px] rounded-[16px] overflow-hidden bg-gray-100">
+                            <div className="w-[30px] h-[30px] rounded-[16px] overflow-hidden bg-gray-100 shrink-0">
                               <img
                                 src={URL.createObjectURL(file)}
                                 alt={file.name}
                                 className="w-full h-full object-cover"
                               />
                             </div>
+
                             {/* 파일명 */}
-                            <p className="text-sm text-gray-700">{file.name}</p>
+                            <p className="text-sm text-gray-700 whitespace-normal break-all max-phone:text-[10px]">
+                              {file.name}
+                            </p>
                           </div>
 
                           {/* 삭제 버튼 */}
@@ -410,14 +420,17 @@ const PromptCreateImgPage = () => {
                   </div>
                 </div>
 
-                <div className="mb-[16px]">
-                  <div className="mb-[12px]">
-                    <p className="text-[16px] font-medium pb-[4px]">한줄 소개</p>
-                    <p className="text-[12px] font-light text-gray700">프롬프트에 대한 한줄 소개를 작성해주세요.</p>
+                <div className="flex flex-col gap-[12px]">
+                  <div className="flex flex-col gap-[4px]">
+                    <p className="custom-h5 max-phone:text-[14px]">한줄 소개</p>
+                    <p className="text-[12px] font-light text-gray700 max-phone:text-[10px]">
+                      프롬프트에 대한 한줄 소개를 작성해주세요.
+                    </p>
                   </div>
-                  <div className="h-[45px] w-full py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
-                    <input
-                      className="w-full h-[22px] text-[14px] font-light placeholder:text-gray-400 resize-none outline-none"
+
+                  <div className="min-h-[45px] h-full w-full py-[12px] px-[16px] bg-gray50 rounded-[8px]">
+                    <textarea
+                      className="resize-none w-full min-h-[22px] h-full text-[14px] font-light placeholder:text-gray-400 outline-none max-phone:placeholder:text-[12px] max-phone:text-[12px]"
                       placeholder={`예) SNS 광고에 활용 가능한 카피 문구 생성 프롬프트입니다!`}
                       value={discriptionText}
                       onChange={(e) => setDescriptionText(e.target.value)}
@@ -425,16 +438,16 @@ const PromptCreateImgPage = () => {
                   </div>
                 </div>
 
-                <div className="">
-                  <div className="mb-[12px]">
-                    <p className="text-[16px] font-medium pb-[4px]">상세 설명</p>
-                    <p className="text-[12px] font-light text-gray700">
+                <div className="flex flex-col gap-[12px]">
+                  <div className="flex flex-col gap-[4px">
+                    <p className="custom-h5 max-phone:text-[14px]">상세 설명</p>
+                    <p className="text-[12px] font-light text-gray700 max-phone:text-[10px]">
                       프롬프트에 대한 상세 설명, 활용법 등을 자유롭게 작성해주세요.
                     </p>
                   </div>
-                  <div className="h-[262px] w-full py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
+                  <div className="h-[262px] max-lg:h-[134px] w-full py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
                     <textarea
-                      className="w-full h-[240px] text-[14px] font-light placeholder:text-gray-400 resize-none outline-none"
+                      className="w-full lg:h-[240px] max-lg:h-full text-[14px] font-light placeholder:text-gray-400 resize-none outline-none max-phone:placeholder:text-[12px] max-phone:text-[12px]"
                       placeholder={`예) [ ]부분은 직접 채워서 사용하세요
 톤앤매너를 바꿔가며 카피 스타일 다양화 (예: “유머러스하게”, “프리미엄스럽게”)
 글자 수 제한을 없애면 블로그/랜딩페이지용 문구에도 확장 가능`}
@@ -450,610 +463,19 @@ const PromptCreateImgPage = () => {
             </div>
 
             {/**업로드 버튼 */}
-            <div className="max-w-[1240px] w-full mt-[40px] mb-[88px]">
+            <div className="lg:max-w-[1240px] w-full mt-[20px] max-lg:mt-[30px]">
               <button
                 className="w-full h-[65px] flex justify-center items-center gap-[16px] bg-primary rounded-[16px] py-[20px]"
                 onClick={handleUploadClick}
                 disabled={isUploaded}>
-                <img src={UploadIcon} alt="업로드 버튼" className="w-[24px] h-[24px]" />
-                <p className="text-[24px] font-medium text-white">업로드 버튼</p>
+                <img src={UploadIcon} alt="업로드 버튼" className="w-[16px] h-[16px]" />
+                <p className="custom-h4 text-white max-phone:text-[16px]">업로드 하기</p>
               </button>
             </div>
           </div>
         </div>
         {/* TextModal */}
         {alertModal && <TextModal text={'업로드가 완료되었어요!'} onClick={() => setAlertModal(false)} size="lg" />}
-      </div>
-
-      {/* 725px ~ 1025px: 태블릿 */}
-      <div className="hidden min-[725px]:block min-[1026px]:hidden">
-        <div className="flex flex-col justify-center px-[40px]">
-          <div className="mt-[64px]">
-            <p className="text-black text-[32px] font-medium tracking-[-0.01em] leading-[140%]">
-              이미지 결과 프롬프트 업로드
-            </p>
-          </div>
-          <div className="mt-[12px] flex justify-between items-start">
-            <p className="flex-1 min-w-0">프롬프트와 프롬프트 정보를 입력하고 '업로드하기'를 눌러주세요</p>
-            <div className="flex flex-col items-end shrink-0">
-              <div className="w-[114px] h-[49px]">{/**bg-alert */}</div>
-              <span className="flex items-center gap-2 mt-[20px] cursor-pointer whitespace-nowrap">
-                <img className="w-[24px] h-[24px]" src={help} alt="작성 꿀팁 보기" />
-                <p className="text-black text-[14px] font-light leading-[16px]">작성 꿀팁 보기</p>
-              </span>
-            </div>
-          </div>
-          <div className="mt-[20px]">
-            {/**우측 본문 */}
-            <div className="max-w-[1245px] w-full bg-white rounded-[16px]  p-[24px]">
-              <div className="h-[80px] w-full mb-[16px]">
-                <p className="text-[16px] font-medium pb-[12px]">프롬프트 제목</p>
-                <div className="w-full py-[12px] px-[16px] h-[46px] bg-gray50 rounded-[8px]">
-                  <input
-                    name="title"
-                    className="w-full text-[14px] font-light placeholder:text-gray400 outline-none"
-                    placeholder="예) SNS 광고 카피 문구 생성기"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="mb-[12px]">
-                <p className="text-[16px] font-medium pb-[4px]">기본 정보 입력</p>
-                <p className="text-[12px] font-light pb-[4px] text-gray700">※ 모델 버전이 있는 경우 작성해주세요.</p>
-                <p className="text-[12px] font-light text-gray700">※ 모델과 카테고리는 최대 5개까지 선택 가능합니다.</p>
-              </div>
-
-              <div className="flex justify-start gap-[12px] mb-[12px]">
-                <span
-                  className="w-[105px] h-[28px] px-[8px] flex justify-between items-center gap-[16px]
-                  cursor-pointer flex-shrink-0"
-                  onClick={() => {
-                    setModalInitialTab('category');
-                    setuploadModal(true);
-                  }}>
-                  <p className="text-[14px] font-light">카테고리</p>
-                  <img className="w-[16px] h-[16px] flex-shrink-0" src={arrowdown} alt="down-arrow" />
-                </span>
-                {/* 선택된 카테고리 표시 - 강제 줄바꿈 필요시  flex-wrap를 srcoll 대신 사용 */}
-                <div className="flex gap-[8px] items-center overflow-x-scroll pb-[3px]">
-                  {categories.map((category) => {
-                    // DB 값 → 라벨 매핑 (FilterModal과 동일)
-                    const categoryLabels: Record<string, string> = {
-                      '보고서 / 레포트': '보고서•레포트',
-                      '사업계획서 / 기획안': '사업계획서•기획안',
-                      '논문 / 학술자료': '논문•학술자료',
-                      '자기소개서 / 이력서': '자기소개서•이력서',
-                      '광고 / 카피라이팅': '광고•카피라이팅',
-                      '시 / 소설': '시•소설',
-                      '숏폼 스크립트': '숏폼 스크립트',
-                      '광고 영상 콘셉트': '광고 영상 콘셉트',
-                      '애니메이션 장면': '애니메이션 장면',
-                      스토리보드: '스토리보드',
-                      '마케팅 캠페인 기획': '마케팅 캠페인 기획',
-                      'SNS 콘텐츠 아이디어': 'SNS 콘텐츠 아이디어',
-                      '시장조사/분석': '시장조사•분석',
-                      '이메일/세일즈 카피': '이메일•세일즈 카피',
-                      '여행 / 일정': '여행•일정',
-                      '요리 / 레시피': '요리•레시피',
-                      '게임 / 시나리오': '게임•시나리오',
-                      '취미 / 심리테스트': '퀴즈•심리테스트',
-                      상담: '상담',
-                      아이데이션: '아이데이션',
-                      브레인스토밍: '브레인스토밍',
-                      '비즈니스 아이디어': '비즈니스 아이디어',
-                      배경음악: '배경음악',
-                      '사운드 이펙트': '사운드 이펙트',
-                      '작곡/편곡 보조': '작곡•편곡 보조',
-                      '나레이션/보이스': '나레이션•보이스',
-                      일러스트: '일러스트',
-                      로고: '로고',
-                      '포스터 / 배너': '포스터•배너',
-                      '캐릭터 디자인': '캐릭터 디자인',
-                      '사진 리터칭': '사진 리터칭',
-                      '코드 자동화': '코드 자동화',
-                      '디버깅/리팩토링': '디버깅•리팩토링',
-                      'API 설계': 'API 설계',
-                      'SQL 쿼리': 'SQL 쿼리',
-                      '테스트 케이스': '테스트 케이스',
-                      '학습 / 과제 요약': '학습•과제 요약',
-                      '문제 풀이': '문제 풀이',
-                      '개념 설명': '개념 설명',
-                      '외국어 학습': '외국어 학습',
-                    };
-
-                    const label = categoryLabels[category] || category;
-
-                    return (
-                      <TagButton
-                        key={category}
-                        hasDelete={true}
-                        hasActive={false}
-                        text={label}
-                        onClick={() => {
-                          setCategories(categories.filter((c) => c !== category));
-                        }}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="mb-[16px]">
-                <div className="flex justify-start gap-[12px] mb-[12px]">
-                  <span
-                    className="w-[105px] h-[28px] px-[8px] flex justify-between items-center gap-[16px]
-                      cursor-pointer"
-                    onClick={() => {
-                      setModalInitialTab('model');
-                      setuploadModal(true);
-                    }}>
-                    <p className="text-[14px] font-light">모델</p>
-                    <img className="w-[16px] h-[16px] flex-shrink-0" src={arrowdown} alt="down-arrow" />
-                  </span>
-                  {/* 선택된 모델 표시 */}
-                  <div className="flex gap-[8px] items-center overflow-x-scroll pb-[3px]">
-                    {selectedModels.map((model) => (
-                      <TagButton
-                        key={model}
-                        hasDelete={true}
-                        hasActive={false}
-                        text={model}
-                        onClick={() => {
-                          setSelectedModels(selectedModels.filter((m) => m !== model));
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <div className="w-full h-[46px] py-[8px] px-[16px]  bg-gray50 rounded-[8px] items-center">
-                  <input
-                    value={modelver}
-                    onChange={(e) => setModelver(e.target.value)}
-                    maxLength={30} //글자 제한
-                    className="w-full text-[14px] font-light outline-none"
-                    placeholder="예) ChatGPT 5, Gemini 2.5 pro"
-                  />
-                </div>
-              </div>
-
-              <FilterModal
-                isOpen={uploadModal}
-                onClose={() => setuploadModal(false)}
-                selectedModels={selectedModels}
-                setSelectedModels={setSelectedModels}
-                categories={categories}
-                setCategories={setCategories}
-                initialTab={modalInitialTab}
-              />
-
-              <div className="mb-[16px]">
-                <div className="mb-[12px]">
-                  <p className="text-[16px] font-medium pb-[4px]">결과 미리보기</p>
-                  <p className="text-[12px] font-light text-gray700">
-                    프롬프트를 입력한 AI의 이미지를 업로드 해주세요.(최대 3개)
-                  </p>
-                </div>
-                <div className="">
-                  {/* 상단: 업로드 버튼 */}
-                  <div
-                    className="w-full h-[195px] flex flex-col items-center justify-center gap-2 p-4
-                   border-[1px] border-dashed border-primary bg-secondary rounded-[16px]">
-                    <img src={imgUpload} alt="업로드" className="w-[42px] h-[42px]" />
-                    <p className="text-[12px] text-gray-700 text-center">
-                      이미지를 업로드해주세요
-                      <br />
-                      (최대 3개)
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => inputImgRef.current?.click()}
-                      disabled={files.length >= 3}
-                      className="px-4 py-2 text-[12px] border border-primary rounded-[8px] bg-white
-             disabled:border-gray-400 disabled:text-gray-400 disabled:bg-gray-300 disabled:cursor-not-allowed">
-                      이미지 업로드
-                    </button>
-                    <input
-                      ref={inputImgRef}
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handleFileChange}
-                      className="hidden"
-                      disabled={files.length >= 3}
-                    />
-                  </div>
-                  {/* 오른쪽: 업로드된 이미지 목록 */}
-                  <div className="h-[195px] mt-[20px]">
-                    {files.map((file, idx) => (
-                      <div
-                        key={idx}
-                        className="h-[55px] flex items-center justify-between px-4 py-3 bg-white border border-gray-300
-                          rounded-[16px] my-[6px]">
-                        <div className="flex items-center gap-3">
-                          {/* 썸네일 이미지 */}
-                          <div className="w-[30px] h-[30px] rounded-[16px] overflow-hidden bg-[#E8F1FF] flex items-center justify-center">
-                            <img
-                              src={URL.createObjectURL(file)}
-                              alt={file.name}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          {/* 파일명 */}
-                          <p className="text-sm text-[#333333]">{file.name}</p>
-                        </div>
-
-                        {/* 삭제 버튼 */}
-                        <img
-                          src={imgDelete}
-                          alt="삭제 버튼"
-                          onClick={() => handleRemove(idx)}
-                          className="cursor-pointer w-5 h-5"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="mb-[16px]">
-                <div className="mb-[12px]">
-                  <p className="text-[16px] font-medium pb-[4px]">한줄 소개</p>
-                  <p className="text-[12px] font-light text-gray700">프롬프트에 대한 한줄 소개를 작성해주세요.</p>
-                </div>
-                <div className="h-[45px] w-full py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
-                  <input
-                    className="w-full h-[22px] text-[14px] font-light placeholder:text-gray-400 resize-none outline-none"
-                    placeholder={`예) SNS 광고에 활용 가능한 카피 문구 생성 프롬프트입니다!`}
-                    value={discriptionText}
-                    onChange={(e) => setDescriptionText(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="">
-                <div className="mb-[12px]">
-                  <p className="text-[16px] font-medium pb-[4px]">상세 설명</p>
-                  <p className="text-[12px] font-light text-gray700">
-                    프롬프트에 대한 상세 설명, 활용법 등을 자유롭게 작성해주세요.
-                  </p>
-                </div>
-                <div className="h-[262px] w-full py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
-                  <textarea
-                    className="w-full h-[240px] text-[14px] font-light placeholder:text-gray-400 resize-none outline-none"
-                    placeholder={`예) [ ]부분은 직접 채워서 사용하세요
-톤앤매너를 바꿔가며 카피 스타일 다양화 (예: “유머러스하게”, “프리미엄스럽게”)
-글자 수 제한을 없애면 블로그/랜딩페이지용 문구에도 확장 가능`}
-                    value={howToUseText}
-                    onChange={(e) => setHowToUseText(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          {/**프롬프트 본문 */}
-          <div className=" w-full bg-white rounded-[16px] p-[24px] mt-[20px]">
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="프롬프트를 작성해주세요."
-              className="w-full h-[285px] flex-1 bg-transparent outline-none resize-none text-[14px] font-light
-                    placeholder:text-text-on-background placeholder:text-[14px] placeholder:font-light overflow-y-auto"
-            />
-          </div>
-          <div className="h-[20px] pt-[15px]">
-            {validationError && <p className="text-[16px] font-medium text-alert">{validationError}</p>}
-          </div>
-          {/**업로드 버튼 */}
-          <div className="w-full mt-[30px] mb-[88px] ">
-            <button
-              className="w-full h-[65px] flex justify-center items-center gap-[16px] bg-primary rounded-[16px] py-[20px]"
-              onClick={handleUploadClick}
-              disabled={isUploaded}>
-              <img src={UploadIcon} alt="업로드 버튼" className="w-[24px] h-[24px]" />
-              <p className="text-[24px] font-medium text-white">업로드 버튼</p>
-            </button>
-          </div>
-        </div>
-        {/* TextModal */}
-        {alertModal && <TextModal text={'업로드가 완료되었어요!'} onClick={() => setAlertModal(false)} size="sm" />}
-      </div>
-
-      {/* 724px 이하: 모바일 */}
-      <div className="block min-[725px]:hidden">
-        <div className="flex flex-col justify-center px-[40px]">
-          <div className="mt-[64px]">
-            <p className="text-black text-[32px] font-medium tracking-[-0.05em] leading-[140%]">
-              이미지 결과 프롬프트 업로드
-            </p>
-          </div>
-          <div className="mt-[12px]">
-            <p className="text-[16px] font-light">프롬프트와 프롬프트 정보를 입력하고 '업로드하기'를 눌러주세요</p>
-            <div className="flex justify-end mt-[20px]">
-              <span className="flex items-center gap-2 cursor-pointer">
-                <img className="w-[24px] h-[24px]" src={help} alt="작성 꿀팁 보기" />
-                <p className="text-black text-[14px] font-light leading-[16px]">작성 꿀팁 보기</p>
-              </span>
-            </div>
-          </div>
-          <div className="mt-[20px]">
-            {/**우측 본문 */}
-            <div className="max-w-[1245px] w-full bg-white rounded-[16px]  p-[24px]">
-              <div className="h-[80px] w-full mb-[16px]">
-                <p className="text-[16px] font-medium pb-[12px]">프롬프트 제목</p>
-                <div className="w-full py-[12px] px-[16px] h-[43px]  bg-gray50 rounded-[8px]">
-                  <input
-                    name="title"
-                    className="w-full text-[14px] font-light placeholder:text-gray400 outline-none"
-                    placeholder="예) SNS 광고 카피 문구 생성기"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="mb-[12px]">
-                <p className="text-[16px] font-medium pb-[4px]">기본 정보 입력</p>
-                <p className="text-[12px] font-light pb-[4px] text-gray700">※ 모델 버전이 있는 경우 작성해주세요.</p>
-                <p className="text-[12px] font-light text-gray700">※ 모델과 카테고리는 최대 5개까지 선택 가능합니다.</p>
-              </div>
-
-              <div className="flex justify-start gap-[12px] mb-[12px]">
-                <span
-                  className="w-[105px] h-[28px] px-[8px] flex justify-between items-center gap-[16px]
-                  cursor-pointer flex-shrink-0"
-                  onClick={() => {
-                    setModalInitialTab('category');
-                    setuploadModal(true);
-                  }}>
-                  <p className="text-[14px] font-light">카테고리</p>
-                  <img className="w-[16px] h-[16px] flex-shrink-0" src={arrowdown} alt="down-arrow" />
-                </span>
-                {/* 선택된 카테고리 표시 - 강제 줄바꿈 필요시  flex-wrap를 srcoll 대신 사용 */}
-                <div className="flex gap-[8px] items-center overflow-x-scroll pb-[3px]">
-                  {categories.map((category) => {
-                    // DB 값 → 라벨 매핑 (FilterModal과 동일)
-                    const categoryLabels: Record<string, string> = {
-                      '보고서 / 레포트': '보고서•레포트',
-                      '사업계획서 / 기획안': '사업계획서•기획안',
-                      '논문 / 학술자료': '논문•학술자료',
-                      '자기소개서 / 이력서': '자기소개서•이력서',
-                      '광고 / 카피라이팅': '광고•카피라이팅',
-                      '시 / 소설': '시•소설',
-                      '숏폼 스크립트': '숏폼 스크립트',
-                      '광고 영상 콘셉트': '광고 영상 콘셉트',
-                      '애니메이션 장면': '애니메이션 장면',
-                      스토리보드: '스토리보드',
-                      '마케팅 캠페인 기획': '마케팅 캠페인 기획',
-                      'SNS 콘텐츠 아이디어': 'SNS 콘텐츠 아이디어',
-                      '시장조사/분석': '시장조사•분석',
-                      '이메일/세일즈 카피': '이메일•세일즈 카피',
-                      '여행 / 일정': '여행•일정',
-                      '요리 / 레시피': '요리•레시피',
-                      '게임 / 시나리오': '게임•시나리오',
-                      '취미 / 심리테스트': '퀴즈•심리테스트',
-                      상담: '상담',
-                      아이데이션: '아이데이션',
-                      브레인스토밍: '브레인스토밍',
-                      '비즈니스 아이디어': '비즈니스 아이디어',
-                      배경음악: '배경음악',
-                      '사운드 이펙트': '사운드 이펙트',
-                      '작곡/편곡 보조': '작곡•편곡 보조',
-                      '나레이션/보이스': '나레이션•보이스',
-                      일러스트: '일러스트',
-                      로고: '로고',
-                      '포스터 / 배너': '포스터•배너',
-                      '캐릭터 디자인': '캐릭터 디자인',
-                      '사진 리터칭': '사진 리터칭',
-                      '코드 자동화': '코드 자동화',
-                      '디버깅/리팩토링': '디버깅•리팩토링',
-                      'API 설계': 'API 설계',
-                      'SQL 쿼리': 'SQL 쿼리',
-                      '테스트 케이스': '테스트 케이스',
-                      '학습 / 과제 요약': '학습•과제 요약',
-                      '문제 풀이': '문제 풀이',
-                      '개념 설명': '개념 설명',
-                      '외국어 학습': '외국어 학습',
-                    };
-
-                    const label = categoryLabels[category] || category;
-
-                    return (
-                      <TagButton
-                        key={category}
-                        hasDelete={true}
-                        hasActive={false}
-                        text={label}
-                        onClick={() => {
-                          setCategories(categories.filter((c) => c !== category));
-                        }}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="mb-[16px]">
-                <div className="flex justify-start gap-[12px] mb-[12px]">
-                  <span
-                    className="w-[105px] h-[28px] px-[8px] flex justify-between items-center gap-[16px]
-                      cursor-pointer"
-                    onClick={() => {
-                      setModalInitialTab('model');
-                      setuploadModal(true);
-                    }}>
-                    <p className="text-[14px] font-light">모델</p>
-                    <img className="w-[16px] h-[16px] flex-shrink-0" src={arrowdown} alt="down-arrow" />
-                  </span>
-                  {/* 선택된 모델 표시 */}
-                  <div className="flex gap-[8px] items-center overflow-x-scroll pb-[3px]">
-                    {selectedModels.map((model) => (
-                      <TagButton
-                        key={model}
-                        hasDelete={true}
-                        hasActive={false}
-                        text={model}
-                        onClick={() => {
-                          setSelectedModels(selectedModels.filter((m) => m !== model));
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <div className="w-full h-[46px] py-[8px] px-[16px]  bg-gray50 rounded-[8px] items-center">
-                  <input
-                    value={modelver}
-                    onChange={(e) => setModelver(e.target.value)}
-                    maxLength={30} //글자 제한
-                    className="w-full text-[14px] font-light outline-none"
-                    placeholder="예) ChatGPT 5, Gemini 2.5 pro"
-                  />
-                </div>
-              </div>
-
-              <FilterModal
-                isOpen={uploadModal}
-                onClose={() => setuploadModal(false)}
-                selectedModels={selectedModels}
-                setSelectedModels={setSelectedModels}
-                categories={categories}
-                setCategories={setCategories}
-                initialTab={modalInitialTab}
-              />
-
-              <div className="mb-[16px]">
-                <div className="mb-[12px]">
-                  <p className="text-[16px] font-medium pb-[4px]">결과 미리보기</p>
-                  <p className="text-[12px] font-light text-gray700">
-                    프롬프트를 입력한 AI의 이미지를 업로드 해주세요.(최대 3개)
-                  </p>
-                </div>
-                <div className="">
-                  {/* 상단: 업로드 버튼 */}
-                  <div
-                    className="w-full h-[195px] flex flex-col items-center justify-center gap-2 p-4
-                   border-[1px] border-dashed border-primary bg-secondary rounded-[16px]">
-                    <img src={imgUpload} alt="업로드" className="w-[42px] h-[42px]" />
-                    <p className="text-[12px] text-gray-700 text-center">
-                      이미지를 업로드해주세요
-                      <br />
-                      (최대 3개)
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => inputImgRef.current?.click()}
-                      disabled={files.length >= 3}
-                      className="px-4 py-2 text-[12px] border border-primary rounded-[8px] bg-white
-             disabled:border-gray-400 disabled:text-gray-400 disabled:bg-gray-300 disabled:cursor-not-allowed">
-                      이미지 업로드
-                    </button>
-                    <input
-                      ref={inputImgRef}
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handleFileChange}
-                      className="hidden"
-                      disabled={files.length >= 3}
-                    />
-                  </div>
-                  {/* 오른쪽: 업로드된 이미지 목록 */}
-                  <div className="h-[195px] mt-[20px]">
-                    {files.map((file, idx) => (
-                      <div
-                        key={idx}
-                        className="h-[55px] flex items-center justify-between px-4 py-3 bg-white border border-gray-300
-                          rounded-[16px] my-[6px]">
-                        <div className="flex items-center gap-3">
-                          {/* 썸네일 이미지 */}
-                          <div className="w-[30px] h-[30px] rounded-[16px] overflow-hidden bg-[#E8F1FF] flex items-center justify-center">
-                            <img
-                              src={URL.createObjectURL(file)}
-                              alt={file.name}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          {/* 파일명 */}
-                          <p className="text-sm text-[#0B0B0B]">
-                            {file.name.length > 13 ? `${file.name.slice(0, 13)}...` : file.name}
-                          </p>
-                        </div>
-
-                        {/* 삭제 버튼 */}
-                        <img
-                          src={imgDelete}
-                          alt="삭제 버튼"
-                          onClick={() => handleRemove(idx)}
-                          className="cursor-pointer w-5 h-5"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="mb-[16px]">
-                <div className="mb-[12px]">
-                  <p className="text-[16px] font-medium pb-[4px]">한줄 소개</p>
-                  <p className="text-[12px] font-light text-gray700">프롬프트에 대한 한줄 소개를 작성해주세요.</p>
-                </div>
-                <div className="h-[45px] w-full py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
-                  <input
-                    className="w-full h-[22px] text-[14px] font-light placeholder:text-gray-400 resize-none outline-none"
-                    placeholder={`예) SNS 광고에 활용 가능한 카피 문구 생성 프롬프트입니다!`}
-                    value={discriptionText}
-                    onChange={(e) => setDescriptionText(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="">
-                <div className="mb-[12px]">
-                  <p className="text-[16px] font-medium pb-[4px]">상세 설명</p>
-                  <p className="text-[12px] font-light text-gray700">
-                    프롬프트에 대한 상세 설명, 활용법 등을 자유롭게 작성해주세요.
-                  </p>
-                </div>
-                <div className="h-[262px] w-full py-[12px] px-[16px]  bg-gray50 rounded-[8px]">
-                  <textarea
-                    className="w-full h-[240px] text-[14px] font-light placeholder:text-gray-400 resize-none outline-none"
-                    placeholder={`예) [ ]부분은 직접 채워서 사용하세요
-톤앤매너를 바꿔가며 카피 스타일 다양화 (예: “유머러스하게”, “프리미엄스럽게”)
-글자 수 제한을 없애면 블로그/랜딩페이지용 문구에도 확장 가능`}
-                    value={howToUseText}
-                    onChange={(e) => setHowToUseText(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          {/**프롬프트 본문 */}
-          <div className=" w-full bg-white rounded-[16px] p-[24px] mt-[20px] ">
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="프롬프트를 작성해주세요."
-              className="w-full h-[285px] flex-1 bg-transparent outline-none resize-none text-[14px] font-light
-                    placeholder:text-text-on-background placeholder:text-[14px] placeholder:font-light overflow-y-auto"
-            />
-          </div>
-          <div className="h-[20px] pt-[15px]">
-            {validationError && <p className="text-[16px] font-medium text-alert">{validationError}</p>}
-          </div>
-          {/**업로드 버튼 */}
-          <div className="w-full mt-[30px] mb-[88px] ">
-            <button
-              className="w-full h-[65px] flex justify-center items-center gap-[16px] bg-primary rounded-[16px] py-[20px]"
-              onClick={handleUploadClick}
-              disabled={isUploaded}>
-              <img src={UploadIcon} alt="업로드 버튼" className="w-[24px] h-[24px]" />
-              <p className="text-[24px] font-medium text-white">업로드 버튼</p>
-            </button>
-          </div>
-        </div>
-        {/* TextModal */}
-        {alertModal && <TextModal text={'업로드가 완료되었어요!'} onClick={() => setAlertModal(false)} size="sm" />}
       </div>
     </>
   );
