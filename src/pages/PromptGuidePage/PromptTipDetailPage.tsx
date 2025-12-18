@@ -7,7 +7,6 @@ import newBadgeImg from '@assets/icon-new-notification.svg';
 import url from '@assets/icon-linkhub-logo.svg';
 import instagram from '@assets/icon-instagram-logo.svg';
 import facebook from '@assets/icon-facebook-logo.svg';
-import kakaotalk from '@assets/icon-kakao-logo.svg';
 import twitter from '@assets/icon-x-logo.svg';
 
 import defaultImg from '@assets/icon-example-image.png';
@@ -38,10 +37,6 @@ const PromptTipDetailPage = () => {
   });
 
   const navigate = useNavigate();
-
-  const handleNavigate = () => {
-    navigate(`/guide/tip`);
-  };
 
   /**api 연동 */
   useEffect(() => {
@@ -91,17 +86,18 @@ const PromptTipDetailPage = () => {
   const handleTwitter = useCallback(() => {
     const shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}`;
     openShareWindow(shareUrl);
-  }, []);
+  }, [currentUrl]);
 
   const handleFacebook = useCallback(() => {
     const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
     openShareWindow(shareUrl);
-  }, []);
+  }, [currentUrl]);
 
   // 클립보드에 복사
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
   };
+
   const handleInstagram = useCallback(() => {
     copyToClipboard(currentUrl);
     const ok = window.confirm('인스타그램으로 이동합니다.');
@@ -109,255 +105,89 @@ const PromptTipDetailPage = () => {
 
     // 확인했으면 새 탭으로 인스타그램 웹 열기
     window.open('https://www.instagram.com', '_blank', 'noopener,noreferrer');
-  }, []);
+  }, [currentUrl]);
 
   return (
     <>
-      <div className="hidden min-[1026px]:block">
-        <div className="mt-[64px] mb-[20px] mx-[102px]">
-          <span
+      <div className="px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
+        <div className="mt-[64px] mb-[20px]">
+          <div
             className="w-[65px] flex justify-center gap-[4px]"
             onClick={() => {
               navigate('/guide/tip');
             }}>
             <p className="text-[14px] font-light text-text-on-white">AI 꿀팁</p>
             <img src={rightArrow} alt="뒤로 가기" />
-          </span>
+          </div>
         </div>
-        <div className="flex flex-col items-center mx-[102px] rounded-[12px] bg-white pt-[56px] px-[80px] pb-[32px]">
+
+        <div className="flex flex-col items-center rounded-[12px] bg-white pt-[56px] px-[80px] pb-[32px] max-lg:px-[32px]">
           <div className="w-full ">
             {/**상단 */}
-            <div className="w-full  h-[135px] border-b-[1px] border-white-stroke mb-[34px]">
+            <div className="w-full border-b-[1px] border-white-stroke pb-[34px] flex flex-col gap-[24px]">
               <div className="flex">
                 {new Date().getTime() - new Date(post.create_at).getTime() <= 14 * 24 * 60 * 60 * 1000 && (
                   <img src={newBadgeImg} alt="NEW" className="w-[20px] h-[20px] mr-[8px]" />
                 )}
-                <p className="text-[18px] font-medium text-text-on-white mb-[12px]">{post.title}</p>
+                <p className="custom-h4 max-phone:text-[16px]">{post.title}</p>
               </div>
-              <div className="h-[22px]">
-                <p className="font-light text-[19px] text-text-on-white  mb-[px]"></p>
-              </div>
-              <div className="flex justify-between items-center">
-                <div>
-                  <div>
-                    <div className="flex items-center gap-[12px] h-[17px]">
-                      <div className="border-r border-gray-400">
-                        <span className="text-[12px] font-light text-black">작성자 : </span>
-                        <span className="text-[12px] font-light text-gray500 pr-[8px] ">프롬프트플레이스</span>
-                      </div>
-                      <div>
-                        <span className="text-[12px] font-light text-black">등록일 : </span>
-                        <span className="text-[12px] font-light text-gray500">{post.create_at}</span>
-                      </div>
-                    </div>
+
+              <div className="flex justify-between items-center max-lg:flex-col max-lg:items-start max-lg:gap-[16px]">
+                <div className="flex items-center gap-[12px]">
+                  <div className="custom-body3 max-phone:text-[10px] border-r border-gray-400">
+                    <span>작성자 : </span>
+                    <span className="text-gray500 pr-[8px]">프롬프트플레이스</span>
+                  </div>
+
+                  <div className="custom-body3 max-phone:text-[10px]">
+                    <span>등록일 : </span>
+                    <span className="text-gray500">{post.create_at}</span>
                   </div>
                 </div>
+
                 <div className="flex gap-[8px]">
-                  <p className="text-[12px] font-light text-text-on-white">공유 :</p>
+                  <p className="custom-body3 text-text-on-white max-phone:texxt-[10px]">공유 :</p>
 
                   <div className="flex justify-between items-center gap-[16px]">
                     <img
-                      className="cursor-pointer w-[20px] h-[20px]"
+                      className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
                       src={instagram}
                       alt="instagram"
                       onClick={handleInstagram}
                     />
                     <img
-                      className="cursor-pointer w-[20px] h-[20px]"
+                      className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
                       src={facebook}
                       alt="facebook"
                       onClick={handleFacebook}
                     />
                     <img
-                      className="cursor-pointer w-[20px] h-[20px]"
+                      className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
                       src={twitter}
                       alt="twitter"
                       onClick={handleTwitter}
                     />
-                    <img className="cursor-pointer w-[20px] h-[20px]" src={url} alt="url" onClick={handleCopyUrl} />
+                    <img
+                      className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
+                      src={url}
+                      alt="url"
+                      onClick={handleCopyUrl}
+                    />
                   </div>
                 </div>
               </div>
             </div>
+
             {/**본문 */}
-            <img className="mb-[40px]" src={post.file_url || defaultImg} alt="미리보기 이미지" />
-            <div className="text-[16px] font-medium text-text-on-white pb-[40px] border-b-[1px] border-white-stroke">
+            <img className="py-[40px]" src={post.file_url || defaultImg} alt="미리보기 이미지" />
+
+            <div className="custom-body2 pb-[40px] border-b-[1px] border-white-stroke [&_p]:mb-4 max-phone:text-[12px]">
               <ReactMarkdown>{post.content}</ReactMarkdown>
             </div>
+
             <div className="flex items-end">
               {post.file_url ? (
                 <div className="w-[98px] h-[36px] gap-[8px] flex mt-[32px] border border-gray400 rounded-[8px] items-center justify-center">
-                  <p className="text-[12px] font-light text-gray700">첨부파일</p>
-                  <img src={attachFile} alt="첨부 파일" className=" w-[20px] h-[20px]" />
-                </div>
-              ) : (
-                <div className="h-[36px] mt-[32px]"></div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 481px ~ 1025px: 태블릿 */}
-      <div className="hidden min-[481px]:block min-[1026px]:hidden">
-        <div className="mt-[64px] mb-[20px] mx-[40px]">
-          <span
-            className="w-[65px] flex justify-center gap-[4px]"
-            onClick={() => {
-              navigate('/guide/tip');
-            }}>
-            <p className="text-[14px] font-light text-text-on-white">AI 꿀팁</p>
-            <img src={rightArrow} alt="뒤로 가기" />
-          </span>
-        </div>
-        <div className="flex flex-col items-center mx-[40px] rounded-[12px] bg-white pt-[56px] px-[80px] pb-[32px]">
-          <div className="w-full ">
-            {/**상단 */}
-            <div className="w-full  h-[135px] border-b-[1px] border-white-stroke mb-[34px]">
-              <div className="flex">
-                {new Date().getTime() - new Date(post.create_at).getTime() <= 14 * 24 * 60 * 60 * 1000 && (
-                  <img src={newBadgeImg} alt="NEW" className="w-[20px] h-[20px] mr-[8px]" />
-                )}
-                <p className="text-[18px] font-medium text-text-on-white mb-[12px]">{post.title}</p>
-              </div>
-              <div className="h-[22px]">
-                <p className="font-light text-[19px] text-text-on-white  mb-[px]"></p>
-              </div>
-              <div className="flex flex-col items-start">
-                <div>
-                  <div>
-                    <div className="flex items-center gap-[12px] h-[17px] mb-[16px]">
-                      <div className="border-r border-gray-400">
-                        <span className="text-[12px] font-light text-black">작성자 : </span>
-                        <span className="text-[12px] font-light text-gray500 pr-[8px] ">프롬프트플레이스</span>
-                      </div>
-                      <div>
-                        <span className="text-[12px] font-light text-black">등록일 : </span>
-                        <span className="text-[12px] font-light text-gray500">{post.create_at}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex gap-[8px]">
-                  <p className="text-[12px] font-light text-text-on-white">공유 :</p>
-
-                  <div className="flex justify-between items-center gap-[16px]">
-                    <img
-                      className="cursor-pointer w-[17px] h-[17px]"
-                      src={instagram}
-                      alt="instagram"
-                      onClick={handleInstagram}
-                    />
-                    <img
-                      className="cursor-pointer w-[17px] h-[17px]"
-                      src={facebook}
-                      alt="facebook"
-                      onClick={handleFacebook}
-                    />
-                    <img
-                      className="cursor-pointer w-[17px] h-[17px]"
-                      src={twitter}
-                      alt="twitter"
-                      onClick={handleTwitter}
-                    />
-                    <img className="cursor-pointer w-[17px] h-[17px]" src={url} alt="url" onClick={handleCopyUrl} />
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/**본문 */}
-            <img className="mb-[40px]" src={post.file_url || defaultImg} alt="미리보기 이미지" />
-            <div className="text-[16px] font-medium text-text-on-white pb-[40px] border-b-[1px] border-white-stroke">
-              <ReactMarkdown>{post.content}</ReactMarkdown>
-            </div>
-            <div className="flex items-end">
-              {post.file_url ? (
-                <div className="w-[98px] h-[36px] gap-[8px] flex mt-[32px] border border-gray400 rounded-[8px] items-center justify-center">
-                  <p className="text-[12px] font-light text-gray700">첨부파일</p>
-                  <img src={attachFile} alt="첨부 파일" className=" w-[20px] h-[20px]" />
-                </div>
-              ) : (
-                <div className="h-[36px] mt-[32px]"></div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* 480px 이하: 모바일 */}
-      <div className="block min-[480px]:hidden">
-        <div className="mt-[64px] mb-[20px] mx-[20px]">
-          <span
-            className="w-[65px] flex justify-center gap-[4px]"
-            onClick={() => {
-              navigate('/guide/tip');
-            }}>
-            <p className="text-[14px] font-light text-text-on-white">AI 꿀팁</p>
-            <img src={rightArrow} alt="뒤로 가기" />
-          </span>
-        </div>
-        <div className="flex flex-col items-center mx-[20px] rounded-[12px] bg-white pt-[32px] px-[20px] pb-[20px]">
-          <div className="w-full ">
-            {/**상단 */}
-            <div className="w-full  h-[135px] border-b-[1px] border-white-stroke mb-[34px]">
-              <div className="flex">
-                {new Date().getTime() - new Date(post.create_at).getTime() <= 14 * 24 * 60 * 60 * 1000 && (
-                  <img src={newBadgeImg} alt="NEW" className="w-[20px] h-[20px] mr-[8px]" />
-                )}
-                <p className="text-[18px] font-medium text-text-on-white mb-[12px]">{post.title}</p>
-              </div>
-              <div className="h-[22px]">
-                <p className="font-light text-[19px] text-text-on-white  mb-[px]"></p>
-              </div>
-              <div className="flex flex-col items-start">
-                <div>
-                  <div>
-                    <div className="flex items-center gap-[12px] h-[17px] mb-[16px]">
-                      <div className="border-r border-gray-400">
-                        <span className="text-[12px] font-light text-black">작성자 : </span>
-                        <span className="text-[12px] font-light text-gray500 pr-[8px] ">프롬프트플레이스</span>
-                      </div>
-                      <div>
-                        <span className="text-[12px] font-light text-black">등록일 : </span>
-                        <span className="text-[12px] font-light text-gray500">{post.create_at}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex gap-[8px]">
-                  <p className="text-[12px] font-light text-text-on-white">공유 :</p>
-
-                  <div className="flex justify-between items-center gap-[16px]">
-                    <img
-                      className="cursor-pointer w-[17px] h-[17px]"
-                      src={instagram}
-                      alt="instagram"
-                      onClick={handleInstagram}
-                    />
-                    <img
-                      className="cursor-pointer w-[17px] h-[17px]"
-                      src={facebook}
-                      alt="facebook"
-                      onClick={handleFacebook}
-                    />
-                    <img
-                      className="cursor-pointer w-[17px] h-[17px]"
-                      src={twitter}
-                      alt="twitter"
-                      onClick={handleTwitter}
-                    />
-                    <img className="cursor-pointer w-[17px] h-[17px]" src={url} alt="url" onClick={handleCopyUrl} />
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/**본문 */}
-            <img className="mb-[16px]" src={post.file_url || defaultImg} alt="미리보기 이미지" />
-            <div className="text-[14px] font-light text-text-on-white pb-[20px] border-b-[1px] border-white-stroke">
-              <ReactMarkdown>{post.content}</ReactMarkdown>
-            </div>
-            <div className="flex justify-end items-end">
-              {post.file_url ? (
-                <div className="w-[83px] h-[32px] gap-[8px] flex mt-[32px] border border-gray400 rounded-[8px] items-center justify-center">
                   <p className="text-[12px] font-light text-gray700">첨부파일</p>
                   <img src={attachFile} alt="첨부 파일" className=" w-[20px] h-[20px]" />
                 </div>
