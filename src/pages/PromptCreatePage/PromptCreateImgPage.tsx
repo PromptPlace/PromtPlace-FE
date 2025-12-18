@@ -465,7 +465,7 @@ const PromptCreateImgPage = () => {
             {/**업로드 버튼 */}
             <div className="lg:max-w-[1240px] w-full mt-[20px] max-lg:mt-[30px]">
               <button
-                className="w-full h-[65px] flex justify-center items-center gap-[16px] bg-primary rounded-[16px] py-[20px]"
+                className="w-full h-[65px] flex justify-center items-center gap-[16px] bg-primary rounded-[12px] py-[20px]"
                 onClick={handleUploadClick}
                 disabled={isUploaded}>
                 <img src={UploadIcon} alt="업로드 버튼" className="w-[16px] h-[16px]" />
