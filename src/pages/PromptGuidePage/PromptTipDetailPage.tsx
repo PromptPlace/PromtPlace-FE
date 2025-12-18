@@ -112,12 +112,12 @@ const PromptTipDetailPage = () => {
       <div className="px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
         <div className="mt-[64px] mb-[20px]">
           <div
-            className="w-[65px] flex justify-center gap-[4px]"
+            className="flex justify-start items-center gap-[10px]"
             onClick={() => {
               navigate('/guide/tip');
             }}>
             <p className="text-[14px] font-light text-text-on-white">AI 꿀팁</p>
-            <img src={rightArrow} alt="뒤로 가기" />
+            <img src={rightArrow} alt="뒤로 가기" className="h-[8px]" />
           </div>
         </div>
 
