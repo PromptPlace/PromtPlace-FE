@@ -42,6 +42,7 @@ const TagButton = ({ hasDelete = false, hasActive = false, text, onClick }: TagB
     '자기소개서•이력서',
     '광고•카피라이팅',
     '시•소설',
+    '논문•학술자료',
   ];
   const ImgList = ['이미지 생성', '일러스트', '로고', '포스터•배너', '캐릭터 디자인', '사진 리터칭'];
   const ScriptList = ['대본•스토리보드', '숏폼 스크립트', '광고 영상 콘셉트', '애니메이션 장면', '스토리보드'];
@@ -76,17 +77,24 @@ const TagButton = ({ hasDelete = false, hasActive = false, text, onClick }: TagB
   return (
     <div
       className={clsx(
-        'custom-button2 py-[6px] px-[12px] flex justify-center items-center gap-[8px] rounded-[50px] whitespace-nowrap text-primary shrink-0',
-        !hasDelete && 'max-lg:border-none',
+        'custom-button2 py-[6px] px-[12px] flex justify-center items-center gap-[8px] rounded-[50px] whitespace-nowrap text-primary shrink-0 transition-all max-phone:text-[10px]',
+        icon && hasDelete
+          ? 'bg-secondary!'
+          : hasDelete
+            ? 'bg-sub2! text-white!'
+            : 'active:bg-secondary-pressed max-lg:border-none',
         hasActive
-          ? 'cursor-pointer bg-white active:bg-secondary-pressed border border-primary border-[0.8px]'
-          : 'bg-secondary',
+          ? 'cursor-pointer bg-white border border-primary border-[0.8px]'
+          : 'cursor-pointer bg-secondary-pressed',
       )}>
       {icon && <img src={icon} alt="이미지" />}
       {text}
       {hasDelete && (
         <div className="cursor-pointer">
-          <CancelIcon onClick={onClick} className="w-full h-full text-primary" />
+          <CancelIcon
+            onClick={onClick}
+            className={clsx('w-full h-full text-primary', hasDelete && icon ? 'text-primary' : 'text-white')}
+          />
         </div>
       )}
     </div>

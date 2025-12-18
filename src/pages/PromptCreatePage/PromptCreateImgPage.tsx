@@ -225,7 +225,7 @@ const PromptCreateImgPage = () => {
 
                   <div className="flex justify-start gap-[12px]">
                     <div
-                      className="w-[102px] max-phone:w-[87px] h-[28px] px-[8px] flex justify-between items-center phone:gap-[16px]
+                      className="w-[102px] max-phone:w-[87px] h-[30px] px-[8px] flex justify-between items-center phone:gap-[16px]
                   cursor-pointer flex-shrink-0 bg-gray50 rounded-[8px]"
                       onClick={() => {
                         setModalInitialTab('category');
@@ -235,7 +235,7 @@ const PromptCreateImgPage = () => {
                       <img className="w-[16px] h-[16px] flex-shrink-0" src={arrowdown} alt="down-arrow" />
                     </div>
                     {/* 선택된 카테고리 표시 - 강제 줄바꿈 필요시  flex-wrap를 srcoll 대신 사용 */}
-                    <div className="flex gap-[8px] items-center overflow-x-scroll pb-[3px]">
+                    <div className="flex gap-[8px] items-center overflow-x-auto">
                       {categories.map((category) => {
                         // DB 값 → 라벨 매핑 (FilterModal과 동일)
                         const categoryLabels: Record<string, string> = {
@@ -301,7 +301,7 @@ const PromptCreateImgPage = () => {
                   <div className="mt-[8px] flex flex-col gap-[12px]">
                     <div className="flex justify-start gap-[12px]">
                       <div
-                        className="w-[75px] max-phone:w-[64px] h-[28px] px-[8px] flex justify-between items-center phone:gap-[16px]
+                        className="w-[75px] max-phone:w-[64px] h-[30px] px-[8px] flex justify-between items-center phone:gap-[16px]
                       cursor-pointer bg-gray50 rounded-[8px]"
                         onClick={() => {
                           setModalInitialTab('model');
@@ -311,7 +311,7 @@ const PromptCreateImgPage = () => {
                         <img className="w-[16px] h-[16px] flex-shrink-0" src={arrowdown} alt="down-arrow" />
                       </div>
                       {/* 선택된 모델 표시 */}
-                      <div className="flex gap-[8px] items-center overflow-x-scroll pb-[3px]">
+                      <div className="flex gap-[8px] items-center overflow-x-auto">
                         {selectedModels.map((model) => (
                           <TagButton
                             key={model}
@@ -325,7 +325,7 @@ const PromptCreateImgPage = () => {
                         ))}
                       </div>
                     </div>
-                    <div className="w-full h-[46px] py-[8px] px-[16px]  bg-gray50 rounded-[8px] items-center">
+                    <div className="w-full h-[46px] py-[8px] px-[16px] bg-gray50 rounded-[8px] items-center">
                       <input
                         value={modelver}
                         onChange={(e) => setModelver(e.target.value)}
@@ -357,9 +357,7 @@ const PromptCreateImgPage = () => {
 
                   <div className="flex items-start gap-[20px] max-lg:flex-col">
                     {/* 왼쪽: 업로드 버튼 */}
-                    <div
-                      className="w-[195px] flex flex-col justify-center items-center gap-[16px] p-4
-  border-[1px] border-dashed border-primary bg-secondary rounded-[16px] max-lg:w-full">
+                    <div className="w-[195px] flex flex-col justify-center items-center gap-[16px] p-4 border-[1px] border-dashed border-primary bg-secondary rounded-[16px] max-lg:w-full">
                       <img src={imgUpload} alt="업로드" className="w-12 h-12" />
 
                       <p className="text-[12px] text-gray-700 text-center max-phone:text-[10px]">
@@ -371,8 +369,7 @@ const PromptCreateImgPage = () => {
                         type="button"
                         onClick={() => inputImgRef.current?.click()}
                         disabled={files.length >= 3} // 여기에 disabled 추가!
-                        className="px-4 py-2 text-[12px] border border-primary rounded-[8px] bg-white
-    disabled:border-gray-400 disabled:text-gray-400 disabled:bg-gray-300 disabled:cursor-not-allowed mt-[-4px] max-phone:text-[10px] max-phone:py-[6px]">
+                        className="px-4 py-2 text-[12px] border border-primary rounded-[8px] bg-white disabled:border-gray-400 disabled:text-gray-400 disabled:bg-gray-300 disabled:cursor-not-allowed mt-[-4px] max-phone:text-[10px] max-phone:py-[6px]">
                         이미지 업로드
                       </button>
                       <input

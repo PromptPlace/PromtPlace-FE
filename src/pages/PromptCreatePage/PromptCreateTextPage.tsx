@@ -176,18 +176,18 @@ const PromptCreateTextPage = () => {
 
                 <div className="flex justify-start gap-[12px] mb-[12px]">
                   <div
-                    className="w-[105px] h-[28px] px-[8px] flex justify-between items-center gap-[16px]
+                    className="w-[105px] h-[30px] px-[8px] flex justify-between items-center gap-[16px]
                   cursor-pointer flex-shrink-0 bg-gray50 rounded-[8px]"
                     onClick={() => {
                       setModalInitialTab('category');
                       setuploadModal(true);
                     }}>
-                    <p className="text-[14px] font-light">카테고리</p>
+                    <p className="text-[14px] font-light max-phone:text-[12px]">카테고리</p>
                     <img className="w-[16px] h-[16px] flex-shrink-0" src={arrowdown} alt="down-arrow" />
                   </div>
 
                   {/* 선택된 카테고리 표시 - 강제 줄바꿈 필요시  flex-wrap를 srcoll 대신 사용 */}
-                  <div className="flex gap-[8px] items-center overflow-x-scroll pb-[3px]">
+                  <div className="flex gap-[8px] items-center overflow-x-auto">
                     {categories.map((category) => {
                       // DB 값 → 라벨 매핑 (FilterModal과 동일)
                       const categoryLabels: Record<string, string> = {
@@ -253,17 +253,17 @@ const PromptCreateTextPage = () => {
                 <div className="mb-[16px]">
                   <div className="flex justify-start gap-[12px] mb-[12px]">
                     <div
-                      className="w-[75px] h-[28px] px-[8px] flex justify-between items-center gap-[16px]
+                      className="w-[75px] h-[30px] px-[8px] flex justify-between items-center gap-[16px]
                       cursor-pointer bg-gray50 rounded-[8px]"
                       onClick={() => {
                         setModalInitialTab('model');
                         setuploadModal(true);
                       }}>
-                      <p className="text-[14px] font-light">모델</p>
+                      <p className="text-[14px] font-light max-phone:text-[12px]">모델</p>
                       <img className="w-[16px] h-[16px] flex-shrink-0" src={arrowdown} alt="down-arrow" />
                     </div>
                     {/* 선택된 모델 표시 */}
-                    <div className="flex gap-[8px] items-center overflow-x-scroll pb-[3px]">
+                    <div className="flex gap-[8px] items-center overflow-x-auto">
                       {selectedModels.map((model) => (
                         <TagButton
                           key={model}

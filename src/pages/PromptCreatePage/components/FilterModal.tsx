@@ -51,8 +51,9 @@ const FilterModal: React.FC<FilterModalProps> = ({
   // API 응답 기반 모델 데이터
   const modelData = {
     '언어모델(LLM)': ['ChatGPT', 'Perplexity', 'Claude', 'Gemini', 'Grok', 'DeepSeek'],
-    '이미지 생성 모델': ['DALL-E', 'Nano Banana', 'Midjourney', 'Stable Diffusion'],
+    '이미지 생성 모델': ['DALL-E', 'Nano Banana', 'Midjourney', 'Stable Diffusion', 'Firefly'],
     '동영상 생성 모델': ['Kling AI', 'Veo', 'Sora', 'Runway', 'Luma Dream Machine'],
+    '음악 생성 모델': ['Suno', 'Udio'],
   };
 
   // 카테고리 데이터 (label: 화면 표시, value: DB 저장 값)
@@ -177,13 +178,13 @@ const FilterModal: React.FC<FilterModalProps> = ({
         className="bg-white rounded-[16px] w-[392px] h-[664px] flex flex-col p-[32px]"
         onClick={(e) => e.stopPropagation()}>
         {/* 메인 콘텐츠 */}
-        <div className="flex flex-col flex-1 overflow-hidden">
-          <div className="h-[40px] border-b border-gray-200">
-            <h3 className="text-[18px] font-medium mb-4">필터</h3>
+        <div className="flex flex-col gap-[20px] flex-1 overflow-hidden">
+          <div className="border-b border-gray-200 pb-[16px]">
+            <h3 className="custom-h4">필터</h3>
           </div>
 
           {/* 탭 버튼 */}
-          <div className="h-[46px] flex gap-[10px] mt-[20px] mb-[20px]">
+          <div className="flex gap-[10px] pb-[16px]">
             <button
               className={`w-[99px] h-[30px] py-[6px] px-[12px] rounded-[8px] text-[12px] font-medium transition-all border ${
                 activeTab === 'model'
@@ -203,6 +204,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
               카테고리
             </button>
           </div>
+
           {/* 스크롤 가능 영역 */}
           <div className="flex-1 overflow-y-auto">
             {/* 모델 탭 */}
@@ -213,16 +215,14 @@ const FilterModal: React.FC<FilterModalProps> = ({
                   const sectionWidth = sectionTitle === '이미지 생성 모델' ? '286px' : '260px';
 
                   return (
-                    <div key={sectionTitle}>
-                      <h4 className="text-[12px] font-medium text-primary mb-[12px]">{sectionTitle}</h4>
+                    <div key={sectionTitle} className="flex flex-col gap-[12px]">
+                      <h4 className="custom-button2 text-primary">{sectionTitle}</h4>
                       <div className="flex flex-wrap gap-[16px]" style={{ maxWidth: sectionWidth }}>
                         {models.map((model) => (
                           <button
                             key={model}
-                            className={`h-[30px] px-[12px] py-[3px] rounded-[16px] text-[12px] font-medium transition-all text-center ${
-                              localSelectedModels.includes(model)
-                                ? 'bg-secondary-pressed text-primary border border-primary'
-                                : 'bg-white text-primary border border-primary hover:bg-blue-50'
+                            className={`custom-button2 h-[30px] px-[12px] py-[3px] rounded-[50px] transition-all text-center text-primary border border-primary ${
+                              localSelectedModels.includes(model) ? 'bg-secondary-pressed' : 'bg-white'
                             } ${isModelDisabled(model) ? ' cursor-not-allowed' : 'cursor-pointer'}`}
                             onClick={() => handleModelClick(model)}
                             disabled={isModelDisabled(model)}>
@@ -238,12 +238,10 @@ const FilterModal: React.FC<FilterModalProps> = ({
 
             {/* 카테고리 탭 */}
             {activeTab === 'category' && (
-              <div className="flex flex-col gap-[16px]  overflow-y-auto mb-[40px]">
+              <div className="flex flex-col gap-[16px] overflow-y-auto mb-[40px]">
                 {Object.entries(categoryDataDB).map(([sectionTitle, items]) => (
-                  <div key={sectionTitle}>
-                    <h4 className="text-[12px] font-medium text-primary mb-[12px]">
-                      {sectionTitleMapping[sectionTitle] || sectionTitle}
-                    </h4>
+                  <div key={sectionTitle} className="flex flex-col gap-[12px]">
+                    <h4 className="custom-button2 text-primary">{sectionTitleMapping[sectionTitle] || sectionTitle}</h4>
                     <div className="flex flex-wrap gap-[16px]">
                       {items.map((item) => {
                         const isSelected = localSelectedCategories.includes(item.value);
@@ -252,9 +250,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                         return (
                           <span
                             key={item.value}
-                            className={`${isDisabled ? '' : ''} ${
-                              isSelected ? 'rounded-[50px] border-primary border-[0.8px]' : ''
-                            }`}
+                            className={`rounded-[50px] border-primary border-[0.8px]`}
                             onClick={() => !isDisabled && handleCategoryClick(item)}>
                             <TagButton
                               hasActive={!isSelected}
