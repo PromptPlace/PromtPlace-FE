@@ -250,7 +250,11 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
         </div>
 
         {showAdminBanModal && (
-          <AdminBanModal userName={userData?.data.nickname} setShowAdminBanModal={setShowAdminBanModal} />
+          <AdminBanModal
+            userName={userData?.data.nickname}
+            memberId={userData?.data.member_id}
+            setShowAdminBanModal={setShowAdminBanModal}
+          />
         )}
 
         {showAdminDeleteModal && (

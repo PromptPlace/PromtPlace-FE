@@ -13,3 +13,10 @@ export type ResponseDeleteHistoriesAdminDto = {
   statusCode: number;
   error: string;
 };
+
+// 계정 정지 (관리자)
+export type ResponsePatchBanAdminDto = {
+  message: string;
+  data: null;
+  statusCode: number;
+};

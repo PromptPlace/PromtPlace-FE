@@ -5,13 +5,15 @@ import RadioIcon from '@assets/icon-radio-circle.svg';
 import RadioMarkedIcon from '@assets/icon-radio-circle-marked.svg';
 
 import PrimaryButton from '@components/Button/PrimaryButton';
+import usePatchBanAdmin from '@/hooks/mutations/ProfilePage/usePatchBanAdmin';
 
 interface AdminBanModalProps {
   userName: string | undefined;
+  memberId: number | undefined;
   setShowAdminBanModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AdminBanModal = ({ userName, setShowAdminBanModal }: AdminBanModalProps) => {
+const AdminBanModal = ({ userName, memberId, setShowAdminBanModal }: AdminBanModalProps) => {
   const BanDays = [
     {
       id: 1,
@@ -23,6 +25,7 @@ const AdminBanModal = ({ userName, setShowAdminBanModal }: AdminBanModalProps) =
   ];
 
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
+  const { mutate } = usePatchBanAdmin();
 
   return (
     <div
@@ -67,6 +70,7 @@ const AdminBanModal = ({ userName, setShowAdminBanModal }: AdminBanModalProps) =
                 text="정지시키기"
                 onClick={() => {
                   console.log('계정 정지 일수', selectedDay);
+                  mutate(memberId!);
                   setShowAdminBanModal(false);
                   alert(`${userName}님의 계정이 ${selectedDay}일 정지되었습니다.`);
                 }}
