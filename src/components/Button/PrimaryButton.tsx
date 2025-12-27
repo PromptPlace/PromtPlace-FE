@@ -67,7 +67,7 @@ const primaryButtonTheme = {
     full: 'w-full custom-h4 border-none px-[20px]! py-[20px]! max-w-[544px] w-full rounded-[12px]',
     admin:
       'text-alert! border-alert! max-phone:text-[10px] w-full! phone:whitespace-nowrap! text-[12.8px] leading-[20.8px] tracking-[0.37px] max-phone:px-[10px]!',
-    adminBG: 'bg-alert! border-alert! text-white! max-phone:text-[17px] w-[30%]! max-w-[158px]! text-[19px]',
+    adminBG: 'bg-alert! border-alert! text-white! max-phone:text-[17px] w-full! max-w-[158px]! text-[19px]',
   },
 };
 

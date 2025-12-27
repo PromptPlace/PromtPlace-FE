@@ -30,7 +30,7 @@ const AdminBanModal = ({ userName, setShowAdminBanModal }: AdminBanModalProps) =
       onClick={() => setShowAdminBanModal(false)}>
       <div className="max-w-[758px] w-full rounded-[16px] bg-white py-[55px]" onClick={(e) => e.stopPropagation()}>
         <div className="px-[30px] py-[10px] flex gap-[10px] items-center">
-          <div className="w-[24px] h-[24px] flex items-center justify-center">
+          <div className="w-[24px] h-[24px] max-phone:w-[22px] max-phone:h-[22px] flex items-center justify-center">
             <img
               src={ArrowIcon}
               alt="뒤로 가기"
@@ -38,7 +38,9 @@ const AdminBanModal = ({ userName, setShowAdminBanModal }: AdminBanModalProps) =
               onClick={() => setShowAdminBanModal(false)}
             />
           </div>
-          <p className="text-text-on-white text-[24px] font-bold leading-[30px]">계정 정지 일수 선택</p>
+          <p className="text-text-on-white text-[24px] font-bold leading-[30px] max-phone:text-[22px]">
+            계정 정지 일수 선택
+          </p>
         </div>
 
         <div className="px-[65px] pt-[30px] flex flex-col gap-[30px]">
@@ -50,7 +52,9 @@ const AdminBanModal = ({ userName, setShowAdminBanModal }: AdminBanModalProps) =
                 className="cursor-pointer"
                 onClick={() => setSelectedDay(day.days)}
               />
-              <p className="text-text-on-white text-[24px] font-bold leading-[30px]">{day.days}일</p>
+              <p className="text-text-on-white text-[24px] max-phone:text-[22px] font-bold leading-[30px]">
+                {day.days}일
+              </p>
             </div>
           ))}
 
