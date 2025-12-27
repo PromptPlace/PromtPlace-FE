@@ -7,10 +7,11 @@ import RadioMarkedIcon from '@assets/icon-radio-circle-marked.svg';
 import PrimaryButton from '@components/Button/PrimaryButton';
 
 interface AdminBanModalProps {
+  userName: string | undefined;
   setShowAdminBanModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AdminBanModal = ({ setShowAdminBanModal }: AdminBanModalProps) => {
+const AdminBanModal = ({ userName, setShowAdminBanModal }: AdminBanModalProps) => {
   const BanDays = [
     {
       id: 1,
@@ -25,7 +26,7 @@ const AdminBanModal = ({ setShowAdminBanModal }: AdminBanModalProps) => {
 
   return (
     <div
-      className="fixed inset-0 bg-overlay z-20 flex items-center justify-center"
+      className="fixed inset-0 bg-overlay z-20 flex items-center justify-center px-[40px]"
       onClick={() => setShowAdminBanModal(false)}>
       <div className="max-w-[758px] w-full rounded-[16px] bg-white py-[55px]" onClick={(e) => e.stopPropagation()}>
         <div className="px-[30px] py-[10px] flex gap-[10px] items-center">
@@ -56,13 +57,15 @@ const AdminBanModal = ({ setShowAdminBanModal }: AdminBanModalProps) => {
           {selectedDay !== null && (
             <div className="flex justify-end">
               <PrimaryButton
-                buttonType="squareAdmin"
+                buttonType="adminBG"
+                borderRadius={8}
+                py={8}
                 text="정지시키기"
                 onClick={() => {
                   console.log('계정 정지 일수', selectedDay);
                   setShowAdminBanModal(false);
+                  alert(`${userName}님의 계정이 ${selectedDay}일 정지되었습니다.`);
                 }}
-                admin={true}
               />
             </div>
           )}

@@ -22,6 +22,9 @@ import ArrowIcon from '@assets/icon-arrow-right-profile.svg?react';
 import ProfileIcon from '@assets/header/icon-mypage.svg';
 import clsx from 'clsx';
 import PrimaryButton from '@/components/Button/PrimaryButton';
+import AdminMessageModal from './AdminMessageModal';
+import AdminBanModal from './AdminBanModal';
+import DualModal from '@/components/Modal/DualModal';
 
 interface ProfileCardProps {
   mypage?: boolean;
@@ -37,6 +40,10 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
   const member_id = isMyProfile ? myId : Number(id);
 
   const isAdmin = user.role === 'ADMIN';
+  const [showAdminBanModal, setShowAdminBanModal] = useState(false); // 관리자 - 계정 정지
+  const [showAdminDeleteModal, setShowAdminDeleteModal] = useState(false); // 관지라 - 계정 삭제
+  const [showAdminMessageModal, setShowAdminMessageModal] = useState(false); // 관리자 - 메시지 보내기
+  const [showAdminDeleteConfirmModal, setShowAdminDeleteConfirmModal] = useState(false);
 
   // 팔로잉, 팔로워 모달
   const [showFollowing, setShowFollowing] = useState(false);
@@ -209,14 +216,74 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
             </div>
           )}
 
+          {/* 관리자 */}
           {isAdmin && (
             <div className="flex gap-[20px] justify-end">
-              <PrimaryButton buttonType="adminBG" text="계정 정지" onClick={() => {}} borderRadius={8} py={8} />
-              <PrimaryButton buttonType="adminBG" text="계정 삭제" onClick={() => {}} borderRadius={8} py={8} />
-              <PrimaryButton buttonType="adminBG" text="메시지 보내기" onClick={() => {}} borderRadius={8} py={8} />
+              <PrimaryButton
+                buttonType="adminBG"
+                text="계정 정지"
+                onClick={() => {
+                  setShowAdminBanModal(true);
+                }}
+                borderRadius={8}
+                py={8}
+              />
+              <PrimaryButton
+                buttonType="adminBG"
+                text="계정 삭제"
+                onClick={() => {
+                  setShowAdminDeleteModal(true);
+                }}
+                borderRadius={8}
+                py={8}
+              />
+              <PrimaryButton
+                buttonType="adminBG"
+                text="메시지 보내기"
+                onClick={() => {
+                  setShowAdminMessageModal(true);
+                }}
+                borderRadius={8}
+                py={8}
+              />
             </div>
           )}
         </div>
+
+        {showAdminBanModal && (
+          <AdminBanModal userName={userData?.data.nickname} setShowAdminBanModal={setShowAdminBanModal} />
+        )}
+
+        {showAdminDeleteModal && (
+          <DualModal
+            text="해당 계정을 삭제 조치 하시겠습니까?"
+            onClickYes={() => {
+              setShowAdminDeleteModal(false);
+              setShowAdminDeleteConfirmModal(true);
+            }}
+            onClickNo={() => {
+              setShowAdminDeleteModal(false);
+            }}
+          />
+        )}
+
+        {showAdminDeleteConfirmModal && (
+          <TextModal
+            text="계정 삭제가 완료되었습니다."
+            onClick={() => {
+              setShowAdminDeleteConfirmModal(false);
+            }}
+            size="lg"
+          />
+        )}
+
+        {showAdminMessageModal && (
+          <AdminMessageModal
+            data={userData}
+            follower={followerData?.data.length}
+            setShowAdminMessageModal={setShowAdminMessageModal}
+          />
+        )}
       </div>
 
       {showFollower && (
