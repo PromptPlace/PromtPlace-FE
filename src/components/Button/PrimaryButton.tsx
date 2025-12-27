@@ -14,13 +14,14 @@
  * @param {function} onClick -- 버튼 클릭 시 실행될 함수
  * @param {string} type -- 버튼 타입, 기본 타입은 button이며 필요에 따라 타입을 지정할 수 있습니다.
  * @param {number} py -- padding top, bottom 값
- * square 버튼을 사용하면서 padding top, bottom 값 변경하고 싶을 때 값을 넘기면 됩니다.
+ * square, admin 버튼을 사용하면서 padding top, bottom 값 변경하고 싶을 때 값을 넘기면 됩니다.
  * @param {number} px -- padding left, right 값
- * square 버튼을 사용하면서 padding left, right 값 변경하고 싶을 때 값을 넘기면 됩니다.
+ * square, admin 버튼을 사용하면서 padding left, right 값 변경하고 싶을 때 값을 넘기면 됩니다.
  * @param {number} textSize -- 글씨크기
  * square 버튼이면서 12px로 사용되는 경우 textSize={12}로 넘기면 됩니다.
  * @param {boolean} disable -- 비활성화 여부
  * @param {'white' | 'primary' | 'gray'} textColor -- 글씨 색상, 기본값 primary
+ * @param {number} borderRadius -- borderRaidus 값
  *
  * @example
  * <PrimaryButton
@@ -45,6 +46,7 @@ interface PrimaryButtonProps {
   textSize?: number;
   disable?: boolean;
   textColor?: 'white' | 'primary' | 'gray';
+  borderRadius?: number;
 }
 
 const primaryButtonTheme = {
@@ -63,6 +65,8 @@ const primaryButtonTheme = {
     plus: 'rounded-[50px] px-[53px] max-lg:px-[20px] text-[32px] max-lg:text-[16px] font-bold leading-[40px] max-lg:leading-[18px] text-base leading-[26px]',
     change: 'rounded-[50px] px-[10px] py-[5px] text-[14px] leading-[18px] text-base leading-[26px]',
     full: 'w-full custom-h4 border-none px-[20px]! py-[20px]! max-w-[544px] w-full rounded-[12px]',
+    admin:
+      'text-alert! border-alert! max-phone:text-[10px] w-full! phone:whitespace-nowrap! text-[12.8px] leading-[20.8px] tracking-[0.37px] max-phone:px-[10px]!',
   },
 };
 
@@ -78,6 +82,7 @@ const PrimaryButton = ({
   textSize,
   disable = false,
   textColor = 'primary',
+  borderRadius,
 }: PrimaryButtonProps) => {
   const isReviewDelete = buttonType === 'reviewDelete';
   return (
@@ -98,8 +103,9 @@ const PrimaryButton = ({
         textColor === 'gray' && 'bg-white text-gray400! border-gray400!',
         primaryButtonTheme.buttonType[buttonType],
       )}
-      style={
-        buttonType === 'square' && py !== undefined
+      style={{
+        borderRadius: borderRadius,
+        ...((buttonType === 'square' || buttonType === 'admin') && py !== undefined
           ? {
               paddingTop: py,
               paddingBottom: py,
@@ -107,8 +113,8 @@ const PrimaryButton = ({
               paddingRight: px,
               width: `${text !== '테스트 결과' ? '99px' : '100%'}`,
             }
-          : undefined
-      }>
+          : undefined),
+      }}>
       {text}
     </button>
   );

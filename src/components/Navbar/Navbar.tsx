@@ -12,6 +12,7 @@ import NotificationAlarmIcon from '@assets/header/icon-notification_new.svg';
 import MessageIcon from '@assets/header/icon-message.svg';
 // import MessageAlarmIcon from '@assets/header/icon-message_new.svg';
 import UserIcon from '@assets/header/mypage.svg';
+import AdminIcon from '@assets/header/icon-admin-profile.svg';
 
 import SocialLoginModal from '@components/Modal/SocialLoginModal';
 import BackgroundButton from '@components/Button/BackgroundButton';
@@ -20,6 +21,7 @@ import clsx from 'clsx';
 import NavbarNotificationModal from './NavbarNotificationModal';
 import TextModal from '../Modal/TextModal';
 import useGetNewNotification from '@/hooks/queries/Navbar/useGetNewNotification';
+import PrimaryButton from '../Button/PrimaryButton';
 
 const Navbar = () => {
   const [loginModalShow, setLoginModalShow] = useState(false);
@@ -34,6 +36,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const { accessToken, user } = useAuth();
+  const isAdmin = user.role === 'ADMIN';
   const { data } = useGetMember({ member_id: user.user_id });
   const { data: notificationData } = useGetNewNotification();
 
@@ -69,7 +72,7 @@ const Navbar = () => {
   return (
     <>
       <nav className="bg-white">
-        <div className="px-[102px] max-lg:px-[40px] max-phone:px-[20px] py-[18px] flex justify-between">
+        <div className="px-[102px] max-lg:px-[40px] max-phone:px-[20px] py-[18px] flex justify-between items-center">
           <img
             src={LogoIcon}
             alt="로고이미지"
@@ -84,60 +87,89 @@ const Navbar = () => {
             className="cursor-pointer w-[48px] lg:hidden"
           />
 
-          {!accessToken && (
-            <div className="flex gap-[24px]">
-              <BackgroundButton
-                background="secondary"
-                text="로그인"
-                onClick={() => {
-                  setLoginModalShow(true);
-                }}
-              />
-              <BackgroundButton
-                background="primary"
-                text="회원가입"
-                onClick={() => {
-                  setSignupModalShow(true);
-                }}
-              />
-            </div>
+          {/* 일반 유저 */}
+          {!isAdmin && (
+            <>
+              {!accessToken && (
+                <div className="flex gap-[24px]">
+                  <BackgroundButton
+                    background="secondary"
+                    text="로그인"
+                    onClick={() => {
+                      setLoginModalShow(true);
+                    }}
+                  />
+                  <BackgroundButton
+                    background="primary"
+                    text="회원가입"
+                    onClick={() => {
+                      setSignupModalShow(true);
+                    }}
+                  />
+                </div>
+              )}
+
+              {accessToken && (
+                <div className="flex gap-[26px] max-phone:gap-[20px] items-center cursor-pointer">
+                  <BackgroundButton
+                    background="secondary"
+                    text="프롬프트 올리기"
+                    onClick={() => {
+                      navigate('/create');
+                    }}
+                  />
+                  <div className="phone:relative">
+                    <img
+                      src={notificationData?.data.hasNew ? NotificationAlarmIcon : NotificationIcon}
+                      alt="알림"
+                      className="self-center max-phone:w-[16px] max-phone:h-[16px]"
+                      onClick={() => setIsNotificationModalShow((prev) => !prev)}
+                    />
+
+                    {isNotificationModalShow && (
+                      <div
+                        ref={notificationRef}
+                        className="phone:absolute top-[34px] right-0 z-50 max-phone:top-[70px]">
+                        <NavbarNotificationModal setIsNotificationModalShow={setIsNotificationModalShow} />
+                      </div>
+                    )}
+                  </div>
+
+                  <img
+                    src={data?.data.has_unread_messages ? MessageIcon : MessageIcon}
+                    alt="메세지 알림"
+                    className="self-center max-phone:w-[16px] max-phone:h-[16px]"
+                    onClick={() => setIsMessageModalShow((prev) => !prev)}
+                  />
+                  <img
+                    src={data?.data.profile_image || UserIcon}
+                    alt="프로필 이미지"
+                    className="w-[40px] h-[40px] rounded-full object-cover self-center max-phone:w-[32px] max-phone:h-[32px]"
+                    onClick={() => navigate(`/mypage/profile`)}
+                  />
+                </div>
+              )}
+            </>
           )}
 
-          {accessToken && (
-            <div className="flex gap-[26px] max-phone:gap-[20px] items-center cursor-pointer">
-              <BackgroundButton
-                background="secondary"
-                text="프롬프트 올리기"
-                onClick={() => {
-                  navigate('/create');
-                }}
-              />
-              <div className="phone:relative">
-                <img
-                  src={notificationData?.data.hasNew ? NotificationAlarmIcon : NotificationIcon}
-                  alt="알림"
-                  className="self-center max-phone:w-[16px] max-phone:h-[16px]"
-                  onClick={() => setIsNotificationModalShow((prev) => !prev)}
-                />
+          {/* 관리자 */}
+          {isAdmin && (
+            <div className="flex justify-center items-center gap-[24px]">
+              <PrimaryButton buttonType="admin" text="신고함" onClick={() => {}} py={8} px={39} borderRadius={8} />
 
-                {isNotificationModalShow && (
-                  <div ref={notificationRef} className="phone:absolute top-[34px] right-0 z-50 max-phone:top-[70px]">
-                    <NavbarNotificationModal setIsNotificationModalShow={setIsNotificationModalShow} />
-                  </div>
-                )}
-              </div>
+              <PrimaryButton
+                buttonType="admin"
+                text="접근 상태 : 운영자"
+                onClick={() => {}}
+                py={8}
+                px={10}
+                borderRadius={32}
+              />
 
               <img
-                src={data?.data.has_unread_messages ? MessageIcon : MessageIcon}
-                alt="메세지 알림"
-                className="self-center max-phone:w-[16px] max-phone:h-[16px]"
-                onClick={() => setIsMessageModalShow((prev) => !prev)}
-              />
-              <img
-                src={data?.data.profile_image || UserIcon}
-                alt="프로필 이미지"
-                className="w-[40px] h-[40px] rounded-full object-cover self-center max-phone:w-[32px] max-phone:h-[32px]"
-                onClick={() => navigate(`/mypage/profile`)}
+                src={AdminIcon}
+                alt="관리자"
+                className="w-[40px] h-[40px] self-center max-phone:w-[32px] max-phone:h-[32px]"
               />
             </div>
           )}
