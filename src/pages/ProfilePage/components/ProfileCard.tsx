@@ -21,6 +21,7 @@ import ProfileButton from './ProfileButton';
 import ArrowIcon from '@assets/icon-arrow-right-profile.svg?react';
 import ProfileIcon from '@assets/header/icon-mypage.svg';
 import clsx from 'clsx';
+import PrimaryButton from '@/components/Button/PrimaryButton';
 
 interface ProfileCardProps {
   mypage?: boolean;
@@ -34,6 +35,8 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
   const myId = user.user_id;
   const isMyProfile = (id ? Number(id) === myId : false) || mypage;
   const member_id = isMyProfile ? myId : Number(id);
+
+  const isAdmin = user.role === 'ADMIN';
 
   // 팔로잉, 팔로워 모달
   const [showFollowing, setShowFollowing] = useState(false);
@@ -182,6 +185,11 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
             />
           </div>
 
+          {/* 관리자 */}
+          {isAdmin && (
+            <p className="custom-h5 text-alert max-phone:text-[14px] max-phone:ml-[40px]">{userData?.data.email}</p>
+          )}
+
           <div className="custom-body1 h-[102px] max-lg:h-[130px] max-phone:h-[208px] overflow-y-scroll max-phone:ml-[40px]">
             {userData?.data.intros ? (
               userData.data.intros
@@ -190,7 +198,7 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
             )}
           </div>
 
-          {!isMyProfile && (
+          {!isMyProfile && !isAdmin && (
             <div className="flex gap-[20px]">
               <ProfileButton text="문의하기" type="chat" onClick={() => setIsMessageModalShow((prev) => !prev)} />
               <ProfileButton
@@ -198,6 +206,14 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
                 type={isFollow ? 'check' : 'plus'}
                 onClick={handleFollow}
               />
+            </div>
+          )}
+
+          {isAdmin && (
+            <div className="flex gap-[20px] justify-end">
+              <PrimaryButton buttonType="adminBG" text="계정 정지" onClick={() => {}} borderRadius={8} py={8} />
+              <PrimaryButton buttonType="adminBG" text="계정 삭제" onClick={() => {}} borderRadius={8} py={8} />
+              <PrimaryButton buttonType="adminBG" text="메시지 보내기" onClick={() => {}} borderRadius={8} py={8} />
             </div>
           )}
         </div>
