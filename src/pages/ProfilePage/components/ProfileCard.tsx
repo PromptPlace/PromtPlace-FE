@@ -43,7 +43,6 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
   const [showAdminBanModal, setShowAdminBanModal] = useState(false); // 관리자 - 계정 정지
   const [showAdminDeleteModal, setShowAdminDeleteModal] = useState(false); // 관지라 - 계정 삭제
   const [showAdminMessageModal, setShowAdminMessageModal] = useState(false); // 관리자 - 메시지 보내기
-  const [showAdminDeleteConfirmModal, setShowAdminDeleteConfirmModal] = useState(false);
 
   // 팔로잉, 팔로워 모달
   const [showFollowing, setShowFollowing] = useState(false);
@@ -259,21 +258,11 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
             text="해당 계정을 삭제 조치 하시겠습니까?"
             onClickYes={() => {
               setShowAdminDeleteModal(false);
-              setShowAdminDeleteConfirmModal(true);
+              alert('계정 삭제가 완료되었습니다.');
             }}
             onClickNo={() => {
               setShowAdminDeleteModal(false);
             }}
-          />
-        )}
-
-        {showAdminDeleteConfirmModal && (
-          <TextModal
-            text="계정 삭제가 완료되었습니다."
-            onClick={() => {
-              setShowAdminDeleteConfirmModal(false);
-            }}
-            size="lg"
           />
         )}
 
