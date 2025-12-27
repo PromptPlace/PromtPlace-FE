@@ -9,11 +9,15 @@ import XIcon from '@assets/icon-x-logo.svg';
 import GoogleIcon from '@assets/icon-google-logo.svg';
 import NaverIcon from '@assets/icon-naver-logo.svg';
 import CloseIcon from '@assets/icon-close.svg';
+import AdminCancleIcon from '@assets/icon-cancle-admin.svg';
 
 import CircleButton from '@/components/Button/CircleButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import MobileButton from '@/components/Button/MobileButton';
 import type { RequestPatchSNSDto } from '@/types/ProfilePage/sns';
+import { useAuth } from '@/context/AuthContext';
+import DualModal from '@/components/Modal/DualModal';
+import TextModal from '@/components/Modal/TextModal';
 
 interface SnsCardProps {
   sns_id: number;
@@ -52,6 +56,11 @@ const SnsCard = ({
   const [editDescription, setEditDescription] = useState(description);
   const snsType = getSnsType(editUrl);
   const y = useMotionValue(1000);
+
+  const [showAdminModal, setShowAdminModal] = useState(false);
+  const [showAdminConfirmModal, setShowAdminConfirmModal] = useState(false);
+
+  const { user } = useAuth();
 
   useEffect(() => {
     animate(y, 308, {
@@ -102,6 +111,15 @@ const SnsCard = ({
       </a>
 
       <div className="flex-1 truncate">{editDescription}</div>
+
+      {user.role === 'ADMIN' && (
+        <img
+          src={AdminCancleIcon}
+          alt="SNS 삭제"
+          className="mr-[18px] cursor-pointer"
+          onClick={() => setShowAdminModal(true)}
+        />
+      )}
 
       {isMyProfile && (
         <div className="flex items-center text-text-on-white text-[20px] font-medium leading-[25px]">
@@ -223,6 +241,23 @@ const SnsCard = ({
             )}
           </div>
         </div>
+      )}
+
+      {showAdminModal && (
+        <DualModal
+          text="해당 주소를 삭제 조치 하시겠습니까?"
+          onClickYes={() => {
+            setShowAdminModal(false);
+            setShowAdminConfirmModal(true);
+          }}
+          onClickNo={() => {
+            setShowAdminModal(false);
+          }}
+        />
+      )}
+
+      {showAdminConfirmModal && (
+        <TextModal text="주소 삭제가 완료되었습니다." onClick={() => setShowAdminConfirmModal(false)} size="lg" />
       )}
     </div>
   );

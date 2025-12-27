@@ -86,6 +86,7 @@ const PrimaryButton = ({
   borderRadius,
 }: PrimaryButtonProps) => {
   const isReviewDelete = buttonType === 'reviewDelete';
+
   return (
     <button
       onClick={onClick}
