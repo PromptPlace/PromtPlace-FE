@@ -111,7 +111,8 @@ const VariousFunction = () => {
 
   const isNewPost = (rawDate: string) => {
     const diff = Date.now() - new Date(rawDate).getTime();
-    return diff < 1000 * 60 * 60 * 24;
+    const fourteenDays = 1000 * 60 * 60 * 24 * 14;
+    return diff < fourteenDays;
   };
 
   return (
@@ -149,14 +150,18 @@ const VariousFunction = () => {
                   <ul className="space-y-3">
                     {tips.map((p) => (
                       <li key={p.id} className="cursor-pointer" onClick={() => onClickItem('tip', p.id)}>
-                        <p className="text-[#9CA3AF] text-[12px] font-light">{p.createdAt}</p>
+                        <p className="text-[#9CA3AF] text-[12px] max-lg:text-[10px] max-phone:text-[8px] font-light">
+                          {p.createdAt}
+                        </p>
                         <div className="flex items-center gap-2 mt-1">
                           {isNewPost(p.rawDate) && (
-                            <span className="w-5 h-5 bg-[#F87171] text-[#FFFEFB] text-[12px] font-medium rounded-full flex items-center justify-center">
+                            <span className="w-5 h-5 max-lg:w-4 max-lg:h-4 max-phone:w-3.5 max-phone:h-3.5 bg-[#F87171] text-[#FFFEFB] text-[12px] max-lg:text-[10px] max-phone:text-[8px] font-medium rounded-full flex items-center justify-center shrink-0">
                               N
                             </span>
                           )}
-                          <p className="font-medium text-[14px] hover:underline mt-1">{p.title}</p>
+                          <p className="font-medium text-[14px] max-lg:text-[12px] max-phone:text-[10px] hover:underline mt-1">
+                            {p.title}
+                          </p>
                         </div>
                       </li>
                     ))}
@@ -186,14 +191,18 @@ const VariousFunction = () => {
                   <ul className="space-y-3">
                     {notices.map((p) => (
                       <li key={p.id} className="cursor-pointer" onClick={() => onClickItem('notice', p.id)}>
-                        <p className="text-[#9CA3AF] text-[12px] font-light">{p.createdAt}</p>
+                        <p className="text-[#9CA3AF] text-[12px] max-lg:text-[10px] max-phone:text-[8px] font-light">
+                          {p.createdAt}
+                        </p>
                         <div className="flex items-center gap-2 mt-1">
                           {isNewPost(p.rawDate) && (
-                            <span className="w-5 h-5 bg-[#F87171] text-[#FFFEFB] text-[12px] font-medium rounded-full flex items-center justify-center">
+                            <span className="w-5 h-5 max-lg:w-4 max-lg:h-4 max-phone:w-3.5 max-phone:h-3.5 bg-[#F87171] text-[#FFFEFB] text-[12px] max-lg:text-[10px] max-phone:text-[8px] font-medium rounded-full flex items-center justify-center shrink-0">
                               N
                             </span>
                           )}
-                          <p className="font-medium text-[14px] hover:underline mt-1">{p.title}</p>
+                          <p className="font-medium text-[14px] max-lg:text-[12px] max-phone:text-[10px] hover:underline mt-1">
+                            {p.title}
+                          </p>
                         </div>
                       </li>
                     ))}

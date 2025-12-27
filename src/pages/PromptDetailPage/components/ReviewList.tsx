@@ -108,7 +108,7 @@ const ReviewList = ({
                     <button
                       onClick={() => toggleMenu(idx)}
                       className={`rounded-full p-1 transition-colors duration-150 ${
-                        openMenuIdx === idx ? 'bg-gray-200' : 'hover:bg-gray-100'
+                        openMenuIdx === idx ? 'bg-secondary-pressed' : 'hover:bg-gray-100'
                       }`}>
                       <BsThreeDotsVertical className="text-lg text-gray-500" />
                     </button>
@@ -137,7 +137,7 @@ const ReviewList = ({
               </div>
             )}
 
-            {idx !== reviews.length - 1 && <div className="h-[1px] bg-[#CCCCCC] w-full my-4" />}
+            {/* {idx !== reviews.length - 1 && <div className="h-[1px] bg-[#CCCCCC] w-full my-4" />} */}
           </div>
         ))}
       </div>
