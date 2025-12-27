@@ -283,29 +283,30 @@ const PromptDetailCard = ({
     <>
       <div className="w-full max-w-[1236px] mx-auto flex flex-col gap-6">
         <div className="flex flex-col gap-6 ">
-          <div className="flex items-center justify-between font-light">
+          <div className="flex items-start justify-between font-light gap-4">
             {mainCategoryLinkItems.length > 0 ? (
-              <div className="flex flex-wrap gap-[20px]">
-                {mainCategoryLinkItems.map((cat) => {
-                  // 표시용 이름: "A / B" → "A • B"
-                  const displayName = cat.name
-                    .replace(/\s*\/\s*/g, ' • ')
-                    .replace(/\s+/g, ' ')
-                    .trim();
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap gap-2">
+                  {mainCategoryLinkItems.map((cat) => {
+                    const displayName = cat.name
+                      .replace(/\s*\/\s*/g, ' • ')
+                      .replace(/\s+/g, ' ')
+                      .trim();
 
-                  return (
-                    <button
-                      key={`${cat.name}-${cat.id ?? 'none'}`}
-                      type="button"
-                      onClick={() => handleMainCategoryClick(cat)}
-                      className="inline-flex items-center gap-1 text-[14px] text-[#030712]
-          px-3 py-2 hover:bg-gray-100 transition cursor-pointer"
-                      aria-label={`메인 카테고리 ${displayName}로 이동`}>
-                      {displayName}
-                      <img src={arrowRightBlack} alt="" className="w-[16px] h-[16px]" />
-                    </button>
-                  );
-                })}
+                    return (
+                      <button
+                        key={`${cat.name}-${cat.id ?? 'none'}`}
+                        type="button"
+                        onClick={() => handleMainCategoryClick(cat)}
+                        className="inline-flex items-center gap-1 text-[14px] text-[#030712]
+                         px-3 py-2 hover:bg-gray-100 transition cursor-pointer"
+                        aria-label={`메인 카테고리 ${displayName}로 이동`}>
+                        {displayName}
+                        <img src={arrowRightBlack} alt="" className="w-[16px] h-[16px]" />
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             ) : (
               <span className="text-[14px] text-[#030712]">—</span>
@@ -313,7 +314,7 @@ const PromptDetailCard = ({
 
             <button
               type="button"
-              className="text-[14px] text-gray-400 underline flex items-center gap-1"
+              className="shrink-0 self-end whitespace-nowrap text-[14px] text-gray-400 underline flex items-center gap-1"
               onClick={() => setIsReportModalOpen(true)}>
               <img src={reportIcon} alt="신고" className="w-[24px] h-[24px]" />
               해당 프롬프트 신고하기
@@ -446,13 +447,13 @@ const PromptDetailCard = ({
                 </>
               ) : (
                 <div className="mt-[28px] w-full max-w-[485px] rounded-[12px] rounded-tl-none bg-[#F0F7FF] p-4">
-                  <p className="text-[14px] font-light leading-[22px] whitespace-pre-line">
+                  <p className="text-[14px] font-light leading-[160%] tracking-[0.02em] whitespace-pre-line">
                     {isLoading ? '불러오는 중…' : promptResult || ''}
                   </p>
                 </div>
               )}
               {hasImages && (
-                <div className="mt-4 text-[15px] leading-[22px] whitespace-pre-line">
+                <div className="mt-4 text-[15px] leading-[160%] tracking-[0.02em] whitespace-pre-line">
                   {isLoading ? '불러오는 중…' : promptResult || ''}
                 </div>
               )}
@@ -462,7 +463,7 @@ const PromptDetailCard = ({
               <p className="text-[14px] font-light text-[#6b7280] mb-[8px]">이 프롬프트의 활용법이 궁금하다면</p>
               <h3 className="mb-[28px] font-medium text-[18px] md:text-[20px]">이렇게 쓰는 프롬프트예요</h3>
 
-              <div className="text-[16px] font-light leading-[22px] whitespace-pre-line">
+              <div className="text-[16px] font-light leading-[160%] tracking-[0.02em] whitespace-pre-line">
                 {isLoading ? '불러오는 중…' : hasImages ? usageGuide || '' : usageGuide || ''}
               </div>
             </aside>
