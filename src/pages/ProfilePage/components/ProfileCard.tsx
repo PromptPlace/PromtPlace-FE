@@ -25,6 +25,7 @@ import PrimaryButton from '@/components/Button/PrimaryButton';
 import AdminMessageModal from './AdminMessageModal';
 import AdminBanModal from './AdminBanModal';
 import DualModal from '@/components/Modal/DualModal';
+import useDeleteAdmin from '@/hooks/mutations/ProfilePage/useDeleteAdmin';
 
 interface ProfileCardProps {
   mypage?: boolean;
@@ -72,6 +73,9 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
 
   // 회원 SNS 목록
   const { data: snsData } = useGetSNS({ member_id });
+
+  // 계정 삭제 (관리자)
+  const { mutate: mutateDeleteAdmin } = useDeleteAdmin();
 
   // 팔로우 및 팔로잉
   const handleFollow = () => {
@@ -261,7 +265,12 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
           <DualModal
             text="해당 계정을 삭제 조치 하시겠습니까?"
             onClickYes={() => {
+              const memberId = userData?.data.member_id;
+              if (memberId === undefined) return;
+
               setShowAdminDeleteModal(false);
+              mutateDeleteAdmin(memberId);
+
               alert('계정 삭제가 완료되었습니다.');
             }}
             onClickNo={() => {
