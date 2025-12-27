@@ -26,7 +26,7 @@ const AdminBanModal = ({ userName, setShowAdminBanModal }: AdminBanModalProps) =
 
   return (
     <div
-      className="fixed inset-0 bg-overlay z-20 flex items-center justify-center px-[40px]"
+      className="fixed inset-0 bg-overlay z-20 flex items-center justify-center px-[20px]"
       onClick={() => setShowAdminBanModal(false)}>
       <div className="max-w-[758px] w-full rounded-[16px] bg-white py-[55px]" onClick={(e) => e.stopPropagation()}>
         <div className="px-[30px] py-[10px] flex gap-[10px] items-center">
