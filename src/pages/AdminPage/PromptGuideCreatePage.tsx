@@ -49,6 +49,12 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
     // setFiles((prev) => prev.filter((f) => f.name !== fileName));
     setFiles([]);
     setPreviewUrl(null);
+
+    if (fileInputRef.current) {
+      {
+        fileInputRef.current.value = '';
+      }
+    }
   };
 
   /** 파일첨부 버튼 클릭 → 숨겨진 input 실행 */
