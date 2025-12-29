@@ -80,7 +80,7 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
 
     if (files[0]) {
       formData.append('file', files[0]);
-    } else {
+    } else if (type === 'tip') {
       const defaultFile = await urlToFile(DefaultImg, 'default.png');
       formData.append('file', defaultFile);
     }
