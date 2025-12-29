@@ -166,7 +166,7 @@ const PromptTipPage = () => {
                 {tips.map((tip) => (
                   <div
                     key={tip.tip_id}
-                    className="w-full bg-white p-[24px] flex gap-[20px] max-lg:flex-col"
+                    className="w-full bg-white p-[24px] flex gap-[20px] max-lg:flex-col cursor-pointer"
                     onClick={() => {
                       handleRowClick(tip.tip_id);
                     }}>

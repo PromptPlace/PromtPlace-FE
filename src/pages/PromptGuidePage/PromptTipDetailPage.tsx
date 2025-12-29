@@ -12,6 +12,8 @@ import twitter from '@assets/icon-x-logo.svg';
 import defaultImg from '@assets/icon-example-image.png';
 import attachFile from '@assets/icon-attach-file-gray.svg';
 import ReactMarkdown from 'react-markdown';
+import { useAuth } from '@/context/AuthContext';
+import PrimaryButton from '@/components/Button/PrimaryButton';
 
 // 게시글 타입
 interface Post {
@@ -37,6 +39,9 @@ const PromptTipDetailPage = () => {
   });
 
   const navigate = useNavigate();
+
+  const { user } = useAuth();
+  const isAdmin = user.role === 'ADMIN';
 
   /**api 연동 */
   useEffect(() => {
@@ -185,7 +190,7 @@ const PromptTipDetailPage = () => {
               <ReactMarkdown>{post.content}</ReactMarkdown>
             </div>
 
-            <div className="flex items-end">
+            <div className="flex items-end justify-between">
               {post.file_url ? (
                 <div className="w-[98px] h-[36px] gap-[8px] flex mt-[32px] border border-gray400 rounded-[8px] items-center justify-center">
                   <p className="text-[12px] font-light text-gray700">첨부파일</p>
@@ -193,6 +198,19 @@ const PromptTipDetailPage = () => {
                 </div>
               ) : (
                 <div className="h-[36px] mt-[32px]"></div>
+              )}
+
+              {/* 관리자 */}
+              {isAdmin && (
+                <PrimaryButton
+                  buttonType="adminBG"
+                  text="수정하기"
+                  borderRadius={8}
+                  py={8}
+                  onClick={() => {
+                    navigate('/admin/guide/tip/create');
+                  }}
+                />
               )}
             </div>
           </div>
