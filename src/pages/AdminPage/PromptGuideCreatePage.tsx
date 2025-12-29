@@ -1,36 +1,25 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { LuChevronRight } from 'react-icons/lu';
-import { useNavigate, useParams } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
+import { useNavigate } from 'react-router-dom';
 
 import PrimaryButton from '@/components/Button/PrimaryButton';
 
 import CancleIcon from '@assets/icon-cancle-admin.svg?react';
+import usePostTipAdmin from '@/hooks/mutations/AdminPage/usePostTipAdmin';
+import { useAuth } from '@/context/AuthContext';
 
 interface PromptGuideCreatePageProps {
   type: 'tip' | 'notice';
 }
-// 게시글 타입
-interface Post {
-  id: number;
-  title: string;
-  content: string;
-  create_at: string;
-  update_at: string;
-  is_visible: boolean;
-  file_url: string | null;
-}
+
 const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
-  const { id } = useParams<{ id: string }>();
-  const [post, setPost] = useState<Post>({
-    id: 0,
-    title: 'title',
-    content: 'conntent',
-    create_at: 'create_date',
-    update_at: 'update_date',
-    is_visible: true,
-    file_url: null,
-  });
+  console.log(type);
+
+  const { user } = useAuth();
+  const writer_id = user.user_id;
+
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
 
   const [files, setFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -38,9 +27,7 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
 
   const navigate = useNavigate();
 
-  const handleNavigate = () => {
-    navigate(`/guide/${type}`);
-  };
+  const { mutate: mutatePostTip } = usePostTipAdmin();
 
   /** 파일 선택 핸들러 */
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -69,6 +56,21 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
     fileInputRef.current?.click();
   };
 
+  // AI 꿀팁 업로드
+  const handlePostTip = () => {
+    const formData = new FormData();
+
+    formData.append('writer_id', String(writer_id));
+    formData.append('title', title);
+    formData.append('content', content);
+
+    if (files[0]) {
+      formData.append('file', files[0]);
+    }
+
+    mutatePostTip(formData);
+  };
+
   useEffect(() => {
     return () => {
       if (previewUrl) {
@@ -91,6 +93,8 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
             {/* 제목, 소개말 */}
             <div className="flex flex-col gap-[12px]">
               <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 className="custom-h4 text-text-on-white outline-none placeholder:font-[SCoreDream] placeholder:custom-h4 placeholder:text-text-on-background w-full"
                 placeholder="게시글 제목 작성"
               />
@@ -110,6 +114,8 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
           {/* 본문 */}
           <textarea
             id="content"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
             className="w-full h-[140px] custom-body2 placeholder:custom-body2 placeholder:font-[SCoreDream] text-text-on-white outline-none resize-none overflow-y-auto placeholder:text-text-on-background"
             placeholder="게시글 본문 작성"
           />
@@ -143,7 +149,16 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
               {/*파일 input (단일 파일만 첨부 가능) */}
               <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileChange} />
 
-              <PrimaryButton buttonType="adminBG" text="업로드" onClick={() => {}} borderRadius={8} py={8} px={21} />
+              <PrimaryButton
+                buttonType="adminBG"
+                text="업로드"
+                onClick={() => {
+                  handlePostTip();
+                }}
+                borderRadius={8}
+                py={8}
+                px={21}
+              />
             </div>
           </div>
         </div>
