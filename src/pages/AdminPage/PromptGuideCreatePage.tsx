@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { LuChevronRight } from 'react-icons/lu';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import usePostTipAdmin from '@/hooks/mutations/AdminPage/usePostTipAdmin';
 import { useAuth } from '@/context/AuthContext';
 
@@ -8,9 +8,15 @@ import PrimaryButton from '@/components/Button/PrimaryButton';
 
 import CancleIcon from '@assets/icon-cancle-admin.svg?react';
 import DefaultImg from '@assets/icon-example-image.png';
+import type { Post } from '@/types/PromptGuidePage/post';
 
 interface PromptGuideCreatePageProps {
   type: 'tip' | 'notice';
+}
+
+interface LocationState {
+  post: Post;
+  mode: 'edit';
 }
 
 const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
@@ -25,6 +31,11 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null); // 이미지 미리보기
 
   const navigate = useNavigate();
+
+  const location = useLocation() as { state: LocationState };
+  console.log(location);
+
+  const { post, mode } = location.state || {};
 
   const { mutate: mutatePostTip } = usePostTipAdmin();
 
@@ -102,6 +113,14 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
     };
   }, [previewUrl]);
 
+  useEffect(() => {
+    if (mode === 'edit' && post) {
+      setTitle(post.title);
+      setContent(post.content);
+      setPreviewUrl(post.file_url);
+    }
+  }, [mode, post]);
+
   return (
     <>
       <div className="flex flex-col gap-[20px] px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
@@ -114,14 +133,14 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
         </div>
 
         {/* 작성 부분 */}
-        <div className="flex flex-col gap-[40px] w-full bg-white rounded-t-[16px] rounded-b-[16px] pt-[56px] px-[80px] pb-[32px]">
+        <div className="flex flex-col gap-[40px] w-full bg-white rounded-t-[16px] rounded-b-[16px] pt-[56px] px-[80px] max-lg:px-[40px] max-phone:px-[20px] pb-[32px]">
           <div className="w-full border-b-[1px] border-gray200 pb-[32px]">
             {/* 제목, 소개말 */}
             <div className="flex flex-col gap-[12px]">
-              <input
+              <textarea
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="custom-h4 text-text-on-white outline-none placeholder:font-[SCoreDream] placeholder:custom-h4 placeholder:text-text-on-background w-full"
+                className="custom-h4 text-text-on-white outline-none placeholder:font-[SCoreDream] placeholder:custom-h4 placeholder:text-text-on-background w-full resize-none"
                 placeholder={type === 'notice' ? '공지글 제목 작성' : '게시글 제목 작성'}
               />
 

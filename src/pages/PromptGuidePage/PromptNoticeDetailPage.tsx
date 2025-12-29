@@ -203,7 +203,12 @@ const PromptNoticeDetailPage = () => {
                   borderRadius={8}
                   py={8}
                   onClick={() => {
-                    navigate('/admin/guide/notice/create');
+                    navigate('/admin/guide/notice/create', {
+                      state: {
+                        post,
+                        mode: 'edit',
+                      },
+                    });
                   }}
                 />
               )}
