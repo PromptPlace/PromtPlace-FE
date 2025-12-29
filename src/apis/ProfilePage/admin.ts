@@ -1,7 +1,9 @@
 import type {
+  RequestMsgAdminDto,
   ResponseAccountAdminDto,
   ResponseDeleteHistoriesAdminDto,
   ResponseDeletePromptAdminDto,
+  ResponseMsgAdminDto,
 } from '@/types/ProfilePage/admin';
 import { axiosInstance } from '../axios';
 
@@ -37,6 +39,13 @@ export const patchBanAdmin = async (memberId: number): Promise<ResponseAccountAd
 // 계정 삭제 (관리자)
 export const deleteAdmin = async (memberId: number): Promise<ResponseAccountAdminDto> => {
   const { data } = await axiosInstance.delete(`/admin/${memberId}/delete`);
+
+  return data;
+};
+
+// 메시지 전송 (관리자)
+export const postMsgAdmin = async (body: RequestMsgAdminDto): Promise<ResponseMsgAdminDto> => {
+  const { data } = await axiosInstance.post('/api/messages', body);
 
   return data;
 };

@@ -1,3 +1,5 @@
+import usePostMsgAdmin from '@/hooks/mutations/ProfilePage/usePostMsgAdmin';
+import type { RequestMsgAdminDto } from '@/types/ProfilePage/admin';
 import type { ResponseMemberDto } from '@/types/ProfilePage/profile';
 import ArrowIcon from '@assets/icon-arrow-left-black.svg';
 import ProfileIcon from '@assets/icon-profile-gray.svg';
@@ -7,13 +9,24 @@ import { useState } from 'react';
 
 interface AdminMessageModalProps {
   data?: ResponseMemberDto;
+  id?: number;
   follower?: number;
   setShowAdminMessageModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AdminMessageModal = ({ data, follower, setShowAdminMessageModal }: AdminMessageModalProps) => {
+const AdminMessageModal = ({ data, id, follower, setShowAdminMessageModal }: AdminMessageModalProps) => {
+  const receiver_id = data?.data.member_id;
+
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
+
+  const { mutate } = usePostMsgAdmin();
+
+  const handlePostMsg = ({ sender_id, receiver_id, title, body }: RequestMsgAdminDto) => {
+    mutate({ sender_id, receiver_id, title, body });
+  };
+
+  if (receiver_id === undefined || id === undefined) return;
 
   return (
     <>
@@ -90,6 +103,7 @@ const AdminMessageModal = ({ data, follower, setShowAdminMessageModal }: AdminMe
                 borderRadius={8}
                 py={8}
                 onClick={() => {
+                  handlePostMsg({ receiver_id, sender_id: id, title, body: content });
                   alert('메시지 전송이 완료되었습니다.');
                 }}
               />

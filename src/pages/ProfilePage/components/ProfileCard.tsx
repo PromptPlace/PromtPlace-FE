@@ -282,6 +282,7 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
         {showAdminMessageModal && (
           <AdminMessageModal
             data={userData}
+            id={myId}
             follower={followerData?.data.length}
             setShowAdminMessageModal={setShowAdminMessageModal}
           />

@@ -20,3 +20,17 @@ export type ResponseAccountAdminDto = {
   data: null;
   statusCode: number;
 };
+
+// 메시지 전송 (관리자)
+export type RequestMsgAdminDto = {
+  sender_id: number;
+  receiver_id: number;
+  title: string;
+  body: string;
+};
+
+export type ResponseMsgAdminDto = {
+  message: string;
+  message_id: number;
+  statusCode: number;
+};
