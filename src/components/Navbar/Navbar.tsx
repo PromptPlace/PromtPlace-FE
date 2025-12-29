@@ -155,7 +155,16 @@ const Navbar = () => {
           {/* 관리자 */}
           {isAdmin && (
             <div className="flex justify-center items-center gap-[24px]">
-              <PrimaryButton buttonType="admin" text="신고함" onClick={() => {}} py={8} px={39} borderRadius={8} />
+              <PrimaryButton
+                buttonType="admin"
+                text="신고함"
+                onClick={() => {
+                  navigate('/admin/complaint');
+                }}
+                py={8}
+                px={39}
+                borderRadius={8}
+              />
 
               <PrimaryButton
                 buttonType="admin"
