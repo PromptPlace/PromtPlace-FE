@@ -9,6 +9,9 @@ import rightArrow from '@assets/icon-arrow-right-black.svg';
 import { useNavigate } from 'react-router-dom';
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
+import { useAuth } from '@/context/AuthContext';
+import PrimaryButton from '@/components/Button/PrimaryButton';
+import clsx from 'clsx';
 
 interface Tip {
   tip_id: number;
@@ -29,6 +32,9 @@ interface PaginationInfo {
 }
 
 const PromptTipPage = () => {
+  const { user } = useAuth();
+  const isAdmin = user.role === 'ADMIN';
+
   const [tips, setTips] = useState<Tip[]>([]);
   const [pagination, setPagination] = useState<PaginationInfo>({
     page: 1,
@@ -99,7 +105,10 @@ const PromptTipPage = () => {
       <div className="px-[102px] mt-[64px] max-lg:px-[40px] max-phone:px-[20px]">
         <div>
           {/* 헤더 */}
-          <div className="flex flex-col items-start">
+          <div
+            className={clsx(
+              isAdmin ? 'flex justify-between items-center flex-wrap mb-[20px]' : 'flex flex-col items-start',
+            )}>
             <div className="mb-[56px] flex flex-col gap-[12px] max-lg:mb-[20px]">
               <h1 className="custom-h1 max-phone:text-[24px]">AI 꿀팁</h1>
 
@@ -121,6 +130,19 @@ const PromptTipPage = () => {
                 <br />꼭 알아야 할 AI 트렌드까지 확인할 수 있어요!
               </p>
             </div>
+
+            {/* 관리자 */}
+            {isAdmin && (
+              <PrimaryButton
+                buttonType="adminBG"
+                text="작성하기"
+                onClick={() => {
+                  navigate('/admin/guide/tip/create');
+                }}
+                borderRadius={8}
+                py={8}
+              />
+            )}
           </div>
 
           {/* 전체 개수 표시 */}

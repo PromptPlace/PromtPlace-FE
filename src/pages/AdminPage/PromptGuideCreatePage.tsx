@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useRef, useState, type ChangeEvent } from 'react';
-import { BsPaperclip } from 'react-icons/bs';
-import { LuChevronLeft, LuX } from 'react-icons/lu';
+import { useEffect, useRef, useState, type ChangeEvent } from 'react';
+import { LuChevronRight } from 'react-icons/lu';
 import { useNavigate, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 
-import attachfile from '@assets/icon-attach-file-hover.svg';
+import PrimaryButton from '@/components/Button/PrimaryButton';
+
+import CancleIcon from '@assets/icon-cancle-admin.svg?react';
 
 interface PromptGuideCreatePageProps {
   type: 'tip' | 'notice';
@@ -33,6 +34,7 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
 
   const [files, setFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null); // 이미지 미리보기
 
   const navigate = useNavigate();
 
@@ -43,13 +45,23 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
   /** 파일 선택 핸들러 */
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
+
     const newFiles = Array.from(e.target.files);
+    const firstFile = newFiles[0];
+
     setFiles((prev) => [...prev, ...newFiles]); // 여러 개 추가 가능
+
+    if (firstFile && firstFile.type.startsWith('image/')) {
+      const url = URL.createObjectURL(firstFile); // 이미지 preview
+      setPreviewUrl(url);
+    }
   };
 
   /** 파일 삭제 */
-  const handleRemove = (fileName: string) => {
-    setFiles((prev) => prev.filter((f) => f.name !== fileName));
+  const handleRemove = () => {
+    // setFiles((prev) => prev.filter((f) => f.name !== fileName));
+    setFiles([]);
+    setPreviewUrl(null);
   };
 
   /** 파일첨부 버튼 클릭 → 숨겨진 input 실행 */
@@ -57,92 +69,81 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
     fileInputRef.current?.click();
   };
 
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
   return (
     <>
-      <div className="min-h-screen flex justify-center items-center">
-        <div className="w-full max-w-[994px] h-[880px] bg-white rounded-t-[16px] rounded-b-[16px]">
-          {/* 상단 */}
-          <div className="w-full max-w-[994px] h-[105px] pt-[55px] pl-[20px] pr-[10px]">
-            <div
-              className="w-[187px] h-[50px] flex items-center gap-[10px] p-[10px] cursor-pointer"
-              onClick={handleNavigate}>
-              <LuChevronLeft size={24} />
-              <span className="text-text-on-white font-bold text-[24px] ">{`${type === 'tip' ? '프롬프트 TIP' : '공지사항'}`}</span>
+      <div className="flex flex-col gap-[20px] px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
+        <div className="flex items-center gap-[4px] mt-[64px]">
+          <p className="custom-body2 text-text-on-white">AI 꿀팁</p>
+          <LuChevronRight size={16} onClick={() => navigate('/guide/tip')} className="cursor-pointer" />
+        </div>
+
+        {/* 작성 부분 */}
+        <div className="flex flex-col gap-[40px] w-full bg-white rounded-t-[16px] rounded-b-[16px] pt-[56px] px-[80px] pb-[32px]">
+          <div className="w-full border-b-[1px] border-gray200 pb-[32px]">
+            {/* 제목, 소개말 */}
+            <div className="flex flex-col gap-[12px]">
+              <input
+                className="custom-h4 text-text-on-white outline-none placeholder:font-[SCoreDream] placeholder:custom-h4 placeholder:text-text-on-background w-full"
+                placeholder="게시글 제목 작성"
+              />
+
+              <input
+                className="custom-h3 text-text-on-white outline-none placeholder:font-[SCoreDream] placeholder:custom-h3 placeholder:text-text-on-background w-full"
+                placeholder="게시글 소개말 작성"
+              />
             </div>
           </div>
 
-          <div className="w-full max-w-[994px] h-[190px] border-b-[1px] border-white-stroke px-[65px]">
-            <div className="max-w-[864px] h-[40px] mt-[30px]">
-              <input
-                className="font-bold text-[32px] text-text-on-white 
-                bg-transparent border-none outline-none w-full placeholder:text-text-on-background"
-                placeholder="제목"
-              />
-            </div>
-            <div className="max-w-[864px] h-[25px] mt-[10px] mb-[30px]">
-              <input
-                className="font-medium text-[24px] text-text-on-background] bg-transparent
-                border-none outline-none w-full placeholder:text-text-on-background"
-                placeholder="날짜 (ex : 2025-09-30)"
-              />
-            </div>
-            <div className="w-[290px] h-[45px] flex justify-between">
-              <div>
-                <button
-                  type="button"
-                  onClick={handleClickFileAttach}
-                  className="w-[115px] h-[45px] flex justify-center items-center bg-white text-alert 
-                  rounded-[16px] border border-alert py-[16px] px-[8px] text-[20px] font-medium">
-                  파일첨부
-                </button>
-
-                {/*파일 input (단일 파일만 첨부 가능) */}
-                <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileChange} />
-              </div>
-              <button
-                onClick={() => {}}
-                className="w-[137px] h-[45px] flex justify-center items-center bg-white text-alert 
-               rounded-[16px] border border-alert py-[16px] px-[8px] text-[20px] font-medium">
-                메인에 걸기
-              </button>
-            </div>
+          {/* 사진 */}
+          <div className="h-[292px]">
+            {previewUrl && <img src={previewUrl} alt="첨부 이미지 미리보기" className="w-full h-full object-contain" />}
           </div>
 
           {/* 본문 */}
-          <div className="w-full max-w-[994px] h-[460px] flex justify-center ">
-            <textarea
-              className="w-[865px] h-full py-[15px] font-medium text-[20px] text-text-on-white bg-transparent
-     border-b-[1px] border-white-stroke outline-none resize-none overflow-y-auto placeholder:text-text-on-background"
-              placeholder=""
-            />
-          </div>
+          <textarea
+            id="content"
+            className="w-full h-[140px] custom-body2 placeholder:custom-body2 placeholder:font-[SCoreDream] text-text-on-white outline-none resize-none overflow-y-auto placeholder:text-text-on-background"
+            placeholder="게시글 본문 작성"
+          />
 
           {/**하단 */}
-          <div className="w-full max-w-[994px] h-[125px] flex justify-center items-center bg-white rounded-b-[16px]">
-            <div className="w-[864px] h-[60px] flex justify-between ">
-              <button
-                onClick={() => {}}
-                className="w-[198px] h-[60px] flex justify-center items-center bg-alert text-white 
-               rounded-[16px] py-[10px] px-[28px] text-[24px] font-bold">
-                업로드
-              </button>
-
-              <div className="w-[300px] flex justify-between items-center">
-                {files.length > 0 && (
-                  <div className="flex items-center justify-between w-full px-3 py-2 bg-white">
-                    <span className="truncate max-w-[300px] text-[24px] font-medium text-text-on-background">
+          <div className="flex flex-wrap gap-[20px] justify-between items-center bg-white rounded-b-[16px] border-t border-gray200 pt-[32px]">
+            {/* 파일 선택 */}
+            <div className="max-w-[502px] w-full">
+              {files.length > 0 && (
+                <div className="py-[10px] px-[16px] rounded-[12px] border border-gray300">
+                  <div className="flex justify-between items-center">
+                    <span className="custom-button2 truncate max-w-[440px] w-full text-text-on-white">
                       {files[0].name}
                     </span>
-                    <button
-                      type="button"
-                      aria-label="첨부 파일 삭제"
-                      onClick={() => handleRemove(files[0].name)}
-                      className="ml-[24px] text-text-on-background text-center">
-                      <LuX size={20} />
-                    </button>
+
+                    <CancleIcon onClick={handleRemove} className="cursor-pointer" />
                   </div>
-                )}
-              </div>
+                </div>
+              )}
+            </div>
+
+            {/* 버튼 */}
+            <div className="flex gap-[37px] max-w-[300px] w-full">
+              <PrimaryButton
+                buttonType="admin"
+                text="파일첨부"
+                onClick={handleClickFileAttach}
+                py={8}
+                borderRadius={8}
+              />
+              {/*파일 input (단일 파일만 첨부 가능) */}
+              <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileChange} />
+
+              <PrimaryButton buttonType="adminBG" text="업로드" onClick={() => {}} borderRadius={8} py={8} px={21} />
             </div>
           </div>
         </div>
