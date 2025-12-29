@@ -47,6 +47,7 @@ interface PrimaryButtonProps {
   disable?: boolean;
   textColor?: 'white' | 'primary' | 'gray';
   borderRadius?: number;
+  width?: number;
 }
 
 const primaryButtonTheme = {
@@ -84,6 +85,7 @@ const PrimaryButton = ({
   disable = false,
   textColor = 'primary',
   borderRadius,
+  width,
 }: PrimaryButtonProps) => {
   const isReviewDelete = buttonType === 'reviewDelete';
 
@@ -113,7 +115,7 @@ const PrimaryButton = ({
               paddingBottom: py,
               paddingLeft: px,
               paddingRight: px,
-              width: `${text !== '테스트 결과' ? '99px' : '100%'}`,
+              width: `${width ? width : text !== '테스트 결과' ? '99px' : '100%'}`,
             }
           : undefined),
       }}>
