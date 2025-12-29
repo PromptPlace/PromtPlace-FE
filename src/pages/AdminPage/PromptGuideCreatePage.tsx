@@ -108,7 +108,10 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
     <>
       <div className="flex flex-col gap-[20px] px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
         <div className="flex items-center gap-[4px] mt-[64px]">
-          <p className="custom-body2 text-text-on-white">AI 꿀팁</p>
+          <p className="custom-body2 text-text-on-white">
+            {type === 'notice' && '공지사항'}
+            {type === 'tip' && 'AI 꿀팁'}
+          </p>
           <LuChevronRight size={16} onClick={() => navigate('/guide/tip')} className="cursor-pointer" />
         </div>
 
@@ -121,20 +124,24 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 className="custom-h4 text-text-on-white outline-none placeholder:font-[SCoreDream] placeholder:custom-h4 placeholder:text-text-on-background w-full"
-                placeholder="게시글 제목 작성"
+                placeholder={type === 'notice' ? '공지글 제목 작성' : '게시글 제목 작성'}
               />
 
-              <input
-                className="custom-h3 text-text-on-white outline-none placeholder:font-[SCoreDream] placeholder:custom-h3 placeholder:text-text-on-background w-full"
-                placeholder="게시글 소개말 작성"
-              />
+              {type === 'tip' && (
+                <input
+                  className="custom-h3 text-text-on-white outline-none placeholder:font-[SCoreDream] placeholder:custom-h3 placeholder:text-text-on-background w-full"
+                  placeholder="게시글 소개말 작성"
+                />
+              )}
             </div>
           </div>
 
           {/* 사진 */}
-          <div className="h-[292px]">
-            <img src={previewUrl || DefaultImg} alt="첨부 이미지 미리보기" className="w-full h-full object-contain" />
-          </div>
+          {type === 'tip' && (
+            <div className="h-[292px]">
+              <img src={previewUrl || DefaultImg} alt="첨부 이미지 미리보기" className="w-full h-full object-contain" />
+            </div>
+          )}
 
           {/* 본문 */}
           <textarea
@@ -142,7 +149,7 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             className="w-full h-[140px] custom-body2 placeholder:custom-body2 placeholder:font-[SCoreDream] text-text-on-white outline-none resize-none overflow-y-auto placeholder:text-text-on-background"
-            placeholder="게시글 본문 작성"
+            placeholder={type === 'notice' ? '공지글 본문 작성' : '게시글 본문 작성'}
           />
 
           {/**하단 */}
