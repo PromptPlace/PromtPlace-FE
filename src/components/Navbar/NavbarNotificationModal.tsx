@@ -40,6 +40,7 @@ const NavbarNotificationModal = ({ setIsNotificationModalShow }: NavbarNotificat
                 content={data.content}
                 date={data.created_at}
                 link={data.link_url}
+                type={data.type}
                 setIsNotificationModalShow={setIsNotificationModalShow}
               />
             ))}
