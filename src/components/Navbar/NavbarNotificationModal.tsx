@@ -36,7 +36,7 @@ const NavbarNotificationModal = ({ setIsNotificationModalShow }: NavbarNotificat
             .map((data) => (
               <NavbarNotificatioinModalCard
                 key={data.notification_id}
-                img={null}
+                img={data.actor?.profile_image || null}
                 content={data.content}
                 date={data.created_at}
                 link={data.link_url}
