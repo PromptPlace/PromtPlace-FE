@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { LuChevronRight } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
+import usePostTipAdmin from '@/hooks/mutations/AdminPage/usePostTipAdmin';
+import { useAuth } from '@/context/AuthContext';
 
 import PrimaryButton from '@/components/Button/PrimaryButton';
 
 import CancleIcon from '@assets/icon-cancle-admin.svg?react';
-import usePostTipAdmin from '@/hooks/mutations/AdminPage/usePostTipAdmin';
-import { useAuth } from '@/context/AuthContext';
+import DefaultImg from '@assets/icon-example-image.png';
 
 interface PromptGuideCreatePageProps {
   type: 'tip' | 'notice';
@@ -62,8 +63,15 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
     fileInputRef.current?.click();
   };
 
+  const urlToFile = async (url: string, fileName: string): Promise<File> => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+
+    return new File([blob], fileName, { type: blob.type });
+  };
+
   // AI 꿀팁 업로드
-  const handlePostTip = () => {
+  const handlePostTip = async () => {
     const formData = new FormData();
 
     formData.append('writer_id', String(writer_id));
@@ -72,6 +80,9 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
 
     if (files[0]) {
       formData.append('file', files[0]);
+    } else {
+      const defaultFile = await urlToFile(DefaultImg, 'default.png');
+      formData.append('file', defaultFile);
     }
 
     mutatePostTip(formData, {
@@ -122,7 +133,7 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
 
           {/* 사진 */}
           <div className="h-[292px]">
-            {previewUrl && <img src={previewUrl} alt="첨부 이미지 미리보기" className="w-full h-full object-contain" />}
+            <img src={previewUrl || DefaultImg} alt="첨부 이미지 미리보기" className="w-full h-full object-contain" />
           </div>
 
           {/* 본문 */}
