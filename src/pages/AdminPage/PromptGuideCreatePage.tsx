@@ -14,8 +14,6 @@ interface PromptGuideCreatePageProps {
 }
 
 const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
-  console.log(type);
-
   const { user } = useAuth();
   const writer_id = user.user_id;
 
