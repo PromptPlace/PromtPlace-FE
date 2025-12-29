@@ -68,7 +68,15 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
       formData.append('file', files[0]);
     }
 
-    mutatePostTip(formData);
+    mutatePostTip(formData, {
+      onSuccess: () => {
+        alert('게시글이 업로드되었습니다.');
+        navigate('/guide/tip');
+      },
+      onError: () => {
+        alert('게시글 업로드에 실패했습니다');
+      },
+    });
   };
 
   useEffect(() => {
