@@ -11,6 +11,9 @@ import usePromptDownload from '@/hooks/mutations/PromptDetailPage/usePromptDownl
 import usePromptLike from '@/hooks/mutations/PromptDetailPage/usePromptLike';
 import usePromptUnlike from '@/hooks/mutations/PromptDetailPage/usePromptUnlike';
 import useMyLikedPrompts from '@/hooks/queries/PromptDetailPage/useMyLikedPrompts';
+import useAdminDeletePrompt from '@/hooks/mutations/PromptDetailPage/Admin/useAdminDeletePrompt';
+import { useAuth } from '@/context/AuthContext';
+import DualModal from '@components/Modal/DualModal';
 
 import updateIcon from '../assets/updatebutton.png';
 import deleteIcon from '../assets/deletebutton.png';
@@ -119,7 +122,6 @@ const PromptDetailCard = ({
   const displayMain = normalizedImages[activeIdx] ?? '';
 
   const [liked, setLiked] = useState(false);
-  const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
   const { data: likedSet } = useMyLikedPrompts();
 
@@ -279,6 +281,34 @@ const PromptDetailCard = ({
     }
   };
 
+  const { user } = useAuth();
+  const isAdmin = user.role === 'ADMIN';
+
+  const { mutate: adminDeleteMutate, isPending: isAdminDeleting } = useAdminDeletePrompt();
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+
+  const handleAdminEdit = () => {
+    navigate(`/prompt/${promptId}/edit`);
+  };
+
+  const handleAdminDelete = () => {
+    if (!Number.isFinite(promptId)) return;
+
+    const ok = window.confirm('이 프롬프트를 삭제할까요? (관리자 권한)');
+    if (!ok) return;
+
+    adminDeleteMutate(promptId, {
+      onSuccess: () => {
+        alert('프롬프트 삭제 성공(관리자)');
+        navigate(-1);
+      },
+      onError: (err: unknown) => {
+        alert('삭제에 실패했습니다. (권한/존재 여부를 확인해주세요)');
+        console.error(err);
+      },
+    });
+  };
+
   return (
     <>
       <div className="w-full max-w-[1236px] mx-auto flex flex-col gap-6">
@@ -328,24 +358,52 @@ const PromptDetailCard = ({
         <div className="w-full bg-[#FFFEFB] rounded-[16px] p-6 max-w-[1236px] mx-auto flex flex-col gap-6">
           <div className="flex items-start justify-between mb-1 flex-wrap gap-y-1">
             <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between flex-wrap gap-y-1">
+              {/* 상단: 모델들 + (오른쪽) 모델버전 + 관리자버튼(세로) */}
+              <div className="flex items-start justify-between flex-wrap gap-y-1">
+                {/* 왼쪽: 모델 버튼들 */}
                 <div className="flex flex-wrap gap-2 font-medium text-[14px]">
                   {safeModels.map((m, i) => (
                     <ModelButton key={`${m}-${i}`} text={m} />
                   ))}
                 </div>
-                <div className="hidden md:inline-flex items-center gap-2 text-[12px] whitespace-nowrap bg-gray-50 rounded-[8px] px-3 py-2">
-                  <span className="text-[#374151] font-light">AI 모델의 버전은?</span>
-                  <span className={`font-medium ${hasModelVersion ? 'text-[#030712]' : 'text-on-white'}`}>
-                    {modelVersionDisplay}
-                  </span>
+
+                {/* 오른쪽: 모델버전 + 관리자버튼 */}
+                <div className="hidden md:flex flex-col items-end gap-2 shrink-0">
+                  <div className="inline-flex items-center gap-2 text-[12px] whitespace-nowrap bg-gray-50 rounded-[8px] px-3 py-2">
+                    <span className="text-[#374151] font-light">AI 모델의 버전은?</span>
+                    <span className={`font-medium ${hasModelVersion ? 'text-[#030712]' : 'text-on-white'}`}>
+                      {modelVersionDisplay}
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-5 flex items-center">
-                <h1 className="font-medium text-[32px] text-[#030712] leading-tight break-words whitespace-normal">
+              <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
+                {/* 왼쪽: 타이틀 */}
+                <h1 className="mt-2 font-medium text-[32px] text-[#030712] leading-tight break-words whitespace-normal min-w-0">
                   {title}
                 </h1>
+
+                {/* 오른쪽: 관리자 버튼 */}
+                {isAdmin && (
+                  <div className="mt-2 flex gap-2 shrink-0">
+                    <button
+                      className="w-[26px] h-[26px]"
+                      aria-label="수정"
+                      onClick={handleAdminEdit}
+                      disabled={isAdminDeleting}>
+                      <img src={updateIcon} alt="수정" />
+                    </button>
+
+                    <button
+                      className="w-[22px] h-[22px]"
+                      aria-label="삭제"
+                      onClick={() => setIsDeleteConfirmOpen(true)}
+                      disabled={isAdminDeleting}>
+                      <img src={deleteIcon} alt="삭제" />
+                    </button>
+                  </div>
+                )}
               </div>
 
               <p className="mt-[16px] font-light text-[16px] leading-[22px] text-[#030712]">{oneLiner}</p>
@@ -384,17 +442,6 @@ const PromptDetailCard = ({
                 </div>
               </div>
             </div>
-
-            {isAdmin && (
-              <div className="flex gap-2 shrink-0">
-                <button className="w-[32px] h-[32px]" aria-label="수정" onClick={() => alert('수정 클릭')}>
-                  <img src={updateIcon} alt="수정" />
-                </button>
-                <button className="w-[32px] h-[32px]" aria-label="삭제" onClick={() => alert('삭제 클릭')}>
-                  <img src={deleteIcon} alt="삭제" />
-                </button>
-              </div>
-            )}
           </div>
 
           {/* 본문 */}
@@ -505,6 +552,29 @@ const PromptDetailCard = ({
           </div>
         </div>
       </div>
+
+      {isDeleteConfirmOpen && (
+        <DualModal
+          text="해당 프롬프트를 삭제 조치 하시겠습니까?"
+          onClickYes={() => {
+            if (!Number.isFinite(promptId) || isAdminDeleting) return;
+
+            adminDeleteMutate(promptId, {
+              onSuccess: () => {
+                setIsDeleteConfirmOpen(false);
+                alert('프롬프트 삭제가 완료되었습니다.');
+                navigate('/prompt'); // 또는 navigate(-1)
+              },
+              onError: (err: unknown) => {
+                setIsDeleteConfirmOpen(false);
+                alert('삭제에 실패했습니다. (권한/토큰 확인)');
+                console.error(err);
+              },
+            });
+          }}
+          onClickNo={() => setIsDeleteConfirmOpen(false)}
+        />
+      )}
     </>
   );
 };
