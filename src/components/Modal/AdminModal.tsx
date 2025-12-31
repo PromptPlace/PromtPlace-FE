@@ -1,10 +1,23 @@
 import DefaultImg from '@assets/logo/app/app-logo-default.svg?react';
+import CancleIcon from '@assets/icon-x-button.svg?react';
 
-const AdminModal = () => {
+interface AdminModalProps {
+  setShowAdminModal: (show: boolean) => void;
+}
+
+const AdminModal = ({ setShowAdminModal }: AdminModalProps) => {
   return (
-    <div className="fixed inset-0 bg-overlay flex justify-center items-center px-[102px] max-lg:p-[40px] max-phone:p-[20px]">
-      <div className="max-w-[825px] w-full bg-white rounded-[16px] flex flex-col gap-[16px] p-[32px]">
+    <div
+      onClick={() => setShowAdminModal(false)}
+      className="fixed inset-0 bg-overlay flex justify-center items-center px-[102px] max-lg:p-[40px] max-phone:p-[20px]">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative max-w-[825px] w-full bg-white rounded-[16px] flex flex-col gap-[16px] p-[32px]">
         <div className="text-center custom-h4 pb-[16px] border-b border-b-gray200">운영자 메시지</div>
+        <CancleIcon
+          className="absolute right-[20px] top-[20px] cursor-pointer"
+          onClick={() => setShowAdminModal(false)}
+        />
 
         <div className="flex items-start gap-[24px]">
           <DefaultImg className="w-[48px] h-[48px]" />
