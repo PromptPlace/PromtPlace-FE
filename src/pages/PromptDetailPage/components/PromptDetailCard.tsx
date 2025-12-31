@@ -387,13 +387,13 @@ const PromptDetailCard = ({
                 {/* 오른쪽: 관리자 버튼 */}
                 {isAdmin && (
                   <div className="mt-2 flex gap-2 shrink-0">
-                    <button
+                    {/* <button
                       className="w-[26px] h-[26px]"
                       aria-label="수정"
                       onClick={handleAdminEdit}
                       disabled={isAdminDeleting}>
                       <img src={updateIcon} alt="수정" />
-                    </button>
+                    </button> */}
 
                     <button
                       className="w-[22px] h-[22px]"
