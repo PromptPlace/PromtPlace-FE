@@ -11,6 +11,7 @@ import PersonIcon from '@assets/icon-sidebar-person.svg?react';
 import ReceiptIcon from '@assets/icon-sidebar-BiReceipt.svg?react';
 import ChatIcon from '@assets/icon-sidebar-chat-bubble.svg?react';
 import ArchiveIcon from '@assets/icon-sidebar-archive.svg?react';
+import AdminProfileIcon from '@assets/icon-profile-admin.svg';
 
 import PrimaryButton from '@components/Button/PrimaryButton';
 import IconButton from '@components/Button/IconButton';
@@ -71,7 +72,7 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
           </>
         )}
 
-        {accessToken && (
+        {accessToken && user.role !== 'ADMIN' && (
           <>
             <div className="flex-1 mt-[93px] flex flex-col gap-[17px] items-center w-full">
               <div className="w-[80px] h-[80px] rounded-full overflow-hidden">
@@ -133,6 +134,22 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
                 text="로그아웃"
                 onClick={() => logout()}
               />
+            </div>
+          </>
+        )}
+
+        {accessToken && user.role === 'ADMIN' && (
+          <>
+            <div className="flex-1 mt-[93px] flex flex-col gap-[31px] items-center w-full">
+              <div className="w-[80px] h-[80px] rounded-full overflow-hidden">
+                <img src={AdminProfileIcon} alt="프로필" className="w-full h-full object-cover" />
+              </div>
+
+              <p className="text-alert text-xl font-medium leading-[25px]">운영자</p>
+            </div>
+
+            <div className="mb-[63px] w-full flex justify-center text-text-on-white font-normal text-sm leading-[23px] cursor-pointer">
+              <PrimaryButton buttonType="square" text="신고함" onClick={() => alert('신고함 연결 예정')} />
             </div>
           </>
         )}

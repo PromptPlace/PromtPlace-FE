@@ -12,17 +12,9 @@ import twitter from '@assets/icon-x-logo.svg';
 import defaultImg from '@assets/icon-example-image.png';
 import attachFile from '@assets/icon-attach-file-gray.svg';
 import ReactMarkdown from 'react-markdown';
-
-// 게시글 타입
-interface Post {
-  id: number;
-  title: string;
-  content: string;
-  create_at: string;
-  update_at: string;
-  is_visible: boolean;
-  file_url: string | null;
-}
+import { useAuth } from '@/context/AuthContext';
+import PrimaryButton from '@/components/Button/PrimaryButton';
+import type { Post } from '@/types/PromptGuidePage/post';
 
 const PromptTipDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,13 +22,16 @@ const PromptTipDetailPage = () => {
     id: 0,
     title: 'title',
     content: 'conntent',
-    create_at: 'create_date',
-    update_at: 'update_date',
+    created_at: 'created_date',
+    updated_at: 'updated_date',
     is_visible: true,
     file_url: null,
   });
 
   const navigate = useNavigate();
+
+  const { user } = useAuth();
+  const isAdmin = user.role === 'ADMIN';
 
   /**api 연동 */
   useEffect(() => {
@@ -53,8 +48,8 @@ const PromptTipDetailPage = () => {
           title: fetched_data.title,
           content: fetched_data.content,
 
-          create_at: fetched_data.created_at.slice(0, 10).replace(/-/g, '.'),
-          update_at: fetched_data.updated_at.slice(0, 10).replace(/-/g, '.'),
+          created_at: fetched_data.created_at.slice(0, 10).replace(/-/g, '.'),
+          updated_at: fetched_data.updated_at.slice(0, 10).replace(/-/g, '.'),
           is_visible: fetched_data.is_visible,
           file_url: fetched_data.file_url,
         };
@@ -126,7 +121,7 @@ const PromptTipDetailPage = () => {
             {/**상단 */}
             <div className="w-full border-b-[1px] border-white-stroke pb-[34px] flex flex-col gap-[24px]">
               <div className="flex">
-                {new Date().getTime() - new Date(post.create_at).getTime() <= 14 * 24 * 60 * 60 * 1000 && (
+                {new Date().getTime() - new Date(post.created_at).getTime() <= 14 * 24 * 60 * 60 * 1000 && (
                   <img src={newBadgeImg} alt="NEW" className="w-[20px] h-[20px] mr-[8px]" />
                 )}
                 <p className="custom-h4 max-phone:text-[16px]">{post.title}</p>
@@ -141,7 +136,7 @@ const PromptTipDetailPage = () => {
 
                   <div className="custom-body3 max-phone:text-[10px]">
                     <span>등록일 : </span>
-                    <span className="text-gray500">{post.create_at}</span>
+                    <span className="text-gray500">{post.created_at}</span>
                   </div>
                 </div>
 
@@ -185,7 +180,7 @@ const PromptTipDetailPage = () => {
               <ReactMarkdown>{post.content}</ReactMarkdown>
             </div>
 
-            <div className="flex items-end">
+            <div className="flex items-end justify-between">
               {post.file_url ? (
                 <div className="w-[98px] h-[36px] gap-[8px] flex mt-[32px] border border-gray400 rounded-[8px] items-center justify-center">
                   <p className="text-[12px] font-light text-gray700">첨부파일</p>
@@ -193,6 +188,24 @@ const PromptTipDetailPage = () => {
                 </div>
               ) : (
                 <div className="h-[36px] mt-[32px]"></div>
+              )}
+
+              {/* 관리자 */}
+              {isAdmin && (
+                <PrimaryButton
+                  buttonType="adminBG"
+                  text="수정하기"
+                  borderRadius={8}
+                  py={8}
+                  onClick={() => {
+                    navigate('/admin/guide/tip/create', {
+                      state: {
+                        post,
+                        mode: 'edit',
+                      },
+                    });
+                  }}
+                />
               )}
             </div>
           </div>

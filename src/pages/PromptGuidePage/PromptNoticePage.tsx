@@ -8,6 +8,9 @@ import rightArrow from '@assets/icon-arrow-right-black.svg';
 import { useNavigate } from 'react-router-dom';
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
+import { useAuth } from '@/context/AuthContext';
+import clsx from 'clsx';
+import PrimaryButton from '@/components/Button/PrimaryButton';
 
 interface Notice {
   announcement_id: number;
@@ -25,6 +28,9 @@ interface PaginationInfo {
 }
 
 const PromptNoticePage = () => {
+  const { user } = useAuth();
+  const isAdmin = user.role === 'ADMIN';
+
   const [notices, setNotices] = useState<Notice[]>([]);
   const [pagination, setPagination] = useState<PaginationInfo>({
     page: 1,
@@ -95,11 +101,27 @@ const PromptNoticePage = () => {
       <div className="px-[102px] mt-[64px] max-lg:px-[40px] max-phone:px-[20px]">
         <div>
           {/* 헤더 */}
-          <div className="flex flex-col items-start">
+          <div
+            className={clsx(
+              isAdmin ? 'flex justify-between items-center flex-wrap mb-[20px]' : 'flex flex-col items-start',
+            )}>
             <div className="mb-[56px] flex flex-col gap-[12px]">
               <h1 className="custom-h1 max-phone:text-[24px]">공지사항</h1>
               <p className="custom-h3 max-phone:text-[14px]">프롬프트 플레이스의 공지사항을 확인해보세요!</p>
             </div>
+
+            {/* 관리자 */}
+            {isAdmin && (
+              <PrimaryButton
+                buttonType="adminBG"
+                text="작성하기"
+                onClick={() => {
+                  navigate('/admin/guide/notice/create');
+                }}
+                borderRadius={8}
+                py={8}
+              />
+            )}
           </div>
 
           {/* 전체 개수 표시 */}

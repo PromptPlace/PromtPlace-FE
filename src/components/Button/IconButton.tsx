@@ -40,7 +40,7 @@ import clsx from 'clsx';
 const iconButtonTheme = {
   buttonType: {
     round:
-      'px-[29px] max-lg:px-[12px] py-[21px] max-lg:py-[10px] rounded-[50px] text-xl max-lg:text-[10px] font-medium leading-[25px] max-lg:leading-[13px] gap-[15px] max-lg:gap-[5px]',
+      'px-[29px] max-phone:px-[12px] py-[21px] rounded-[50px] text-xl max-phone:text-[18px] font-medium leading-[25px] max-phone:leading-[13px] gap-[15px] max-phone:gap-[5px]',
     squareBig:
       'custom-h4 px-[20px] py-[12px] max-lg:py-[8px] rounded-[10px] max-lg:rounded-[4px] max-lg:text-[14px] max-lg:leading-[18px] gap-[15px] max-lg:gap-[8px]',
     squareMd:
@@ -58,8 +58,8 @@ const iconButtonTheme = {
     red: 'bg-alert text-white px-[29px] max-lg:px-[] leading-[24px] shadow-none hover:shadow-none',
   },
   textButton: {
-    white: 'min-w-[160px] max-lg:min-w-[58px] bg-white max-lg:px-[15px] max-lg:h-[25px]',
-    blue: 'min-w-[160px] max-lg:min-w-[58px] bg-primary max-lg:px-[15px] max-lg:h-[25px]',
+    white: 'min-w-[160px] max-phone:min-w-[80px] bg-white max-phone:px-[15px] max-phone:h-[25px]',
+    blue: 'min-w-[160px] max-phone:min-w-[80px] bg-primary max-phone:px-[15px] max-phone:h-[25px]',
   },
 };
 
