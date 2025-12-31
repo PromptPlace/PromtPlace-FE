@@ -36,3 +36,16 @@ export const postNoticeAdmin = async (body: FormData): Promise<ResponseNoticeAdm
 
   return data;
 };
+
+// 공지사항 수정 (관리자)
+export const patchNoticeAdmin = async ({
+  announcement_id,
+  body,
+}: {
+  announcement_id: number;
+  body: RequestPatchTipAdminDto;
+}) => {
+  const { data } = await axiosInstance.patch(`/api/announcements/${announcement_id}`, body);
+
+  return data;
+};

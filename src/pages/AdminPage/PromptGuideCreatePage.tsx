@@ -11,6 +11,7 @@ import DefaultImg from '@assets/icon-example-image.png';
 import type { Post } from '@/types/PromptGuidePage/post';
 import usePatchTipAdmin from '@/hooks/mutations/AdminPage/usePatchTipAdmin';
 import usePostNoticeAdmin from '@/hooks/mutations/AdminPage/usePostNoticeAdmin';
+import usePatchNoticeAdmin from '@/hooks/mutations/AdminPage/usePatchNoticeAdmin';
 
 interface PromptGuideCreatePageProps {
   type: 'tip' | 'notice';
@@ -39,6 +40,7 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
   const { mutate: mutatePostTip } = usePostTipAdmin(); // AI 꿀팁 작성
   const { mutate: mutatePatchTip } = usePatchTipAdmin(); // AI 꿀팁 수정
   const { mutate: mutatePostNotice } = usePostNoticeAdmin(); // 공지사항 작성
+  const { mutate: mutatePatchNotice } = usePatchNoticeAdmin(); // 공지사항 수정
 
   /** 파일 선택 핸들러 */
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -95,21 +97,24 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
       formData.append('file', defaultFile);
     }
 
+    // AI 꿀팁
     if (type === 'tip') {
+      // AI 꿀팁 수정
       if (mode === 'edit') {
         mutatePatchTip(
           { tip_id: post.id, body: { title, content } },
           {
             onSuccess: () => {
-              alert('게시글이 수정되었습니다.');
+              alert('AI 꿀팁이 수정되었습니다.');
               navigate('/guide/tip');
             },
             onError: () => {
-              alert('게시글 수정에 실패했습니다.');
+              alert('AI 꿀팁 수정에 실패했습니다.');
             },
           },
         );
       } else {
+        // AI 꿀팁 등록
         mutatePostTip(formData, {
           onSuccess: () => {
             alert('게시글이 업로드되었습니다.');
@@ -120,10 +125,30 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
           },
         });
       }
-    } else if (type === 'notice') {
+    }
+    // 공지사항
+    else if (type === 'notice') {
+      // 공지사항 수정
       if (mode === 'edit') {
-        console.log();
+        mutatePatchNotice(
+          {
+            announcement_id: post.id,
+            body: {
+              title,
+              content,
+            },
+          },
+          {
+            onSuccess: () => {
+              alert('공지사항이 수정되었습니다.');
+            },
+            onError: () => {
+              alert('공지사항 수정에 실패했습니다.');
+            },
+          },
+        );
       } else {
+        // 공지사항 등록
         mutatePostNotice(formData, {
           onSuccess: () => {
             alert('게시글이 업로드되었습니다.');
