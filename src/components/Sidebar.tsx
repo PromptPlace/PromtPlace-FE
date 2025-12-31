@@ -149,7 +149,7 @@ const Sidebar = ({ sidebarVisible, setSidebarVisible, setSidebarOpen }: SidebarP
             </div>
 
             <div className="mb-[63px] w-full flex justify-center text-text-on-white font-normal text-sm leading-[23px] cursor-pointer">
-              <PrimaryButton buttonType="square" text="신고함" onClick={() => alert('신고함 연결 예정')} admin={true} />
+              <PrimaryButton buttonType="square" text="신고함" onClick={() => alert('신고함 연결 예정')} />
             </div>
           </>
         )}

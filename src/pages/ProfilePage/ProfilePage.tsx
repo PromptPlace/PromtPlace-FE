@@ -65,7 +65,6 @@ import TextModal from '@/components/Modal/TextModal';
 import useGetNofify from '@/hooks/queries/ProfilePage/useGetNofify';
 import useDeleteInquiries from '@/hooks/mutations/ProfilePage/useDeleteInquiries';
 import usePatchEditIntro from '@/hooks/mutations/ProfilePage/usePatchEditIntro';
-import AdminBanModal from './components/AdminBanModal';
 import AdminMessageModal from './components/AdminMessageModal';
 import DualModal from '@/components/Modal/DualModal';
 
@@ -618,29 +617,26 @@ const ProfilePage = () => {
 
               <div className="flex flex-col gap-[20px]">
                 <PrimaryButton
-                  buttonType="squareAdmin"
+                  buttonType="admin"
                   text="메시지 보내기"
                   onClick={() => {
                     setShowAdminMessageModal(true);
                   }}
-                  admin={true}
                 />
                 <div className="flex gap-[24px]">
                   <PrimaryButton
-                    buttonType="squareAdmin"
+                    buttonType="admin"
                     text="계정 정지"
                     onClick={() => {
                       setShowAdminBanModal(true);
                     }}
-                    admin={true}
                   />
                   <PrimaryButton
-                    buttonType="squareAdmin"
+                    buttonType="admin"
                     text="계정 삭제"
                     onClick={() => {
                       setShowAdminDeleteModal(true);
                     }}
-                    admin={true}
                   />
                 </div>
               </div>
@@ -652,7 +648,10 @@ const ProfilePage = () => {
                   setShowAdminMessageModal={setShowAdminMessageModal}
                 />
               )}
-              {showAdminBanModal && <AdminBanModal setShowAdminBanModal={setShowAdminBanModal} />}
+              {showAdminBanModal && (
+                // <AdminBanModal setShowAdminBanModal={setShowAdminBanModal} />
+                <></>
+              )}
               {showAdminDeleteModal && (
                 <DualModal
                   text="해당 계정을 삭제 조치 하시겠습니까?"
