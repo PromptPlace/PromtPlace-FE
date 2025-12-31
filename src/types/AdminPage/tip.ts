@@ -22,3 +22,8 @@ export type ResponsePatchTipAdminDto = CommonResponse<{
   tip_id: number;
   updated_at: Date;
 }>;
+
+// 공지사항 작성 (관리자)
+export type ResponseNoticeAdminDto = CommonResponse<{
+  announcement_id: number;
+}>;

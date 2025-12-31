@@ -1,4 +1,9 @@
-import type { RequestPatchTipAdminDto, ResponsePatchTipAdminDto, ResponseTipAdminDto } from '@/types/AdminPage/tip';
+import type {
+  RequestPatchTipAdminDto,
+  ResponseNoticeAdminDto,
+  ResponsePatchTipAdminDto,
+  ResponseTipAdminDto,
+} from '@/types/AdminPage/tip';
 import { axiosInstance } from '../axios';
 
 // 프롬프트 팁 작성 (관리자)
@@ -21,6 +26,13 @@ export const patchTipAdmin = async ({
   body: RequestPatchTipAdminDto;
 }): Promise<ResponsePatchTipAdminDto> => {
   const { data } = await axiosInstance.patch(`/api/tips/${tip_id}`, body);
+
+  return data;
+};
+
+// 공지사항 작성 (관리자)
+export const postNoticeAdmin = async (body: FormData): Promise<ResponseNoticeAdminDto> => {
+  const { data } = await axiosInstance.post('/api/announcements', body);
 
   return data;
 };

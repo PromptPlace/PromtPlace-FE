@@ -10,6 +10,7 @@ import CancleIcon from '@assets/icon-cancle-admin.svg?react';
 import DefaultImg from '@assets/icon-example-image.png';
 import type { Post } from '@/types/PromptGuidePage/post';
 import usePatchTipAdmin from '@/hooks/mutations/AdminPage/usePatchTipAdmin';
+import usePostNoticeAdmin from '@/hooks/mutations/AdminPage/usePostNoticeAdmin';
 
 interface PromptGuideCreatePageProps {
   type: 'tip' | 'notice';
@@ -26,7 +27,6 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
-
   const [files, setFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null); // 이미지 미리보기
@@ -36,8 +36,9 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
   const location = useLocation() as { state: LocationState };
   const { post, mode } = location.state || {};
 
-  const { mutate: mutatePostTip } = usePostTipAdmin(); // 작성
-  const { mutate: mutatePatchTip } = usePatchTipAdmin(); // 수정
+  const { mutate: mutatePostTip } = usePostTipAdmin(); // AI 꿀팁 작성
+  const { mutate: mutatePatchTip } = usePatchTipAdmin(); // AI 꿀팁 수정
+  const { mutate: mutatePostNotice } = usePostNoticeAdmin(); // 공지사항 작성
 
   /** 파일 선택 핸들러 */
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -79,7 +80,7 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
     return new File([blob], fileName, { type: blob.type });
   };
 
-  // AI 꿀팁 업로드
+  // AI 꿀팁 - 공지사항 업로드
   const handlePostTip = async () => {
     const formData = new FormData();
 
@@ -94,29 +95,44 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
       formData.append('file', defaultFile);
     }
 
-    if (mode === 'edit') {
-      mutatePatchTip(
-        { tip_id: post.id, body: { title, content } },
-        {
+    if (type === 'tip') {
+      if (mode === 'edit') {
+        mutatePatchTip(
+          { tip_id: post.id, body: { title, content } },
+          {
+            onSuccess: () => {
+              alert('게시글이 수정되었습니다.');
+              navigate('/guide/tip');
+            },
+            onError: () => {
+              alert('게시글 수정에 실패했습니다.');
+            },
+          },
+        );
+      } else {
+        mutatePostTip(formData, {
           onSuccess: () => {
-            alert('게시글이 수정되었습니다.');
+            alert('게시글이 업로드되었습니다.');
             navigate('/guide/tip');
           },
           onError: () => {
-            alert('게시글 수정에 실패했습니다.');
+            alert('AI 꿀팁 업로드에 실패했습니다');
           },
-        },
-      );
-    } else {
-      mutatePostTip(formData, {
-        onSuccess: () => {
-          alert('게시글이 업로드되었습니다.');
-          navigate('/guide/tip');
-        },
-        onError: () => {
-          alert('게시글 업로드에 실패했습니다');
-        },
-      });
+        });
+      }
+    } else if (type === 'notice') {
+      if (mode === 'edit') {
+        console.log();
+      } else {
+        mutatePostNotice(formData, {
+          onSuccess: () => {
+            alert('게시글이 업로드되었습니다.');
+          },
+          onError: () => {
+            alert('공지사항 업로드에 실패했습니다.');
+          },
+        });
+      }
     }
   };
 
