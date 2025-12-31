@@ -46,7 +46,7 @@ const NavbarNotificatioinModalCard = ({
           </div>
         </div>
 
-        {type === 'ADMIN' && (
+        {type === 'ADMIN_MESSAGE' && (
           <div className="flex justify-end">
             <PrimaryButton
               buttonType="square"

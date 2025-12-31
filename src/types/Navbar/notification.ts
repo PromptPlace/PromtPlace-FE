@@ -1,6 +1,8 @@
 import type { CommonResponse } from '../common';
 
 // 회원 알림 목록 조회
+type TType = 'FOLLOW' | 'NEW_PROMPT' | 'INQUIRY' | 'ANNOUNCEMENT' | 'REPORT' | 'ADMIN_MESSAGE';
+
 type Actor = {
   user_id: number;
   nickname: string;
@@ -10,7 +12,7 @@ type Actor = {
 type Notificaion = {
   notification_id: number;
   content: string;
-  type: string;
+  type: TType;
   created_at: string;
   link_url: string;
   actor: Actor | null;
