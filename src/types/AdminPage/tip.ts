@@ -11,3 +11,14 @@ export type RequestTipAdminDto = {
 export type ResponseTipAdminDto = CommonResponse<{
   tip_id: number;
 }>;
+
+// 프롬프트 팁 수정 (관리자)
+export type RequestPatchTipAdminDto = {
+  title: string;
+  content: string;
+};
+
+export type ResponsePatchTipAdminDto = CommonResponse<{
+  tip_id: number;
+  updated_at: Date;
+}>;

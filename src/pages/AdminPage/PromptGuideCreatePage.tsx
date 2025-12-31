@@ -9,6 +9,7 @@ import PrimaryButton from '@/components/Button/PrimaryButton';
 import CancleIcon from '@assets/icon-cancle-admin.svg?react';
 import DefaultImg from '@assets/icon-example-image.png';
 import type { Post } from '@/types/PromptGuidePage/post';
+import usePatchTipAdmin from '@/hooks/mutations/AdminPage/usePatchTipAdmin';
 
 interface PromptGuideCreatePageProps {
   type: 'tip' | 'notice';
@@ -33,11 +34,10 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
   const navigate = useNavigate();
 
   const location = useLocation() as { state: LocationState };
-  console.log(location);
-
   const { post, mode } = location.state || {};
 
-  const { mutate: mutatePostTip } = usePostTipAdmin();
+  const { mutate: mutatePostTip } = usePostTipAdmin(); // 작성
+  const { mutate: mutatePatchTip } = usePatchTipAdmin(); // 수정
 
   /** 파일 선택 핸들러 */
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -94,15 +94,30 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
       formData.append('file', defaultFile);
     }
 
-    mutatePostTip(formData, {
-      onSuccess: () => {
-        alert('게시글이 업로드되었습니다.');
-        navigate('/guide/tip');
-      },
-      onError: () => {
-        alert('게시글 업로드에 실패했습니다');
-      },
-    });
+    if (mode === 'edit') {
+      mutatePatchTip(
+        { tip_id: post.id, body: { title, content } },
+        {
+          onSuccess: () => {
+            alert('게시글이 수정되었습니다.');
+            navigate('/guide/tip');
+          },
+          onError: () => {
+            alert('게시글 수정에 실패했습니다.');
+          },
+        },
+      );
+    } else {
+      mutatePostTip(formData, {
+        onSuccess: () => {
+          alert('게시글이 업로드되었습니다.');
+          navigate('/guide/tip');
+        },
+        onError: () => {
+          alert('게시글 업로드에 실패했습니다');
+        },
+      });
+    }
   };
 
   useEffect(() => {
