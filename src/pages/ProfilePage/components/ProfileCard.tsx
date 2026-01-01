@@ -21,6 +21,11 @@ import ProfileButton from './ProfileButton';
 import ArrowIcon from '@assets/icon-arrow-right-profile.svg?react';
 import ProfileIcon from '@assets/header/icon-mypage.svg';
 import clsx from 'clsx';
+import PrimaryButton from '@/components/Button/PrimaryButton';
+import AdminMessageModal from './AdminMessageModal';
+import AdminBanModal from './AdminBanModal';
+import DualModal from '@/components/Modal/DualModal';
+import useDeleteAdmin from '@/hooks/mutations/ProfilePage/useDeleteAdmin';
 
 interface ProfileCardProps {
   mypage?: boolean;
@@ -34,6 +39,11 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
   const myId = user.user_id;
   const isMyProfile = (id ? Number(id) === myId : false) || mypage;
   const member_id = isMyProfile ? myId : Number(id);
+
+  const isAdmin = user.role === 'ADMIN';
+  const [showAdminBanModal, setShowAdminBanModal] = useState(false); // 관리자 - 계정 정지
+  const [showAdminDeleteModal, setShowAdminDeleteModal] = useState(false); // 관지라 - 계정 삭제
+  const [showAdminMessageModal, setShowAdminMessageModal] = useState(false); // 관리자 - 메시지 보내기
 
   // 팔로잉, 팔로워 모달
   const [showFollowing, setShowFollowing] = useState(false);
@@ -63,6 +73,9 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
 
   // 회원 SNS 목록
   const { data: snsData } = useGetSNS({ member_id });
+
+  // 계정 삭제 (관리자)
+  const { mutate: mutateDeleteAdmin } = useDeleteAdmin();
 
   // 팔로우 및 팔로잉
   const handleFollow = () => {
@@ -182,6 +195,11 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
             />
           </div>
 
+          {/* 관리자 */}
+          {isAdmin && (
+            <p className="custom-h5 text-alert max-phone:text-[14px] max-phone:ml-[40px]">{userData?.data.email}</p>
+          )}
+
           <div className="custom-body1 h-[102px] max-lg:h-[130px] max-phone:h-[208px] overflow-y-scroll max-phone:ml-[40px]">
             {userData?.data.intros ? (
               userData.data.intros
@@ -190,7 +208,7 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
             )}
           </div>
 
-          {!isMyProfile && (
+          {!isMyProfile && !isAdmin && (
             <div className="flex gap-[20px]">
               <ProfileButton text="문의하기" type="chat" onClick={() => setIsMessageModalShow((prev) => !prev)} />
               <ProfileButton
@@ -200,7 +218,75 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
               />
             </div>
           )}
+
+          {/* 관리자 */}
+          {isAdmin && (
+            <div className="flex gap-[20px] justify-end">
+              <PrimaryButton
+                buttonType="adminBG"
+                text="계정 정지"
+                onClick={() => {
+                  setShowAdminBanModal(true);
+                }}
+                borderRadius={8}
+                py={8}
+              />
+              <PrimaryButton
+                buttonType="adminBG"
+                text="계정 삭제"
+                onClick={() => {
+                  setShowAdminDeleteModal(true);
+                }}
+                borderRadius={8}
+                py={8}
+              />
+              <PrimaryButton
+                buttonType="adminBG"
+                text="메시지 보내기"
+                onClick={() => {
+                  setShowAdminMessageModal(true);
+                }}
+                borderRadius={8}
+                py={8}
+              />
+            </div>
+          )}
         </div>
+
+        {showAdminBanModal && (
+          <AdminBanModal
+            userName={userData?.data.nickname}
+            memberId={userData?.data.member_id}
+            setShowAdminBanModal={setShowAdminBanModal}
+          />
+        )}
+
+        {showAdminDeleteModal && (
+          <DualModal
+            text="해당 계정을 삭제 조치 하시겠습니까?"
+            onClickYes={() => {
+              const memberId = userData?.data.member_id;
+              if (memberId === undefined) return;
+
+              setShowAdminDeleteModal(false);
+              mutateDeleteAdmin(memberId);
+
+              alert('계정 삭제가 완료되었습니다.');
+            }}
+            onClickNo={() => {
+              setShowAdminDeleteModal(false);
+            }}
+          />
+        )}
+
+        {showAdminMessageModal && (
+          <AdminMessageModal
+            data={userData}
+            id={myId}
+            follower={followerData?.data.length}
+            setShowAdminMessageModal={setShowAdminMessageModal}
+          />
+        )}
       </div>
 
       {showFollower && (

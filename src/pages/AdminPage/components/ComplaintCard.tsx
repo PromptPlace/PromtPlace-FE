@@ -17,18 +17,27 @@ interface ComplaintCardProps {
 
 const ComplaintCard = ({ complaint }: ComplaintCardProps) => {
   const [date, timePart] = complaint.created_at.split('T');
-  const displayTime = timePart ? timePart.substring(0, 5) : '';
+  // - 부분을 ". " 으로 변경
+  const codate = date.replace(/-/g, '. ');
+  const Time = timePart ? timePart.substring(0, 5) : '';
+  // codate와 time 합치기
+  const displayTime = `${codate}. ${Time}`;
   return (
-    <div className="flex  w-full py-[20px] bg-white border-b-[1px] border-white-stroke text-[20px] font-medium text-text-on-white">
-      <div className="flex justify-center w-[72px]">
+    <div className="flex flex-col w-full py-[20px] px-[24px] bg-white text-[20px] font-medium text-black">
+      <div className="custom-body3 text-gray-400 mb-[8px]">{displayTime}</div>
+      <div className="flex gap-[12px] mb-[12px] items-center">
         {complaint.is_read === 'true' ? <img src={unread} alt="unread" className="w-[20px] h-[20px]" /> : null}
+        <Link to={`/admin/complaint/${complaint.report_id}`} className="flex items-center w-[678px] min-w-0">
+          <div className=" block truncate custom-button1">{complaint.prompt_title}</div>
+        </Link>
       </div>
-      <Link to={`/admin/complaint/${complaint.report_id}`} className="flex items-center w-[678px] min-w-0">
-        <div className=" block truncate">{complaint.prompt_title}</div>
-      </Link>
-      <div className="w-[223px] flex justify-center items-center">{complaint.reporter_nickname}</div>
-      <div className="w-[263px] flex justify-center items-center">
-        {date} {displayTime}
+      <div className="flex gap-[8px] mb-[4px]">
+        <div className="flex items-center custom-button2">신고자 닉네임: </div>
+        <div className="flex items-center custom-body3">{complaint.reporter_nickname}</div>
+      </div>
+      <div className="flex gap-[8px]">
+        <div className="flex items-center custom-button2">사유: </div>
+        <div className="flex items-center custom-body3">저작권 및 지적재산권 침해</div>
       </div>
     </div>
   );

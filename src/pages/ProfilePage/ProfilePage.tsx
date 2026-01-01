@@ -1,10 +1,3 @@
-/**
- * TODO:
- * - userId 가져와서 본인의 프로필 홈인지 타인의 프로필 홈인지 구별하는 로직 필요
- *
- * @author 김진효
- * **/
-
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import clsx from 'clsx';
@@ -72,6 +65,8 @@ import TextModal from '@/components/Modal/TextModal';
 import useGetNofify from '@/hooks/queries/ProfilePage/useGetNofify';
 import useDeleteInquiries from '@/hooks/mutations/ProfilePage/useDeleteInquiries';
 import usePatchEditIntro from '@/hooks/mutations/ProfilePage/usePatchEditIntro';
+import AdminMessageModal from './components/AdminMessageModal';
+import DualModal from '@/components/Modal/DualModal';
 
 type Inquiry = {
   inquiry_id: number;
@@ -121,6 +116,11 @@ const ProfilePage = () => {
   const [showMsgModal, setShowMsgModal] = useState(false);
 
   const [type, setType] = useState<RequestGetInquiriesDto>({ type: 'buyer' });
+
+  const [showAdminBanModal, setShowAdminBanModal] = useState(false); // 관리자 - 계정 정지
+  const [showAdminMessageModal, setShowAdminMessageModal] = useState(false); // 관리자 - 메시지 보내기
+  const [showAdminDeleteModal, setShowAdminDeleteModal] = useState(false); // 관지라 - 계정 삭제
+  const [showAdminDeleteConfirmModal, setShowAdminDeleteConfirmModal] = useState(false);
 
   // 회원 정보 불러오기
   const { data } = useGetMember({ member_id });
@@ -394,6 +394,9 @@ const ProfilePage = () => {
                 profileEdit && 'gap-[15px]',
                 'flex flex-col gap-[5px] max-lg:gap-[4px] text-text-on-white shrink-0 max-lg:items-center',
               )}>
+              {user.role === 'ADMIN' && (
+                <p className="text-alert text-[20px] font-medium leading-[25px]">{data?.data.email}</p>
+              )}
               {!profileEdit && (
                 <div className="flex gap-[4px] max-lg:justify-center">
                   <p className="text-[32px] font-bold leading-[40px] max-lg:text-[16px] max-lg:font-medium max-lg:leading-[20px] ">
@@ -489,7 +492,7 @@ const ProfilePage = () => {
             )}
           </div>
 
-          {!isMyProfile && (
+          {!isMyProfile && user.role !== 'ADMIN' && (
             <>
               <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
                 <p className="text-primary-hover text-[18px] font-normal leading-[23px] max-lg:text-[10px] max-lg:leading-[13px]">
@@ -528,7 +531,7 @@ const ProfilePage = () => {
             </>
           )}
 
-          {isMyProfile && (
+          {isMyProfile && user.role === 'USER' && (
             <>
               <div className="flex gap-[28px] max-lg:gap-[16px]">
                 <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
@@ -566,6 +569,108 @@ const ProfilePage = () => {
                   list={normalizedFollowingList}
                   setShow={setShowFollowing}
                   member_id={member_id}
+                />
+              )}
+            </>
+          )}
+
+          {user.role === 'ADMIN' && (
+            <>
+              <div className="flex gap-[28px] max-lg:gap-[16px]">
+                <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
+                  <p className="text-primary-hover text-[18px] font-normal leading-[23px] max-lg:text-[10px] max-lg:leading-[13px]">
+                    팔로워
+                  </p>
+                  <div
+                    onClick={() => setShowFollower(true)}
+                    className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center max-lg:py-[2px] max-lg:px-[6px] max-lg:text-[12px] max-lg:leading-[15px]">
+                    {followerData?.data.length}
+                  </div>
+                </div>
+                <div className="flex flex-col gap-[5px] items-center max-lg:flex-row">
+                  <p className="text-primary-hover text-[18px] font-normal leading-[23px] max-lg:text-[10px] max-lg:leading-[13px]">
+                    팔로잉
+                  </p>
+                  <div
+                    onClick={() => setShowFollowing(true)}
+                    className="cursor-pointer px-[10px] py-[5px] border border-primary-hover bg-primary-hover rounded-[50px] text-white text-[20px] font-medium leading-[25px] text-center  max-lg:py-[2px] max-lg:px-[6px] max-lg:text-[12px] max-lg:leading-[15px]">
+                    {followingData?.data.length}
+                  </div>
+                </div>
+              </div>
+              {showFollower && (
+                <FollowCard
+                  title={`${data?.data.nickname}님의 팔로워 목록`}
+                  list={normalizedFollowerList}
+                  setShow={setShowFollower}
+                  member_id={member_id}
+                />
+              )}
+              {showFollowing && (
+                <FollowCard
+                  title={`${data?.data.nickname}님의 팔로잉 목록`}
+                  list={normalizedFollowingList}
+                  setShow={setShowFollowing}
+                  member_id={member_id}
+                />
+              )}
+
+              <div className="flex flex-col gap-[20px]">
+                <PrimaryButton
+                  buttonType="admin"
+                  text="메시지 보내기"
+                  onClick={() => {
+                    setShowAdminMessageModal(true);
+                  }}
+                />
+                <div className="flex gap-[24px]">
+                  <PrimaryButton
+                    buttonType="admin"
+                    text="계정 정지"
+                    onClick={() => {
+                      setShowAdminBanModal(true);
+                    }}
+                  />
+                  <PrimaryButton
+                    buttonType="admin"
+                    text="계정 삭제"
+                    onClick={() => {
+                      setShowAdminDeleteModal(true);
+                    }}
+                  />
+                </div>
+              </div>
+
+              {showAdminMessageModal && (
+                <AdminMessageModal
+                  data={data}
+                  follower={followerData?.data.length}
+                  setShowAdminMessageModal={setShowAdminMessageModal}
+                />
+              )}
+              {showAdminBanModal && (
+                // <AdminBanModal setShowAdminBanModal={setShowAdminBanModal} />
+                <></>
+              )}
+              {showAdminDeleteModal && (
+                <DualModal
+                  text="해당 계정을 삭제 조치 하시겠습니까?"
+                  onClickYes={() => {
+                    setShowAdminDeleteModal(false);
+                    setShowAdminDeleteConfirmModal(true);
+                  }}
+                  onClickNo={() => {
+                    setShowAdminDeleteModal(false);
+                  }}
+                />
+              )}
+              {showAdminDeleteConfirmModal && (
+                <TextModal
+                  text="계정 삭제가 완료되었습니다."
+                  onClick={() => {
+                    setShowAdminDeleteConfirmModal(false);
+                  }}
+                  size="lg"
                 />
               )}
             </>
@@ -635,18 +740,20 @@ const ProfilePage = () => {
         <div className="flex flex-col items-center justify-center max-lg:pl-[20px] max-lg:pr-[20px] mt-[40px] max-lg:mt-[42px]">
           <div className="w-full">
             <div className="max-lg:hidden flex w-full justify-between border-b border-text-on-background">
-              {menuList.map((menu) => (
-                <div
-                  key={menu.id}
-                  onClick={() => setMenuId(menu.id)}
-                  className={clsx(
-                    'max-w-[309px] w-full px-[10px] py-[20px] cursor-pointer text-[24px] font-bold leading-[30px] text-center',
-                    menuId === menu.id && 'border-b-[3px] border-b-primary text-primary-hover ',
-                    menuId !== menu.id && 'text-text-on-background',
-                  )}>
-                  {menu.label}
-                </div>
-              ))}
+              {menuList
+                .filter((menu) => user.role !== 'ADMIN' || menu.id !== 2)
+                .map((menu) => (
+                  <div
+                    key={menu.id}
+                    onClick={() => setMenuId(menu.id)}
+                    className={clsx(
+                      'max-w-[309px] w-full px-[10px] py-[20px] cursor-pointer text-[24px] font-bold leading-[30px] text-center',
+                      menuId === menu.id && 'border-b-[3px] border-b-primary text-primary-hover ',
+                      menuId !== menu.id && 'text-text-on-background',
+                    )}>
+                    {menu.label}
+                  </div>
+                ))}
             </div>
 
             {menuId === 0 && (

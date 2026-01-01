@@ -356,7 +356,7 @@ const PromptAuthorAndReview = ({
                   onClick={isEditing ? handleUpdateReview : handleCreateReview}
                   disabled={isPending || !rating}
                   className={`w-full h-[49px] rounded-[12px] border text-[16px] font-medium transition-colors duration-200 ${
-                    isPending || !rating || !reviewText.trim()
+                    isPending || !rating
                       ? 'border-gray-300 text-gray-400 bg-gray-100 cursor-not-allowed'
                       : 'border-[#2563EB] text-[#2563EB] hover:bg-blue-50'
                   }`}>
