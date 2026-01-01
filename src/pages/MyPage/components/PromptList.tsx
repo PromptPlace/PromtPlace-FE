@@ -75,7 +75,7 @@ const PromptList = ({ setActiveTab }: PromptListProps) => {
           )}
         </div>
         {DownloadedPromptsNum > 0 && (
-          <div className=" bg-white rounded-[12px]">
+          <div>
             {downloadedData?.data
               .slice(0, 6)
               .filter(Boolean)
