@@ -38,15 +38,17 @@ const PromptList = ({ setActiveTab }: PromptListProps) => {
             </button>
           )}
         </div>
-        <div className=" bg-white p-[24px] rounded-[12px]">
-          {authoredData?.pages
-            .flatMap((page) => page.data)
-            .filter(Boolean)
-            .slice(0, 6)
-            .map((prompt) => (
-              <AuthoredPromptCard key={prompt.prompt_id} prompt={prompt} />
-            ))}
-        </div>
+        {AuthoredPromptsNum > 0 && (
+          <div className=" bg-white p-[24px] rounded-[12px]">
+            {authoredData?.pages
+              .flatMap((page) => page.data)
+              .filter(Boolean)
+              .slice(0, 6)
+              .map((prompt) => (
+                <AuthoredPromptCard key={prompt.prompt_id} prompt={prompt} />
+              ))}
+          </div>
+        )}
         {AuthoredPromptsNum === 0 && (
           <div className="self-center mt-[92px] max-phone:mt-[84px]">
             <NoAuthoredPrompts />
