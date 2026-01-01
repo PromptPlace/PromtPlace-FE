@@ -32,7 +32,7 @@ const dummyData = [
     prompt_id: 12,
     prompt_title: '프롬프트 제목2',
     reporter_id: 13,
-    reporter_nickname: '신고자 닉네임2',
+    reporter_nickname: '닉네임2',
     created_at: '2025-07-28T12:11:02.000Z',
     is_read: 'true',
   },
