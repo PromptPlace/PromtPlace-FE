@@ -26,6 +26,7 @@ import AdminMessageModal from './AdminMessageModal';
 import AdminBanModal from './AdminBanModal';
 import DualModal from '@/components/Modal/DualModal';
 import useDeleteAdmin from '@/hooks/mutations/ProfilePage/useDeleteAdmin';
+import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 
 interface ProfileCardProps {
   mypage?: boolean;
@@ -65,7 +66,7 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
   const { mutate: mutateFollow } = usePatchFollow({ member_id: member_id });
   const { mutate: mutateUnFollow } = useDeleteFollow({ member_id: member_id });
 
-  const { handleShowLoginModal } = useShowLoginModal();
+  const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
   const [isMessageModalShow, setIsMessageModalShow] = useState(false); // 문의하기 모달
 
   // 작성한 프롬프트 목록
@@ -217,6 +218,10 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
                 onClick={handleFollow}
               />
             </div>
+          )}
+
+          {loginModalShow && (
+            <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
           )}
 
           {/* 관리자 */}
