@@ -432,6 +432,7 @@ const PromptCreateImgPage = () => {
                       placeholder={`예) SNS 광고에 활용 가능한 카피 문구 생성 프롬프트입니다!`}
                       value={discriptionText}
                       onChange={(e) => setDescriptionText(e.target.value)}
+                      maxLength={100}
                     />
                   </div>
                 </div>
