@@ -10,6 +10,7 @@ import TextModal from '@/components/Modal/TextModal';
 
 import useCreatePromptText from '@/hooks/mutations/PromptCreatePage/useCreateText';
 import { useNavigate } from 'react-router-dom';
+import clsx from 'clsx';
 
 const PromptCreateTextPage = () => {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ const PromptCreateTextPage = () => {
   //isPending : 현재 로딩 중인지 알려주는 boolean 값
 
   // 유효성 검증 함수
-  const [validationError, setValidationError] = useState<string>('');
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const validateForm = (): boolean => {
     // 필수 필드 검증 (모델 버전 제외)
@@ -61,7 +62,7 @@ const PromptCreateTextPage = () => {
     }
 
     // 모든 검증 통과
-    setValidationError('');
+    setValidationError(null);
     return true;
   };
 
@@ -139,7 +140,7 @@ const PromptCreateTextPage = () => {
             </div>
 
             {/**메인 작성 파트 */}
-            <div className="lg:h-[1056px] lg:mt-[20px] lg:mb-[40px] flex lg:justify-between lg:gap-[20px] max-lg:mt-[20px] max-lg:flex-col-reverse">
+            <div className="lg:mt-[20px] mb-[40px] flex lg:justify-between lg:gap-[20px] max-lg:mt-[20px] max-lg:flex-col-reverse">
               {/**좌측 본문 */}
               <div className="lg:max-w-[450px] w-full bg-white rounded-[16px] p-[24px] max-lg:mt-[20px]">
                 <textarea
@@ -326,6 +327,7 @@ const PromptCreateTextPage = () => {
                       placeholder={`예) SNS 광고에 활용 가능한 카피 문구 생성 프롬프트입니다!`}
                       value={discriptionText}
                       onChange={(e) => setDescriptionText(e.target.value)}
+                      maxLength={100}
                     />
                   </div>
                 </div>
@@ -351,12 +353,10 @@ const PromptCreateTextPage = () => {
               </div>
             </div>
 
-            <div className="h-[20px] max-lg:h-[30px] max-lg:pt-[15px]">
-              {validationError && <p className="text-[16px] font-medium text-alert">{validationError}</p>}
-            </div>
+            {validationError && <p className="custom-h5 text-alert max-phone:text-[14px]">{validationError}</p>}
 
             {/**업로드 버튼 */}
-            <div className="w-full mt-[40px] max-lg:mt-[30px]">
+            <div className={clsx('w-full', validationError ? 'mt-[20px]' : 'mt-[82px]')}>
               <button
                 className="w-full h-[65px] flex justify-center items-center gap-[16px] bg-primary rounded-[12px] py-[20px]"
                 onClick={handleUploadClick}

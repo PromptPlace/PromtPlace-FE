@@ -27,13 +27,13 @@ const NavbarNotificatioinModalCard = ({
 
   return (
     <>
-      <div className="pt-[8px] pr-[24px] pb-[20px]">
+      <div className="pt-[8px] pr-[24px] pb-[20px] max-phone:pr-0">
         <div
           onClick={() => {
             setIsNotificationModalShow((prev) => !prev);
             navigate(link);
           }}
-          className="flex gap-[24px]">
+          className="flex gap-[24px] max-phone:gap-[16px]">
           {img ? (
             <img src={img} className="w-[48px] h-[48px] rounded-full object-cover" />
           ) : (

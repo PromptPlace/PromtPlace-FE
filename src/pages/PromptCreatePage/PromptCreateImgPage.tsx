@@ -12,6 +12,7 @@ import TagButton from '@/components/Button/TagButton';
 import TextModal from '@/components/Modal/TextModal';
 import useCreatePromptWithImage from '@/hooks/mutations/PromptCreatePage/useCreateImg';
 import { useNavigate } from 'react-router-dom';
+import clsx from 'clsx';
 
 const PromptCreateImgPage = () => {
   const navigate = useNavigate();
@@ -68,7 +69,7 @@ const PromptCreateImgPage = () => {
   //isPending : 현재 로딩 중인지 알려주는 boolean 값
 
   // 유효성 검증
-  const [validationError, setValidationError] = useState<string>('');
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   // 유효성 검증 함수
   const validateForm = (): boolean => {
@@ -103,7 +104,7 @@ const PromptCreateImgPage = () => {
     }
 
     // 모든 검증 통과
-    setValidationError('');
+    setValidationError(null);
     return true;
   };
 
@@ -432,6 +433,7 @@ const PromptCreateImgPage = () => {
                       placeholder={`예) SNS 광고에 활용 가능한 카피 문구 생성 프롬프트입니다!`}
                       value={discriptionText}
                       onChange={(e) => setDescriptionText(e.target.value)}
+                      maxLength={100}
                     />
                   </div>
                 </div>
@@ -456,12 +458,11 @@ const PromptCreateImgPage = () => {
                 </div>
               </div>
             </div>
-            <div className="h-[20px]">
-              {validationError && <p className="text-[16px] font-medium text-alert">{validationError}</p>}
-            </div>
+
+            {validationError && <p className="custom-h5 text-alert max-phone:text-[14px]">{validationError}</p>}
 
             {/**업로드 버튼 */}
-            <div className="w-full mt-[20px] max-lg:mt-[30px]">
+            <div className={clsx('w-full', validationError ? 'mt-[20px]' : 'mt-[82px]')}>
               <button
                 className="w-full h-[65px] flex justify-center items-center gap-[16px] bg-primary rounded-[12px] py-[20px]"
                 onClick={handleUploadClick}

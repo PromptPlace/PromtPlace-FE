@@ -270,12 +270,12 @@ const FilterModal: React.FC<FilterModalProps> = ({
           {/* 액션 버튼 */}
           <div className="h-[77px] flex gap-[20px] pt-[30px] border-t border-gray-200">
             <button
-              className="flex-1 py-[10px]  rounded-[16px] text-[16px] font-medium bg-white text-gray-700 border border-gray-400  transition-all"
+              className="flex-1 py-[10px]  rounded-[12px] text-[16px] font-medium bg-white text-gray-700 border border-gray-400  transition-all"
               onClick={handleReset}>
               선택 초기화
             </button>
             <button
-              className={`flex-1 py-[10px]  rounded-[16px] text-[16px] font-medium transition-all ${
+              className={`flex-1 py-[10px]  rounded-[16px] text-[12px] font-medium transition-all ${
                 isConfirmDisabled() ? 'bg-primary text-white opacity-40 cursor-not-allowed' : 'bg-primary text-white '
               }`}
               onClick={handleConfirm}
