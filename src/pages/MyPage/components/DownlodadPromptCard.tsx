@@ -41,7 +41,7 @@ const DownloadedPromptCard = ({ prompt }: DownloadedPromptCardProps) => {
   const imageUrl = prompt.imageUrls && prompt.imageUrls.length > 0 ? prompt.imageUrls[0] : defaultlogo;
   const price = prompt.price === 0 ? '무료' : `${prompt.price}원`;
   return (
-    <div className="w-full bg-white p-[24px]">
+    <div className="w-full bg-white rounded-[12px] p-[24px]">
       {' '}
       <div className="w-full bg-white pr-[24px] mb-[20px]">
         <div className="flex">

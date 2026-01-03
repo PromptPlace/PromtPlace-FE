@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import GoogleIcon from '@/assets/icon-google-logo.svg';
 import KakaoIcon from '@/assets/icon-kakao-logo.svg';
 import NaverIcon from '@/assets/icon-naver-logo.svg';
+import DefaultIcon from '@/assets/icon-default-logo.svg';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import type { ResponseMemberDto } from '@/types/ProfilePage/profile';
 import ProfileIcon from '@assets/header/mypage.svg?react';
@@ -63,6 +64,7 @@ const ProfileView = ({ userData, setActiveTab }: ProfileViewProps) => {
       case 'NAVER':
         return <img src={NaverIcon} alt="Naver Icon" className="inline-block w-[24px] h-[24px]" />;
       default:
+        return <img src={DefaultIcon} alt="Default Icon" className="inline-block w-[32px] h-[32px]" />;
         return null;
     }
   };
@@ -145,7 +147,7 @@ const ProfileView = ({ userData, setActiveTab }: ProfileViewProps) => {
           <section className="flex-flex-col gap-[20px] bg-white  mt-[20px] p-[24px] rounded-[12px]">
             <div>
               <label className="custom-h5 block mb-[12px]">가입한 계정</label>
-              <div className="flex gap-[12px] custom-body2 text-text-on-white px-[16px] py-[12px]">
+              <div className="flex items-center gap-[12px] custom-body2 text-text-on-white px-[16px] py-[12px]">
                 {getProviderIcon(socialType as 'GOOGLE' | 'KAKAO' | 'NAVER')}
                 {userData?.data.email}
               </div>
@@ -153,7 +155,7 @@ const ProfileView = ({ userData, setActiveTab }: ProfileViewProps) => {
             <div>
               <label className="custom-h5 block mb-[12px]">계정 바꾸기</label>
               <div className="flex justify-between custom-body2 text-text-on-white px-[16px] py-[12px]">
-                <div className="flex flex-1 gap-[12px] break-words min-w-0">
+                <div className="flex items-center flex-1 gap-[12px] break-words min-w-0">
                   {getProviderIcon(socialType as 'GOOGLE' | 'KAKAO' | 'NAVER')}
                   <span className="break-all">{userData?.data.email}</span>
                 </div>

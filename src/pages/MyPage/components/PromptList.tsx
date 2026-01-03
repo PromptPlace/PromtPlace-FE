@@ -5,6 +5,7 @@ import LikedPrompts from './LikedPrompts';
 import useGetMyDownloadedPrompts from '@/hooks/queries/MyPage/useGetMyDownloadedPrompts.tsx';
 import { NoAuthoredPrompts, NoDownloadedPrompts, NoLikedPrompts } from './NoPrompts';
 import { useGetLikedPrompts } from '@/hooks/queries/MyPage/useGetPrompts';
+import arrow from '@/assets/icon-arrow-right-prompt.svg';
 interface PromptListProps {
   setActiveTab: (tab: 'prompt' | 'dashboard' | 'profile' | 'profileEdit' | 'authored' | 'downloaded') => void;
 }
@@ -33,20 +34,22 @@ const PromptList = ({ setActiveTab }: PromptListProps) => {
             </div>
           </div>
           {AuthoredPromptsNum > 6 && (
-            <button onClick={() => setActiveTab('authored')} className="custom-button2 text-gray-500">
-              더보기 &gt;
+            <button onClick={() => setActiveTab('authored')} className="flex items-center custom-button2 text-gray-500">
+              더보기 <img src={arrow} className="w-[24px] h-[20px]" alt="arrow" />
             </button>
           )}
         </div>
-        <div className=" bg-white p-[24px] rounded-[12px]">
-          {authoredData?.pages
-            .flatMap((page) => page.data)
-            .filter(Boolean)
-            .slice(0, 6)
-            .map((prompt) => (
-              <AuthoredPromptCard key={prompt.prompt_id} prompt={prompt} />
-            ))}
-        </div>
+        {AuthoredPromptsNum > 0 && (
+          <div className=" bg-white p-[24px] rounded-[12px]">
+            {authoredData?.pages
+              .flatMap((page) => page.data)
+              .filter(Boolean)
+              .slice(0, 6)
+              .map((prompt) => (
+                <AuthoredPromptCard key={prompt.prompt_id} prompt={prompt} />
+              ))}
+          </div>
+        )}
         {AuthoredPromptsNum === 0 && (
           <div className="self-center mt-[92px] max-phone:mt-[84px]">
             <NoAuthoredPrompts />
@@ -64,19 +67,23 @@ const PromptList = ({ setActiveTab }: PromptListProps) => {
             </div>
           </div>
           {DownloadedPromptsNum > 6 && (
-            <button onClick={() => setActiveTab('downloaded')} className="custom-button2 text-gray-500">
-              더보기 &gt;
+            <button
+              onClick={() => setActiveTab('downloaded')}
+              className="flex items-center custom-button2 text-gray-500">
+              더보기 <img src={arrow} className="w-[24px] h-[20px]" alt="arrow" />
             </button>
           )}
         </div>
-        <div className=" bg-white rounded-[12px]">
-          {downloadedData?.data
-            .slice(0, 6)
-            .filter(Boolean)
-            .map((prompt) => (
-              <DownloadedPromptCard key={prompt.prompt_id} prompt={prompt} />
-            ))}
-        </div>
+        {DownloadedPromptsNum > 0 && (
+          <div>
+            {downloadedData?.data
+              .slice(0, 6)
+              .filter(Boolean)
+              .map((prompt) => (
+                <DownloadedPromptCard key={prompt.prompt_id} prompt={prompt} />
+              ))}
+          </div>
+        )}
         {DownloadedPromptsNum === 0 && (
           <div className="self-center mt-[92px] max-phone:mt-[84px]">
             <NoDownloadedPrompts />

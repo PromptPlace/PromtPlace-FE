@@ -30,13 +30,15 @@ const AuthoredPromptPage = () => {
       <div className="flex">
         <label className="custom-h2 text-black">작성한 프롬프트</label>
         <div className="ml-[20px] rounded-[50px] border-[0.8px] px-[10px] py-[5px] bg-white text-gray-500 custom-h5">
-          {data?.pages.length || 0}
+          {data?.pages[0].total_prompts}
         </div>
       </div>
-      <div className="flex flex-col mt-[20px] rounded-[12px]">
-        {data?.pages.flatMap(page => page.data).map((prompt) => (
-          <AuthoredPromptCard key={prompt.prompt_id} prompt={prompt} />
-        ))}
+      <div className="flex flex-col mt-[20px] rounded-[12px] bg-white p-[24px]">
+        {data?.pages
+          .flatMap((page) => page.data)
+          .map((prompt) => (
+            <AuthoredPromptCard key={prompt.prompt_id} prompt={prompt} />
+          ))}
 
         <div ref={ref}></div>
       </div>
