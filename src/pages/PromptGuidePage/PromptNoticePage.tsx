@@ -151,7 +151,9 @@ const PromptNoticePage = () => {
                     }}>
                     {/* 내용 */}
                     <div className="w-full flex flex-col justify-between gap-[8px]">
-                      <p className="custom-body3 text-gray400 max-phone:text-[10px]">{formatDate(notice.created_at)}</p>
+                      <p className="custom-body3 text-gray400 max-phone:text-[10px]">
+                        {formatDate(notice.created_at)}.
+                      </p>
 
                       <div className="flex justify-between items-center">
                         <div className="flex items-center">

@@ -172,7 +172,9 @@ const PromptTipPage = () => {
                     }}>
                     <div className="w-full flex justify-between items-start mb-[8px] lg:hidden">
                       <p className="text-[12px] font-light text-text-on-white">프롬프트플레이스{/**임시 */}</p>
-                      <p className="text-[12px] text-gray-400 ml-[12px] flex-shrink-0">{formatDate(tip.created_at)}</p>
+                      <p className="custom-body3 max-phone:text-[10px] text-gray-400 ml-[12px] flex-shrink-0">
+                        {formatDate(tip.created_at)}.
+                      </p>
                     </div>
 
                     {/* 이미지 */}
@@ -189,8 +191,8 @@ const PromptTipPage = () => {
                       <div>
                         <div className="w-full flex justify-between items-start mb-[8px] max-lg:hidden">
                           <p className="text-[12px] font-light text-text-on-white">프롬프트플레이스{/**임시 */}</p>
-                          <p className="text-[12px] text-gray-400 ml-[12px] flex-shrink-0">
-                            {formatDate(tip.created_at)}
+                          <p className="custom-body3 max-phone:text-[10px] text-gray-400 ml-[12px] flex-shrink-0">
+                            {formatDate(tip.created_at)}.
                           </p>
                         </div>
 

@@ -82,7 +82,7 @@ const TagButton = ({ hasDelete = false, hasActive = false, text, onClick }: TagB
           ? 'bg-secondary!'
           : hasDelete
             ? 'bg-sub2! text-white!'
-            : 'active:bg-secondary-pressed max-lg:border-none',
+            : 'active:bg-secondary-pressed border-none',
         hasActive
           ? 'cursor-pointer bg-white border border-primary border-[0.8px]'
           : 'cursor-pointer bg-secondary-pressed',

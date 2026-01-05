@@ -85,6 +85,15 @@
   }
 }
 
+@layer base {
+  input:focus, 
+  button:focus, 
+  textarea:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}
+
 @layer components {
   .custom-h1 {
     font-size: 32px;
