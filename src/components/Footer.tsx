@@ -33,7 +33,11 @@ const Footer = () => {
     },
     {
       title: '주소',
-      content: '서울특별시 관악구 인헌동 12가길 7',
+      content: '서울특별시 관악구 인헌12가길 7, 402호(봉천동, 청운빌라)',
+    },
+    {
+      title: '전화번호',
+      content: ' 070-8983-9738',
     },
     {
       title: '이메일',
@@ -76,17 +80,30 @@ const Footer = () => {
         </div>
       </nav>
 
-      <div className="grid grid-cols-3 max-lg:grid-cols-2 max-sm:grid-cols-1 grid-flow-end gap-x-[20px] gap-y-[8px] w-max">
-        {CONTENTS.map((content) => (
-          <div
-            className={clsx(
-              'custom-body2 max-phone:text-[12px]',
-              content.title === '대표자' && 'col-span-2 max-lg:col-span-1',
-            )}
-            key={content.title}>
-            <span className="text-gray700">{content.title}</span> :{' '}
-            <span className="text-gray500">{content.content}</span>
-          </div>
+      <div className="flex flex-wrap gap-x-[20px] gap-y-[8px] max-lg:flex-col">
+        {CONTENTS.map((content, idx, arr) => (
+          <>
+            <div
+              className={clsx(
+                'custom-body2 max-phone:text-[12px]',
+                content.title === '대표자' && 'max-lg:hidden',
+                idx === 0 && 'max-lg:flex gap-[20px]',
+              )}
+              key={content.title}>
+              <div>
+                <span className="text-gray700">{content.title}</span> :{' '}
+                <span className="text-gray500">{content.content}</span>
+              </div>
+
+              {idx === 0 && (
+                <div className="lg:hidden">
+                  <span className="text-gray700">대표자</span> : <span className="text-gray500">안송연</span>
+                </div>
+              )}
+            </div>
+
+            {idx % 2 === 1 && idx !== arr.length - 1 && <div className="w-full max-lg:hidden"></div>}
+          </>
         ))}
       </div>
 
