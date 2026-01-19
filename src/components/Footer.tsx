@@ -96,7 +96,7 @@ const Footer = () => {
               </div>
 
               {idx === 0 && (
-                <div>
+                <div className="lg:hidden">
                   <span className="text-gray700">대표자</span> : <span className="text-gray500">안송연</span>
                 </div>
               )}
