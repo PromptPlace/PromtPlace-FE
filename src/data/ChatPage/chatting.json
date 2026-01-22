@@ -1,0 +1,63 @@
+[
+  {
+    "message": "채팅방 상세를 성공적으로 조회했습니다.",
+    "data": {
+      "room": {
+        "room_id": 12,
+        "created_at": "2025-08-21T12:26:42.522Z",
+        "is_pinned": true
+      },
+      "my": {
+        "user_id": 45,
+        "left_at": "2026-01-20T10:00:00.000Z"
+      },
+      "partner": {
+        "user_id": 67,
+        "nickname": "프롬프트 플레이스",
+        "profile_image_url": null,
+        "role": "ADMIN"
+      },
+      "block_status": {
+        "i_blocked_partner": true,
+        "partner_blocked_me": false
+      },
+      "messages": [
+        {
+          "message_id": 56,
+          "sender_id": 45,
+          "content": "혹시 이 사진이랑 파일도 프롬프트에 사용할 수 있나요?",
+          "sent_at": "2025-08-21T12:26:42.522Z",
+          "attachments": [
+            {
+              "attachment_id": 23,
+              "url": "https://...png",
+              "type": "IMAGE",
+              "original_name": "picture.png",
+              "size": 27187,
+              "created_at": "2025-08-21T12:26:42.522Z"
+            },
+            {
+              "attachment_id": 24,
+              "url": "https://...pdf",
+              "type": "FILE",
+              "original_name": "apple.pdf",
+              "size": 234,
+              "created_at": "2025-08-21T12:26:42.522Z"
+            }
+          ]
+        },
+        {
+          "message_id": 57,
+          "sender_id": 67,
+          "content": "네! 같이 사용 가능해요.",
+          "sent_at": "2025-08-21T12:26:42.522Z",
+          "attachments": []
+        }
+      ],
+      "page": {
+        "has_more": false,
+        "total_count": 2
+      }
+    }
+  }
+]
