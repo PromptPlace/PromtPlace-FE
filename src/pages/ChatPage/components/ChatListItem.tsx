@@ -1,3 +1,4 @@
+import formatDate from '@/utils/formatDate';
 import Default from '@assets/icon-profile-image-default.svg';
 
 interface ChatListItemProps {
@@ -28,7 +29,7 @@ const ChatListItem = ({ partner, last_message, unread_count }: ChatListItemProps
       <div className="flex-1 min-w-0 flex flex-col gap-[8px]">
         <div className="flex justify-between">
           <h2 className="custom-button1 text-text-on-white">{partner.nickname}</h2>
-          <p className="custom-body3 text-gray700">{'10월'}</p>
+          <p className="custom-body3 text-gray700">{formatDate(last_message.sent_at)}</p>
         </div>
 
         <div className="flex items-center justify-between">
