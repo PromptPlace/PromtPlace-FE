@@ -4,13 +4,17 @@ import SearchIcon from '@assets/icon-search.svg?react';
 import clsx from 'clsx';
 import { useState } from 'react';
 
+interface ChatListProps {
+  setSelectedRoomId: (roomId: number) => void;
+}
+
 const BUTTONS = [
   { id: 1, label: '전체' },
   { id: 2, label: '안읽은 메시지' },
   { id: 3, label: '고정된 메시지' },
 ];
 
-const ChatList = () => {
+const ChatList = ({ setSelectedRoomId }: ChatListProps) => {
   const [search, setSearch] = useState('');
   const [activeButtonId, setActiveButtonId] = useState<number>(1);
 
@@ -64,6 +68,7 @@ const ChatList = () => {
               last_message={list.last_message}
               unread_count={list.unread_count}
               is_pinned={list.is_pinned}
+              onClick={() => setSelectedRoomId(list.room_id)}
             />
           )),
         )}

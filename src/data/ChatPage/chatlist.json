@@ -7,7 +7,7 @@
           "room_id": 12,
           "partner": {
             "user_id": 67,
-            "nickname": "달팽이",
+            "nickname": "프롬프트 플레이스",
             "profile_image_url": null
           },
           "last_message": {
@@ -19,7 +19,7 @@
           "is_pinned": true
         },
         {
-          "room_id": 15,
+          "room_id": 12,
           "partner": {
             "user_id": 72,
             "nickname": "개구리",
