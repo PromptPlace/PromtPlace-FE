@@ -1,0 +1,48 @@
+[
+  {
+    "message": "채팅방 목록을 성공적으로 조회했습니다.",
+    "data": {
+      "rooms": [
+        {
+          "room_id": 12,
+          "partner": {
+            "user_id": 67,
+            "nickname": "달팽이",
+            "profile_image_url": null
+          },
+          "last_message": {
+            "content": "이용 가이드라인 안내 드릴게요. 이용 가이드라인 안내 드릴게요.",
+            "sent_at": "2025-10-18T10:15:00Z",
+            "has_attachments": false
+          },
+          "unread_count": 0,
+          "is_pinned": true
+        },
+        {
+          "room_id": 15,
+          "partner": {
+            "user_id": 72,
+            "nickname": "개구리",
+            "profile_image_url": null
+          },
+          "last_message": {
+            "content": "가격도 저렴하고 퀄리티 좋아요. 잘 쓰고 있습니다.",
+            "sent_at": "2025-10-18T09:40:00Z",
+            "has_attachments": true,
+            "attachment_summary": {
+              "image_count": 2,
+              "file_count": 0
+            }
+          },
+          "unread_count": 123,
+          "is_pinned": false
+        }
+      ],
+      "page": {
+        "has_more": false,
+        "total_count": 3
+      }
+    },
+    "statusCode": 200
+  }
+]
