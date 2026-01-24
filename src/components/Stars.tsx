@@ -1,6 +1,6 @@
 import StarFill from '@assets/icon-star-fill.svg';
 import StarHalf from '@assets/icon-star-half.svg';
-import StarEmpty from '@assets/icon-star-outline.svg';
+import StarEmpty from '@assets/icon-star-outline_new.svg';
 
 /**
  * 별점을 표시하는 컴포넌트입니다.
@@ -47,7 +47,7 @@ const Stars = ({ star = 0 }: RatingProps) => {
         src={StarEmpty}
         key={'empty' + i}
         alt="star empty"
-        className="w-[16px] h-[16px] max-lg:w-[12px] max-lg:h-[12px]"
+        className="w-[16px] h-[16px] max-lg:w-[14px] max-lg:h-[14px]"
       />,
     );
   }
