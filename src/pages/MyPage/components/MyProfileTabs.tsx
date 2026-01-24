@@ -7,6 +7,19 @@ const TABS: { id: TabType; title: string }[] = [
 type TabType = 'prompt' | 'dashboard' | 'profile';
 
 const MyProfileTabs = ({ activeTab, setActiveTab }: { activeTab: string; setActiveTab: (tab: TabType) => void }) => {
+  const isTabActive = (tabId: string) => {
+    if (tabId === 'prompt') {
+      return ['prompt', 'authored', 'downloaded'].includes(activeTab);
+    }
+    if (tabId === 'dashboard') {
+      return activeTab === 'dashboard';
+    }
+    if (tabId === 'profile') {
+      return ['profile', 'profileEdit'].includes(activeTab);
+    }
+    return false;
+  };
+
   return (
     <div className="flex justify-center w-full w-full my-[56px] max-phone:my-[40px]">
       {TABS.map((tab) => (
@@ -14,7 +27,7 @@ const MyProfileTabs = ({ activeTab, setActiveTab }: { activeTab: string; setActi
           key={tab.id}
           onClick={() => setActiveTab(tab.id)}
           className={`flex-1 text-center py-[20px] max-phone:py-[16px] custom-h4 ${
-            activeTab === tab.id ? 'border-b-[3px] border-primary text-primary' : 'text-text-on-background'
+            isTabActive(tab.id) ? 'border-b-[3px] border-primary text-primary' : 'text-text-on-background'
           }`}>
           {tab.title}
         </button>
