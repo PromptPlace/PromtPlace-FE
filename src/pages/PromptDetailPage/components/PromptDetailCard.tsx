@@ -344,7 +344,7 @@ const PromptDetailCard = ({
 
             <button
               type="button"
-              className="shrink-0 self-end whitespace-nowrap text-[14px] text-gray-400 underline flex items-center gap-1"
+              className="shrink-0 self-end whitespace-nowrap text-[12px] text-gray-400 underline flex items-center gap-1"
               onClick={() => setIsReportModalOpen(true)}>
               <img src={reportIcon} alt="신고" className="w-[24px] h-[24px]" />
               해당 프롬프트 신고하기
@@ -380,7 +380,7 @@ const PromptDetailCard = ({
 
               <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
                 {/* 왼쪽: 타이틀 */}
-                <h1 className="mt-2 font-medium text-[32px] text-[#030712] leading-tight break-words whitespace-normal min-w-0">
+                <h1 className="mt-2 font-medium text-[24px] md:text-[32px] text-[#030712] leading-tight break-words whitespace-normal min-w-0">
                   {title}
                 </h1>
 
@@ -493,14 +493,14 @@ const PromptDetailCard = ({
                   </div>
                 </>
               ) : (
-                <div className="mt-[28px] w-full max-w-[485px] rounded-[12px] rounded-tl-none bg-[#F0F7FF] p-4">
-                  <p className="text-[14px] font-light leading-[160%] tracking-[0.02em] whitespace-pre-line">
+                <div className="mt-[28px] w-full max-w-[485px] rounded-[12px] rounded-tl-none bg-[#F0F7FF] p-4 overflow-hidden">
+                  <p className="text-[14px] font-light leading-[160%] tracking-[0.02em] whitespace-pre-wrap break-words [word-break:break-word]">
                     {isLoading ? '불러오는 중…' : promptResult || ''}
                   </p>
                 </div>
               )}
               {hasImages && (
-                <div className="mt-4 text-[15px] leading-[160%] tracking-[0.02em] whitespace-pre-line">
+                <div className="mt-4 text-[15px] leading-[160%] tracking-[0.02em] whitespace-pre-wrap break-words [word-break:break-word]">
                   {isLoading ? '불러오는 중…' : promptResult || ''}
                 </div>
               )}

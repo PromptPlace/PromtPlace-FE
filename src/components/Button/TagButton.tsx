@@ -55,7 +55,15 @@ const TagButton = ({ hasDelete = false, hasActive = false, text, onClick }: TagB
     '이메일•세일즈 카피',
   ];
   const BookList = ['학습•과제', '학습•과제 요약', '문제 풀이', '개념 설명', '외국어 학습'];
-  const GameList = ['생활•엔터테인먼트', '여행•일정', '요리•레시피', '게임•시나리오', '퀴즈•심리테스트', '상담'];
+  const GameList = [
+    '생활•엔터테인먼트',
+    '여행•일정',
+    '요리•레시피',
+    '게임•시나리오',
+    '퀴즈•심리테스트',
+    '취미•심리테스트',
+    '상담',
+  ];
   const AudioList = ['음악•오디오', '배경음악', '사운드 이펙트', '작곡•편곡 보조', '나레이션•보이스'];
   const IdeaList = ['아이디어', '아이데이션', '브레인스토밍', '비즈니스 아이디어'];
 
@@ -78,14 +86,8 @@ const TagButton = ({ hasDelete = false, hasActive = false, text, onClick }: TagB
     <div
       className={clsx(
         'custom-button2 py-[6px] px-[12px] flex justify-center items-center gap-[8px] rounded-[50px] whitespace-nowrap text-primary shrink-0 transition-all max-phone:text-[10px]',
-        icon && hasDelete
-          ? 'bg-secondary!'
-          : hasDelete
-            ? 'bg-sub2! text-white!'
-            : 'active:bg-secondary-pressed border-none',
-        hasActive
-          ? 'cursor-pointer bg-white border border-primary border-[0.8px]'
-          : 'cursor-pointer bg-secondary-pressed',
+        icon && hasDelete ? 'bg-secondary!' : hasDelete ? 'bg-sub2! text-white!' : 'active:bg-secondary border-none',
+        hasActive ? 'cursor-pointer bg-white border border-primary border-[0.8px]' : 'cursor-pointer bg-secondary',
       )}>
       {icon && <img src={icon} alt="이미지" />}
       {text}
