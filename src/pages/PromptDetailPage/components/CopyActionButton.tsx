@@ -12,7 +12,6 @@ export default function CopyActionButton({ onClick, className }: CopyButtonProps
       type="button"
       onClick={onClick}
       className={clsx(
-        //adius 8, gap 8
         'flex items-center justify-center gap-[8px] rounded-[8px]',
         'bg-primary text-white shadow-button hover:shadow-button-hover transition-all duration-300 ease-in-out',
         'hover:bg-primary-hover active:bg-primary-pressed',
