@@ -6,7 +6,7 @@ import KakaoPayIcon from '../assets/kakaopay.svg';
 import TossPayIcon from '../assets/tosspay.svg';
 import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY } from '@/hooks/queries/MyPage/useGetPrompts';
-import { getPromptDownload } from '@/apis/PromptDetailPage/promptDownload';
+import CopyActionButton from '../components/CopyActionButton';
 
 interface DownloadModalProps {
   isOpen: boolean;
@@ -20,9 +20,20 @@ interface DownloadModalProps {
   isPaid: boolean;
 
   onPaid: () => void;
+  variant?: 'modal' | 'fullscreen';
 }
 
-const DownloadModal = ({ isOpen, onClose, title, content, price, isFree, isPaid, onPaid }: DownloadModalProps) => {
+const DownloadModal = ({
+  isOpen,
+  onClose,
+  title,
+  content,
+  price,
+  isFree,
+  isPaid,
+  onPaid,
+  variant = 'modal',
+}: DownloadModalProps) => {
   const isDesktop = useMemo(() => typeof window !== 'undefined' && window.innerWidth >= 1024, []);
   const qc = useQueryClient();
 
@@ -31,9 +42,8 @@ const DownloadModal = ({ isOpen, onClose, title, content, price, isFree, isPaid,
   if (!isOpen) return null;
 
   const handleCopy = async () => {
-    const textToCopy = content; // 서버에서 받아온 최신 content가 부모에서 내려옴
+    const textToCopy = content;
 
-    // 1) 복사
     try {
       await navigator.clipboard.writeText(textToCopy);
     } catch {
@@ -45,7 +55,6 @@ const DownloadModal = ({ isOpen, onClose, title, content, price, isFree, isPaid,
       document.body.removeChild(ta);
     }
 
-    // 2) 목록 갱신 (무효화 + 강제 재조회)
     try {
       await qc.invalidateQueries({ queryKey: QUERY_KEY.downloadedPrompts });
       await qc.refetchQueries({ queryKey: QUERY_KEY.downloadedPrompts });
@@ -53,7 +62,6 @@ const DownloadModal = ({ isOpen, onClose, title, content, price, isFree, isPaid,
       console.error('다운로드 목록 갱신 실패:', e);
     }
 
-    // 3) UX
     if (isDesktop || isFree || isPaid) {
       alert('복사되었습니다!');
       onClose();
@@ -61,10 +69,13 @@ const DownloadModal = ({ isOpen, onClose, title, content, price, isFree, isPaid,
     }
     setStep('copied');
   };
+
   const handlePay = () => {
     setStep('paid');
     onPaid();
   };
+
+  const isMobileFullscreen = !isDesktop && variant === 'fullscreen';
 
   const hideTitle = step === 'paid' && !isDesktop;
 
@@ -72,46 +83,67 @@ const DownloadModal = ({ isOpen, onClose, title, content, price, isFree, isPaid,
     <div className="bg-overlay fixed inset-0 z-50 flex items-center justify-center bg-opacity-40">
       <div
         className={`
-     relative bg-white rounded-[16px] shadow-lg overflow-y-auto text-[#121212]
-    w-full max-w-[1056px] h-auto max-h-[90vh]
-    px-[64px] py-[48px]
-    max-lg:w-[90vw] max-lg:max-w-[480px] max-lg:px-[24px] max-lg:py-[28px]
-
-          ${step === 'paid' ? 'max-lg:h-[100px]' : 'max-lg:h-[334px]'}
+          relative bg-white shadow-lg overflow-y-auto text-[#121212]
+          ${isMobileFullscreen ? 'w-full h-full rounded-none' : 'w-full max-w-[1056px] h-auto max-h-[90vh] rounded-[16px]'}
+          px-[32px] py-[32px]
+          max-lg:px-[32px] max-lg:py-[32px]
+          max-phone:px-[20px] max-phone:pt-[40px] max-phone:pb-[32px]
+          ${!isMobileFullscreen ? 'max-lg:w-[90vw] max-lg:max-w-[480px]' : ''}
+          ${step === 'paid' && !isDesktop ? 'max-lg:h-[100px]' : ''}
+          ${!isDesktop && step !== 'paid' && !isMobileFullscreen ? 'max-lg:h-[334px]' : ''}
         `}>
-        {/* 닫기 */}
-        <button onClick={onClose} className="lg:block hidden absolute top-[20px] right-[20px] w-[24px] h-[24px]">
-          <img src={CloseIcon} alt="닫기" className="w-full h-full object-contain" />
-        </button>
+        {/* 닫기 - 우측 상단 고정 */}
         <button
           onClick={onClose}
-          className="lg:hidden absolute top-[20px] right-[20px] max-lg:w-[10px] max-lg:h-[10px] max-lg:top-[12px] max-lg:right-[12px]">
+          className="absolute top-[20px] right-[20px] w-[24px] h-[24px] lg:block hidden"
+          aria-label="닫기"
+          type="button">
           <img src={CloseIcon} alt="닫기" className="w-full h-full object-contain" />
         </button>
 
-        {!hideTitle || window.innerWidth >= 1024 ? (
+        <button
+          onClick={onClose}
+          className="absolute top-[12px] right-[12px] w-[16px] h-[16px] lg:hidden"
+          aria-label="닫기"
+          type="button">
+          <img src={CloseIcon} alt="닫기" className="w-full h-full object-contain" />
+        </button>
+
+        {/* 타이틀 */}
+        {!hideTitle || isDesktop ? (
           <>
-            <h2 className="text-[32px] font-bold mb-[32px] max-lg:text-[16px] max-lg:mb-[12px]">{title}</h2>
-            <div className="h-[1px] bg-[#CCCCCC] w-full mb-[30px] max-lg:mb-[16px]" />
+            <h2 className="custom-h4 text-[14px] text-text-on-white mb-[16px] max-lg:text-[16px] max-lg:mb-[12px]">
+              {title}
+            </h2>
+            <div className="h-[1px] bg-[#CCCCCC] w-full mb-[16px] max-lg:mb-[16px]" />
           </>
         ) : null}
+
+        {/* (추가) 저작권 관련 멘트: 칩인데 10px + gray-700 */}
+        <p className="custom-chip text-[10px] text-gray700 mt-[16px]">
+          ※ 본 프롬프트의 상업적 이용 및 타사이트 무단 재배포를 금지합니다.
+        </p>
 
         {/* 데스크탑 본문 */}
         <div className="block max-lg:hidden">
           <div className="flex justify-end ml-[790px]">
-            <IconButton buttonType="squareMini" style="fill" imgType="copy" text="복사하기" onClick={handleCopy} />
+            <CopyActionButton onClick={handleCopy} />
           </div>
-          <div className="text-[20px] pt-[40px] font-medium whitespace-pre-wrap leading-relaxed">{content}</div>
+          <div className="custom-body2 text-[10px] text-gray700 pt-[16px] whitespace-pre-wrap leading-relaxed">
+            {content}
+          </div>
         </div>
 
         {/* 모바일 */}
         <div className="hidden max-lg:block text-[14px] text-[#121212]">
           {step === 'init' && (
             <>
-              <div className="flex justify-end">
-                <IconButton buttonType="squareMini" style="fill" imgType="copy" text="복사하기" onClick={handleCopy} />
+              <div className="flex justify-end mb-[16px]">
+                <CopyActionButton onClick={handleCopy} />
               </div>
-              <div className="text-[10px] whitespace-pre-wrap leading-relaxed mb-[16px]">{content}</div>
+              <div className="custom-body2 text-[10px] text-gray700 whitespace-pre-wrap leading-relaxed mb-[16px]">
+                {content}
+              </div>
             </>
           )}
 

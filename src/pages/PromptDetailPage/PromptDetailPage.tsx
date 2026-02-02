@@ -19,6 +19,7 @@ import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
 import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
 import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
 import useGetAllPromptReviews from '@/hooks/queries/PromptDetailPage/useGetAllPromptReviews';
+import useMediaQuery from '@/hooks/queries/PromptDetailPage/useMediaQuery';
 
 import type { Review } from './components/ReviewList';
 
@@ -29,6 +30,7 @@ const PromptDetailPage = () => {
     const n = Number(id);
     return Number.isFinite(n) && n > 0 ? n : NaN;
   }, [id]);
+  const isMobile = useMediaQuery('(max-width: 1024px)');
 
   const qc = useQueryClient();
   const { data: prompt, isLoading } = useGetPromptDetail(promptId);
@@ -198,6 +200,7 @@ const PromptDetailPage = () => {
           isFree={prompt.is_free}
           isPaid={isPaid}
           onPaid={() => setIsPaid(true)}
+          variant={isMobile ? 'fullscreen' : 'modal'}
         />
       )}
       {loginModalShow && (
