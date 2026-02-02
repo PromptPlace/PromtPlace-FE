@@ -7,6 +7,7 @@ import TossPayIcon from '../assets/tosspay.svg';
 import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY } from '@/hooks/queries/MyPage/useGetPrompts';
 import { getPromptDownload } from '@/apis/PromptDetailPage/promptDownload';
+import CopyActionButton from '../components/CopyActionButton';
 
 interface DownloadModalProps {
   isOpen: boolean;
@@ -99,7 +100,7 @@ const DownloadModal = ({ isOpen, onClose, title, content, price, isFree, isPaid,
         {/* 데스크탑 본문 */}
         <div className="block max-lg:hidden">
           <div className="flex justify-end ml-[790px]">
-            <IconButton buttonType="squareMini" style="fill" imgType="copy" text="복사하기" onClick={handleCopy} />
+            <CopyActionButton onClick={handleCopy} />
           </div>
           <div className="text-[20px] pt-[40px] font-medium whitespace-pre-wrap leading-relaxed">{content}</div>
         </div>
@@ -109,7 +110,7 @@ const DownloadModal = ({ isOpen, onClose, title, content, price, isFree, isPaid,
           {step === 'init' && (
             <>
               <div className="flex justify-end">
-                <IconButton buttonType="squareMini" style="fill" imgType="copy" text="복사하기" onClick={handleCopy} />
+                <CopyActionButton onClick={handleCopy} />
               </div>
               <div className="text-[10px] whitespace-pre-wrap leading-relaxed mb-[16px]">{content}</div>
             </>
