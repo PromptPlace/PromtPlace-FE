@@ -69,7 +69,8 @@ const PromptAuthorAndReview = ({
   const { id } = useParams<{ id: string }>();
   const promptId = Number(id);
   const { user: me } = useAuth();
-  const myId = me.user_id;
+  const myId = me?.user_id ?? null;
+  const isLoggedIn = myId !== null;
   const member_id = user?.user_id;
 
   const queryClient = useQueryClient();
@@ -85,7 +86,9 @@ const PromptAuthorAndReview = ({
   const [isFollow, setIsFollow] = useState<boolean>(false);
   const [isToggling, setIsToggling] = useState(false);
 
-  const { data: myFollowingData, isLoading: isFollowingLoading } = useGetFollowing({ member_id: myId });
+  const { data: myFollowingData, isLoading: isFollowingLoading } = useGetFollowing({
+    member_id: myId ?? 0,
+  });
   const { mutate: mutateFollow } = usePatchFollow({ member_id });
   const { mutate: mutateUnFollow } = useDeleteFollow({ member_id });
   const { handleShowLoginModal } = useShowLoginModal();
@@ -170,19 +173,26 @@ const PromptAuthorAndReview = ({
   };
 
   const handleFollow = () => {
-    if (!ready || isToggling) return;
+    if (!member_id || isToggling) return;
     if (isMyself) return;
 
-    handleShowLoginModal(() => {
-      setIsToggling(true);
-      try {
-        if (isFollow) mutateUnFollow({ member_id });
-        else mutateFollow({ member_id });
-        setIsFollow((prev) => !prev);
-      } finally {
-        setIsToggling(false);
-      }
-    });
+    if (!isLoggedIn) {
+      alert('로그인이 필요합니다.');
+
+      handleShowLoginModal(() => {});
+      return;
+    }
+
+    if (!ready) return;
+
+    setIsToggling(true);
+    try {
+      if (isFollow) mutateUnFollow({ member_id });
+      else mutateFollow({ member_id });
+      setIsFollow((prev) => !prev);
+    } finally {
+      setIsToggling(false);
+    }
   };
 
   const getSNSIcons = () => {

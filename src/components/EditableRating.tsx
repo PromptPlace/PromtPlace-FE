@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import StarFill from '@assets/icon-star-fill.svg';
 import StarHalf from '@assets/icon-star-half.svg';
-import StarEmpty from '@assets/icon-star-outline.svg';
+import StarEmpty from '@assets/icon-star-outline_40px.svg';
 
 /**
  * 사용자가 클릭으로 평점을 선택할 수 있는 별점 컴포넌트입니다.

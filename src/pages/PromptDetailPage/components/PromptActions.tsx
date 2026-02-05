@@ -29,6 +29,7 @@ import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 import PaymentModal from './PaymentModal';
 import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
+import useMediaQuery from '@/hooks/queries/PromptDetailPage/useMediaQuery';
 
 import type { PromptDetailDto } from '@/types/PromptDetailPage/PromptDetailDto';
 import type { PromptReviewDto } from '@/types/PromptDetailPage/PromptReviewDto';
@@ -246,6 +247,8 @@ const PromptActions = ({
 
   const [showCreateModal, setShowCreateModal] = useState(false);
 
+  const isMobile = useMediaQuery('(max-width: 1024px)');
+
   useEffect(() => {
     const shouldOpen = searchParams.get('open_review') === 'true';
     if (!shouldOpen) return;
@@ -387,6 +390,7 @@ const PromptActions = ({
                 isFree={isFree}
                 isPaid={isPaid}
                 onPaid={() => setIsPaid(true)}
+                variant={isMobile ? 'fullscreen' : 'modal'}
               />
             )}
           </>
