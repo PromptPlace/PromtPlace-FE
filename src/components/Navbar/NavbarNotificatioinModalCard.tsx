@@ -65,7 +65,7 @@ const NavbarNotificatioinModalCard = ({
         )}
       </div>
 
-      {showAdminModal && <AdminModal setShowAdminModal={setShowAdminModal} />}
+      {showAdminModal && <AdminModal setShowAdminModal={setShowAdminModal} content={content} />}
     </>
   );
 };
