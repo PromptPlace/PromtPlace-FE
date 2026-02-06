@@ -105,6 +105,7 @@ const AdminMessageModal = ({ data, id, follower, setShowAdminMessageModal }: Adm
                 onClick={() => {
                   handlePostMsg({ receiver_id, sender_id: id, title, body: content });
                   alert('메시지 전송이 완료되었습니다.');
+                  setShowAdminMessageModal(false);
                 }}
               />
             </div>
