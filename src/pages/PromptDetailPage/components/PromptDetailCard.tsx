@@ -14,6 +14,7 @@ import useMyLikedPrompts from '@/hooks/queries/PromptDetailPage/useMyLikedPrompt
 import useAdminDeletePrompt from '@/hooks/mutations/PromptDetailPage/Admin/useAdminDeletePrompt';
 import { useAuth } from '@/context/AuthContext';
 import DualModal from '@components/Modal/DualModal';
+import TextModal from '@components/Modal/TextModal';
 
 import updateIcon from '../assets/updatebutton.png';
 import deleteIcon from '../assets/deletebutton.png';
@@ -281,6 +282,29 @@ const PromptDetailCard = ({
     }
   };
 
+  const isPaidPrompt = !isFree; // 유료 프롬프트 여부
+  const hasPurchased = isPaidPrompt && isPaid; // 구매 완료 여부(유료일 때만 의미 있음)
+
+  const actionLabel = hasPurchased || isFree ? '프롬프트 다운로드' : '프롬프트 구매하기';
+
+  const guideText =
+    hasPurchased || isFree
+      ? '※ 다운로드를 하고 실제 프롬프트를 사용해보세요!'
+      : '※ 결제 후 ‘프롬프트 다운로드’를 누르면 확인하실 수 있습니다. 열람 후에는 환불이 불가합니다.';
+
+  const [isPaymentBlockedOpen, setIsPaymentBlockedOpen] = useState(false);
+
+  const handlePrimaryAction = () => {
+    // 유료 + 구매 전 → 결제 모달(현재는 결제 제한 안내)
+    if (isPaidPrompt && !hasPurchased) {
+      setIsPaymentBlockedOpen(true);
+      return;
+    }
+
+    // 무료 or 구매 완료 → 다운로드 동작
+    onDownload();
+  };
+
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
 
@@ -344,7 +368,7 @@ const PromptDetailCard = ({
 
             <button
               type="button"
-              className="shrink-0 self-end whitespace-nowrap text-[14px] text-gray-400 underline flex items-center gap-1"
+              className="shrink-0 self-end whitespace-nowrap text-[12px] text-gray-400 underline flex items-center gap-1"
               onClick={() => setIsReportModalOpen(true)}>
               <img src={reportIcon} alt="신고" className="w-[24px] h-[24px]" />
               해당 프롬프트 신고하기
@@ -380,7 +404,7 @@ const PromptDetailCard = ({
 
               <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
                 {/* 왼쪽: 타이틀 */}
-                <h1 className="mt-2 font-medium text-[32px] text-[#030712] leading-tight break-words whitespace-normal min-w-0">
+                <h1 className="mt-2 font-medium text-[24px] md:text-[32px] text-[#030712] leading-tight break-words whitespace-normal min-w-0">
                   {title}
                 </h1>
 
@@ -493,14 +517,14 @@ const PromptDetailCard = ({
                   </div>
                 </>
               ) : (
-                <div className="mt-[28px] w-full max-w-[485px] rounded-[12px] rounded-tl-none bg-[#F0F7FF] p-4">
-                  <p className="text-[14px] font-light leading-[160%] tracking-[0.02em] whitespace-pre-line">
+                <div className="mt-[28px] w-full max-w-[485px] rounded-[12px] rounded-tl-none bg-[#F0F7FF] p-4 overflow-hidden">
+                  <p className="text-[14px] font-light leading-[160%] tracking-[0.02em] whitespace-pre-wrap break-words [word-break:break-word]">
                     {isLoading ? '불러오는 중…' : promptResult || ''}
                   </p>
                 </div>
               )}
               {hasImages && (
-                <div className="mt-4 text-[15px] leading-[160%] tracking-[0.02em] whitespace-pre-line">
+                <div className="mt-4 text-[15px] leading-[160%] tracking-[0.02em] whitespace-pre-wrap break-words [word-break:break-word]">
                   {isLoading ? '불러오는 중…' : promptResult || ''}
                 </div>
               )}
@@ -529,18 +553,17 @@ const PromptDetailCard = ({
             <div className="flex flex-col items-end text-right w-full lg:w-auto">
               <p className="font-medium text-[24px]">{isFree ? '무료' : `${price.toLocaleString()}원`}</p>
               {isPaid && !isFree && <span className="text-sm text-green-600">구매 완료</span>}
-              <span className="text-[12px] font-light text-[#374151] mb-[8px]">
-                ※ 다운로드를 하고 프롬프트를 사용해보세요!
-              </span>
+              <span className="text-[12px] font-light text-[#374151] mb-[8px]">{guideText}</span>
 
               <div className="flex items-center gap-5 mt-2 lg:mt-0">
                 <IconButton
                   buttonType="squareBig"
                   style="fill"
                   imgType="download"
-                  text="프롬프트 다운로드"
-                  onClick={onDownload}
+                  text={actionLabel}
+                  onClick={handlePrimaryAction}
                 />
+
                 <button
                   className="w-[49px] h-[49px] rounded-[12px] bg-[#FFFEFB] border-[1px] border-[#D1D5DB] flex items-center justify-center"
                   onClick={handleToggleLike}
@@ -573,6 +596,14 @@ const PromptDetailCard = ({
             });
           }}
           onClickNo={() => setIsDeleteConfirmOpen(false)}
+        />
+      )}
+
+      {isPaymentBlockedOpen && (
+        <TextModal
+          text="PG사 심사 중으로 결제가 제한됩니다."
+          onClick={() => setIsPaymentBlockedOpen(false)}
+          size="lg"
         />
       )}
     </>

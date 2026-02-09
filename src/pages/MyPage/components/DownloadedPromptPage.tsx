@@ -8,7 +8,7 @@ const DownloadedPromptPage = () => {
   return (
      <div className="mt-[64px] w-full">
       <div className="flex">
-        <label className="custom-h2 text-black">작성한 프롬프트</label>
+        <label className="custom-h2 text-black">다운받은 프롬프트</label>
         <div className="ml-[20px] rounded-[50px] border-[0.8px] px-[10px] py-[5px] bg-white text-gray-500 custom-h5">
           {data?.data.length || 0}
         </div>

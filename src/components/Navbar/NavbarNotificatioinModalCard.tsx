@@ -1,8 +1,10 @@
-import DefaultImg from '@assets/logo/app/app-logo-default.svg?react';
 import { useNavigate } from 'react-router-dom';
-import PrimaryButton from '../Button/PrimaryButton';
 import { useState } from 'react';
+
 import AdminModal from '../Modal/AdminModal';
+import PrimaryButton from '../Button/PrimaryButton';
+import DefaultImg from '@assets/logo/app/app-logo-default.svg?react';
+import AdminProfile from '@assets/logo/app/app-logo-default.svg';
 
 interface NavbarNotificatioinModalCardProps {
   img: string | null;
@@ -35,7 +37,10 @@ const NavbarNotificatioinModalCard = ({
           }}
           className="flex gap-[24px] max-phone:gap-[16px]">
           {img ? (
-            <img src={img} className="w-[48px] h-[48px] rounded-full object-cover" />
+            <img
+              src={type === 'ADMIN_MESSAGE' ? AdminProfile : img}
+              className="w-[48px] h-[48px] rounded-full object-cover"
+            />
           ) : (
             <DefaultImg className="w-[48px] h-[48px]" />
           )}
@@ -65,7 +70,7 @@ const NavbarNotificatioinModalCard = ({
         )}
       </div>
 
-      {showAdminModal && <AdminModal setShowAdminModal={setShowAdminModal} />}
+      {showAdminModal && <AdminModal setShowAdminModal={setShowAdminModal} content={content} />}
     </>
   );
 };
