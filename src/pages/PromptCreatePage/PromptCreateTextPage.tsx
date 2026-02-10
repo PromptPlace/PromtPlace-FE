@@ -12,6 +12,7 @@ import useCreatePromptText from '@/hooks/mutations/PromptCreatePage/useCreateTex
 import { useNavigate, useParams } from 'react-router-dom';
 import clsx from 'clsx';
 import useGetPromptDetail from '@/hooks/queries/PromptDetailPage/useGetPromptDetail';
+import useEditPrompt from '@/hooks/mutations/PromptCreatePage/useEditPrompt';
 
 interface PromptCreateTextPageProps {
   mode?: 'create' | 'edit';
@@ -50,10 +51,10 @@ const PromptCreateTextPage = ({ mode = 'create', promptId }: PromptCreateTextPag
 
   //API 연동 관련
   const { mutateAsync: createPrompt } = useCreatePromptText();
-
   const { data: detailData } = useGetPromptDetail(actualPromptId!, {
     enabled: mode === 'edit' && !!actualPromptId,
   });
+  const { mutate: editPrompt } = useEditPrompt(actualPromptId!);
 
   // 유효성 검증 함수
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -89,37 +90,64 @@ const PromptCreateTextPage = ({ mode = 'create', promptId }: PromptCreateTextPag
       return;
     }
     try {
-      // 프롬프트 업로드
-      const res = await createPrompt({
-        title: title,
-        prompt: content,
-        prompt_result: previewText,
-        has_image: false,
-        description: discriptionText,
-        usage_guide: howToUseText,
-        is_free: true,
-        price: 0,
-        model_version: modelver || '',
-        categories: categories,
-        models: selectedModels,
-      });
+      if (mode === 'create') {
+        // 프롬프트 업로드
+        const res = await createPrompt({
+          title: title,
+          prompt: content,
+          prompt_result: previewText,
+          has_image: false,
+          description: discriptionText,
+          usage_guide: howToUseText,
+          is_free: true,
+          price: 0,
+          model_version: modelver || '',
+          categories: categories,
+          models: selectedModels,
+        });
 
-      console.log('전송 성공!', res);
-      const prompt_ID = res.data.prompt_id;
+        console.log('전송 성공!', res);
+        const prompt_ID = res.data.prompt_id;
 
-      // 성공
-      if (prompt_ID) {
-        setIsUploaded(true);
-        setModalText('업로드가 완료되었어요!');
-        setAlertModal(true);
+        // 성공
+        if (prompt_ID) {
+          setIsUploaded(true);
+          setModalText('업로드가 완료되었어요!');
+          setAlertModal(true);
 
-        setTimeout(() => {
-          navigate(`/prompt/${prompt_ID}`);
-        }, 1000);
+          setTimeout(() => {
+            navigate(`/prompt/${prompt_ID}`);
+          }, 1000);
+        } else {
+          // 실패 처리
+          setModalText('업로드가 실패했습니다');
+          setAlertModal(true);
+        }
       } else {
-        // 실패 처리
-        setModalText('업로드가 실패했습니다');
-        setAlertModal(true);
+        // 프롬프트 수정
+        editPrompt(
+          {
+            promptId: actualPromptId!,
+            body: {
+              title: title,
+              prompt: content,
+              prompt_result: previewText,
+              has_image: false,
+              description: discriptionText,
+              usage_guide: howToUseText,
+              is_free: true,
+              price: 0,
+              model_version: modelver || '',
+              categories: categories,
+              models: selectedModels,
+            },
+          },
+          {
+            onSuccess: () => {
+              navigate(`/prompt/${actualPromptId}`);
+            },
+          },
+        );
       }
     } catch (err) {
       console.error(err);
