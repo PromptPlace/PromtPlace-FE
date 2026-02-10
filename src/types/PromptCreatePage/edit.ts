@@ -18,6 +18,7 @@ export type EditPromptDto = {
 export type RequestEditPromptDto = {
   promptId: number;
   body: EditPromptDto;
+  files?: File;
 };
 
 export type Category = {

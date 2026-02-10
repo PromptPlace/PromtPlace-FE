@@ -83,9 +83,15 @@ const AuthoredPromptCard = ({ prompt }: AuthoredPromptCardProps) => {
     };
   }, [isDropdownOpen]);
 
-  const handleEditAuthoredPrompt = (prompt_id: number) => {
-    const promptId = prompt_id;
-    const targetUrl = `/mypage/edit/${promptId}`;
+  const handleEditAuthoredPrompt = (prompt: NewAuthoredPromptDTO) => {
+    const promptId = prompt.prompt_id;
+
+    let targetUrl = '';
+    if (prompt.image_url) {
+      targetUrl = `/mypage/edit/img/${promptId}`;
+    } else {
+      targetUrl = `/mypage/edit/text/${promptId}`;
+    }
 
     // 3. 생성된 URL로 페이지를 이동시킵니다.
     navigate(targetUrl);
@@ -148,7 +154,7 @@ const AuthoredPromptCard = ({ prompt }: AuthoredPromptCardProps) => {
 
                     <button
                       onClick={() => {
-                        handleEditAuthoredPrompt(prompt.prompt_id);
+                        handleEditAuthoredPrompt(prompt);
                         setIsDropdownOpen(false);
                       }}
                       className="block custom-h3 px-[15px]  py-[8px] text-[16px]  text-text-on-background bg-secondary active:bg-secondary-pressed active:text-black rounded-b-[4px]">
