@@ -2,18 +2,28 @@ import help from '@assets/promptCreate/icon-help.svg';
 import arrowdown from '@assets/promptCreate/icon_arrow.svg';
 import UploadIcon from '@assets/icon-upload.svg';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FilterModal from './components/FilterModal';
 import TagButton from '@/components/Button/TagButton';
 
 import TextModal from '@/components/Modal/TextModal';
 
 import useCreatePromptText from '@/hooks/mutations/PromptCreatePage/useCreateText';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import clsx from 'clsx';
+import useGetPromptDetail from '@/hooks/queries/PromptDetailPage/useGetPromptDetail';
 
-const PromptCreateTextPage = () => {
+interface PromptCreateTextPageProps {
+  mode?: 'create' | 'edit';
+  promptId?: number;
+}
+
+const PromptCreateTextPage = ({ mode = 'create', promptId }: PromptCreateTextPageProps) => {
   const navigate = useNavigate();
+
+  const params = useParams();
+  const idFormUrl = params.id ? Number(params.id) : undefined;
+  const actualPromptId = mode === 'edit' ? idFormUrl : promptId;
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -40,7 +50,10 @@ const PromptCreateTextPage = () => {
 
   //API 연동 관련
   const { mutateAsync: createPrompt } = useCreatePromptText();
-  //isPending : 현재 로딩 중인지 알려주는 boolean 값
+
+  const { data: detailData } = useGetPromptDetail(actualPromptId!, {
+    enabled: mode === 'edit' && !!actualPromptId,
+  });
 
   // 유효성 검증 함수
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -114,6 +127,19 @@ const PromptCreateTextPage = () => {
       setAlertModal(true);
     }
   };
+
+  useEffect(() => {
+    if (mode === 'edit' && detailData) {
+      setTitle(detailData.title);
+      setContent(detailData.prompt);
+      setPreviewText(detailData.prompt_result);
+      setDescriptionText(detailData.description);
+      setHowToUseText(detailData.usage_guide);
+      setSelectedModels(detailData.models.map((m) => m.name));
+      setCategories(detailData.categories.map((c) => c.category.name));
+      setModelver(detailData.model_version ?? '');
+    }
+  }, [mode, detailData]);
 
   return (
     <>
@@ -362,7 +388,9 @@ const PromptCreateTextPage = () => {
                 onClick={handleUploadClick}
                 disabled={isUploaded}>
                 <img src={UploadIcon} alt="업로드 버튼" className="w-[16px] h-[16px]" />
-                <p className="custom-h4 text-white max-phone:text-[16px]">업로드 하기</p>
+                <p className="custom-h4 text-white max-phone:text-[16px]">
+                  {mode === 'create' ? '업로드 하기' : '수정하기'}
+                </p>
               </button>
             </div>
           </div>
