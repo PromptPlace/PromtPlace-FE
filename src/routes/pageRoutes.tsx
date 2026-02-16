@@ -29,6 +29,7 @@ export const publicRoutes: RouteObject[] = [
       // { path: 'guide/tip/create', element: <lazyRoutes.PromptGuideCreatePage type="tip" /> },
       // { path: 'guide/notice/create', element: <lazyRoutes.PromptGuideCreatePage type="notice" /> },
       { path: 'chat', element: <lazyRoutes.ChatPage /> },
+      { path: 'chat/:roomId', element: <lazyRoutes.ChatRoomPage /> },
     ],
   },
 ];
