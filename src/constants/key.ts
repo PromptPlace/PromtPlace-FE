@@ -9,6 +9,8 @@ export const QUERY_KEY = {
   prompters: 'prompters',
   prompterList: 'prompterList',
   searchpromptList: 'searchpromptList',
+
+  chatRooms: 'chatRooms',
 };
 
 export const SESSION_STORAGE_KEY = {
