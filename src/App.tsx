@@ -5,7 +5,7 @@ import { RouterProvider } from 'react-router-dom';
 import { router } from '@routes/pageRoutes';
 import { AuthProvider } from './context/AuthContext';
 import GTMScript from './utils/gtmScript';
-import SocketInit from './shared/socket/apis/SocketInit';
+import SocketInit from './shared/socket/SocketInit';
 
 export const queryClient = new QueryClient();
 
