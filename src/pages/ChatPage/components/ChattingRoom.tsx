@@ -39,7 +39,7 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
 
   return (
     <>
-      <div className="rounded-[12px] bg-white w-full p-[32px] flex flex-col">
+      <div className="rounded-[12px] bg-white w-full p-[32px] flex flex-col h-dvh">
         {/* 상단 회원 정보 */}
         <div className="flex justify-between items-center  mb-[20px]">
           {/* 사진 ~소개 */}

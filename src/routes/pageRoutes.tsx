@@ -3,6 +3,7 @@ import { lazyRoutes } from './routes';
 import HomeLayout from '@/layouts/HomeLayout';
 import ProtectedLayout from '@/layouts/ProtectedLayout';
 import AdminLayout from '@/layouts/AdminLayout';
+import ChattingLayout from '@/layouts/ChattingLayout';
 
 export const publicRoutes: RouteObject[] = [
   {
@@ -31,7 +32,6 @@ export const publicRoutes: RouteObject[] = [
       // { path: 'guide/tip/create', element: <lazyRoutes.PromptGuideCreatePage type="tip" /> },
       // { path: 'guide/notice/create', element: <lazyRoutes.PromptGuideCreatePage type="notice" /> },
       { path: 'chat', element: <lazyRoutes.ChatPage /> },
-      { path: 'chat/:roomId', element: <lazyRoutes.ChatRoomPage /> },
     ],
   },
 ];
@@ -62,6 +62,14 @@ export const protectedRoutes: RouteObject[] = [
   },
 ];
 
+export const chatRoutes: RouteObject[] = [
+  {
+    path: '/chat/:roomId',
+    element: <ChattingLayout />,
+    children: [{ index: true, element: <lazyRoutes.ChatRoomPage /> }],
+  },
+];
+
 export const adminRoutes: RouteObject[] = [
   {
     path: '/admin',
@@ -76,4 +84,4 @@ export const adminRoutes: RouteObject[] = [
   },
 ];
 
-export const router = createBrowserRouter([...publicRoutes, ...protectedRoutes, ...adminRoutes]);
+export const router = createBrowserRouter([...publicRoutes, ...protectedRoutes, ...chatRoutes, ...adminRoutes]);
