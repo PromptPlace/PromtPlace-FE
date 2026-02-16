@@ -1,11 +1,10 @@
 import type { CommonResponse } from '../common';
+import type { PaginationDto } from './pagination';
 
 //채팅방 목록 조회
-export type RequestChatDto = {
+export type RequestChatDto = PaginationDto & {
   filter?: 'all' | 'unread' | 'pinned';
   search?: string;
-  cursor?: number;
-  limit?: number;
 };
 
 export type Room = {
