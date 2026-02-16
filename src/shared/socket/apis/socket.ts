@@ -9,7 +9,7 @@ export const initSocket = (token: string) => {
     socket = null;
   }
 
-  socket = io(import.meta.env.VITE_SERVER_API_URL, {
+  socket = io(`${import.meta.env.VITE_SERVER_API_URL}/ws/chat`, {
     auth: { token },
   });
 
