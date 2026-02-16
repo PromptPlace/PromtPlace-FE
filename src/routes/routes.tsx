@@ -35,4 +35,5 @@ export const lazyRoutes = {
   SellerModalTestPage: React.lazy(() => import('../pages/Test/SellerModalTestPage')),
   SellerNotRegisteredTestPage: React.lazy(() => import('../pages/Test/SellerNotRegisteredTestPage')),
   ChatPage: React.lazy(() => import('../pages/ChatPage/ChatPage')),
+  ChatRoomPage: React.lazy(() => import('../pages/ChatPage/ChatRoomPage')),
 };

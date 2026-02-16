@@ -215,7 +215,19 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
 
           {!isMyProfile && !isAdmin && (
             <div className="flex gap-[20px]">
-              <ProfileButton text="문의하기" type="chat" onClick={() => mutatePostChatRooms(member_id)} />
+              <ProfileButton
+                text="문의하기"
+                type="chat"
+                onClick={() =>
+                  mutatePostChatRooms(member_id, {
+                    onSuccess: (data) => {
+                      const roomId = data.data.room_id;
+
+                      window.open(`/chat/${roomId}`, '_blank', 'width=500,height=700');
+                    },
+                  })
+                }
+              />
               <ProfileButton
                 text={isFollow ? '팔로우 완료' : '팔로우'}
                 type={isFollow ? 'check' : 'plus'}
