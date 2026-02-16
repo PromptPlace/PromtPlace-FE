@@ -1,6 +1,6 @@
 import { useAuth } from '@/context/AuthContext';
 import { useEffect } from 'react';
-import { disconnectSocket, initSocket } from './socket';
+import { disconnectSocket, initSocket } from './apis/socket';
 
 const SocketInit = () => {
   const { accessToken } = useAuth();
