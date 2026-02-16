@@ -11,7 +11,7 @@ const ChatPage = () => {
 
       <div className="flex gap-[20px]">
         <ChatList setSelectedRoomId={setSelectedRoomId} />
-        <ChattingRoom selectedRoomId={selectedRoomId} />
+        <ChattingRoom selectedRoomId={selectedRoomId!} />
       </div>
     </div>
   );
