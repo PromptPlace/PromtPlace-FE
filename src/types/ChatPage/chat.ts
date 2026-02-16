@@ -31,3 +31,9 @@ export type ResponseChatDto = CommonResponse<{
     total_count: number;
   };
 }>;
+
+// 채팅방 생성/반환
+export type ResponsePostChatRoomsDto = CommonResponse<{
+  room_id: number;
+  is_new: boolean;
+}>;
