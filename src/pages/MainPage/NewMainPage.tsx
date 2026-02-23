@@ -101,8 +101,6 @@ const NewMainPage = () => {
     }
   });
 
-  console.log(prompts);
-
   const displayedPrompts = sortedPrompts.slice(0, displayCount);
   const hasNext = sortedPrompts.length > displayCount;
   const totalCount = sortedPrompts.length;

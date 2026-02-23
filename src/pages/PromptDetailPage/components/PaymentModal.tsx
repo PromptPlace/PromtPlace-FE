@@ -5,6 +5,7 @@ import xButton from '@/assets/icon-x-button.svg';
 import type { RequestPaymentDTO } from '@/types/PromptDetailPage/payments';
 import { usePostPayment, usePostPaymentCheck } from '@/hooks/mutations/PromptDetailPage/usePostPayment';
 import { useAuth } from '@/context/AuthContext';
+import usePostRequestPayment, { usePayment } from '@/hooks/mutations/MainPage/usePostRequestPayment';
 
 // 포트원 결제 요청 데이터 타입
 interface PortOnePaymentData {
@@ -62,15 +63,33 @@ const PaymentModal = ({
   const { user } = useAuth();
   const [phoneNumber, setPhoneNumber] = useState<string>('');
 
-  const { mutate: requestPayment } = usePostPayment();
-  const { mutate: requestPaymentCheck } = usePostPaymentCheck();
+  const { handlePayment } = usePayment();
 
-  // 포트원 초기화
-  useEffect(() => {
-    if (window.IMP) {
-      window.IMP.init(import.meta.env.VITE_PORTONE_IMP_CODE || 'imp31482176'); // 가맹점 식별코드
+  const onClickPayment = async () => {
+    if (!selected || !window.PortOne) return; // SDK 없으면 막기
+    setLoading(true);
+    try {
+      const result = await handlePayment(promptId);
+      console.log('결제 완료:', result);
+      _onPaid();
+      onClose();
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || '결제 실패');
+    } finally {
+      setLoading(false);
     }
-  }, []);
+  };
+
+  // const { mutate: requestPayment } = usePostPayment();
+  // const { mutate: requestPaymentCheck } = usePostPaymentCheck();
+
+  // // 포트원 초기화
+  // useEffect(() => {
+  //   if (window.IMP) {
+  //     window.IMP.init(import.meta.env.VITE_PORTONE_IMP_CODE || 'imp31482176'); // 가맹점 식별코드
+  //   }
+  // }, []);
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     // 모달창 바깥 클릭 시 닫기
@@ -79,84 +98,84 @@ const PaymentModal = ({
     }
   };
 
-  const paymentHandler = () => {
-    if (!selected || !window.IMP) return;
-    setLoading(true);
+  // const paymentHandler = () => {
+  //   if (!selected || !window.IMP) return;
+  //   setLoading(true);
 
-    // 백엔드 결제 요청 데이터
-    const paymentRequestData = {
-      prompt_id: promptId,
-      pg: selected, // 'kakaopay' | 'tosspay'
-      merchant_uid: 'store-ac1c069c-7294-44cc-a81b-1ec7558c55d2', // 명세서에 정의된 고정값
-      amount: price,
-      buyer_name:  '구매자', //기존: buyer_name: user.nickname || '구매자' User타입에서 nickname 제거로 고정값 처리
-      redirect_url: `${window.location.origin}/payment/result`,
-      custom_data: {
-        promptId: { promptId: promptId },
-      },
-    };
+  //   // 백엔드 결제 요청 데이터
+  //   const paymentRequestData = {
+  //     prompt_id: promptId,
+  //     pg: selected, // 'kakaopay' | 'tosspay'
+  //     merchant_uid: 'store-ac1c069c-7294-44cc-a81b-1ec7558c55d2', // 명세서에 정의된 고정값
+  //     amount: price,
+  //     buyer_name:  '구매자', //기존: buyer_name: user.nickname || '구매자' User타입에서 nickname 제거로 고정값 처리
+  //     redirect_url: `${window.location.origin}/payment/result`,
+  //     custom_data: {
+  //       promptId: { promptId: promptId },
+  //     },
+  //   };
 
-    // 1단계: 백엔드에 결제 요청
-    requestPayment(paymentRequestData, {
-      onSuccess: (response) => {
-        console.log('백엔드 결제 요청 성공:', response);
-        
-        // 2단계: 포트원 결제 실행
-        const paymentData = {
-          pg: selected, // 'kakaopay' 또는 'tosspay'
-          pay_method: 'card',
-          merchant_uid: response.merchant_uid || paymentRequestData.merchant_uid,
-          name: `${title} 구매`,
-          amount: price,
-          buyer_email: user.email || '',
-          buyer_name: '구매자',  //기존: buyer_name: user.nickname || '구매자'
-          buyer_tel: phoneNumber || '010-0000-0000',
-          buyer_addr: '',
-          buyer_postcode: '',
-          m_redirect_url: response.redirect_url || paymentRequestData.redirect_url,
-          custom_data: {
-            promptId: promptId,
-          },
-        };
+  //   // 1단계: 백엔드에 결제 요청
+  //   requestPayment(paymentRequestData, {
+  //     onSuccess: (response) => {
+  //       console.log('백엔드 결제 요청 성공:', response);
 
-        window.IMP.request_pay(paymentData, (portoneResponse: PortOneResponse) => {
-          if (portoneResponse.success && portoneResponse.imp_uid && portoneResponse.merchant_uid) {
-            // 3단계: 결제 완료 후 백엔드 검증
-            const verificationData = {
-              imp_uid: portoneResponse.imp_uid,
-              merchant_uid: portoneResponse.merchant_uid,
-            };
+  //       // 2단계: 포트원 결제 실행
+  //       const paymentData = {
+  //         pg: selected, // 'kakaopay' 또는 'tosspay'
+  //         pay_method: 'card',
+  //         merchant_uid: response.merchant_uid || paymentRequestData.merchant_uid,
+  //         name: `${title} 구매`,
+  //         amount: price,
+  //         buyer_email: user.email || '',
+  //         buyer_name: '구매자',  //기존: buyer_name: user.nickname || '구매자'
+  //         buyer_tel: phoneNumber || '010-0000-0000',
+  //         buyer_addr: '',
+  //         buyer_postcode: '',
+  //         m_redirect_url: response.redirect_url || paymentRequestData.redirect_url,
+  //         custom_data: {
+  //           promptId: promptId,
+  //         },
+  //       };
 
-            requestPaymentCheck(verificationData, {
-              onSuccess: (verifyResponse) => {
-                console.log('결제 검증 완료:', verifyResponse);
-                setLoading(false);
-                alert('결제가 완료되었습니다!');
-                _onPaid(); // 결제 완료 콜백 호출
-                onClose(); // 모달 닫기
-              },
-              onError: (verifyError: unknown) => {
-                console.error('결제 검증 실패:', verifyError);
-                setLoading(false);
-                alert('결제는 완료되었지만 검증 중 오류가 발생했습니다. 고객센터에 문의해주세요.');
-                onClose();
-              },
-            });
-          } else {
-            // 결제 실패
-            setLoading(false);
-            alert(`결제 실패: ${portoneResponse.error_msg || '알 수 없는 오류가 발생했습니다.'}`);
-            onClose();
-          }
-        });
-      },
-      onError: (error: unknown) => {
-        console.error('백엔드 결제 요청 실패:', error);
-        setLoading(false);
-        alert('결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.');
-      },
-    });
-  };
+  //       window.IMP.request_pay(paymentData, (portoneResponse: PortOneResponse) => {
+  //         if (portoneResponse.success && portoneResponse.imp_uid && portoneResponse.merchant_uid) {
+  //           // 3단계: 결제 완료 후 백엔드 검증
+  //           const verificationData = {
+  //             imp_uid: portoneResponse.imp_uid,
+  //             merchant_uid: portoneResponse.merchant_uid,
+  //           };
+
+  //           requestPaymentCheck(verificationData, {
+  //             onSuccess: (verifyResponse) => {
+  //               console.log('결제 검증 완료:', verifyResponse);
+  //               setLoading(false);
+  //               alert('결제가 완료되었습니다!');
+  //               _onPaid(); // 결제 완료 콜백 호출
+  //               onClose(); // 모달 닫기
+  //             },
+  //             onError: (verifyError: unknown) => {
+  //               console.error('결제 검증 실패:', verifyError);
+  //               setLoading(false);
+  //               alert('결제는 완료되었지만 검증 중 오류가 발생했습니다. 고객센터에 문의해주세요.');
+  //               onClose();
+  //             },
+  //           });
+  //         } else {
+  //           // 결제 실패
+  //           setLoading(false);
+  //           alert(`결제 실패: ${portoneResponse.error_msg || '알 수 없는 오류가 발생했습니다.'}`);
+  //           onClose();
+  //         }
+  //       });
+  //     },
+  //     onError: (error: unknown) => {
+  //       console.error('백엔드 결제 요청 실패:', error);
+  //       setLoading(false);
+  //       alert('결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.');
+  //     },
+  //   });
+  // };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={handleBackdropClick}>
@@ -210,7 +229,7 @@ const PaymentModal = ({
                 selected ? `bg-gradient-to-bl from-blue-500 to-blue-400 text-white` : `bg-gray-200 text-gray-500`
               }`}
               disabled={!selected || loading}
-              onClick={paymentHandler}>
+              onClick={onClickPayment}>
               <span className="text-2xl font-bold">{loading ? '처리중...' : '결제하기'}</span>
             </button>
           </div>
@@ -261,7 +280,7 @@ const PaymentModal = ({
               selected ? 'bg-gradient-to-bl from-blue-500 to-blue-400' : 'bg-gray-300'
             }`}
             disabled={!selected || loading}
-            onClick={paymentHandler}>
+            onClick={onClickPayment}>
             <div className="justify-start text-white text-sm font-bold font-['Spoqa_Han_Sans_Neo']">
               {loading ? '처리중...' : '결제하기'}
             </div>

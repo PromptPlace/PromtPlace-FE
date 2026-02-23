@@ -15,14 +15,24 @@ export type RequestPaymentDTO = {
 
 export type ResponsePaymentDTO = {
   message: string;
-  payment_gateway: string;
-  merchant_uid: string;
-  redirect_url: string;
+  storeId: string;
+  channelKey: string;
+  paymentId: string;
+  orderName: string;
+  totalAmount: number;
   statusCode: number;
-  custom_data: {
+  customData: {
     promptId: { promptId: number };
+    userId: { userId: number };
   };
 };
+
+export type ResponseCompletePurchaseDTO = {
+  message: string;
+  purchaseId: number;
+  statusCode: number;
+  status: number;
+}
 
 export type ResponseError = {
   error: string;
