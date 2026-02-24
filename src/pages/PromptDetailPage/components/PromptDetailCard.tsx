@@ -28,6 +28,7 @@ import XIcon from '@assets/icon-x-logo.svg';
 import KakaoIcon from '../assets/kakaotalk-logo.svg';
 import LinkIcon from '../assets/link-logo.svg';
 import FacebookIcon from '../assets/facebook-logo.svg';
+import PaymentModal from './PaymentModal';
 
 interface Props {
   title: string;
@@ -599,13 +600,18 @@ const PromptDetailCard = ({
         />
       )}
 
-      {isPaymentBlockedOpen && (
-        <TextModal
-          text="PG사 심사 중으로 결제가 제한됩니다."
-          onClick={() => setIsPaymentBlockedOpen(false)}
-          size="lg"
+      {isPaymentBlockedOpen && 
+        <PaymentModal
+          promptId={promptId}
+          title={title}
+          price={price}
+          onClose={() => setIsPaymentBlockedOpen(false)}
+          onPaid={() => {
+            setIsPaymentBlockedOpen(false);
+            // You may want to trigger a refresh or update state here if needed
+          }}
         />
-      )}
+      }
     </>
   );
 };

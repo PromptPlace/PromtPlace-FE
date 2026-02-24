@@ -34,7 +34,7 @@ const PromptCard = ({ prompt }: PromptCardProps) => {
   };
 
   return (
-    <div className="w-[294px] h-[533px] rounded-lg">
+    <div className="w-[294px] h-[533px] rounded-lg" onClick={() => navigate(`/prompt/${prompt.prompt_id}`)}>
       <div className="relative w-full h-[263px] bg-secondary rounded-t-lg overflow-hidden">
         {prompt.images?.[0]?.image_url ? (
           <img
@@ -71,9 +71,7 @@ const PromptCard = ({ prompt }: PromptCardProps) => {
         </div>
       </div>
 
-      <div
-        className="w-full h-[270px] px-6 py-5 inline-flex flex-col justify-start gap-3 bg-white rounded-b-lg cursor-pointer"
-        onClick={() => navigate(`/prompt/${prompt.prompt_id}`)}>
+      <div className="w-full h-[270px] px-6 py-5 inline-flex flex-col justify-start gap-3 bg-white rounded-b-lg cursor-pointer">
         <div className="text-xs font-light leading-4 inline-flex justify-between items-start self-stretch">
           <div>{prompt?.user?.nickname}</div>
           <div className="text-gray-400 ">{new Date(prompt.created_at).toLocaleDateString('ko-KR')}</div>
