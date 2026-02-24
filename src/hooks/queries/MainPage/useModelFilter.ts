@@ -9,7 +9,9 @@ export function useModelFilter() {
 
   const filterByModels = (prompts: any[]) => {
     if (selectedModels.length === 0) return prompts;
-    return prompts.filter((prompt) => prompt.models.some((modelObj) => selectedModels.includes(modelObj.model.name)));
+    return prompts.filter((prompt) =>
+      prompt.models.some((modelObj: { model: { name: string } }) => selectedModels.includes(modelObj.model.name)),
+    );
   };
 
   return {

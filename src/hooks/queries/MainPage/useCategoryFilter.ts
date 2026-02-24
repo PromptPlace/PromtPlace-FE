@@ -7,7 +7,7 @@ export function useCategoryFilter(initialCategoryName?: string, initialSubcatego
   );
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(initialSubcategory || '전체');
 
-  const handleCategorySelect = (categoryName: string | null) => {
+  const handleCategorySelect = (categoryId: number | null, categoryName: string | null) => {
     setSelectedCategoryName(categoryName);
     setSelectedSubcategory('전체');
   };
@@ -20,18 +20,20 @@ export function useCategoryFilter(initialCategoryName?: string, initialSubcatego
     if (!selectedCategoryName || selectedSubcategory === null) return prompts;
 
     const selectedCategoryData = categoryData.find((cat) => cat.name === selectedCategoryName);
-    const allowedSubcategories = selectedCategoryData?.subcategories || [];
+    // const allowedSubcategories = selectedCategoryData?.subcategories || [];
 
     if (selectedSubcategory === '전체') {
       return prompts.filter((prompt) =>
-        prompt.categories.some((cat) =>
+        prompt.categories.some((cat: { category: { name: string } }) =>
           selectedSubcategory === '전체'
             ? cat.category.name === selectedCategoryName
             : cat.category.name === selectedSubcategory,
         ),
       );
     } else {
-      return prompts.filter((prompt) => prompt.categories.some((cat) => cat.category.name === selectedSubcategory));
+      return prompts.filter((prompt) =>
+        prompt.categories.some((cat: { category: { name: string } }) => cat.category.name === selectedSubcategory),
+      );
     }
   };
 
