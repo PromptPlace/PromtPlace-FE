@@ -139,5 +139,16 @@ export type Creator = {
   followed: boolean;
 };
 
+export interface PromptQueryState {
+  search: string;
+  categoryId: string | null;
+  categoryName: string | null;
+  subcategory: string | null;
+  model: string[] | null;
+  sort: string | null;
+  page: string | null;
+  size: string | null;
+}
+
 export type ResponsePromptDTO = CommonResponse<Prompt[]>;
 export type ResponseSearchPromptDTO = CommonResponse<{ prompts: searchPrompt[]; related_users: SearchRelatedUser[] }>;
