@@ -22,8 +22,8 @@ export type ResponsePaymentDTO = {
   totalAmount: number;
   statusCode: number;
   customData: {
-    promptId: { promptId: number };
-    userId: { userId: number };
+    prompt_id: { promptId: number };
+    user_id: { userId: number };
   };
 };
 

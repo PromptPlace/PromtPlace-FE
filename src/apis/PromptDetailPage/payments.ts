@@ -1,4 +1,9 @@
-import type { PaymentCheckRequestDTO, PaymentCheckResponseDTO, RequestPaymentDTO, ResponsePaymentDTO } from '@/types/PromptDetailPage/payments';
+import type {
+  PaymentCheckRequestDTO,
+  PaymentCheckResponseDTO,
+  RequestPaymentDTO,
+  ResponsePaymentDTO,
+} from '@/types/PromptDetailPage/payments';
 import { axiosInstance } from '@/apis/axios';
 
 export const postPayment = async (data: RequestPaymentDTO): Promise<ResponsePaymentDTO> => {

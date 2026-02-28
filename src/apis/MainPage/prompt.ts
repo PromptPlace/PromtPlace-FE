@@ -28,12 +28,15 @@ export const postRequestPayment = async (promptId: number): Promise<ResponsePaym
   return data;
 };
 
-export const postCompletePurchase = async (paymentId: string): Promise<ResponseCompletePurchaseDTO> => {
+export const postCompletePurchase = async (
+  paymentId: string,
+  promptId: number,
+): Promise<ResponseCompletePurchaseDTO> => {
   const token = sessionStorage.getItem('accessToken'); // 토큰 가져오기
   const accessToken = token?.replace(/^"|"$/g, ''); // 앞뒤 큰따옴표 제거
   const { data } = await axios.post(
     `${import.meta.env.VITE_SERVER_API_URL}/api/prompts/purchases/complete`,
-    { paymentId },
+    { paymentId, promptId },
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
