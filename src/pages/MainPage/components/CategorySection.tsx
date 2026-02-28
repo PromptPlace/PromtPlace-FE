@@ -114,7 +114,7 @@ const CategorySection = ({
             style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
             <div className="inline-flex justify-start items-start gap-[20px] min-w-min">
               <div className="text-center justify-center text-text-on-white text-2xl pr-[20px] whitespace-nowrap">
-                {categoryData.find((cat) => cat.id === selectedCategory)?.name}
+                {categoryData.find((cat) => cat.id === selectedCategory)?.displayName}
               </div>
               <div
                 onClick={() => handleSelectSubcategory('전체')}

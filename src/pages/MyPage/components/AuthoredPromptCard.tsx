@@ -1,4 +1,3 @@
-import PrimaryButton from '@components/Button/PrimaryButton';
 import { Link } from 'react-router-dom';
 import type { NewAuthoredPromptDTO } from '@/types/MyPage/prompt';
 import logo from '@/assets/logo/app/app-logo-default.svg';
@@ -84,9 +83,15 @@ const AuthoredPromptCard = ({ prompt }: AuthoredPromptCardProps) => {
     };
   }, [isDropdownOpen]);
 
-  const handleEditAuthoredPrompt = (prompt_id: number) => {
-    const promptId = prompt_id;
-    const targetUrl = `/mypage/edit/${promptId}`;
+  const handleEditAuthoredPrompt = (prompt: NewAuthoredPromptDTO) => {
+    const promptId = prompt.prompt_id;
+
+    let targetUrl = '';
+    if (prompt.image_url) {
+      targetUrl = `/mypage/edit/img/${promptId}`;
+    } else {
+      targetUrl = `/mypage/edit/text/${promptId}`;
+    }
 
     // 3. 생성된 URL로 페이지를 이동시킵니다.
     navigate(targetUrl);
@@ -146,16 +151,15 @@ const AuthoredPromptCard = ({ prompt }: AuthoredPromptCardProps) => {
                       className="block custom-h3 px-[15px]  py-[8px]  border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary active:bg-secondary-pressed active:text-black rounded-t-[4px]">
                       삭제하기
                     </button>
-                    {/*
+
                     <button
                       onClick={() => {
-                        handleEditAuthoredPrompt(prompt.prompt_id);
+                        handleEditAuthoredPrompt(prompt);
                         setIsDropdownOpen(false);
                       }}
                       className="block custom-h3 px-[15px]  py-[8px] text-[16px]  text-text-on-background bg-secondary active:bg-secondary-pressed active:text-black rounded-b-[4px]">
                       수정하기
                     </button>
-                    */}
                   </div>
                 </Portal>
               )}
