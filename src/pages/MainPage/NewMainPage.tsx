@@ -4,12 +4,12 @@ import Filter from './components/Filter';
 import useGetPromptList from '@/hooks/queries/MainPage/useGetPromptList';
 import PromptGrid from '@/components/PromptGrid';
 import PromptMobileCard from '../HomePage/components/PromptMobileCard';
-import usePromptMode from '@/hooks/queries/MainPage/usePromptMode';
 import { useCategoryFilter } from '@/hooks/queries/MainPage/useCategoryFilter';
 import { useModelFilter } from '@/hooks/queries/MainPage/useModelFilter';
 import { useSortFilter } from '@/hooks/queries/MainPage/useSortFilter';
 import { usePagination } from '@/hooks/queries/MainPage/usePagination';
 import { useFilteredPrompts } from '@/hooks/queries/MainPage/useFilteredPrompt';
+import useGetSearchPromptList from '@/hooks/queries/MainPage/useGetSearchList';
 
 const NewMainPage = () => {
   const [searchParams] = useSearchParams();
@@ -17,13 +17,27 @@ const NewMainPage = () => {
   const categoryIdFromUrl = searchParams.get('categoryId');
   const subcategoryFromUrl = searchParams.get('subcategory');
 
-  const { data } = useGetPromptList();
-  const prompts = data?.data || [];
-
   const categoryFilter = useCategoryFilter();
   const modelFilter = useModelFilter();
   const sortFilter = useSortFilter();
   const pagination = usePagination(20);
+
+  const { data: normalData } = useGetPromptList();
+
+  const { data: searchData } = useGetSearchPromptList(
+    {
+      model: modelFilter.selectedModels.length > 0 ? modelFilter.selectedModels : null,
+      tag: null,
+      keyword: searchQuery || null,
+      page: 1,
+      size: 100,
+      sort: sortFilter.getSortValue(),
+      is_free: false,
+    },
+    !!searchQuery,
+  );
+
+  const prompts = searchQuery ? searchData?.data?.prompts || [] : normalData?.data || [];
 
   const filteredPrompts = useFilteredPrompts({
     prompts,
@@ -66,23 +80,6 @@ const NewMainPage = () => {
   //       return 'recent';
   //   }
   // };
-
-  // const { data: normalData } = useGetPromptList();
-  // const { data: searchData } = useGetSearchPromptList(
-  //   {
-  //     model: selectedModels.length > 0 ? selectedModels : null,
-  //     tag: null,
-  //     keyword: searchQuery || null,
-  //     page: 1,
-  //     size: 100,
-  //     sort: getSortValue(),
-  //     is_free: false,
-  //   },
-  //   !!searchQuery,
-  // );
-
-  // const prompts: Prompt[] = searchQuery ? (searchData?.data ? searchData.data.prompts : []) : normalData?.data || [];
-  // let filteredPrompts = prompts;
 
   // // 카테고리 필터링
   // if (selectedCategoryName && selectedSubcategory !== null) {
@@ -168,7 +165,7 @@ const NewMainPage = () => {
         <CategorySection
           onCategorySelect={categoryFilter.handleCategorySelect}
           onSubcategorySelect={categoryFilter.handleSubcategorySelect}
-          initialCategoryId={categoryIdFromUrl ? Number(categoryIdFromUrl) : searchQuery ? null : 1}
+          initialCategoryId={categoryIdFromUrl ? Number(categoryIdFromUrl) : null}
           initialSubcategory={subcategoryFromUrl || '전체'}
           isSearchMode={!!searchQuery}
         />

@@ -3,10 +3,8 @@ import type { Prompt } from '@/types/MainPage/prompt';
 import { useState } from 'react';
 
 export function useCategoryFilter(initialCategoryName?: string, initialSubcategory?: string) {
-  const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(
-    initialCategoryName || '글쓰기 / 문서 작성',
-  );
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(initialSubcategory || '전체');
+  const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(initialCategoryName ?? null);
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(initialSubcategory ?? null);
 
   const handleCategorySelect = (categoryId: number | null, categoryName: string | null) => {
     setSelectedCategoryName(categoryName);
@@ -18,19 +16,22 @@ export function useCategoryFilter(initialCategoryName?: string, initialSubcatego
   };
 
   const filterByCategory = (prompts: Prompt[]) => {
-    if (!selectedCategoryName || selectedSubcategory === null) return prompts;
+    // 카테고리 선택 안 된 상태면 필터 적용 X
+    if (!selectedCategoryName) return prompts;
 
     const selectedCategoryData = categoryData.find((cat) => cat.name === selectedCategoryName);
 
     const allowedSubcategories = selectedCategoryData?.subcategories || [];
 
-    if (selectedSubcategory === '전체') {
+    // 대분류 + 전체
+    if (!selectedSubcategory || selectedSubcategory === '전체') {
       return prompts.filter((prompt) =>
         prompt.categories.some((cat) => allowedSubcategories.includes(cat.category.name)),
       );
-    } else {
-      return prompts.filter((prompt) => prompt.categories.some((cat) => cat.category.name === selectedSubcategory));
     }
+
+    // 특정 소분류
+    return prompts.filter((prompt) => prompt.categories.some((cat) => cat.category.name === selectedSubcategory));
   };
 
   return {
