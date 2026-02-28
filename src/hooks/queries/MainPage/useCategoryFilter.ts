@@ -1,5 +1,5 @@
+import type { Prompt } from '@/types/MainPage/prompt';
 import { useState } from 'react';
-import { categoryData } from '@/pages/MainPage/components/categoryData';
 
 export function useCategoryFilter(initialCategoryName?: string, initialSubcategory?: string) {
   const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(
@@ -16,10 +16,10 @@ export function useCategoryFilter(initialCategoryName?: string, initialSubcatego
     setSelectedSubcategory(subcategory);
   };
 
-  const filterByCategory = (prompts: any[]) => {
+  const filterByCategory = (prompts: Prompt[]) => {
     if (!selectedCategoryName || selectedSubcategory === null) return prompts;
 
-    const selectedCategoryData = categoryData.find((cat) => cat.name === selectedCategoryName);
+    // const selectedCategoryData = categoryData.find((cat) => cat.name === selectedCategoryName);
     // const allowedSubcategories = selectedCategoryData?.subcategories || [];
 
     if (selectedSubcategory === '전체') {
