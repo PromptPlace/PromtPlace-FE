@@ -1,3 +1,4 @@
+import { categoryData } from '@/pages/MainPage/components/categoryData';
 import type { Prompt } from '@/types/MainPage/prompt';
 import { useState } from 'react';
 
@@ -19,21 +20,16 @@ export function useCategoryFilter(initialCategoryName?: string, initialSubcatego
   const filterByCategory = (prompts: Prompt[]) => {
     if (!selectedCategoryName || selectedSubcategory === null) return prompts;
 
-    // const selectedCategoryData = categoryData.find((cat) => cat.name === selectedCategoryName);
-    // const allowedSubcategories = selectedCategoryData?.subcategories || [];
+    const selectedCategoryData = categoryData.find((cat) => cat.name === selectedCategoryName);
+
+    const allowedSubcategories = selectedCategoryData?.subcategories || [];
 
     if (selectedSubcategory === '전체') {
       return prompts.filter((prompt) =>
-        prompt.categories.some((cat: { category: { name: string } }) =>
-          selectedSubcategory === '전체'
-            ? cat.category.name === selectedCategoryName
-            : cat.category.name === selectedSubcategory,
-        ),
+        prompt.categories.some((cat) => allowedSubcategories.includes(cat.category.name)),
       );
     } else {
-      return prompts.filter((prompt) =>
-        prompt.categories.some((cat: { category: { name: string } }) => cat.category.name === selectedSubcategory),
-      );
+      return prompts.filter((prompt) => prompt.categories.some((cat) => cat.category.name === selectedSubcategory));
     }
   };
 
