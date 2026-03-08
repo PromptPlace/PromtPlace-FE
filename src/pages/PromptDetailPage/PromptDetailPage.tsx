@@ -9,7 +9,6 @@ import PromptAuthorAndReview from './components/PromptAuthorAndReview';
 import ReportModal from './components/ReportModal';
 import DownloadModal from './components/DownloadModal';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
-import PaymentModal from './components/PaymentModal';
 
 // hooks
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
@@ -49,7 +48,6 @@ const PromptDetailPage = () => {
   const [isPaid, setIsPaid] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [downloadData, setDownloadData] = useState<{ title: string; content: string } | null>(null);
 
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
@@ -89,10 +87,6 @@ const PromptDetailPage = () => {
   const { mutateAsync: fetchDownload } = usePromptDownload();
   const handleDownloadClick = async () => {
     if (!Number.isFinite(promptId)) return;
-    if (prompt && !prompt.is_free && !isPaid) {
-      setIsPaymentModalOpen(true);
-      return;
-    }
 
     try {
       const res = await fetchDownload(promptId);
@@ -107,17 +101,12 @@ const PromptDetailPage = () => {
           return;
         }
         if (status === 403) {
-          setIsPaymentModalOpen(true);
+          alert('결제가 필요한 프롬프트입니다. 먼저 결제를 진행해주세요.');
           return;
         }
       }
       alert('다운로드를 불러오지 못했습니다.');
     }
-  };
-
-  const handlePaid = () => {
-    setIsPaid(true);
-    setIsPaymentModalOpen(false);
   };
 
   const handleToggleFollow = async () => {
@@ -181,15 +170,6 @@ const PromptDetailPage = () => {
       </div>
 
       <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} promptId={promptId} />
-      {isPaymentModalOpen && (
-        <PaymentModal
-          promptId={Number(id)}
-          title={prompt.title}
-          price={prompt.price}
-          onClose={() => setIsPaymentModalOpen(false)}
-          onPaid={handlePaid}
-        />
-      )}
       {downloadData && (
         <DownloadModal
           isOpen={isDownloadModalOpen}
