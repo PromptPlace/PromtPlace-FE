@@ -23,6 +23,13 @@ export type Message = {
   content: string;
   sent_at: string;
   attachments: Attachment[];
+
+  // socket 타입
+  sender?: {
+    user_id: number;
+    nickname: string;
+    profile_img: string;
+  };
 };
 
 //채팅방 목록 조회
