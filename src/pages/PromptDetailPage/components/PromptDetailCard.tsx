@@ -222,8 +222,6 @@ const PromptDetailCard = ({
     downloadPrompt(promptId);
   };
 
-  console.log(promptResult);
-
   const currentUrl = window.location.href;
 
   // Kakao SDK 초기화
