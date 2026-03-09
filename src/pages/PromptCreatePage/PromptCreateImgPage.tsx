@@ -5,17 +5,28 @@ import UploadIcon from '@assets/icon-upload.svg';
 import imgUpload from '@assets/promptCreate/image-upload-img.svg';
 import imgDelete from '@assets/promptCreate/icon-delete-Xbutton-red.svg';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import FilterModal from './components/FilterModal';
 import TagButton from '@/components/Button/TagButton';
 
 import TextModal from '@/components/Modal/TextModal';
 import useCreatePromptWithImage from '@/hooks/mutations/PromptCreatePage/useCreateImg';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import clsx from 'clsx';
+import useGetPromptDetail from '@/hooks/queries/PromptDetailPage/useGetPromptDetail';
+import useEditPrompt from '@/hooks/mutations/PromptCreatePage/useEditPrompt';
 
-const PromptCreateImgPage = () => {
+interface PromptCreateImgPageProps {
+  mode?: 'create' | 'edit';
+  promptId?: number;
+}
+
+const PromptCreateImgPage = ({ mode = 'create', promptId }: PromptCreateImgPageProps) => {
   const navigate = useNavigate();
+
+  const params = useParams();
+  const idFormUrl = params.id ? Number(params.id) : undefined;
+  const actualPromptId = mode === 'edit' ? idFormUrl : promptId;
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -32,6 +43,7 @@ const PromptCreateImgPage = () => {
   const [categories, setCategories] = useState<string[]>([]);
 
   const [files, setFiles] = useState<File[]>([]);
+  const [existingImages, setExistingImages] = useState<string[]>([]); // 서버에서 온 이미지
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [previewText, setPreviewText] = useState<string>('');
@@ -65,6 +77,10 @@ const PromptCreateImgPage = () => {
 
   //API 연동 관련
   const { mutateAsync: createPromptWithImage } = useCreatePromptWithImage();
+  const { data: detailData } = useGetPromptDetail(actualPromptId!, {
+    enabled: mode === 'edit' && !!actualPromptId,
+  });
+  const { mutate: editPrompt } = useEditPrompt(actualPromptId!);
 
   //isPending : 현재 로딩 중인지 알려주는 boolean 값
 
@@ -119,40 +135,67 @@ const PromptCreateImgPage = () => {
     }
 
     try {
-      // 2. 프롬프트와 이미지 업로드
-      const result = await createPromptWithImage({
-        promptData: {
-          title: title,
-          prompt: content,
-          prompt_result: previewText,
-          has_image: files.length > 0, // 이미지가 있으면 true
-          description: discriptionText,
-          usage_guide: howToUseText,
-          is_free: true, // 무료 고정
-          price: 0, // 무료 고정
-          model_version: modelver || '',
-          categories: categories,
-          models: selectedModels,
-        },
-        files: files,
-      });
+      if (mode === 'create') {
+        // 2. 프롬프트와 이미지 업로드
+        const result = await createPromptWithImage({
+          promptData: {
+            title: title,
+            prompt: content,
+            prompt_result: previewText,
+            has_image: files.length > 0, // 이미지가 있으면 true
+            description: discriptionText,
+            usage_guide: howToUseText,
+            is_free: true, // 무료 고정
+            price: 0, // 무료 고정
+            model_version: modelver || '',
+            categories: categories,
+            models: selectedModels,
+          },
+          files: files,
+        });
 
-      console.log('전송 성공!', result);
-      const prompt_ID = result.prompt_id;
+        console.log('전송 성공!', result);
+        const prompt_ID = result.prompt_id;
 
-      // 3. 성공 처리
-      if (prompt_ID) {
-        setIsUploaded(true);
-        setModalText('업로드가 완료되었어요!');
-        setAlertModal(true);
+        // 3. 성공 처리
+        if (prompt_ID) {
+          setIsUploaded(true);
+          setModalText('업로드가 완료되었어요!');
+          setAlertModal(true);
 
-        setTimeout(() => {
-          navigate(`/prompt/${prompt_ID}`);
-        }, 1000);
+          setTimeout(() => {
+            navigate(`/prompt/${prompt_ID}`);
+          }, 1000);
+        } else {
+          // 실패 처리
+          setModalText('업로드가 실패했습니다');
+          setAlertModal(true);
+        }
       } else {
-        // 실패 처리
-        setModalText('업로드가 실패했습니다');
-        setAlertModal(true);
+        // 프롬프트 수정
+        editPrompt(
+          {
+            promptId: actualPromptId!,
+            body: {
+              title: title,
+              prompt: content,
+              prompt_result: previewText,
+              has_image: files.length > 0,
+              description: discriptionText,
+              usage_guide: howToUseText,
+              is_free: true,
+              price: 0,
+              model_version: modelver || '',
+              categories: categories,
+              models: selectedModels,
+            },
+          },
+          {
+            onSuccess: () => {
+              navigate(`/prompt/${actualPromptId}`);
+            },
+          },
+        );
       }
     } catch (err) {
       console.error(err);
@@ -160,6 +203,20 @@ const PromptCreateImgPage = () => {
       setAlertModal(true);
     }
   };
+
+  useEffect(() => {
+    if (mode === 'edit' && detailData) {
+      setTitle(detailData.title);
+      setContent(detailData.prompt);
+      setPreviewText(detailData.prompt_result);
+      setDescriptionText(detailData.description);
+      setHowToUseText(detailData.usage_guide);
+      setSelectedModels(detailData.models.map((m) => m.name));
+      setCategories(detailData.categories.map((c) => c.category.name));
+      setModelver(detailData.model_version ?? '');
+      setExistingImages(detailData.images.map((i) => i.image_url));
+    }
+  }, [mode, detailData]);
 
   return (
     <>
@@ -386,6 +443,32 @@ const PromptCreateImgPage = () => {
 
                     {/* 오른쪽: 업로드된 이미지 목록 */}
                     <div className="flex-1 flex flex-col gap-[12px] max-lg:w-full">
+                      {existingImages.map((file, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-[16px]">
+                          <div className="flex items-center gap-[8px] flex-1 min-w-0">
+                            {/* 썸네일 이미지 */}
+                            <div className="w-[30px] h-[30px] rounded-[16px] overflow-hidden bg-gray-100 shrink-0">
+                              <img src={file} alt={file} className="w-full h-full object-cover" />
+                            </div>
+
+                            {/* 파일명 */}
+                            <p className="text-sm text-gray-700 whitespace-normal break-all max-phone:text-[10px]">
+                              {file}
+                            </p>
+                          </div>
+
+                          {/* 삭제 버튼 */}
+                          <img
+                            src={imgDelete}
+                            alt="삭제 버튼"
+                            onClick={() => setExistingImages(existingImages.filter((_, i) => i !== idx))}
+                            className="text-alert"
+                          />
+                        </div>
+                      ))}
+
                       {files.map((file, idx) => (
                         <div
                           key={idx}

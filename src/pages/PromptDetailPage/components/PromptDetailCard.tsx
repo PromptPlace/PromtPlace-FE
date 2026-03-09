@@ -28,6 +28,7 @@ import XIcon from '@assets/icon-x-logo.svg';
 import KakaoIcon from '../assets/kakaotalk-logo.svg';
 import LinkIcon from '../assets/link-logo.svg';
 import FacebookIcon from '../assets/facebook-logo.svg';
+import usePayment from '@/hooks/mutations/MainPage/usePostRequestPayment';
 
 interface Props {
   title: string;
@@ -62,7 +63,7 @@ const PromptDetailCard = ({
   tags = [],
   description: descProp,
   usageGuide: usageProp,
-  isPaid = false,
+  isPaid,
   price,
   isFree,
   onDownload,
@@ -72,6 +73,8 @@ const PromptDetailCard = ({
   const { data, isLoading } = useGetPromptDetail(promptId, {
     enabled: Number.isFinite(promptId),
   });
+
+  const accessToken = localStorage.getItem('accessToken');
 
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -292,12 +295,22 @@ const PromptDetailCard = ({
       ? '※ 다운로드를 하고 실제 프롬프트를 사용해보세요!'
       : '※ 결제 후 ‘프롬프트 다운로드’를 누르면 확인하실 수 있습니다. 열람 후에는 환불이 불가합니다.';
 
-  const [isPaymentBlockedOpen, setIsPaymentBlockedOpen] = useState(false);
+  const { handlePayment } = usePayment();
 
-  const handlePrimaryAction = () => {
-    // 유료 + 구매 전 → 결제 모달(현재는 결제 제한 안내)
+  const handlePrimaryAction = async () => {
+    if (accessToken === null) {
+      // 로그인하지 않은 경우 로그인 모달 오픈
+      onDownload();
+      return;
+    }
+    // 유료 + 구매 전 → 결제 진행
     if (isPaidPrompt && !hasPurchased) {
-      setIsPaymentBlockedOpen(true);
+      try {
+        await handlePayment(promptId);
+        onDownload();
+      } catch (err: any) {
+        alert(err.message || '결제에 실패했습니다.');
+      }
       return;
     }
 
@@ -353,7 +366,7 @@ const PromptDetailCard = ({
                         type="button"
                         onClick={() => handleMainCategoryClick(cat)}
                         className="inline-flex items-center gap-1 text-[14px] text-[#030712]
-                         px-3 py-2 hover:bg-gray-100 transition cursor-pointer"
+                        px-3 py-2 hover:bg-gray-100 transition cursor-pointer"
                         aria-label={`메인 카테고리 ${displayName}로 이동`}>
                         {displayName}
                         <img src={arrowRightBlack} alt="" className="w-[16px] h-[16px]" />
@@ -596,14 +609,6 @@ const PromptDetailCard = ({
             });
           }}
           onClickNo={() => setIsDeleteConfirmOpen(false)}
-        />
-      )}
-
-      {isPaymentBlockedOpen && (
-        <TextModal
-          text="PG사 심사 중으로 결제가 제한됩니다."
-          onClick={() => setIsPaymentBlockedOpen(false)}
-          size="lg"
         />
       )}
     </>

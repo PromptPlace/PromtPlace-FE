@@ -2,18 +2,29 @@ import help from '@assets/promptCreate/icon-help.svg';
 import arrowdown from '@assets/promptCreate/icon_arrow.svg';
 import UploadIcon from '@assets/icon-upload.svg';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FilterModal from './components/FilterModal';
 import TagButton from '@/components/Button/TagButton';
 
 import TextModal from '@/components/Modal/TextModal';
 
 import useCreatePromptText from '@/hooks/mutations/PromptCreatePage/useCreateText';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import clsx from 'clsx';
+import useGetPromptDetail from '@/hooks/queries/PromptDetailPage/useGetPromptDetail';
+import useEditPrompt from '@/hooks/mutations/PromptCreatePage/useEditPrompt';
 
-const PromptCreateTextPage = () => {
+interface PromptCreateTextPageProps {
+  mode?: 'create' | 'edit';
+  promptId?: number;
+}
+
+const PromptCreateTextPage = ({ mode = 'create', promptId }: PromptCreateTextPageProps) => {
   const navigate = useNavigate();
+
+  const params = useParams();
+  const idFormUrl = params.id ? Number(params.id) : undefined;
+  const actualPromptId = mode === 'edit' ? idFormUrl : promptId;
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -40,7 +51,10 @@ const PromptCreateTextPage = () => {
 
   //API 연동 관련
   const { mutateAsync: createPrompt } = useCreatePromptText();
-  //isPending : 현재 로딩 중인지 알려주는 boolean 값
+  const { data: detailData } = useGetPromptDetail(actualPromptId!, {
+    enabled: mode === 'edit' && !!actualPromptId,
+  });
+  const { mutate: editPrompt } = useEditPrompt(actualPromptId!);
 
   // 유효성 검증 함수
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -76,37 +90,64 @@ const PromptCreateTextPage = () => {
       return;
     }
     try {
-      // 프롬프트 업로드
-      const res = await createPrompt({
-        title: title,
-        prompt: content,
-        prompt_result: previewText,
-        has_image: false,
-        description: discriptionText,
-        usage_guide: howToUseText,
-        is_free: true,
-        price: 0,
-        model_version: modelver || '',
-        categories: categories,
-        models: selectedModels,
-      });
+      if (mode === 'create') {
+        // 프롬프트 업로드
+        const res = await createPrompt({
+          title: title,
+          prompt: content,
+          prompt_result: previewText,
+          has_image: false,
+          description: discriptionText,
+          usage_guide: howToUseText,
+          is_free: true,
+          price: 0,
+          model_version: modelver || '',
+          categories: categories,
+          models: selectedModels,
+        });
 
-      console.log('전송 성공!', res);
-      const prompt_ID = res.data.prompt_id;
+        console.log('전송 성공!', res);
+        const prompt_ID = res.data.prompt_id;
 
-      // 성공
-      if (prompt_ID) {
-        setIsUploaded(true);
-        setModalText('업로드가 완료되었어요!');
-        setAlertModal(true);
+        // 성공
+        if (prompt_ID) {
+          setIsUploaded(true);
+          setModalText('업로드가 완료되었어요!');
+          setAlertModal(true);
 
-        setTimeout(() => {
-          navigate(`/prompt/${prompt_ID}`);
-        }, 1000);
+          setTimeout(() => {
+            navigate(`/prompt/${prompt_ID}`);
+          }, 1000);
+        } else {
+          // 실패 처리
+          setModalText('업로드가 실패했습니다');
+          setAlertModal(true);
+        }
       } else {
-        // 실패 처리
-        setModalText('업로드가 실패했습니다');
-        setAlertModal(true);
+        // 프롬프트 수정
+        editPrompt(
+          {
+            promptId: actualPromptId!,
+            body: {
+              title: title,
+              prompt: content,
+              prompt_result: previewText,
+              has_image: false,
+              description: discriptionText,
+              usage_guide: howToUseText,
+              is_free: true,
+              price: 0,
+              model_version: modelver || '',
+              categories: categories,
+              models: selectedModels,
+            },
+          },
+          {
+            onSuccess: () => {
+              navigate(`/prompt/${actualPromptId}`);
+            },
+          },
+        );
       }
     } catch (err) {
       console.error(err);
@@ -114,6 +155,19 @@ const PromptCreateTextPage = () => {
       setAlertModal(true);
     }
   };
+
+  useEffect(() => {
+    if (mode === 'edit' && detailData) {
+      setTitle(detailData.title);
+      setContent(detailData.prompt);
+      setPreviewText(detailData.prompt_result);
+      setDescriptionText(detailData.description);
+      setHowToUseText(detailData.usage_guide);
+      setSelectedModels(detailData.models.map((m) => m.name));
+      setCategories(detailData.categories.map((c) => c.category.name));
+      setModelver(detailData.model_version ?? '');
+    }
+  }, [mode, detailData]);
 
   return (
     <>
@@ -362,7 +416,9 @@ const PromptCreateTextPage = () => {
                 onClick={handleUploadClick}
                 disabled={isUploaded}>
                 <img src={UploadIcon} alt="업로드 버튼" className="w-[16px] h-[16px]" />
-                <p className="custom-h4 text-white max-phone:text-[16px]">업로드 하기</p>
+                <p className="custom-h4 text-white max-phone:text-[16px]">
+                  {mode === 'create' ? '업로드 하기' : '수정하기'}
+                </p>
               </button>
             </div>
           </div>
