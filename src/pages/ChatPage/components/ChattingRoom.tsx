@@ -1,18 +1,22 @@
-import formatDate from '@/utils/formatDate';
+import { useEffect, useRef, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
 
+import { useQueryClient, type InfiniteData } from '@tanstack/react-query';
+
+import useGetChatRoomsDetail from '@/hooks/queries/ChatPage/useGetChatRoomsDetail';
+import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
+import { getSocket } from '@/shared/socket/apis/socket';
+import { useAuth } from '@/context/AuthContext';
+import { QUERY_KEY } from '@/constants/key';
+import formatDate from '@/utils/formatDate';
 import ChatBubble from './ChatBubble';
+import type { Message, ResponseChatRoomsDetailDto } from '@/types/ChatPage/chat';
 
 import DefaultIcon from '@assets/icon-profile-image-default.svg';
 import PinIcon from '@assets/chat/icon-pin.svg?react';
 import AttachIcon from '@assets/chat/icon-attach.svg?react';
 import GalleryIcon from '@assets/chat/icon-gallery.svg?react';
 import SendIcon from '@assets/chat/icon-send.svg?react';
-import { useEffect, useRef, useState } from 'react';
-import useGetChatRoomsDetail from '@/hooks/queries/ChatPage/useGetChatRoomsDetail';
-import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
-import { getSocket } from '@/shared/socket/apis/socket';
-import { useAuth } from '@/context/AuthContext';
-import { useInView } from 'react-intersection-observer';
 
 interface ChattingRoomProps {
   selectedRoomId: number;
@@ -20,25 +24,34 @@ interface ChattingRoomProps {
 
 const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
   const { data, hasNextPage, fetchNextPage, isFetching } = useGetChatRoomsDetail(selectedRoomId); // 채팅방 상세 조회
-  const { user } = useAuth();
 
-  const firstPage = data?.pages[0].data;
-  const messages = data?.pages.map((page) => page.data.messages).flat() ?? []; // 채팅방 메세지 전체 조회
+  const { user } = useAuth();
+  const queryClient = useQueryClient(); // 캐시 업데이트를 위해서 queryClient 가져옴
+
+  const firstPage = data?.pages[0].data; // 첫 페이지 데이터 (채팅방 및 상대방 정보)
+  const messages =
+    data?.pages
+      .map((page) => page.data.messages)
+      .flat()
+      .reverse() ?? []; // 채팅방 메세지 전체 조회 (최신 메시지 아래로 가도록 순서 뒤집기)
 
   const { data: userData } = useGetMember({ member_id: firstPage?.partner.user_id as number }); // 상대방 정보
   const { year, month, day, dayOfWeek } = formatDate(firstPage?.room.created_at || '');
 
   const [input, setInput] = useState('');
 
-  const { ref, inView } = useInView({ threshold: 0 });
-  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null); // 채팅 스크롤 영역
+  const { ref } = useInView({ threshold: 0, root: scrollRef.current });
+  const bottomRef = useRef<HTMLDivElement | null>(null); // 채팅 맨 아래 위치 (자동 스크롤)
 
+  // 메시지 전송
   const handleSubmit = () => {
     setInput('');
 
     const socket = getSocket();
     if (!socket) return;
 
+    // socket으로 메시지 전송
     socket.emit('sendMessage', { room_id: selectedRoomId, content: input, files: [] }, (ack: { ok: boolean }) => {
       if (!ack.ok) {
         console.log('sendMessage 실패');
@@ -54,6 +67,18 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
     }
   };
 
+  // 채팅 스크롤 이벤트
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    // 스크롤 상단 도달 -> 이전 메시지 불러오기
+    if (el.scrollTop <= 10 && hasNextPage && !isFetching) {
+      fetchNextPage();
+    }
+  };
+
+  // 채팅방 입장
   useEffect(() => {
     const socket = getSocket();
 
@@ -69,15 +94,50 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
     });
   }, [selectedRoomId]);
 
-  useEffect(() => {
-    if (inView && !isFetching && hasNextPage) {
-      fetchNextPage();
-    }
-  }, [fetchNextPage, inView, isFetching, hasNextPage]);
-
+  // 새 메시지 도착 (메시지 개수 변경 시) -> 아래로 스크롤
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages.length]);
+
+  // 메시지 수신
+  useEffect(() => {
+    const socket = getSocket();
+    if (!socket) return;
+
+    // 서버에서 메시지 받음
+    const handleReceiveMessage = (newMessage: Message) => {
+      // 캐시 업데이트
+      queryClient.setQueryData(
+        [QUERY_KEY.chatRooms, selectedRoomId, undefined],
+        (old: InfiniteData<ResponseChatRoomsDetailDto>) => {
+          if (!old) return old;
+
+          // 기존 pages 복사
+          const newPages = [...old.pages];
+
+          // 첫 페이지에 새 메시지 추가 (최신 메시지는 가장 첫 페이지에 존재해야하므로)
+          newPages[0] = {
+            ...newPages[0],
+            data: {
+              ...newPages[0].data,
+              messages: [newMessage, ...newPages[0].data.messages],
+            },
+          };
+
+          return {
+            ...old,
+            pages: newPages,
+          };
+        },
+      );
+    };
+
+    socket.on('receiveMessage', handleReceiveMessage);
+
+    return () => {
+      socket.off('receiveMessage', handleReceiveMessage);
+    };
+  }, [selectedRoomId, queryClient]);
 
   return (
     <>
@@ -116,10 +176,13 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
           <PinIcon />
         </div>
 
-        <div ref={ref} className="h-2 bg-red-300"></div>
-
         {/* 채팅 섹션 */}
-        <section className="flex flex-col gap-[20px] flex-1 min-h-0 overflow-auto">
+        <section
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="flex flex-col gap-[20px] flex-1 min-h-0 overflow-auto">
+          <div ref={ref} className="h-2 bg-red-300 shrink-0"></div>
+
           {/* 사용자 정보 부분 */}
           <div className="flex flex-col gap-[20px] items-center pt-[20px]">
             {/* 사용자 이미지 */}
@@ -169,8 +232,12 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
           {/* 메시지 */}
           {messages && (
             <div className="flex flex-col gap-[8px] flex-1">
-              {messages.map((msg, idx) => (
-                <ChatBubble key={idx} text={msg.content} isMine={msg.sender_id === user.user_id} />
+              {messages.map((msg) => (
+                <ChatBubble
+                  key={msg.message_id}
+                  text={msg.content}
+                  isMine={(msg.sender_id ?? msg?.sender?.user_id) === user.user_id}
+                />
               ))}
             </div>
           )}
