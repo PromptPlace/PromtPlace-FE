@@ -31,4 +31,7 @@ export const lazyRoutes = {
   AdminComplaintPage: React.lazy(() => import('../pages/AdminPage/AdiminComplaintPage')),
   PromptGuideCreatePage: React.lazy(() => import('../pages/AdminPage/PromptGuideCreatePage')),
   AdminComplaintDetailPage: React.lazy(() => import('../pages/AdminPage/AdminComplaintDetailPage')),
+  TestPage: React.lazy(() => import('../pages/TestPage')),
+  SellerModalTestPage: React.lazy(() => import('../pages/Test/SellerModalTestPage')),
+  SellerNotRegisteredTestPage: React.lazy(() => import('../pages/Test/SellerNotRegisteredTestPage')),
 };
