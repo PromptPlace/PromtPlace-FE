@@ -33,4 +33,5 @@ export const lazyRoutes = {
   AdminComplaintDetailPage: React.lazy(() => import('../pages/AdminPage/AdminComplaintDetailPage')),
   ChatPage: React.lazy(() => import('../pages/ChatPage/ChatPage')),
   ChatRoomPage: React.lazy(() => import('../pages/ChatPage/ChatRoomPage')),
+  TestPage: React.lazy(() => import('../pages/TestPage')),
 };
