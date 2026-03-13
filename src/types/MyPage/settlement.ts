@@ -146,3 +146,20 @@ export interface TotalSettlementAmountSectionProps {
   onClickYearSelect?: () => void;
   onClickYearOption?: (option: string) => void;
 }
+
+// 사용처: 정산 계좌 정보 조회 API 응답의 data 필드
+export interface SettlementAccountInfoApiData {
+  bank: string;
+  accountNumber: string;
+  holderName: string;
+}
+
+// 사용처: src/pages/MyPage/components/settlement/SettlementAccountInfoSection.tsx
+// 정산 계좌 정보 섹션에서 사용하는 API 기반 데이터 형태입니다.
+export type SettlementAccountInfoSectionData = SettlementAccountInfoApiData;
+
+// 사용처: src/pages/MyPage/components/settlement/SettlementAccountInfoSection.tsx
+export interface SettlementAccountInfoSectionProps {
+  data: SettlementAccountInfoSectionData;
+  onClickEdit?: () => void;
+}
