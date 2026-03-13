@@ -37,7 +37,8 @@ export const publicRoutes: RouteObject[] = [
 export const protectedRoutes: RouteObject[] = [
   {
     path: '/mypage',
-    element: <ProtectedLayout />,
+    //element: <ProtectedLayout />,
+    element: <HomeLayout />,
     children: [
       {
         path: 'prompt',
