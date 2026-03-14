@@ -148,6 +148,16 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
       }
       console.log('joinRoom 성공');
     });
+
+    return () => {
+      socket.emit('leaveRoom', { room_id: selectedRoomId }, (ack: { ok: boolean }) => {
+        if (!ack?.ok) {
+          console.log('leaveRoom 실패');
+          return;
+        }
+        console.log('leaveRoom 성공');
+      });
+    };
   }, [selectedRoomId]);
 
   // 새 메시지 도착 (메시지 개수 변경 시) -> 아래로 스크롤
