@@ -17,6 +17,8 @@ import PinIcon from '@assets/chat/icon-pin.svg?react';
 import AttachIcon from '@assets/chat/icon-attach.svg?react';
 import GalleryIcon from '@assets/chat/icon-gallery.svg?react';
 import SendIcon from '@assets/chat/icon-send.svg?react';
+import PreviewItem from './PreviewItem';
+import formatFileSize from '@/utils/formatFileSize';
 
 interface ChattingRoomProps {
   selectedRoomId: number;
@@ -24,6 +26,8 @@ interface ChattingRoomProps {
 
 const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
   const { data, hasNextPage, fetchNextPage, isFetching } = useGetChatRoomsDetail(selectedRoomId); // 채팅방 상세 조회
+  const [files, setFiles] = useState<File[]>([]); // 파일 관련
+  const [previews, setPreviews] = useState<string[]>([]); // 미리보기용 이미지
 
   const { user } = useAuth();
   const queryClient = useQueryClient(); // 캐시 업데이트를 위해서 queryClient 가져옴
@@ -46,6 +50,7 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
 
   // 메시지 전송
   const handleSubmit = () => {
+    if (!input) return;
     setInput('');
 
     const socket = getSocket();
@@ -76,6 +81,29 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
     if (el.scrollTop <= 10 && hasNextPage && !isFetching) {
       fetchNextPage();
     }
+  };
+
+  // 파일 선택
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files;
+    if (!selected) return;
+    if (files.length === 3) return;
+    if (previews.length === 3) return;
+
+    const fileArr = Array.from(selected);
+
+    setFiles((prev) => [...prev, ...fileArr]);
+
+    const previewUrl = fileArr.map((file) => URL.createObjectURL(file));
+    setPreviews((prev) => [...prev, ...previewUrl]);
+  };
+
+  // 파일 지우기
+  const handleDeleteFile = (idx: number) => {
+    URL.revokeObjectURL(previews[idx]);
+
+    setPreviews((prev) => prev.filter((_, i) => i !== idx));
+    setFiles((prev) => prev.filter((_, i) => i !== idx));
   };
 
   // 채팅방 입장
@@ -246,30 +274,44 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
         </section>
 
         {/* 입력창 */}
-        <div className="flex items-end w-full pt-[20px] relative">
-          <div className="h-[58px] bg-background w-full px-[20px] py-[16px] rounded-[8px] flex gap-[20px] items-center">
+        <div className="flex flex-col w-full relative bg-background">
+          <div className="w-full px-[20px] py-[16px] rounded-[8px] flex gap-[20px] items-start">
             <div className="flex gap-[8px]">
               {/* 파일 선택 */}
               <label>
                 <AttachIcon className="cursor-pointer" />
-                <input type="file" className="hidden" />
+                <input type="file" className="hidden" onChange={handleFileSelect} />
               </label>
 
               {/* 사진 선택 */}
               <label>
                 <GalleryIcon className="cursor-pointer" />
-                <input type="file" className="hidden" />
+                <input type="file" accept="image/*" multiple className="hidden" onChange={handleFileSelect} />
               </label>
             </div>
 
-            {/* 채팅 입력 */}
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleEnter}
-              placeholder="메시지를 입력해주세요."
-              className="flex-1 cursor-pointer custom-body1 plcaeholder:font-['SCoreDream'] placeholder:custom-body1 placeholder:text-gray500"
-            />
+            <div className="flex-1">
+              {/* 채팅 입력 */}
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleEnter}
+                placeholder="메시지를 입력해주세요."
+                className="flex-1 cursor-pointer custom-body1 plcaeholder:font-['SCoreDream'] placeholder:custom-body1 placeholder:text-gray500"
+              />
+
+              <div className="flex gap-[4px] flex-wrap">
+                {previews.length > 0 &&
+                  previews.map((item, idx) => (
+                    <PreviewItem
+                      key={idx}
+                      imageURL={item}
+                      fileSize={formatFileSize({ size: files[idx].size })}
+                      handleDeleteImage={() => handleDeleteFile(idx)}
+                    />
+                  ))}
+              </div>
+            </div>
 
             {/* 채팅 전송 */}
             <SendIcon onClick={handleSubmit} className="cursor-pointer" />
