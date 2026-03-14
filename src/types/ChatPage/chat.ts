@@ -80,3 +80,23 @@ export type ResponseChatRoomsDetailDto = CommonResponse<{
   messages: Message[];
   page: Page;
 }>;
+
+// 파일 업로드용 presign url 발급
+export type File = {
+  name: string;
+  content_type: string;
+};
+
+export type RequestPresignUrlDto = {
+  files: File[];
+};
+
+export type PresignAttachment = {
+  name: string;
+  url: string;
+  key: string;
+};
+
+export type ResponsePresignUrlDto = CommonResponse<{
+  attatchments: PresignAttachment[];
+}>;

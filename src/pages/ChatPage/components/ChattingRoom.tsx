@@ -19,15 +19,19 @@ import GalleryIcon from '@assets/chat/icon-gallery.svg?react';
 import SendIcon from '@assets/chat/icon-send.svg?react';
 import PreviewItem from './PreviewItem';
 import formatFileSize from '@/utils/formatFileSize';
+import usePostPresignUrl from '@/hooks/mutations/ChatPage/usePostPresignUrl';
 
 interface ChattingRoomProps {
   selectedRoomId: number;
 }
 
 const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
-  const { data, hasNextPage, fetchNextPage, isFetching } = useGetChatRoomsDetail(selectedRoomId); // 채팅방 상세 조회
+  const [input, setInput] = useState('');
   const [files, setFiles] = useState<File[]>([]); // 파일 관련
   const [previews, setPreviews] = useState<string[]>([]); // 미리보기용 이미지
+
+  const { data, hasNextPage, fetchNextPage, isFetching } = useGetChatRoomsDetail(selectedRoomId); // 채팅방 상세 조회
+  const { mutateAsync: postPresignUrl } = usePostPresignUrl();
 
   const { user } = useAuth();
   const queryClient = useQueryClient(); // 캐시 업데이트를 위해서 queryClient 가져옴
@@ -42,24 +46,48 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
   const { data: userData } = useGetMember({ member_id: firstPage?.partner.user_id as number }); // 상대방 정보
   const { year, month, day, dayOfWeek } = formatDate(firstPage?.room.created_at || '');
 
-  const [input, setInput] = useState('');
-
   const scrollRef = useRef<HTMLDivElement | null>(null); // 채팅 스크롤 영역
   const { ref } = useInView({ threshold: 0, root: scrollRef.current });
   const bottomRef = useRef<HTMLDivElement | null>(null); // 채팅 맨 아래 위치 (자동 스크롤)
 
   // 메시지 전송
-  const handleSubmit = () => {
-    if (!input) return;
+  const handleSubmit = async () => {
+    const content = input;
     setInput('');
 
     const socket = getSocket();
     if (!socket) return;
 
+    let filePayload: {
+      key: string;
+      content_type: string;
+      name: string;
+      size: number;
+    }[] = [];
+
+    // 파일 있는 경우
+    if (files.length > 0) {
+      const res = await postPresignUrl({
+        files: files.map((file) => ({
+          name: file.name,
+          content_type: file.type,
+        })),
+      });
+
+      const attachments = res.data.attatchments;
+
+      filePayload = attachments.map((attachment, idx) => ({
+        key: attachment.key,
+        content_type: files[idx].type,
+        name: files[idx].name,
+        size: files[idx].size,
+      }));
+    }
+
     // socket으로 메시지 전송
-    socket.emit('sendMessage', { room_id: selectedRoomId, content: input, files: [] }, (ack: { ok: boolean }) => {
+    socket.emit('sendMessage', { room_id: selectedRoomId, content, files: filePayload }, (ack: { ok: boolean }) => {
       if (!ack.ok) {
-        console.log('sendMessage 실패');
+        console.log('sendMessage 실패', ack);
         return;
       }
       console.log('sendMessage 성공');
@@ -264,6 +292,7 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
                 <ChatBubble
                   key={msg.message_id}
                   text={msg.content}
+                  files={msg.attachments}
                   isMine={(msg.sender_id ?? msg?.sender?.user_id) === user.user_id}
                 />
               ))}
