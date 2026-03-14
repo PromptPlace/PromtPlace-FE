@@ -1,8 +1,10 @@
 import type {
   RequestChatDto,
+  RequestPresignUrlDto,
   ResponseChatDto,
   ResponseChatRoomsDetailDto,
   ResponsePostChatRoomsDto,
+  ResponsePresignUrlDto,
 } from '@/types/ChatPage/chat';
 import { axiosInstance } from '../axios';
 import type { PaginationDto } from '@/types/ChatPage/pagination';
@@ -31,6 +33,13 @@ export const getChatRoomsDetail = async (
   const { data } = await axiosInstance(`/api/chat/rooms/${roomId}`, {
     params: { cursor, limit },
   });
+
+  return data;
+};
+
+// 파일 업로드용 presign url 발급
+export const postPresignUrl = async (body: RequestPresignUrlDto): Promise<ResponsePresignUrlDto> => {
+  const { data } = await axiosInstance.post('/api/chat/presigned-url', body);
 
   return data;
 };

@@ -1,11 +1,13 @@
+import type { Attachment } from '@/types/ChatPage/chat';
 import clsx from 'clsx';
 
 interface ChatBubbleProps {
   text: string;
+  files: Attachment[];
   isMine: boolean;
 }
 
-const ChatBubble = ({ text, isMine }: ChatBubbleProps) => {
+const ChatBubble = ({ text, files, isMine }: ChatBubbleProps) => {
   return (
     <div className={clsx('flex', isMine ? 'justify-end' : 'justify-start')}>
       <div
@@ -16,6 +18,10 @@ const ChatBubble = ({ text, isMine }: ChatBubbleProps) => {
             : 'bg-background rounded-r-[32px] rounded-bl-[32px]',
         )}>
         {text}
+
+        {files?.map((file) => (
+          <img key={file.url} src={file.url} className="max-w-[200px] rounded-md" />
+        ))}
       </div>
     </div>
   );
