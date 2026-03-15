@@ -14,12 +14,14 @@ import type { Message, ResponseChatRoomsDetailDto } from '@/types/ChatPage/chat'
 
 import DefaultIcon from '@assets/icon-profile-image-default.svg';
 import PinIcon from '@assets/chat/icon-pin.svg?react';
+import DotsIcon from '@assets/icon-dot.svg?react';
 import AttachIcon from '@assets/chat/icon-attach.svg?react';
 import GalleryIcon from '@assets/chat/icon-gallery.svg?react';
 import SendIcon from '@assets/chat/icon-send.svg?react';
 import PreviewItem from './PreviewItem';
 import formatFileSize from '@/utils/formatFileSize';
 import usePostPresignUrl from '@/hooks/mutations/ChatPage/usePostPresignUrl';
+import ChatMenu from './ChatMenu';
 
 interface ChattingRoomProps {
   selectedRoomId: number;
@@ -29,6 +31,8 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
   const [input, setInput] = useState('');
   const [files, setFiles] = useState<File[]>([]); // 파일 관련
   const [previews, setPreviews] = useState<string[]>([]); // 미리보기용 이미지
+  const [showMenu, setShowMenu] = useState<boolean>(false); // 메뉴 클릭 여부
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   const { data, hasNextPage, fetchNextPage, isFetching } = useGetChatRoomsDetail(selectedRoomId); // 채팅방 상세 조회
   const { mutateAsync: postPresignUrl } = usePostPresignUrl();
@@ -133,6 +137,22 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
     setPreviews((prev) => prev.filter((_, i) => i !== idx));
     setFiles((prev) => prev.filter((_, i) => i !== idx));
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!menuRef.current) return;
+
+      if (!menuRef.current.contains(e.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // 채팅방 입장
   useEffect(() => {
@@ -241,7 +261,18 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
                   </div>
                 </section>
               </div>
-              <PinIcon />
+
+              <div ref={menuRef} className="flex items-center gap-[16px] relative">
+                <PinIcon className="cursor-pointer" />
+                <DotsIcon className="cursor-pointer" onClick={() => setShowMenu((prev) => !prev)} />
+
+                {/* 메뉴 */}
+                {showMenu && (
+                  <div className="absolute right-0 top-8">
+                    <ChatMenu roomId={selectedRoomId} />
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* 채팅 섹션 */}
