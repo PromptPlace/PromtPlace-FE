@@ -8,6 +8,7 @@ import type {
 } from '@/types/ChatPage/chat';
 import { axiosInstance } from '../axios';
 import type { PaginationDto } from '@/types/ChatPage/pagination';
+import type { CommonResponse } from '@/types/common';
 
 // 채팅방 목록 조회
 export const getChatRooms = async ({ filter, search, cursor, limit }: RequestChatDto): Promise<ResponseChatDto> => {
@@ -40,6 +41,13 @@ export const getChatRoomsDetail = async (
 // 파일 업로드용 presign url 발급
 export const postPresignUrl = async (body: RequestPresignUrlDto): Promise<ResponsePresignUrlDto> => {
   const { data } = await axiosInstance.post('/api/chat/presigned-url', body);
+
+  return data;
+};
+
+// 채팅방 나가기
+export const patchLeaveChat = async (roomId: number): Promise<CommonResponse<null>> => {
+  const { data } = await axiosInstance.patch(`/api/chat/rooms/${roomId}/leave`);
 
   return data;
 };
