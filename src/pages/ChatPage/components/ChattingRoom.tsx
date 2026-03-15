@@ -269,7 +269,7 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
                 {/* 메뉴 */}
                 {showMenu && (
                   <div className="absolute right-0 top-8">
-                    <ChatMenu roomId={selectedRoomId} />
+                    <ChatMenu roomId={selectedRoomId} blocked_user_id={userData?.data.member_id as number} />
                   </div>
                 )}
               </div>

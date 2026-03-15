@@ -51,3 +51,10 @@ export const patchLeaveChat = async (roomId: number): Promise<CommonResponse<nul
 
   return data;
 };
+
+// 상대방 차단
+export const postBlockChat = async (blocked_user_id: number): Promise<CommonResponse<null>> => {
+  const { data } = await axiosInstance.post('/api/chat/block', blocked_user_id);
+
+  return data;
+};
