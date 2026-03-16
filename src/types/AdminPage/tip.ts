@@ -5,7 +5,7 @@ export type RequestTipAdminDto = {
   writer_id: number;
   title: string;
   content: string;
-  file_url: string;
+  file_url?: string;
 };
 
 export type ResponseTipAdminDto = CommonResponse<{
