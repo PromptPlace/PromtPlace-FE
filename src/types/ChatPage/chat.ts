@@ -100,3 +100,8 @@ export type PresignAttachment = {
 export type ResponsePresignUrlDto = CommonResponse<{
   attatchments: PresignAttachment[];
 }>;
+
+// 채팅방 고정 토글
+export type ResponsePatchPinChatDto = CommonResponse<{
+  isPinned: boolean;
+}>;

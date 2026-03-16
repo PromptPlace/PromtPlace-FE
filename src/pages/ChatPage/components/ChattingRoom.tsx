@@ -2,26 +2,29 @@ import { useEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 import { useQueryClient, type InfiniteData } from '@tanstack/react-query';
-
 import useGetChatRoomsDetail from '@/hooks/queries/ChatPage/useGetChatRoomsDetail';
 import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
+import usePostPresignUrl from '@/hooks/mutations/ChatPage/usePostPresignUrl';
+import usePatchPinChat from '@/hooks/mutations/ChatPage/usePatchPinChat';
+
 import { getSocket } from '@/shared/socket/apis/socket';
 import { useAuth } from '@/context/AuthContext';
+import formatFileSize from '@/utils/formatFileSize';
+
 import { QUERY_KEY } from '@/constants/key';
 import formatDate from '@/utils/formatDate';
 import ChatBubble from './ChatBubble';
 import type { Message, ResponseChatRoomsDetailDto } from '@/types/ChatPage/chat';
+import PreviewItem from './PreviewItem';
+import ChatMenu from './ChatMenu';
 
 import DefaultIcon from '@assets/icon-profile-image-default.svg';
 import PinIcon from '@assets/chat/icon-pin.svg?react';
+import PinPrimaryIcon from '@assets/chat/icon-pin-primary.svg?react';
 import DotsIcon from '@assets/icon-dot.svg?react';
 import AttachIcon from '@assets/chat/icon-attach.svg?react';
 import GalleryIcon from '@assets/chat/icon-gallery.svg?react';
 import SendIcon from '@assets/chat/icon-send.svg?react';
-import PreviewItem from './PreviewItem';
-import formatFileSize from '@/utils/formatFileSize';
-import usePostPresignUrl from '@/hooks/mutations/ChatPage/usePostPresignUrl';
-import ChatMenu from './ChatMenu';
 
 interface ChattingRoomProps {
   selectedRoomId: number;
@@ -36,6 +39,7 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
 
   const { data, hasNextPage, fetchNextPage, isFetching } = useGetChatRoomsDetail(selectedRoomId); // 채팅방 상세 조회
   const { mutateAsync: postPresignUrl } = usePostPresignUrl();
+  const { mutate: mutatePatchPinChat } = usePatchPinChat();
 
   const { user } = useAuth();
   const queryClient = useQueryClient(); // 캐시 업데이트를 위해서 queryClient 가져옴
@@ -147,12 +151,14 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('click', handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('click', handleClickOutside);
     };
   }, []);
+
+  // 채팅방 고정
 
   // 채팅방 입장
   useEffect(() => {
@@ -263,7 +269,11 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
               </div>
 
               <div ref={menuRef} className="flex items-center gap-[16px] relative">
-                <PinIcon className="cursor-pointer" />
+                {firstPage?.room.is_pinned ? (
+                  <PinPrimaryIcon onClick={() => mutatePatchPinChat(selectedRoomId)} className="cursor-pointer" />
+                ) : (
+                  <PinIcon onClick={() => mutatePatchPinChat(selectedRoomId)} className="cursor-pointer" />
+                )}
                 <DotsIcon className="cursor-pointer" onClick={() => setShowMenu((prev) => !prev)} />
 
                 {/* 메뉴 */}

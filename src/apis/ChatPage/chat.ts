@@ -3,6 +3,7 @@ import type {
   RequestPresignUrlDto,
   ResponseChatDto,
   ResponseChatRoomsDetailDto,
+  ResponsePatchPinChatDto,
   ResponsePostChatRoomsDto,
   ResponsePresignUrlDto,
 } from '@/types/ChatPage/chat';
@@ -55,6 +56,13 @@ export const patchLeaveChat = async (roomId: number): Promise<CommonResponse<nul
 // 상대방 차단
 export const postBlockChat = async (blocked_user_id: number): Promise<CommonResponse<null>> => {
   const { data } = await axiosInstance.post('/api/chat/block', blocked_user_id);
+
+  return data;
+};
+
+// 채팅방 고정 토글
+export const patchPinChat = async (roomId: number): Promise<ResponsePatchPinChatDto> => {
+  const { data } = await axiosInstance.patch(`/api/chat/rooms/${roomId}/pin`);
 
   return data;
 };
