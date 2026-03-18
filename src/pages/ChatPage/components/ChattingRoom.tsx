@@ -290,7 +290,7 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
               ref={scrollRef}
               onScroll={handleScroll}
               className="flex flex-col gap-[20px] flex-1 min-h-0 overflow-auto">
-              <div ref={ref} className="h-2 bg-red-300 shrink-0"></div>
+              <div ref={ref} className="h-2 shrink-0"></div>
 
               {/* 사용자 정보 부분 */}
               <div className="flex flex-col gap-[20px] items-center pt-[20px]">

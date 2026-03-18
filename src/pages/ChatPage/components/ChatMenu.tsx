@@ -16,7 +16,7 @@ const ChatMenu = ({ roomId, blocked_user_id }: ChatMenuProps) => {
   const { mutate: mutatePostBlockChat } = usePostBlockChat(); // 상대방 차단
 
   return (
-    <div className="w-[142px] h-[94px] p-[10px] rounded-[8px] border border-white-stroke shadow-md flex flex-col items-center justify-center">
+    <div className="w-[142px] h-[94px] p-[10px] rounded-[8px] border border-white-stroke shadow-md flex flex-col items-center justify-center bg-white">
       {MENUS.map((menu) => (
         <div
           key={menu.id}
