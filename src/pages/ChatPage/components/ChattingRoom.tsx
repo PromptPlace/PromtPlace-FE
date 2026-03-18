@@ -74,6 +74,7 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
     }[] = [];
 
     // 파일 있는 경우
+    // 1. presign
     if (files.length > 0) {
       const res = await postPresignUrl({
         files: files.map((file) => ({
@@ -84,6 +85,25 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
 
       const attachments = res.data.attatchments;
 
+      // 2. S3 업로드
+      await Promise.all(
+        attachments.map(async (attachment, idx) => {
+          const res = await fetch(attachment.url, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': files[idx].type,
+            },
+            body: files[idx],
+          });
+
+          if (!res.ok) {
+            console.error('S3 업로드 실패', res);
+            throw new Error('S3 upload failed');
+          }
+        }),
+      );
+
+      // 3. payload 생성
       filePayload = attachments.map((attachment, idx) => ({
         key: attachment.key,
         content_type: files[idx].type,
@@ -92,7 +112,7 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
       }));
     }
 
-    // socket으로 메시지 전송
+    // 4. socket으로 메시지 전송
     socket.emit('sendMessage', { room_id: selectedRoomId, content, files: filePayload }, (ack: { ok: boolean }) => {
       if (!ack.ok) {
         console.log('sendMessage 실패', ack);
