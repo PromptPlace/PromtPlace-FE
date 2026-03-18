@@ -1,5 +1,6 @@
 import type {
   RequestPatchTipAdminDto,
+  RequestTipAdminDto,
   ResponseNoticeAdminDto,
   ResponsePatchTipAdminDto,
   ResponseTipAdminDto,
@@ -31,7 +32,7 @@ export const patchTipAdmin = async ({
 };
 
 // 공지사항 작성 (관리자)
-export const postNoticeAdmin = async (body: FormData): Promise<ResponseNoticeAdminDto> => {
+export const postNoticeAdmin = async (body: RequestTipAdminDto): Promise<ResponseNoticeAdminDto> => {
   const { data } = await axiosInstance.post('/api/announcements', body);
 
   return data;

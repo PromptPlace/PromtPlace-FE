@@ -149,14 +149,21 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
         );
       } else {
         // 공지사항 등록
-        mutatePostNotice(formData, {
-          onSuccess: () => {
-            alert('게시글이 업로드되었습니다.');
+        mutatePostNotice(
+          {
+            writer_id,
+            title,
+            content,
           },
-          onError: () => {
-            alert('공지사항 업로드에 실패했습니다.');
+          {
+            onSuccess: () => {
+              alert('게시글이 업로드되었습니다.');
+            },
+            onError: () => {
+              alert('공지사항 업로드에 실패했습니다.');
+            },
           },
-        });
+        );
       }
     }
   };
