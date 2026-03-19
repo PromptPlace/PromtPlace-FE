@@ -25,6 +25,9 @@ import DotsIcon from '@assets/icon-dot.svg?react';
 import AttachIcon from '@assets/chat/icon-attach.svg?react';
 import GalleryIcon from '@assets/chat/icon-gallery.svg?react';
 import SendIcon from '@assets/chat/icon-send.svg?react';
+import ArrowIcon from '@assets/header/icon-arrow_fill.svg?react';
+import useGetMyDownloadedPrompts from '@/hooks/queries/MyPage/useGetMyDownloadedPrompts';
+import clsx from 'clsx';
 
 interface ChattingRoomProps {
   selectedRoomId: number;
@@ -35,11 +38,14 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
   const [files, setFiles] = useState<File[]>([]); // 파일 관련
   const [previews, setPreviews] = useState<string[]>([]); // 미리보기용 이미지
   const [showMenu, setShowMenu] = useState<boolean>(false); // 메뉴 클릭 여부
+  const [showDownload, setShowDownload] = useState<boolean>(false); // 내가 다운받은 프롬프트
+  const [showDownloadAll, setShowDownloadAll] = useState<boolean>(false); // 내가 다운받은 프롬프트 더 보기
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   const { data, hasNextPage, fetchNextPage, isFetching } = useGetChatRoomsDetail(selectedRoomId); // 채팅방 상세 조회
   const { mutateAsync: postPresignUrl } = usePostPresignUrl();
   const { mutate: mutatePatchPinChat } = usePatchPinChat();
+  const { data: downloadPromptsData } = useGetMyDownloadedPrompts();
 
   const { user } = useAuth();
   const queryClient = useQueryClient(); // 캐시 업데이트를 위해서 queryClient 가져옴
@@ -257,7 +263,53 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
         <>
           <div className="rounded-[12px] bg-white w-full p-[32px] flex flex-col h-dvh">
             {/* 상단 회원 정보 */}
-            <div className="flex justify-between items-center  mb-[20px]">
+            <div className="flex justify-between items-center mb-[20px] relative">
+              {/* 내가 다운받은 프롬프트 */}
+              {showDownload && (
+                <div className="fixed z-10 inset-0 top-[92px] bg-overlay h-dvh">
+                  <div
+                    className={clsx(
+                      'absolute inset-0 bg-white flex flex-col gap-[16px] p-[32px]',
+                      showDownloadAll ? 'h-dvh' : 'h-max max-h-[215px]',
+                    )}>
+                    <ul className="list-disc ">
+                      {/* 3개까지 잘라서 보여줌 */}
+                      {!showDownloadAll &&
+                        downloadPromptsData?.data.slice(0, 3).map((data) => (
+                          <li key={data.prompt_id} className="custom-body2">
+                            {data.title}
+                          </li>
+                        ))}
+                      {/* 더 보기인 경우 전체 다 보여줌 */}
+                      {showDownloadAll &&
+                        downloadPromptsData?.data.map((data) => (
+                          <li key={data.prompt_id} className="custom-body2">
+                            {data.title}
+                          </li>
+                        ))}
+                    </ul>
+
+                    {/* 4개 이상인 경우 더 보기 버튼 */}
+                    {downloadPromptsData?.data && downloadPromptsData.data.length > 4 && (
+                      <div className={clsx('flex justify-center', showDownloadAll && 'flex-1 pb-[112px] items-end')}>
+                        <button
+                          onClick={() => {
+                            setShowDownloadAll((prev) => !prev);
+                            if (showDownloadAll) {
+                              setShowDownload(false);
+                            }
+                          }}
+                          className={clsx(
+                            'text-gray500 px-[16px] h-[45px] flex justify-center items-center rounded-[12px] bg-white hover:bg-background duration-300',
+                          )}>
+                          {showDownloadAll ? '메시지로 돌아가기' : '더 보기'}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {/* 사진 ~소개 */}
               <div className="flex gap-[16px] items-center">
                 <div className="size-[60px] rounded-full overflow-hidden">
@@ -284,6 +336,18 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
 
                     {/* 계정 소개 */}
                     {firstPage?.partner.role === 'ADMIN' && <p className="custom-body2">운영자 계정이에요</p>}
+                    {firstPage?.partner.role === 'USER' && (
+                      <div className="flex relative">
+                        <p className="custom-body2">내가 다운받은 프롬프트</p>
+                        <ArrowIcon
+                          className={clsx(
+                            'cursor-pointer transition-all duration-500 ease-in-out',
+                            showDownload ? '-rotate-180' : 'rotate-none',
+                          )}
+                          onClick={() => setShowDownload((prev) => !prev)}
+                        />
+                      </div>
+                    )}
                   </div>
                 </section>
               </div>
