@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import clsx from 'clsx';
 
 import { useAuth } from '@/context/AuthContext';
 
@@ -11,6 +12,8 @@ import useGetFollower from '@/hooks/queries/ProfilePage/useGetFollower';
 import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
 import useGetPrompts from '@/hooks/queries/ProfilePage/useGetPrompts';
 import useGetSNS from '@/hooks/queries/ProfilePage/useGetSNS';
+import useDeleteAdmin from '@/hooks/mutations/ProfilePage/useDeleteAdmin';
+import { useOpenChatRoom } from '@/hooks/useOpenChatRoom';
 
 import type { FollowerWithStatus, FollowingWithStatus } from '@/types/ProfilePage/profile';
 import TextModal from '@/components/Modal/TextModal';
@@ -20,14 +23,11 @@ import ProfileButton from './ProfileButton';
 
 import ArrowIcon from '@assets/icon-arrow-right-profile.svg?react';
 import ProfileIcon from '@assets/header/icon-mypage.svg';
-import clsx from 'clsx';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import AdminMessageModal from './AdminMessageModal';
 import AdminBanModal from './AdminBanModal';
 import DualModal from '@/components/Modal/DualModal';
-import useDeleteAdmin from '@/hooks/mutations/ProfilePage/useDeleteAdmin';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
-import usePostChatRooms from '@/hooks/mutations/ChatPage/usePostChatRooms';
 
 interface ProfileCardProps {
   mypage?: boolean;
@@ -80,7 +80,7 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
   const { mutate: mutateDeleteAdmin } = useDeleteAdmin();
 
   // 채팅방 생성/반환
-  const { mutate: mutatePostChatRooms } = usePostChatRooms();
+  const { openChatRoom } = useOpenChatRoom();
 
   // 팔로우 및 팔로잉
   const handleFollow = () => {
@@ -215,19 +215,7 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
 
           {!isMyProfile && !isAdmin && (
             <div className="flex gap-[20px]">
-              <ProfileButton
-                text="문의하기"
-                type="chat"
-                onClick={() =>
-                  mutatePostChatRooms(member_id, {
-                    onSuccess: (data) => {
-                      const roomId = data.data.room_id;
-
-                      window.open(`/chat/${roomId}`, '_blank', 'width=500,height=700');
-                    },
-                  })
-                }
-              />
+              <ProfileButton text="문의하기" type="chat" onClick={() => openChatRoom(member_id)} />
               <ProfileButton
                 text={isFollow ? '팔로우 완료' : '팔로우'}
                 type={isFollow ? 'check' : 'plus'}
