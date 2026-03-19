@@ -342,14 +342,11 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
                     </p>
                   )}
 
-                  {/*  채팅 내역 없는 경우 */}
-                  {messages.length === 0 && (
-                    <p className="custom-body3 text-center">
-                      해당 이용자님과
-                      <br />
-                      자유롭게 대화를 나눠보세요.
-                    </p>
-                  )}
+                  <p className="custom-body3 text-center">
+                    해당 이용자님과
+                    <br />
+                    자유롭게 대화를 나눠보세요.
+                  </p>
                 </div>
               </div>
 
