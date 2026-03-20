@@ -41,6 +41,8 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
   const [showDownload, setShowDownload] = useState<boolean>(false); // 내가 다운받은 프롬프트
   const [showDownloadAll, setShowDownloadAll] = useState<boolean>(false); // 내가 다운받은 프롬프트 더 보기
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const isFirstLoad = useRef(true); // 처음 입장했는지
+  const prevHeightRef = useRef(0);
 
   const { data, hasNextPage, fetchNextPage, isFetching } = useGetChatRoomsDetail(selectedRoomId); // 채팅방 상세 조회
   const { mutateAsync: postPresignUrl } = usePostPresignUrl();
@@ -135,13 +137,14 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
   };
 
   // 채팅 스크롤 이벤트
-  const handleScroll = () => {
+  const handleScroll = async () => {
     const el = scrollRef.current;
     if (!el) return;
 
     // 스크롤 상단 도달 -> 이전 메시지 불러오기
-    if (el.scrollTop <= 10 && hasNextPage && !isFetching) {
-      fetchNextPage();
+    if (el.scrollTop <= 200 && hasNextPage && !isFetching) {
+      prevHeightRef.current = el.scrollHeight; // fetch 전 높이 저장
+      await fetchNextPage();
     }
   };
 
@@ -168,6 +171,13 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
     setFiles((prev) => prev.filter((_, i) => i !== idx));
   };
 
+  const isNearBottom = () => {
+    const el = scrollRef.current;
+    if (!el) return false;
+
+    return el.scrollHeight - el.scrollTop - el.clientHeight < 70;
+  };
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (!menuRef.current) return;
@@ -183,8 +193,6 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
       document.removeEventListener('click', handleClickOutside);
     };
   }, []);
-
-  // 채팅방 고정
 
   // 채팅방 입장
   useEffect(() => {
@@ -214,8 +222,32 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
 
   // 새 메시지 도착 (메시지 개수 변경 시) -> 아래로 스크롤
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (!messages.length) return;
+
+    // 처음 입장했을 때에는 맨 아래로 이동
+    if (isFirstLoad.current) {
+      bottomRef.current?.scrollIntoView({ block: 'end' });
+      isFirstLoad.current = false;
+      return;
+    }
+
+    // 사용자가 아래 보고 있을 때 스크롤 내려줌
+    if (isNearBottom()) {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages.length]);
+
+  // fetch 후 스크롤 위치 유지
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    if (prevHeightRef.current) {
+      const diff = el.scrollHeight - prevHeightRef.current;
+      el.scrollTop += diff;
+      prevHeightRef.current = 0;
+    }
+  }, [data]);
 
   // 메시지 수신
   useEffect(() => {
