@@ -11,7 +11,7 @@ function useGetChatRoomsDetail(roomId: number, limit?: number) {
     getNextPageParam: (lastPage) => {
       if (!lastPage.data.page.has_more) return undefined;
 
-      return lastPage.data.messages[0]?.message_id ?? undefined;
+      return lastPage.data.messages.at(-1)?.message_id ?? undefined;
     },
   });
 }

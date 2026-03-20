@@ -19,9 +19,17 @@ const ChatBubble = ({ text, files, isMine }: ChatBubbleProps) => {
         )}>
         {text}
 
-        {files?.map((file) => (
-          <img key={file.url} src={file.url} className="max-w-[200px] rounded-md" />
-        ))}
+        <div
+          className={clsx(
+            'grid gap-[16px]',
+            files.length === 1 && 'grid-cols-1',
+            files.length === 2 && 'grid-cols-2',
+            files.length >= 3 && 'grid-cols-3',
+          )}>
+          {files?.map((file) => (
+            <img key={file.url} src={file.url} className="w-full h-[80px] object-cover rounded-md" />
+          ))}
+        </div>
       </div>
     </div>
   );
