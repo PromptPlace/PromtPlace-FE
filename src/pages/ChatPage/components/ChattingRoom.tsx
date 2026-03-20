@@ -127,6 +127,8 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
         return;
       }
       console.log('sendMessage 성공');
+      setFiles([]);
+      setPreviews([]);
     });
   };
 
