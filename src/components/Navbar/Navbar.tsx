@@ -19,7 +19,6 @@ import BackgroundButton from '@components/Button/BackgroundButton';
 import NavbarModal from './NavbarModal';
 import clsx from 'clsx';
 import NavbarNotificationModal from './NavbarNotificationModal';
-import TextModal from '../Modal/TextModal';
 import useGetNewNotification from '@/hooks/queries/Navbar/useGetNewNotification';
 import PrimaryButton from '../Button/PrimaryButton';
 
@@ -28,7 +27,6 @@ const Navbar = () => {
   const [signupModalShow, setSignupModalShow] = useState(false);
   const [isNavModalShow, setIsNavModalShow] = useState(false);
   const [isNotificationModalShow, setIsNotificationModalShow] = useState(false);
-  const [isMessageModalShow, setIsMessageModalShow] = useState(false);
 
   const navRef = useRef<HTMLDivElement | null>(null);
   const notificationRef = useRef<HTMLDivElement | null>(null);
@@ -139,7 +137,7 @@ const Navbar = () => {
                     src={data?.data.has_unread_messages ? MessageIcon : MessageIcon}
                     alt="메세지 알림"
                     className="self-center max-phone:w-[16px] max-phone:h-[16px]"
-                    onClick={() => setIsMessageModalShow((prev) => !prev)}
+                    onClick={() => navigate('/chat')}
                   />
                   <img
                     src={data?.data.profile_image || UserIcon}
@@ -233,14 +231,6 @@ const Navbar = () => {
           onClose={() => setSignupModalShow(false)}
           onClick={() => {}}
           initialView="signup"
-        />
-      )}
-
-      {isMessageModalShow && (
-        <TextModal
-          text="아직 오픈하지 않은 페이지예요!"
-          size="lg"
-          onClick={() => setIsMessageModalShow((prev) => !prev)}
         />
       )}
     </>
