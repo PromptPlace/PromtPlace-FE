@@ -11,11 +11,13 @@ interface ChatBubbleProps {
   text: string;
   files: Attachment[];
   isMine: boolean;
+  popup?: boolean;
 }
 
-const ChatBubble = ({ text, files, isMine }: ChatBubbleProps) => {
+const ChatBubble = ({ text, files, isMine, popup }: ChatBubbleProps) => {
   const [preview, setPreview] = useState<string | null>(null);
   const [selected, setSelected] = useState<Attachment | null>(null);
+  const hasFile = files.some((file) => file.type === 'FILE');
 
   return (
     <div className={clsx('flex', isMine ? 'justify-end' : 'justify-start')}>
@@ -30,7 +32,8 @@ const ChatBubble = ({ text, files, isMine }: ChatBubbleProps) => {
 
         <div
           className={clsx(
-            'grid gap-[16px]',
+            hasFile && 'flex flex-col gap-[8px]',
+            !hasFile && 'grid gap-[16px]',
             files.length === 1 && 'grid-cols-1',
             files.length === 2 && 'grid-cols-2',
             files.length >= 3 && 'grid-cols-3',
@@ -46,7 +49,7 @@ const ChatBubble = ({ text, files, isMine }: ChatBubbleProps) => {
                   setPreview(file.url);
                   setSelected(file);
                 }}
-                className="w-full h-[80px] object-cover rounded-md"
+                className={clsx('w-full object-cover rounded-md', popup ? 'h-[80px]' : 'h-full')}
               />
             ) : (
               <PreviewItem

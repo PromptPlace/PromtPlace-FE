@@ -4,7 +4,7 @@ import ChattingRoom from './components/ChattingRoom';
 const ChatRoomPage = () => {
   const { roomId } = useParams();
 
-  return <ChattingRoom selectedRoomId={Number(roomId)} />;
+  return <ChattingRoom selectedRoomId={Number(roomId)} className="h-dvh!" popup={true} />;
 };
 
 export default ChatRoomPage;

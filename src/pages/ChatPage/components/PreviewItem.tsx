@@ -16,8 +16,8 @@ const PreviewItem = ({ imageURL, fileSize, type, name, handleDeleteImage }: Prev
   return (
     <div
       className={clsx(
-        'bg-white p-[8px] border border-gray300 rounded-[12px] w-full flex gap-[16px] items-center justify-between',
-        type.startsWith('image/') ? 'max-w-[150px]' : 'lg:w-full max-lg:max-w-[223px] h-[56px]',
+        'bg-white p-[8px] border border-gray300 rounded-[12px] w-full flex gap-[16px] items-center',
+        type.startsWith('image/') ? 'max-w-[150px]' : 'max-w-[256px] h-[56px] min-w-0',
       )}>
       {/* 이미지 */}
       {type.startsWith('image/') && (
@@ -28,27 +28,28 @@ const PreviewItem = ({ imageURL, fileSize, type, name, handleDeleteImage }: Prev
 
       {/* 파일 */}
       {!type.startsWith('image/') && (
-        <div className="flex gap-[10px] items-center w-full">
-          <AttachIcon className="text-black" />
-          <p
-            className={clsx(
-              'custom-button2 max-lg:truncate text-black',
-              handleDeleteImage ? 'max-lg:max-w-[81px]' : '',
-            )}>
-            {name}
-          </p>
+        <div className="flex gap-[10px] items-center flex-1 min-w-0">
+          <AttachIcon className="text-black size-[24px] shrink-0" />
+          <p className={clsx('custom-button2 truncate text-black max-w-fit')}>{name}</p>
         </div>
       )}
 
-      {/* 파일 및 이미지 선택 시 파일 사이즈 */}
-      {handleDeleteImage && <p className="custom-button3">{fileSize}</p>}
+      {handleDeleteImage && (
+        <div className="flex items-center gap-[16px] shrink-0">
+          {/* 파일 및 이미지 선택 시 파일 사이즈 */}
+          <p className="custom-button3">{fileSize}</p>
 
-      {/* 파일 및 이미지 삭제 */}
-      {handleDeleteImage && <XIcon onClick={handleDeleteImage} className="cursor-pointer shrink-0 text-gray500" />}
+          {/* 파일 및 이미지 삭제 */}
+          <XIcon onClick={handleDeleteImage} className="cursor-pointer shrink-0 text-gray500" />
+        </div>
+      )}
 
       {/* 파일의 경우 다운로드 아이콘 */}
       {!handleDeleteImage && (
-        <DownloadIcon className="cursor-pointer shrink-0 text-gray500" onClick={() => downloadFile(imageURL, name)} />
+        <DownloadIcon
+          className="cursor-pointer shrink-0 text-gray500 size-[24px]"
+          onClick={() => downloadFile(imageURL, name)}
+        />
       )}
     </div>
   );
