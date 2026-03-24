@@ -31,9 +31,11 @@ import clsx from 'clsx';
 
 interface ChattingRoomProps {
   selectedRoomId: number;
+  className?: string;
+  popup?: boolean;
 }
 
-const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
+const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) => {
   const [input, setInput] = useState('');
   const [files, setFiles] = useState<File[]>([]); // 파일 관련
   const [previews, setPreviews] = useState<string[]>([]); // 미리보기용 이미지
@@ -295,55 +297,60 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
     <>
       {selectedRoomId !== null && (
         <>
-          <div className="rounded-[12px] bg-white w-full p-[32px] flex flex-col h-dvh">
+          <div
+            className={clsx(
+              'rounded-[12px] bg-white w-full p-[32px] flex flex-col h-[717px]',
+              !popup && 'relative overflow-hidden',
+              className,
+            )}>
+            {/* 내가 다운받은 프롬프트 */}
+            {showDownload && (
+              <div className={clsx('z-10 inset-0 top-[92px] bg-overlay', popup ? 'fixed h-dvh' : 'absolute h-full')}>
+                <div
+                  className={clsx(
+                    'absolute inset-0 bg-white flex flex-col gap-[16px] p-[32px]',
+                    showDownloadAll ? (popup ? 'h-dvh' : 'h-full') : 'h-max max-h-[215px]',
+                  )}>
+                  <ul className="list-disc ">
+                    {/* 3개까지 잘라서 보여줌 */}
+                    {!showDownloadAll &&
+                      downloadPromptsData?.data.slice(0, 3).map((data) => (
+                        <li key={data.prompt_id} className="custom-body2">
+                          {data.title}
+                        </li>
+                      ))}
+                    {/* 더 보기인 경우 전체 다 보여줌 */}
+                    {showDownloadAll &&
+                      downloadPromptsData?.data.map((data) => (
+                        <li key={data.prompt_id} className="custom-body2">
+                          {data.title}
+                        </li>
+                      ))}
+                  </ul>
+
+                  {/* 4개 이상인 경우 더 보기 버튼 */}
+                  {downloadPromptsData?.data && downloadPromptsData.data.length > 4 && (
+                    <div className={clsx('flex justify-center', showDownloadAll && 'flex-1 pb-[112px] items-end')}>
+                      <button
+                        onClick={() => {
+                          setShowDownloadAll((prev) => !prev);
+                          if (showDownloadAll) {
+                            setShowDownload(false);
+                          }
+                        }}
+                        className={clsx(
+                          'text-gray500 px-[16px] h-[45px] flex justify-center items-center rounded-[12px] bg-white hover:bg-background duration-300',
+                        )}>
+                        {showDownloadAll ? '메시지로 돌아가기' : '더 보기'}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* 상단 회원 정보 */}
             <div className="flex justify-between items-center mb-[20px] relative">
-              {/* 내가 다운받은 프롬프트 */}
-              {showDownload && (
-                <div className="fixed z-10 inset-0 top-[92px] bg-overlay h-dvh">
-                  <div
-                    className={clsx(
-                      'absolute inset-0 bg-white flex flex-col gap-[16px] p-[32px]',
-                      showDownloadAll ? 'h-dvh' : 'h-max max-h-[215px]',
-                    )}>
-                    <ul className="list-disc ">
-                      {/* 3개까지 잘라서 보여줌 */}
-                      {!showDownloadAll &&
-                        downloadPromptsData?.data.slice(0, 3).map((data) => (
-                          <li key={data.prompt_id} className="custom-body2">
-                            {data.title}
-                          </li>
-                        ))}
-                      {/* 더 보기인 경우 전체 다 보여줌 */}
-                      {showDownloadAll &&
-                        downloadPromptsData?.data.map((data) => (
-                          <li key={data.prompt_id} className="custom-body2">
-                            {data.title}
-                          </li>
-                        ))}
-                    </ul>
-
-                    {/* 4개 이상인 경우 더 보기 버튼 */}
-                    {downloadPromptsData?.data && downloadPromptsData.data.length > 4 && (
-                      <div className={clsx('flex justify-center', showDownloadAll && 'flex-1 pb-[112px] items-end')}>
-                        <button
-                          onClick={() => {
-                            setShowDownloadAll((prev) => !prev);
-                            if (showDownloadAll) {
-                              setShowDownload(false);
-                            }
-                          }}
-                          className={clsx(
-                            'text-gray500 px-[16px] h-[45px] flex justify-center items-center rounded-[12px] bg-white hover:bg-background duration-300',
-                          )}>
-                          {showDownloadAll ? '메시지로 돌아가기' : '더 보기'}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
               {/* 사진 ~소개 */}
               <div className="flex gap-[16px] items-center">
                 <div className="size-[60px] rounded-full overflow-hidden">
@@ -464,6 +471,7 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
                       text={msg.content}
                       files={msg.attachments}
                       isMine={(msg.sender_id ?? msg?.sender?.user_id) === user.user_id}
+                      popup={popup}
                     />
                   ))}
                 </div>
