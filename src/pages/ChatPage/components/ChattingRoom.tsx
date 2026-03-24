@@ -46,6 +46,8 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
   const isFirstLoad = useRef(true); // 처음 입장했는지
   const prevHeightRef = useRef(0);
 
+  const isTablet = window.innerWidth < 1024;
+
   const { data, hasNextPage, fetchNextPage, isFetching } = useGetChatRoomsDetail(selectedRoomId); // 채팅방 상세 조회
   const { mutateAsync: postPresignUrl } = usePostPresignUrl();
   const { mutate: mutatePatchPinChat } = usePatchPinChat();
@@ -182,6 +184,17 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
     return el.scrollHeight - el.scrollTop - el.clientHeight < 70;
   };
 
+  // tablet 이하인 경우 스크롤 막음
+  useEffect(() => {
+    if (!isTablet) return;
+
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isTablet]);
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (!menuRef.current) return;
@@ -301,6 +314,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
             className={clsx(
               'rounded-[12px] bg-white w-full p-[32px] flex flex-col h-[717px]',
               !popup && 'relative overflow-hidden',
+              'max-lg:fixed max-lg:inset-0 max-lg:h-dvh',
               className,
             )}>
             {/* 내가 다운받은 프롬프트 */}
