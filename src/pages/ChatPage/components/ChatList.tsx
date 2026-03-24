@@ -3,6 +3,7 @@ import SearchIcon from '@assets/icon-search.svg?react';
 import clsx from 'clsx';
 import { useState } from 'react';
 import useGetInfiniteChatRooms from '@/hooks/queries/ChatPage/useGetInfiniteChatRooms';
+import { useNavigate } from 'react-router-dom';
 
 interface ChatListProps {
   setSelectedRoomId: (roomId: number) => void;
@@ -23,6 +24,8 @@ const BUTTONS: ActiveButton[] = [
 const ChatList = ({ setSelectedRoomId }: ChatListProps) => {
   const [search, setSearch] = useState('');
   const [activeButton, setActiveButton] = useState<ActiveButton>(BUTTONS[0]);
+  const isTablet = window.innerWidth < 1024;
+  const navigate = useNavigate();
 
   const { data } = useGetInfiniteChatRooms({ filter: activeButton.filter, search, limit: 20 }); // 채팅 목록 조회
 
@@ -39,7 +42,7 @@ const ChatList = ({ setSelectedRoomId }: ChatListProps) => {
   };
 
   return (
-    <div className="max-w-[357px] w-full bg-white rounded-[12px] h-[717px] px-[20px] py-[32px]">
+    <div className="lg:max-w-[357px] w-full bg-white rounded-[12px] h-[717px] px-[20px] py-[32px] max-lg:w-vw max-lg:px-0">
       <h1 className="custom-h4 text-text-on-white pl-[16px] mb-[20px]">메시지 주고받은 사람</h1>
 
       <div className="relative h-[54px] flex items-center justify-end pr-[20px]">
@@ -53,7 +56,7 @@ const ChatList = ({ setSelectedRoomId }: ChatListProps) => {
         <SearchIcon className="absolute cursor-pointer" onClick={handleSearch} />
       </div>
 
-      <section className="py-[20px] px-[16px] flex gap-[12px] justify-between">
+      <section className="py-[20px] px-[16px] flex gap-[12px] lg:justify-between">
         {BUTTONS.map((button) => (
           <button
             key={button.id}
@@ -78,7 +81,13 @@ const ChatList = ({ setSelectedRoomId }: ChatListProps) => {
               last_message={list.last_message}
               unread_count={list.unread_count}
               is_pinned={list.is_pinned}
-              onClick={() => setSelectedRoomId(list.room_id)}
+              onClick={() => {
+                if (isTablet) {
+                  navigate(`/chat/${list.room_id}`);
+                } else {
+                  setSelectedRoomId(list.room_id);
+                }
+              }}
             />
           ))}
       </section>

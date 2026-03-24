@@ -22,7 +22,7 @@ const ChatListItem = ({ partner, last_message, unread_count, onClick }: ChatList
   return (
     <div
       onClick={onClick}
-      className="p-[16px] flex gap-[16px] items-center max-w-[317px] w-full cursor-pointer hover:bg-background rounded-[8px]">
+      className="p-[16px] flex gap-[16px] items-center lg:max-w-[317px] w-full cursor-pointer hover:bg-background rounded-[8px]">
       <div className="size-[48px] shrink-0">
         <img
           src={partner.profile_image_url || Default}
