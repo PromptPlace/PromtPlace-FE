@@ -478,7 +478,7 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
                 <div className="flex gap-[8px]">
                   {/* 파일 선택 */}
                   <label>
-                    <AttachIcon className="cursor-pointer" />
+                    <AttachIcon className="cursor-pointer text-gray500" />
                     <input type="file" className="hidden" onChange={handleFileSelect} />
                   </label>
 
@@ -505,6 +505,8 @@ const ChattingRoom = ({ selectedRoomId }: ChattingRoomProps) => {
                         <PreviewItem
                           key={idx}
                           imageURL={item}
+                          type={files[idx].type}
+                          name={files[idx].name}
                           fileSize={formatFileSize({ size: files[idx].size })}
                           handleDeleteImage={() => handleDeleteFile(idx)}
                         />
