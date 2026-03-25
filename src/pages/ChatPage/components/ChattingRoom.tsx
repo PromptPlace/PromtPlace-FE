@@ -166,6 +166,8 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
 
     const previewUrl = fileArr.map((file) => URL.createObjectURL(file));
     setPreviews((prev) => [...prev, ...previewUrl]);
+
+    e.target.value = '';
   };
 
   // 파일 지우기
