@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 import { useQueryClient, type InfiniteData } from '@tanstack/react-query';
@@ -68,7 +68,6 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
 
   const scrollRef = useRef<HTMLDivElement | null>(null); // 채팅 스크롤 영역
   const { ref } = useInView({ threshold: 0, root: scrollRef.current });
-  const bottomRef = useRef<HTMLDivElement | null>(null); // 채팅 맨 아래 위치 (자동 스크롤)
 
   // 메시지 전송
   const handleSubmit = async () => {
@@ -180,8 +179,9 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
   const isNearBottom = () => {
     const el = scrollRef.current;
     if (!el) return false;
+    console.log(el.scrollHeight - el.scrollTop - el.clientHeight);
 
-    return el.scrollHeight - el.scrollTop - el.clientHeight < 70;
+    return el.scrollHeight - el.scrollTop - el.clientHeight < 200;
   };
 
   // tablet 이하인 경우 스크롤 막음
@@ -238,21 +238,34 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
   }, [selectedRoomId]);
 
   // 새 메시지 도착 (메시지 개수 변경 시) -> 아래로 스크롤
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!messages.length) return;
 
     // 처음 입장했을 때에는 맨 아래로 이동
     if (isFirstLoad.current) {
-      bottomRef.current?.scrollIntoView({ block: 'end' });
+      const el = scrollRef.current;
+      if (el) {
+        el.scrollTop = el.scrollHeight;
+      }
       isFirstLoad.current = false;
       return;
     }
 
     // 사용자가 아래 보고 있을 때 스크롤 내려줌
     if (isNearBottom()) {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+      const el = scrollRef.current;
+      if (el) {
+        el.scrollTo({
+          top: el.scrollHeight,
+          behavior: 'smooth',
+        });
+      }
     }
-  }, [messages.length]);
+  }, [messages.length, isTablet]);
+
+  useEffect(() => {
+    isFirstLoad.current = true;
+  }, [selectedRoomId]);
 
   // fetch 후 스크롤 위치 유지
   useEffect(() => {
@@ -491,7 +504,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
                 </div>
               )}
 
-              <div ref={bottomRef}></div>
+              {/* <div ref={bottomRef} className="h-2 bg-red-400 shrink-0"></div> */}
             </section>
 
             {/* 입력창 */}
