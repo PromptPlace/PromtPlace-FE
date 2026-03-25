@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import usePostChatRooms from './mutations/ChatPage/usePostChatRooms';
 
 /**
@@ -5,12 +6,20 @@ import usePostChatRooms from './mutations/ChatPage/usePostChatRooms';
  * **/
 
 export const useOpenChatRoom = () => {
+  const navigate = useNavigate();
   const { mutate } = usePostChatRooms();
 
   const openChatRoom = (member_id: number) => {
+    const isTablet = window.innerWidth < 1024;
+
     mutate(member_id, {
       onSuccess: (data) => {
         const roomId = data.data.room_id;
+
+        if (isTablet) {
+          navigate(`/chat/${roomId}`);
+          return;
+        }
 
         const width = 480;
         const height = Math.floor(window.innerHeight * 0.9);
