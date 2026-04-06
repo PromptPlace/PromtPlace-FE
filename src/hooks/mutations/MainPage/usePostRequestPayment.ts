@@ -51,14 +51,18 @@ export const usePayment = () => {
       const result = await postCompletePurchase(payment.paymentId, Number(order.customData.prompt_id));
 
       console.log('서버 검증 결과:', result);
-      return result;
+
+      if (result.status === 200) {
+        return true;
+      }
+
+      return false;
     } catch (error: any) {
       // 409: 이미 구매한 프롬프트 (즉시 다운로드 진행)
       if (error.response?.status === 409) {
         console.log('이미 구매한 프롬프트입니다. 다운로드를 진행합니다.');
-        return { success: true, message: '이미 구매한 프롬프트입니다.' };
+        return true;
       }
-
       console.error('결제 처리 중 오류 발생:', error);
       throw error;
     }
