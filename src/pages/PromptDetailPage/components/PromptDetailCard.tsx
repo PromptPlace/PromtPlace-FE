@@ -297,6 +297,25 @@ const PromptDetailCard = ({
 
   const { handlePayment } = usePayment();
 
+  const waitForSDK = () => {
+    return new Promise<void>((resolve, reject) => {
+      const checkInterval = 50;
+      const timeout = 5000;
+      let elapsed = 0;
+
+      const intervalId = setInterval(() => {
+        elapsed += checkInterval;
+        if ((window as any).PortOne) {
+          clearInterval(intervalId);
+          resolve();
+        } else if (elapsed > timeout) {
+          clearInterval(intervalId);
+          reject(new Error('결제 SDK 로드 실패'));
+        }
+      }, checkInterval);
+    });
+  };
+
   const handlePrimaryAction = async () => {
     if (accessToken === null) {
       // 로그인하지 않은 경우 로그인 모달 오픈
@@ -306,8 +325,10 @@ const PromptDetailCard = ({
     // 유료 + 구매 전 → 결제 진행
     if (isPaidPrompt && !hasPurchased) {
       try {
-        await handlePayment(promptId);
-        onDownload();
+        const isPaymentSuccess = await handlePayment(promptId);
+        if (isPaymentSuccess === true) {
+          onDownload();
+        }
       } catch (err: any) {
         alert(err.message || '결제에 실패했습니다.');
       }
