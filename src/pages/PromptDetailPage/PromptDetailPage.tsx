@@ -100,10 +100,11 @@ const PromptDetailPage = () => {
           handleShowLoginModal(() => handleDownloadClick());
           return;
         }
-        if (status === 403) {
-          alert('결제가 필요한 프롬프트입니다. 먼저 결제를 진행해주세요.');
-          return;
-        }
+        // if (status === 403) {
+        //   // alert('결제가 필요한 프롬프트입니다. 먼저 결제를 진행해주세요.');
+        //
+        //   return;
+        // }
       }
       alert('다운로드를 불러오지 못했습니다.');
     }
