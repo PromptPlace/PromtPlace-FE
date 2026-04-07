@@ -325,10 +325,11 @@ const PromptDetailCard = ({
     // 유료 + 구매 전 → 결제 진행
     if (isPaidPrompt && !hasPurchased) {
       try {
-        const isPaymentSuccess = await handlePayment(promptId);
-        if (isPaymentSuccess === true) {
-          onDownload();
-        }
+        await handlePayment(promptId);
+        // const isPaymentSuccess = await handlePayment(promptId);
+        // if (isPaymentSuccess === true) {
+        //   onDownload();
+        // }
       } catch (err: any) {
         alert(err.message || '결제에 실패했습니다.');
       }
