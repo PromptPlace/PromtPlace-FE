@@ -21,6 +21,7 @@ import useGetAllPromptReviews from '@/hooks/queries/PromptDetailPage/useGetAllPr
 import useMediaQuery from '@/hooks/queries/PromptDetailPage/useMediaQuery';
 
 import type { Review } from './components/ReviewList';
+import usePayment from '@hooks/mutations/MainPage/usePostRequestPayment.ts';
 
 const PromptDetailPage = () => {
   const navigate = useNavigate();
@@ -84,31 +85,96 @@ const PromptDetailPage = () => {
     setFollow(isFollowing);
   }, [myFollowings, targetUserId]);
 
+  const { handlePayment } = usePayment();
   const { mutateAsync: fetchDownload } = usePromptDownload();
-  const handleDownloadClick = async () => {
+
+  const handlePrimaryAction = async () => {
     if (!Number.isFinite(promptId)) return;
 
     try {
-      const res = await fetchDownload(promptId);
-      if (!prompt?.is_free) setIsPaid(res.is_paid ?? false);
-      setDownloadData({ title: res.title, content: res.content ?? '' });
+      const result = await fetchDownload(promptId);
+
+      if (!prompt?.is_free) {
+        setIsPaid(result.is_paid ?? false);
+      }
+
+      setDownloadData({
+        title: result.title,
+        content: result.content ?? '',
+      });
       setIsDownloadModalOpen(true);
     } catch (e: unknown) {
       if (isAxiosError(e)) {
         const status = e.response?.status;
+
         if (status === 401) {
-          handleShowLoginModal(() => handleDownloadClick());
+          handleShowLoginModal(handlePrimaryAction);
           return;
         }
-        // if (status === 403) {
-        //   // alert('결제가 필요한 프롬프트입니다. 먼저 결제를 진행해주세요.');
-        //
-        //   return;
-        // }
+
+        if (status === 403) {
+          try {
+            const isPaymentSuccess = await handlePayment(promptId);
+
+            if (isPaymentSuccess) {
+              const retryResult = await fetchDownload(promptId);
+              setIsPaid(true);
+              setDownloadData({
+                title: retryResult.title,
+                content: retryResult.content ?? '',
+              });
+              setIsDownloadModalOpen(true);
+            }
+          } catch (paymentError: any) {
+            if (paymentError.message !== '결제가 취소되었습니다') {
+              alert(paymentError.message || '결제 처리 중 오류가 발생했습니다.');
+            }
+          }
+          return;
+        }
       }
       alert('다운로드를 불러오지 못했습니다.');
     }
   };
+
+  // const handleDownloadClick = async () => {
+  //   if (!Number.isFinite(promptId)) return;
+  //
+  //   try {
+  //     const res = await fetchDownload(promptId);
+  //     if (!prompt?.is_free) setIsPaid(res.is_paid ?? false);
+  //     setDownloadData({ title: res.title, content: res.content ?? '' });
+  //     setIsDownloadModalOpen(true);
+  //   } catch (e: unknown) {
+  //     if (isAxiosError(e)) {
+  //       const status = e.response?.status;
+  //       if (status === 401) {
+  //         handleShowLoginModal(() => handleDownloadClick());
+  //         return;
+  //       }
+  //       if (status === 403) {
+  //         try {
+  //           const isPaymentSuccess = await handlePayment(promptId);
+  //
+  //           if (isPaymentSuccess) {
+  //             const retryRes = await fetchDownload(promptId);
+  //             if (!prompt?.is_free) setIsPaid(retryRes.is_paid ?? false);
+  //             setDownloadData({ title: retryRes.title, content: retryRes.content ?? '' });
+  //             setIsDownloadModalOpen(true);
+  //           }
+  //         } catch (paymentError: any) {
+  //           if (paymentError.message !== '결제가 취소되었습니다.') {
+  //             alert(paymentError.message || '결제 처리 중 오류가 발생했습니다.');
+  //           }
+  //         }
+  //         // alert('결제가 필요한 프롬프트입니다. 먼저 결제를 진행해주세요.');
+  //
+  //         return;
+  //       }
+  //     }
+  //     alert('다운로드를 불러오지 못했습니다.');
+  //   }
+  // };
 
   const handleToggleFollow = async () => {
     if (!Number.isFinite(targetUserId)) return;
@@ -155,7 +221,7 @@ const PromptDetailPage = () => {
           isPaid={isPaid}
           price={prompt.price}
           isFree={prompt.is_free}
-          onDownload={() => handleShowLoginModal(handleDownloadClick)}
+          onPrimaryAction={handlePrimaryAction}
         />
 
         <PromptAuthorAndReview
@@ -188,7 +254,7 @@ const PromptDetailPage = () => {
         <SocialLoginModal
           isOpen={loginModalShow}
           onClose={() => setLoginModalShow(false)}
-          onClick={handleDownloadClick}
+          onClick={handlePrimaryAction}
         />
       )}
     </div>
