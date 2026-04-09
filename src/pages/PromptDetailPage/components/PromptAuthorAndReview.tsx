@@ -318,7 +318,8 @@ const PromptAuthorAndReview = ({
         <div className="mt-5 flex gap-2 flex-row w-full">
           <button
             className="flex-1 h-[48px] border border-gray-400 rounded-[12px] text-[14px] text-gray-700 flex items-center justify-center gap-3 hover:bg-gray-100 transition"
-            onClick={() => openChatRoom(member_id)}>
+            // onClick={() => openChatRoom(member_id)}
+            onClick={() => setShowModal(true)}>
             <img src={mail} alt="문의하기" className="w-4 h-4" />
             문의하기
           </button>
