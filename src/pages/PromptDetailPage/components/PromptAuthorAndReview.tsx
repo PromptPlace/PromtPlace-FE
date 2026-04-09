@@ -26,6 +26,8 @@ import YoutubeIcon from '@assets/icon-youtube-logo.svg';
 import XIcon from '@assets/icon-x-logo.svg';
 import TextModal from '@components/Modal/TextModal';
 import star from '../assets/star.png';
+import usePostChatRooms from '@/hooks/mutations/ChatPage/usePostChatRooms';
+import { useOpenChatRoom } from '@/hooks/useOpenChatRoom';
 
 interface Review {
   review_id: number;
@@ -99,6 +101,9 @@ const PromptAuthorAndReview = ({
   const { mutateAsync: updateReview } = useUpdateReview();
 
   const profileSrc = user?.profileImage && user.profileImage.trim().length > 0 ? user.profileImage : defaultProfile;
+
+  // 채팅방 생성/반환
+  const { openChatRoom } = useOpenChatRoom();
 
   useEffect(() => {
     if (!myFollowingData?.data || !member_id) return;
@@ -313,6 +318,7 @@ const PromptAuthorAndReview = ({
         <div className="mt-5 flex gap-2 flex-row w-full">
           <button
             className="flex-1 h-[48px] border border-gray-400 rounded-[12px] text-[14px] text-gray-700 flex items-center justify-center gap-3 hover:bg-gray-100 transition"
+            // onClick={() => openChatRoom(member_id)}
             onClick={() => setShowModal(true)}>
             <img src={mail} alt="문의하기" className="w-4 h-4" />
             문의하기

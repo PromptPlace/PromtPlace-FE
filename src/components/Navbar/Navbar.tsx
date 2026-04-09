@@ -19,9 +19,9 @@ import BackgroundButton from '@components/Button/BackgroundButton';
 import NavbarModal from './NavbarModal';
 import clsx from 'clsx';
 import NavbarNotificationModal from './NavbarNotificationModal';
-import TextModal from '../Modal/TextModal';
 import useGetNewNotification from '@/hooks/queries/Navbar/useGetNewNotification';
 import PrimaryButton from '../Button/PrimaryButton';
+import TextModal from '../Modal/TextModal';
 
 const Navbar = () => {
   const [loginModalShow, setLoginModalShow] = useState(false);
@@ -139,6 +139,7 @@ const Navbar = () => {
                     src={data?.data.has_unread_messages ? MessageIcon : MessageIcon}
                     alt="메세지 알림"
                     className="self-center max-phone:w-[16px] max-phone:h-[16px]"
+                    // onClick={() => navigate('/chat')}
                     onClick={() => setIsMessageModalShow((prev) => !prev)}
                   />
                   <img

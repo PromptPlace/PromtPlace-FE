@@ -44,7 +44,7 @@ interface Props {
   isPaid?: boolean;
   price: number;
   isFree: boolean;
-  onDownload: () => void;
+  onPrimaryAction: () => void;
 }
 
 type MainCategoryLinkItem = {
@@ -66,7 +66,7 @@ const PromptDetailCard = ({
   isPaid,
   price,
   isFree,
-  onDownload,
+  onPrimaryAction,
 }: Props) => {
   const { id } = useParams<{ id: string }>();
   const promptId = Number(id);
@@ -217,10 +217,10 @@ const PromptDetailCard = ({
     );
   }, [tags]);
 
-  const { mutate: downloadPrompt, isPending } = usePromptDownload();
-  const handleDownload = () => {
-    downloadPrompt(promptId);
-  };
+  // const { mutate: downloadPrompt, isPending } = usePromptDownload();
+  // const handleDownload = () => {
+  //   downloadPrompt(promptId);
+  // };
 
   const currentUrl = window.location.href;
 
@@ -295,28 +295,30 @@ const PromptDetailCard = ({
       ? '※ 다운로드를 하고 실제 프롬프트를 사용해보세요!'
       : '※ 결제 후 ‘프롬프트 다운로드’를 누르면 확인하실 수 있습니다. 열람 후에는 환불이 불가합니다.';
 
-  const { handlePayment } = usePayment();
-
-  const handlePrimaryAction = async () => {
-    if (accessToken === null) {
-      // 로그인하지 않은 경우 로그인 모달 오픈
-      onDownload();
-      return;
-    }
-    // 유료 + 구매 전 → 결제 진행
-    if (isPaidPrompt && !hasPurchased) {
-      try {
-        await handlePayment(promptId);
-        onDownload();
-      } catch (err: any) {
-        alert(err.message || '결제에 실패했습니다.');
-      }
-      return;
-    }
-
-    // 무료 or 구매 완료 → 다운로드 동작
-    onDownload();
-  };
+  // const { handlePayment } = usePayment();
+  //
+  // // const handlePrimaryAction = async () => {
+  // //   if (accessToken === null) {
+  // //     // 로그인하지 않은 경우 로그인 모달 오픈
+  // //     onDownload();
+  // //     return;
+  // //   }
+  // //   // 유료 + 구매 전 → 결제 진행
+  // //   if (isPaidPrompt && !hasPurchased) {
+  // //     try {
+  // //       await handlePayment(promptId);
+  // //       // const isPaymentSuccess = await handlePayment(promptId);
+  // //       // if (isPaymentSuccess === true) {
+  // //       //   onDownload();
+  // //       // }
+  // //     } catch (err: any) {
+  // //       alert(err.message || '결제에 실패했습니다.');
+  // //     }
+  // //     return;
+  // //   }
+  // //   // 무료 or 구매 완료 → 다운로드 동작
+  // //   onDownload();
+  // // };
 
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
@@ -574,7 +576,7 @@ const PromptDetailCard = ({
                   style="fill"
                   imgType="download"
                   text={actionLabel}
-                  onClick={handlePrimaryAction}
+                  onClick={onPrimaryAction}
                 />
 
                 <button
