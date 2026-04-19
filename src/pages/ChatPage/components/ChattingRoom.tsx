@@ -501,6 +501,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
                       files={msg.attachments}
                       isMine={(msg.sender_id ?? msg?.sender?.user_id) === user.user_id}
                       popup={popup}
+                      date={msg.sent_at}
                     />
                   ))}
                 </div>
