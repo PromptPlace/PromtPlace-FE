@@ -12,15 +12,28 @@ interface ChatBubbleProps {
   files: Attachment[];
   isMine: boolean;
   popup?: boolean;
+  date: string;
 }
 
-const ChatBubble = ({ text, files, isMine, popup }: ChatBubbleProps) => {
+const ChatBubble = ({ text, files, isMine, popup, date }: ChatBubbleProps) => {
   const [preview, setPreview] = useState<string | null>(null);
   const [selected, setSelected] = useState<Attachment | null>(null);
   const hasFile = files.some((file) => file.type === 'FILE');
 
+  const formatTime = (date: string) => {
+    const d = new Date(date);
+
+    return new Intl.DateTimeFormat('ko-KR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    }).format(d);
+  };
+
   return (
-    <div className={clsx('flex', isMine ? 'justify-end' : 'justify-start')}>
+    <div className={clsx('flex gap-2', isMine ? 'justify-end' : 'justify-end flex-row-reverse')}>
+      <div className={clsx('custom-body3 text-gray700 self-end')}>{formatTime(date)}</div>
+
       <div
         className={clsx(
           'px-[20px] py-[16px] custom-body1 max-w-[316px] w-fit',
