@@ -43,8 +43,8 @@ const BankSelectDropdown = ({
       <button
         type="button"
         onClick={() => setIsDropdownOpen((prev) => !prev)}
-        className="h-[56px] w-full rounded-lg border-[0.8px] border-gray-400 bg-white px-[16px] py-[12px] text-[14px] font-light leading-[1.6] tracking-[0.02em]">
-        <div className="flex items-center justify-between">
+        className="flex h-[56px] w-full items-center rounded-lg border-[0.8px] border-gray-400 bg-white px-[16px] text-[14px] font-light leading-[1.6] tracking-[0.02em]">
+        <div className="flex w-full items-center justify-between">
           <div className="flex min-w-0 items-center gap-[12px]">
             {selectedBank && (
               <img
@@ -53,7 +53,8 @@ const BankSelectDropdown = ({
                 className="h-[28px] w-[28px] md:h-[32px] md:w-[32px]"
               />
             )}
-            <span className={`${selectedBank ? 'custom-h5 max-phone:!text-[14px] text-gray-700' : 'text-gray-400'} truncate`}>
+            <span
+              className={`${selectedBank ? 'custom-h5 max-phone:!text-[14px] text-gray-700' : 'text-gray-400'} truncate`}>
               {selectedBank ? selectedBank.name : placeholder}
             </span>
           </div>
