@@ -12,10 +12,10 @@ const SettlementAccountInfoSection = ({ data, onClickEdit }: SettlementAccountIn
 
   return (
     <section className="flex flex-col gap-[20px]">
-      <h2 className="custom-h2 text-text-on-white">{SETTLEMENT_ACCOUNT_SECTION_TITLE}</h2>
+      <h2 className="custom-h2 text-text-on-white max-phone:!text-[20px]">{SETTLEMENT_ACCOUNT_SECTION_TITLE}</h2>
 
       <div className="flex flex-col gap-[16px] rounded-[12px] bg-white p-[24px]">
-        <p className="max-w-[559px] custom-button1 text-gray-700">{SETTLEMENT_ACCOUNT_NOTICE_TEXT}</p>
+        <p className="max-w-[559px] custom-button1 text-gray-700 max-phone:!text-[12px]">{SETTLEMENT_ACCOUNT_NOTICE_TEXT}</p>
 
         <div className="flex flex-col justify-between gap-[20px] lg:flex-row lg:items-center">
           <div className="flex items-center gap-[20px]">
@@ -23,12 +23,12 @@ const SettlementAccountInfoSection = ({ data, onClickEdit }: SettlementAccountIn
 
             <div className="flex flex-col gap-[12px]">
               <div className="flex flex-wrap items-center gap-[12px]">
-                <p className="custom-h2 text-text-on-white">{bankName}</p>
-                <p className="custom-body1 text-text-on-white">{data.accountNumber}</p>
+                <p className="custom-h2 text-text-on-white max-phone:!text-[16px]">{bankName}</p>
+                <p className="custom-body1 text-text-on-white max-phone:!text-[14px]">{data.accountNumber}</p>
               </div>
 
-              <p className="custom-body1 text-text-on-white">
-                예금주: <span className="custom-h5">{data.holderName}</span>
+              <p className="custom-body1 text-text-on-white max-phone:!text-[14px]">
+                예금주: <span className="custom-h5 max-phone:!text-[14px]">{data.holderName}</span>
               </p>
             </div>
           </div>

@@ -27,7 +27,7 @@ const SellerRegistrationModalFrame = ({
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-[20px] top-[20px] flex size-[24px] items-center justify-center"
+          className="absolute right-[20px] top-[20px] flex size-[13px] max-phone:size-[8.7px] items-center justify-center"
           aria-label="모달 닫기">
           <img src={CloseIcon} alt="닫기" className="h-full w-full object-contain" />
         </button>
@@ -40,8 +40,8 @@ const SellerRegistrationModalFrame = ({
               className={`flex flex-col items-center text-center text-text-on-white ${
                 description ? 'gap-[12px]' : ''
               }`}>
-              <p className="custom-h2">{title}</p>
-              {description && <p className="custom-body1">{description}</p>}
+              <p className="custom-h2 max-phone:!text-[20px]">{title}</p>
+              {description && <p className="custom-body1 max-phone:!text-[14px]">{description}</p>}
             </div>
 
             {actionLabel && (
