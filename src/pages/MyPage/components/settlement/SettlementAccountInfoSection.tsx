@@ -1,5 +1,6 @@
 import { getBankInfoByPortOneCode } from '../../utils/banks';
 import type { SettlementAccountInfoSectionProps } from '@/types/MyPage/settlement';
+import { formatBankAccountNumber } from '@/pages/MyPage/utils/banks';
 
 const SETTLEMENT_ACCOUNT_SECTION_TITLE = '정산 계좌 정보';
 const SETTLEMENT_ACCOUNT_NOTICE_TEXT =
@@ -9,13 +10,16 @@ const EDIT_BUTTON_LABEL = '정보 수정하기';
 const SettlementAccountInfoSection = ({ data, onClickEdit }: SettlementAccountInfoSectionProps) => {
   const bankInfo = getBankInfoByPortOneCode(data.bank);
   const bankName = bankInfo?.name ?? data.bank;
+  const formattedAccountNumber = formatBankAccountNumber(bankName, data.accountNumber);
 
   return (
     <section className="flex flex-col gap-[20px]">
       <h2 className="custom-h2 text-text-on-white max-phone:!text-[20px]">{SETTLEMENT_ACCOUNT_SECTION_TITLE}</h2>
 
       <div className="flex flex-col gap-[16px] rounded-[12px] bg-white p-[24px]">
-        <p className="max-w-[559px] custom-button1 text-gray-700 max-phone:!text-[12px]">{SETTLEMENT_ACCOUNT_NOTICE_TEXT}</p>
+        <p className="max-w-[559px] custom-button1 text-gray-700 max-phone:!text-[12px]">
+          {SETTLEMENT_ACCOUNT_NOTICE_TEXT}
+        </p>
 
         <div className="flex flex-col justify-between gap-[20px] lg:flex-row lg:items-center">
           <div className="flex items-center gap-[20px]">
@@ -24,7 +28,7 @@ const SettlementAccountInfoSection = ({ data, onClickEdit }: SettlementAccountIn
             <div className="flex flex-col gap-[12px]">
               <div className="flex flex-wrap items-center gap-[12px]">
                 <p className="custom-h2 text-text-on-white max-phone:!text-[16px]">{bankName}</p>
-                <p className="custom-body1 text-text-on-white max-phone:!text-[14px]">{data.accountNumber}</p>
+                <p className="custom-body1 text-text-on-white max-phone:!text-[14px]">{formattedAccountNumber}</p>
               </div>
 
               <p className="custom-body1 text-text-on-white max-phone:!text-[14px]">
