@@ -3,6 +3,8 @@ import SellerRegistrationStatusModal from './modal/SellerRegistrationStatusModal
 import type { SellerRegistrationModalType } from '@/types/MyPage/settlement';
 import AttachFileIcon from '@assets/icon-attach-file-black.svg';
 import DeleteIcon from '@assets/icon-delete.svg';
+import CheckedSquareIcon from '@assets/icon-bi-check-square-primary.svg';
+import NonCheckedSquareIcon from '@assets/icon-bi-noncheck-square2.svg';
 import BankSelectDropdown from './BankSelectDropdown';
 import type { Bank } from '../utils/banks';
 import { getPortOneBankCodeByBankName } from '../utils/banks';
@@ -205,30 +207,6 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
             <div className="flex flex-col gap-[12px]">
               <div className="flex flex-col gap-[4px]">
                 <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em]">
-                  사업자등록번호
-                </label>
-                <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em]">
-                  ※ 숫자만 입력하면 자동으로 형식이 맞춰집니다.
-                </p>
-              </div>
-              <input
-                type="text"
-                value={businessRegistrationNumber}
-                onChange={(e) => {
-                  const digits = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
-                  let formatted = digits;
-                  if (digits.length > 5) formatted = `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`;
-                  else if (digits.length > 3) formatted = `${digits.slice(0, 3)}-${digits.slice(3)}`;
-                  setBusinessRegistrationNumber(formatted);
-                }}
-                placeholder="000-00-00000"
-                className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary"
-              />
-            </div>
-
-            <div className="flex flex-col gap-[12px]">
-              <div className="flex flex-col gap-[4px]">
-                <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em]">
                   대표자명
                 </label>
                 <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em]">
@@ -258,6 +236,30 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
                 value={businessName}
                 onChange={(e) => setBusinessName(e.target.value)}
                 placeholder="예) 프롬프트 플레이스"
+                className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+            </div>
+
+            <div className="flex flex-col gap-[12px]">
+              <div className="flex flex-col gap-[4px]">
+                <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em]">
+                  사업자등록번호
+                </label>
+                <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em]">
+                  ※ '-' 제외한 숫자만 입력해 주세요.
+                </p>
+              </div>
+              <input
+                type="text"
+                value={businessRegistrationNumber}
+                onChange={(e) => {
+                  const digits = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
+                  let formatted = digits;
+                  if (digits.length > 5) formatted = `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`;
+                  else if (digits.length > 3) formatted = `${digits.slice(0, 3)}-${digits.slice(3)}`;
+                  setBusinessRegistrationNumber(formatted);
+                }}
+                placeholder="000-00-00000"
                 className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary"
               />
             </div>
@@ -340,9 +342,6 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
             <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em]">
               예금주명
             </label>
-            <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em]">
-              ※ 실명과 동일해야 해요.
-            </p>
           </div>
           <div className="flex gap-[20px] items-center">
             <input
@@ -362,18 +361,27 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
         </div>
 
         {/* 7. 개인정보 동의 */}
-        <div className="flex gap-[8px] items-center">
+        <div className="flex items-center gap-[8px]">
           <input
             type="checkbox"
             id="privacy-agree"
             checked={privacyAgreed}
             onChange={(e) => setPrivacyAgreed(e.target.checked)}
-            className="w-[24px] h-[24px] cursor-pointer"
+            className="sr-only"
           />
-          <label
-            htmlFor="privacy-agree"
-            className="text-[14px] font-light leading-[1.6] tracking-[0.02em] cursor-pointer">
-            <span className="font-medium text-primary underline">판매자 등록 개인정보 수집 및 이용</span>에 동의합니다.
+          <label htmlFor="privacy-agree" className="flex items-center gap-[8px] cursor-pointer">
+            <img
+              src={privacyAgreed ? CheckedSquareIcon : NonCheckedSquareIcon}
+              alt=""
+              aria-hidden="true"
+              className="size-[20px] shrink-0"
+            />
+            <span className="custom-body2 leading-[1.6] tracking-[0.02em]">
+              <span className="custom-button1 leading-[1.5] text-primary underline">
+                판매자 등록 개인정보 수집 및 이용
+              </span>
+              에 동의합니다.
+            </span>
           </label>
         </div>
 
