@@ -47,7 +47,7 @@ const MonthlySalesHistorySection = ({
           <button
             type="button"
             onClick={onClickMonthSelect}
-            className="flex h-[48px] w-full items-end justify-between rounded-[8px] bg-gray-50 px-[16px] py-[12px]">
+            className="flex h-[48px] w-full items-center justify-between rounded-[8px] bg-gray-50 px-[16px] py-[12px]">
             <span className="custom-button1 text-text-on-white">{data.selectedMonthLabel}</span>
             <ArrowIcon fillColor="#9CA3AF" />
           </button>
