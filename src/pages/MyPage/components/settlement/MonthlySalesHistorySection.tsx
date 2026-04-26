@@ -81,9 +81,9 @@ const MonthlySalesHistorySection = ({
 
           {/* 판매 내역이 없는 경우*/}
           {displayedItems.length === 0 ? (
-            <div className="flex flex-col items-center justify-center gap-[20px] py-[40px]">
-              <p className="custom-h5 text-gray-600">해당 월의 판매내역이 없어요.</p>
-              <p className="custom-body2 text-gray-500">프롬프트를 등록해보세요!</p>
+            <div className="flex flex-col items-center justify-center py-[40px]">
+              <p className="custom-h5 text-gray-600 mb-[8px]">해당 월의 판매내역이 없어요.</p>
+              <p className="custom-body2 text-gray-500 mb-[16px]">프롬프트를 등록해보세요!</p>
               <button
                 type="button"
                 className="rounded-[8px] bg-primary px-[20px] py-[9px] custom-button1 text-white"
