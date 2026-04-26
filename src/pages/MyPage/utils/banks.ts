@@ -77,3 +77,121 @@ export const getPortOneBankCodeByBankName = (bankName: string) => {
 
   return entry?.[0] ?? null;
 };
+
+const formatAccountNumberBySegments = (accountNumber: string, segments: number[]) => {
+  let cursor = 0;
+
+  return segments
+    .map((segmentLength) => {
+      const part = accountNumber.slice(cursor, cursor + segmentLength);
+      cursor += segmentLength;
+      return part;
+    })
+    .filter(Boolean)
+    .join('-');
+};
+
+const formatAccountNumberByLength = (accountNumber: string, rules: Record<number, number[]>) => {
+  const segments = rules[accountNumber.length];
+
+  if (!segments) {
+    return accountNumber;
+  }
+
+  return formatAccountNumberBySegments(accountNumber, segments);
+};
+
+// 정산 계좌 정보 화면에서 은행별 계좌번호 표시 형식을 맞춥니다.
+export const formatBankAccountNumber = (bankName: string, accountNumber: string) => {
+  const digitsOnly = accountNumber.replace(/\D/g, '');
+
+  if (!digitsOnly) {
+    return accountNumber;
+  }
+
+  switch (bankName) {
+    case 'KB국민은행':
+      return formatAccountNumberByLength(digitsOnly, {
+        11: [3, 2, 6],
+        14: [6, 2, 6],
+      });
+    case '신한은행':
+      return formatAccountNumberByLength(digitsOnly, {
+        12: [3, 3, 6],
+      });
+    case '우리은행':
+      return formatAccountNumberByLength(digitsOnly, {
+        13: [4, 3, 6],
+      });
+    case '하나은행':
+      return formatAccountNumberByLength(digitsOnly, {
+        14: [3, 6, 5],
+      });
+    case 'NH농협은행':
+      return formatAccountNumberByLength(digitsOnly, {
+        13: [3, 4, 4, 2],
+      });
+    case 'IBK기업은행':
+      return formatAccountNumberByLength(digitsOnly, {
+        14: [3, 6, 2, 3],
+      });
+    case 'KDB산업은행':
+      return formatAccountNumberByLength(digitsOnly, {
+        14: [3, 4, 4, 3],
+      });
+    case '카카오뱅크':
+      return formatAccountNumberByLength(digitsOnly, {
+        13: [4, 2, 7],
+      });
+    case '토스뱅크':
+      return formatAccountNumberByLength(digitsOnly, {
+        12: [4, 4, 4],
+      });
+    case '케이뱅크':
+      return formatAccountNumberByLength(digitsOnly, {
+        12: [3, 3, 6],
+      });
+    case 'SC제일은행':
+      return formatAccountNumberByLength(digitsOnly, {
+        11: [3, 2, 6],
+      });
+    case '씨티은행':
+      return formatAccountNumberByLength(digitsOnly, {
+        12: [3, 6, 3],
+      });
+    case 'iM뱅크':
+      return formatAccountNumberByLength(digitsOnly, {
+        12: [3, 2, 6, 1],
+      });
+    case '부산은행':
+      return formatAccountNumberByLength(digitsOnly, {
+        13: [3, 4, 4, 2],
+      });
+    case '광주은행':
+      return formatAccountNumberByLength(digitsOnly, {
+        12: [3, 3, 6],
+      });
+    case '전북은행':
+      return formatAccountNumberByLength(digitsOnly, {
+        12: [3, 2, 7],
+      });
+    case '제주은행':
+      return formatAccountNumberByLength(digitsOnly, {
+        10: [2, 2, 6],
+      });
+    case '우체국':
+      return formatAccountNumberByLength(digitsOnly, {
+        14: [6, 2, 6],
+      });
+    case '새마을금고':
+      return formatAccountNumberByLength(digitsOnly, {
+        13: [4, 2, 6, 1],
+      });
+    case 'Sh수협은행':
+      return formatAccountNumberByLength(digitsOnly, {
+        11: [3, 2, 6],
+      });
+    default:
+      return accountNumber;
+  }
+};

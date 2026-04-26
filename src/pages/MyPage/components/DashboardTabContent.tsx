@@ -88,7 +88,7 @@ const DashboardTabContent = ({ sellerStatusFromQuery }: DashboardTabContentProps
   const [showSellerInfoEditView, setShowSellerInfoEditView] = useState(false);
   const [settlementAccountInfo, setSettlementAccountInfo] = useState<SettlementAccountInfoSectionData>({
     bank: 'KOOKMIN',
-    accountNumber: '1234567890',
+    accountNumber: '11400104111111',
     holderName: '홍길동',
   });
 
