@@ -29,32 +29,33 @@ const ExpectedSettlementSection = ({ data, onClickGuideLink }: ExpectedSettlemen
 
   return (
     <section className="flex flex-col gap-[20px]">
-      <h2 className="custom-h2 text-text-on-white">정산 예정 금액</h2>
+      <h2 className="custom-h2 text-text-on-white max-phone:!text-[20px]">정산 예정 금액</h2>
 
       <div className="flex flex-col gap-[20px] rounded-[12px] border-[0.8px] border-primary bg-white p-[24px]">
         <div className="flex flex-col gap-[20px] lg:flex-row lg:items-center">
           <div className="flex min-w-0 flex-1 flex-col gap-[20px]">
-            <h3 className="custom-h4 text-text-on-white">{periodLabel}</h3>
+            <h3 className="custom-h4 text-text-on-white max-phone:!text-[16px]">{periodLabel}</h3>
 
             <div className="flex flex-col gap-[8px]">
-              <p className={`custom-h1 ${data.expectedAmount === 0 ? 'text-gray-400' : 'text-primary'}`}>
+              <p
+                className={`custom-h1 max-phone:!text-[24px] ${data.expectedAmount === 0 ? 'text-gray-400' : 'text-primary'}`}>
                 {formattedExpectedAmount}
               </p>
-              <p className="custom-body1 text-gray-700">{formattedNextSettlementDate}</p>
+              <p className="custom-body1 text-gray-700 max-phone:!text-[14px]">{formattedNextSettlementDate}</p>
             </div>
 
             <div className="flex flex-col gap-[12px] rounded-[8px] bg-gray-50 px-[16px] py-[12px]">
               <div className="flex items-center justify-between">
-                <span className="custom-body1 text-text-on-white">총 판매 금액</span>
-                <span className="custom-h5 text-gray-700">{toWon(data.totalSalesAmount)}</span>
+                <span className="custom-body1 text-text-on-white max-phone:!text-[14px]">총 판매 금액</span>
+                <span className="custom-h5 text-gray-700 max-phone:!text-[14px]">{toWon(data.totalSalesAmount)}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="custom-body1 text-text-on-white">서비스 수수료</span>
-                <span className="custom-h5 text-alert">{toDeductionWon(data.serviceFee)}</span>
+                <span className="custom-body1 text-text-on-white max-phone:!text-[14px]">서비스 수수료</span>
+                <span className="custom-h5 text-alert max-phone:!text-[14px]">{toDeductionWon(data.serviceFee)}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="custom-body1 text-text-on-white">부가가치세(VAT)</span>
-                <span className="custom-h5 text-alert">{toDeductionWon(data.vatAmount)}</span>
+                <span className="custom-body1 text-text-on-white max-phone:!text-[14px]">부가가치세(VAT)</span>
+                <span className="custom-h5 text-alert max-phone:!text-[14px]">{toDeductionWon(data.vatAmount)}</span>
               </div>
             </div>
           </div>
@@ -63,17 +64,20 @@ const ExpectedSettlementSection = ({ data, onClickGuideLink }: ExpectedSettlemen
             <div className="flex flex-col gap-[12px]">
               <div className="flex items-center gap-[8px]">
                 <img src={ReportIcon} alt="안내" className="size-[24px]" />
-                <h3 className="custom-h5 text-text-on-white">{SETTLEMENT_GUIDE_TITLE}</h3>
+                <h3 className="custom-h5 text-text-on-white max-phone:!text-[14px]">{SETTLEMENT_GUIDE_TITLE}</h3>
               </div>
 
-              <ul className="list-disc ps-[24px] custom-body1 text-text-on-white">
+              <ul className="list-disc ps-[24px] custom-body1 text-text-on-white max-phone:!text-[14px]">
                 {SETTLEMENT_GUIDE_ITEMS.map((guide) => (
                   <li key={guide}>{guide}</li>
                 ))}
               </ul>
             </div>
 
-            <button type="button" className="w-fit custom-button1 text-primary underline" onClick={onClickGuideLink}>
+            <button
+              type="button"
+              className="w-fit custom-button1 text-primary underline max-phone:!text-[12px]"
+              onClick={onClickGuideLink}>
               {SETTLEMENT_GUIDE_LINK_LABEL}
             </button>
           </div>

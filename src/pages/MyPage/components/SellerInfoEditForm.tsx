@@ -117,11 +117,11 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
   };
 
   return (
-    <div className="flex flex-col gap-[40px] w-full">
+    <div className="flex w-full flex-col gap-[40px]">
       {/* 제목 및 설명 */}
       <div className="flex flex-col gap-[12px]">
-        <h2 className="custom-h2 text-text-on-white">판매자 정보 수정</h2>
-        <p className="custom-body2 text-gray-700">
+        <h2 className="custom-h2 text-text-on-white max-phone:!text-[22px]">판매자 정보 수정</h2>
+        <p className="custom-body2 text-gray-700 max-phone:!text-[12px]">
           정확한 정산을 위해 모든 항목을 빠짐없이 입력해 주세요.
           <br />
           계좌 인증과 '판매자 등록 개인정보 수집 및 이용 동의'를 완료해야 수정이 가능합니다.
@@ -133,15 +133,17 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
         {/* 1. 등록 유형 */}
         <div className="flex flex-col gap-[12px] h-auto">
           <div className="flex flex-col gap-[4px]">
-            <label className="custom-h5 text-text-on-white">등록 유형</label>
-            <p className="custom-body3 text-gray-700">※ 개인•법인 사업자의 경우 사업자등록증이 필요합니다.</p>
+            <label className="custom-h5 text-text-on-white max-phone:!text-[14px]">등록 유형</label>
+            <p className="custom-body3 text-gray-700 max-phone:!text-[10px]">
+              ※ 개인•법인 사업자의 경우 사업자등록증이 필요합니다.
+            </p>
           </div>
 
-          <div className="flex gap-[20px]">
+          <div className="flex gap-[20px] max-phone:gap-[16px]">
             <button
               type="button"
               onClick={() => setSellerType('individual')}
-              className={`flex-1 h-[48px] px-[20px] py-[12px] rounded-[12px] border-[0.8px] custom-button1 transition-colors ${
+              className={`flex-1 h-[48px] px-[20px] py-[12px] rounded-[12px] border-[0.8px] custom-button1 max-phone:!text-[12px] transition-colors ${
                 sellerType === 'individual'
                   ? 'border-primary bg-secondary text-primary'
                   : 'border-gray-400 bg-white text-gray-700 hover:border-gray-300'
@@ -151,7 +153,7 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
             <button
               type="button"
               onClick={() => setSellerType('business')}
-              className={`flex-1 h-[48px] px-[20px] py-[12px] rounded-[12px] border-[0.8px] custom-button1 transition-colors ${
+              className={`flex-1 h-[48px] px-[20px] py-[12px] rounded-[12px] border-[0.8px] custom-button1 max-phone:!text-[12px] transition-colors ${
                 sellerType === 'business'
                   ? 'border-primary bg-secondary text-primary'
                   : 'border-gray-400 bg-white text-gray-700 hover:border-gray-300'
@@ -165,8 +167,10 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
         {sellerType === 'individual' && (
           <div className="flex flex-col gap-[12px]">
             <div className="flex flex-col gap-[4px]">
-              <label className="custom-h5 text-text-on-white">실명</label>
-              <p className="custom-body3 text-gray-700">※ 예금주와 동일한 이름을 입력해 주세요.</p>
+              <label className="custom-h5 text-text-on-white max-phone:!text-[14px]">실명</label>
+              <p className="custom-body3 text-gray-700 max-phone:!text-[10px]">
+                ※ 예금주와 동일한 이름을 입력해 주세요.
+              </p>
             </div>
 
             <input
@@ -174,7 +178,7 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
               value={realName}
               onChange={(e) => setRealName(e.target.value)}
               placeholder="예) 이은주"
-              className="h-[48px] rounded-[8px] bg-gray-50 px-[16px] py-[12px] custom-body2 text-text-on-white placeholder:text-gray-400 focus:border-primary focus:outline-none"
+              className="h-[48px] rounded-[8px] bg-gray-50 px-[16px] py-[12px] custom-body2 text-text-on-white placeholder:text-gray-400 max-phone:!text-[12px] focus:border-primary focus:outline-none"
             />
           </div>
         )}
@@ -184,10 +188,10 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
           <>
             <div className="flex flex-col gap-[12px]">
               <div className="flex flex-col gap-[4px]">
-                <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em]">
+                <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em] max-phone:text-[14px]">
                   대표자명
                 </label>
-                <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em]">
+                <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em] max-phone:text-[10px]">
                   ※ 사업자등록증에 표기된 대표자명을 입력해 주세요.
                 </p>
               </div>
@@ -197,16 +201,16 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
                 value={representativeName}
                 onChange={(e) => setRepresentativeName(e.target.value)}
                 placeholder="예) 이은주"
-                className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 max-phone:text-[12px] focus:outline-none focus:ring-1 focus:ring-primary"
               />
             </div>
 
             <div className="flex flex-col gap-[12px]">
               <div className="flex flex-col gap-[4px]">
-                <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em]">
+                <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em] max-phone:text-[14px]">
                   상호명
                 </label>
-                <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em]">
+                <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em] max-phone:text-[10px]">
                   ※ 사업자등록증에 표기된 상호명을 입력해 주세요.
                 </p>
               </div>
@@ -216,16 +220,16 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
                 value={businessName}
                 onChange={(e) => setBusinessName(e.target.value)}
                 placeholder="예) 프롬프트 플레이스"
-                className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 max-phone:text-[12px] focus:outline-none focus:ring-1 focus:ring-primary"
               />
             </div>
 
             <div className="flex flex-col gap-[12px]">
               <div className="flex flex-col gap-[4px]">
-                <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em]">
+                <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em] max-phone:text-[14px]">
                   사업자등록번호
                 </label>
-                <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em]">
+                <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em] max-phone:text-[10px]">
                   ※ '-' 제외한 숫자만 입력해 주세요.
                 </p>
               </div>
@@ -241,16 +245,16 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
                   setBusinessRegistrationNumber(formatted);
                 }}
                 placeholder="숫자만 입력해 주세요"
-                className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 max-phone:text-[12px] focus:outline-none focus:ring-1 focus:ring-primary"
               />
             </div>
 
             <div className="flex flex-col gap-[12px]">
               <div className="flex flex-col gap-[4px]">
-                <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em]">
+                <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em] max-phone:text-[14px]">
                   사업자등록증
                 </label>
-                <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em]">
+                <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em] max-phone:text-[10px]">
                   ※ 최대 10MB 이하의 JPG, PNG, PDF 파일만 업로드 가능합니다.
                 </p>
               </div>
@@ -267,11 +271,11 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
                   <div className="flex h-[48px] w-full items-center gap-[16px] rounded-[8px] border-[0.8px] border-gray-400 bg-white px-[16px] py-[12px]">
                     <div className="flex min-w-0 flex-1 items-center gap-[4px]">
                       <img src={AttachFileIcon} alt="첨부 파일" className="size-[24px] shrink-0" />
-                      <p className="truncate text-[14px] font-medium leading-[1.5] text-gray-700">
+                      <p className="truncate text-[14px] font-medium leading-[1.5] text-gray-700 max-phone:text-[12px]">
                         {businessRegistrationFile.name}
                       </p>
                     </div>
-                    <p className="shrink-0 text-[12px] font-medium leading-[1.5] text-gray-700">
+                    <p className="shrink-0 text-[12px] font-medium leading-[1.5] text-gray-700 max-phone:text-[10px]">
                       {formatFileSize(businessRegistrationFile.size)}
                     </p>
                     <button type="button" onClick={handleBusinessFileClear} className="size-[24px] shrink-0">
@@ -282,7 +286,7 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="rounded-[8px] border-[0.8px] border-primary bg-white px-[12px] py-[6px] text-center text-[12px] font-medium leading-[1.5] text-primary hover:bg-secondary focus:outline-none">
+                    className="rounded-[8px] border-[0.8px] border-primary bg-white px-[12px] py-[6px] text-center text-[12px] font-medium leading-[1.5] text-primary max-phone:text-[10px] hover:bg-secondary focus:outline-none">
                     파일 업로드
                   </button>
                 )}
@@ -296,14 +300,14 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
           selectedBank={selectedBank}
           onSelectBank={setSelectedBank}
           label="은행"
-          labelClassName="custom-h5 text-text-on-white"
+          labelClassName="custom-h5 text-text-on-white max-phone:!text-[14px]"
         />
 
         {/* 5. 계좌 번호 */}
         <div className="flex flex-col gap-[12px]">
           <div className="flex flex-col gap-[4px]">
-            <label className="custom-h5 text-text-on-white">계좌 번호</label>
-            <p className="custom-body3 text-gray-700">※ '-' 제외한 숫자만 입력해 주세요.</p>
+            <label className="custom-h5 text-text-on-white max-phone:!text-[14px]">계좌 번호</label>
+            <p className="custom-body3 text-gray-700 max-phone:!text-[10px]">※ '-' 제외한 숫자만 입력해 주세요.</p>
           </div>
 
           <input
@@ -311,14 +315,14 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
             value={accountNumber}
             onChange={(e) => setAccountNumber(e.target.value.replace(/\D/g, ''))}
             placeholder="계좌번호를 입력해주세요"
-            className="h-[48px] rounded-[8px] bg-gray-50 px-[16px] py-[12px] custom-body2 text-text-on-white placeholder:text-gray-400 focus:border-primary focus:outline-none"
+            className="h-[48px] rounded-[8px] bg-gray-50 px-[16px] py-[12px] custom-body2 text-text-on-white placeholder:text-gray-400 max-phone:!text-[12px] focus:border-primary focus:outline-none"
           />
         </div>
 
         {/* 6. 예금주명 + 계좌 인증하기 */}
         <div className="flex flex-col gap-[12px]">
           <div className="flex flex-col gap-[4px]">
-            <label className="custom-h5 text-text-on-white">예금주명</label>
+            <label className="custom-h5 text-text-on-white max-phone:!text-[14px]">예금주명</label>
           </div>
 
           <div className="flex gap-[20px]">
@@ -327,18 +331,20 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
               value={accountHolder}
               onChange={(e) => setAccountHolder(e.target.value)}
               placeholder="예금주명을 입력해주세요"
-              className="flex-1 h-[48px] rounded-[8px] bg-gray-50 px-[16px] py-[12px] custom-body2 text-text-on-white placeholder:text-gray-400 focus:border-primary focus:outline-none"
+              className="flex-1 h-[48px] rounded-[8px] bg-gray-50 px-[16px] py-[12px] custom-body2 text-text-on-white placeholder:text-gray-400 max-phone:!text-[12px] focus:border-primary focus:outline-none"
             />
             <button
               type="button"
               onClick={handleAccountVerify}
               disabled={!accountHolder || !accountNumber || !selectedBank}
-              className="h-[48px] rounded-[12px] border-[0.8px] border-primary bg-white px-[20px] py-[12px] custom-button1 text-primary transition-colors hover:bg-secondary disabled:border-gray-300 disabled:text-gray-400">
+              className="h-[48px] rounded-[12px] border-[0.8px] border-primary bg-white px-[20px] py-[12px] custom-button1 max-phone:!text-[12px] text-primary transition-colors hover:bg-secondary disabled:border-gray-300 disabled:text-gray-400">
               계좌 인증하기
             </button>
           </div>
 
-          {accountVerified && <p className="custom-body3 text-primary">✓ 계좌가 인증되었습니다.</p>}
+          {accountVerified && (
+            <p className="custom-body3 text-primary max-phone:!text-[10px]">✓ 계좌가 인증되었습니다.</p>
+          )}
         </div>
 
         {/* 7. 개인정보 동의 */}
@@ -357,8 +363,8 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
               aria-hidden="true"
               className="size-[20px] shrink-0"
             />
-            <span className="custom-body2 leading-[1.6] tracking-[0.02em]">
-              <span className="custom-button1 leading-[1.5] text-primary underline">
+            <span className="custom-body2 leading-[1.6] tracking-[0.02em] max-phone:!text-[12px]">
+              <span className="custom-button1 leading-[1.5] text-primary underline max-phone:!text-[12px]">
                 판매자 등록 개인정보 수집 및 이용
               </span>
               에 동의합니다.
@@ -371,14 +377,14 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
           <button
             type="button"
             onClick={onCancel}
-            className="h-[65px] flex-1 rounded-[12px] border-[0.8px] border-primary bg-white py-[20px] custom-h5 text-primary transition-colors hover:bg-secondary">
+            className="h-[65px] flex-1 rounded-[12px] border-[0.8px] border-primary bg-white py-[20px] custom-h5 max-phone:!text-[14px] text-primary transition-colors hover:bg-secondary">
             취소
           </button>
           <button
             type="button"
             onClick={handleFormSubmit}
             disabled={isSubmitDisabled}
-            className="h-[65px] flex-1 rounded-[12px] bg-primary py-[20px] custom-h5 text-white transition-colors disabled:bg-gray-400">
+            className="h-[65px] flex-1 rounded-[12px] bg-primary py-[20px] custom-h5 max-phone:!text-[14px] text-white transition-colors disabled:bg-gray-400">
             수정하기
           </button>
         </div>
