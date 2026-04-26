@@ -10,8 +10,10 @@ const SellerNotRegistered = ({ onRegisterClick }: SellerNotRegisteredProps) => {
       {/* 판매자 등록 안내 섹션 */}
       <div className="flex flex-col gap-[20px]">
         <div className="flex flex-col gap-[12px] text-text-on-white">
-          <h2 className="text-[24px] font-medium leading-[1.4] tracking-[-0.01em]">판매자 등록이 필요해요</h2>
-          <p className="text-[16px] font-light leading-[1.6] tracking-[0.02em]">
+          <h2 className="text-[24px] font-medium leading-[1.4] tracking-[-0.01em] max-phone:text-[22px]">
+            판매자 등록이 필요해요
+          </h2>
+          <p className="text-[16px] font-light leading-[1.6] tracking-[0.02em] max-phone:text-[14px]">
             판매자 등록을 완료하고 나만의 프롬프트를 판매해 보세요!
           </p>
         </div>
@@ -28,11 +30,9 @@ const SellerNotRegistered = ({ onRegisterClick }: SellerNotRegisteredProps) => {
           <div className="flex flex-col gap-[12px]">
             <div className="flex items-center gap-[8px]">
               <img src={ReportIcon} alt="안내" className="size-[24px]" />
-              <h3 className="text-[16px] font-medium leading-[1.4] tracking-[-0.01em] text-text-on-white">
-                등록하기 위해 무엇이 필요한가요?
-              </h3>
+              <h3 className="custom-h5 text-text-on-white max-phone:text-[14px]">등록하기 위해 무엇이 필요한가요?</h3>
             </div>
-            <div className="text-[16px] font-light leading-[1.6] tracking-[0.02em] text-text-on-white">
+            <div className="text-[16px] font-light leading-[1.6] tracking-[0.02em] text-text-on-white max-phone:text-[14px]">
               <p className="mb-0">유료 프롬프트를 판매하기 전, 판매자 등록을 위해서는 다음의 자료가 필요해요.</p>
               <ul className="list-disc whitespace-pre-wrap">
                 <li className="mb-0 ms-[24px]">
@@ -50,7 +50,7 @@ const SellerNotRegistered = ({ onRegisterClick }: SellerNotRegisteredProps) => {
           </div>
           <a
             href="#"
-            className="text-[14px] font-medium leading-[1.5] text-primary underline decoration-solid decoration-skip-ink-none">
+            className="text-[14px] font-medium leading-[1.5] text-primary underline decoration-solid decoration-skip-ink-none max-phone:text-[12px]">
             판매자 등록 개인정보 수집 및 이용약관 확인하기
           </a>
         </div>
@@ -58,59 +58,67 @@ const SellerNotRegistered = ({ onRegisterClick }: SellerNotRegisteredProps) => {
 
       {/* 정산 예정 금액 섹션 */}
       <div className="flex flex-col gap-[20px]">
-        <h2 className="text-[24px] font-medium leading-[1.4] tracking-[-0.01em] text-text-on-white">정산 예정 금액</h2>
+        <h2 className="text-[24px] font-medium leading-[1.4] tracking-[-0.01em] text-text-on-white max-phone:text-[22px]">
+          정산 예정 금액
+        </h2>
         <div className="flex flex-col gap-[20px] rounded-[12px] border-[0.8px] border-primary bg-white p-[24px]">
-          <div className="flex gap-[20px]">
+          <div className="flex gap-[20px] max-mypage:flex-col">
             {/* 좌측: 정산 금액 */}
             <div className="flex min-w-0 flex-1 flex-col gap-[20px]">
               <div className="flex flex-col gap-[4px]">
-                <h3 className="text-[18px] font-medium leading-[1.4] tracking-[-0.01em] text-text-on-white">
+                <h3 className="text-[18px] font-medium leading-[1.4] tracking-[-0.01em] text-text-on-white max-phone:text-[16px]">
                   2026년 2월 정산 예정 금액
                 </h3>
-                <p className="text-[12px] font-medium leading-[1.5] text-alert">
+                <p className="text-[12px] font-medium leading-[1.5] text-alert max-phone:text-[10px]">
                   ※ 아직 판매자 등록이 완료되지 않아 데이터를 확인할 수 없어요.
                 </p>
               </div>
 
               <div className="flex flex-col gap-[8px]">
-                <p className="text-[32px] font-medium leading-[1.4] tracking-[-0.01em] text-gray-400">-</p>
-                <p className="text-[16px] font-light leading-[1.6] tracking-[0.02em] text-gray-700">
+                <p className="text-[32px] font-medium leading-[1.4] tracking-[-0.01em] text-gray-400 max-phone:text-[30px]">
+                  -
+                </p>
+                <p className="text-[16px] font-light leading-[1.6] tracking-[0.02em] text-gray-700 max-phone:text-[14px]">
                   다음 정산일: 2026.03.15 (월)
                 </p>
               </div>
 
               <div className="flex flex-col gap-[12px] rounded-[8px] bg-gray-50 px-[16px] py-[12px]">
                 <div className="flex items-center justify-between">
-                  <span className="text-[16px] font-light leading-[1.6] tracking-[0.02em] text-text-on-white">
+                  <span className="text-[16px] font-light leading-[1.6] tracking-[0.02em] text-text-on-white max-phone:text-[14px]">
                     총 판매 금액
                   </span>
-                  <span className="text-[16px] font-medium leading-[1.4] tracking-[-0.01em] text-gray-700">-</span>
+                  <span className="text-[16px] font-medium leading-[1.4] tracking-[-0.01em] text-gray-700 max-phone:text-[14px]">
+                    -
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[16px] font-light leading-[1.6] tracking-[0.02em] text-text-on-white">
+                  <span className="text-[16px] font-light leading-[1.6] tracking-[0.02em] text-text-on-white max-phone:text-[14px]">
                     서비스 수수료(19%)
                   </span>
-                  <span className="text-[16px] font-medium leading-[1.4] tracking-[-0.01em] text-alert">-</span>
+                  <span className="text-[16px] font-medium leading-[1.4] tracking-[-0.01em] text-alert max-phone:text-[14px]">
+                    -
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[16px] font-light leading-[1.6] tracking-[0.02em] text-text-on-white">
+                  <span className="text-[16px] font-light leading-[1.6] tracking-[0.02em] text-text-on-white max-phone:text-[14px]">
                     부가가치세(VAT)
                   </span>
-                  <span className="text-[16px] font-medium leading-[1.4] tracking-[-0.01em] text-alert">-</span>
+                  <span className="text-[16px] font-medium leading-[1.4] tracking-[-0.01em] text-alert max-phone:text-[14px]">
+                    -
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* 우측: 정산 안내 */}
-            <div className="flex shrink-0 flex-col gap-[20px]">
+            <div className="flex shrink-0 flex-col gap-[20px] max-mypage:w-full">
               <div className="flex flex-col gap-[12px]">
                 <div className="flex items-center gap-[8px]">
                   <img src={ReportIcon} alt="안내" className="size-[24px]" />
-                  <h3 className="text-[16px] font-medium leading-[1.4] tracking-[-0.01em] text-text-on-white">
-                    정산 관련 안내 사항
-                  </h3>
+                  <h3 className="custom-h5 text-text-on-white max-phone:text-[14px]">정산 관련 안내 사항</h3>
                 </div>
-                <div className="text-[16px] font-light leading-[1.6] tracking-[0.02em] text-text-on-white">
+                <div className="text-[16px] font-light leading-[1.6] tracking-[0.02em] text-text-on-white max-phone:text-[14px]">
                   <ul className="list-disc whitespace-pre-wrap">
                     <li className="mb-0 ms-[24px]">
                       <span className="leading-[1.6]">정산 금액은 수수료 및 세금 공제 후 금액입니다.</span>
@@ -133,7 +141,7 @@ const SellerNotRegistered = ({ onRegisterClick }: SellerNotRegisteredProps) => {
               </div>
               <a
                 href="#"
-                className="text-[14px] font-medium leading-[1.5] text-primary underline decoration-solid decoration-skip-ink-none">
+                className="text-[14px] font-medium leading-[1.5] text-primary underline decoration-solid decoration-skip-ink-none max-phone:text-[12px]">
                 정산 관련 세부 안내사항 확인하기
               </a>
             </div>
