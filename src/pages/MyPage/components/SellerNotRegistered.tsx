@@ -19,8 +19,8 @@ const SellerNotRegistered = ({ onRegisterClick }: SellerNotRegisteredProps) => {
         {/* 등록하기 버튼 */}
         <button
           onClick={onRegisterClick}
-          className="flex h-[57px] items-center justify-center rounded-[12px] bg-primary px-[20px] py-[16px] shadow-button">
-          <span className="text-[18px] font-medium leading-[1.4] tracking-[-0.01em] text-white">판매자 등록하기</span>
+          className="flex max-w-[165px] items-center justify-center rounded-[12px] bg-primary px-[20px] py-[16px] shadow-button">
+          <span className="custom-h4 max-phone:!text-[16px] text-white">판매자 등록하기</span>
         </button>
 
         {/* 준비물 안내 카드 */}
