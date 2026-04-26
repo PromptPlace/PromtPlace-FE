@@ -53,7 +53,7 @@ const BankSelectDropdown = ({
                 className="h-[28px] w-[28px] md:h-[32px] md:w-[32px]"
               />
             )}
-            <span className={`${selectedBank ? 'text-gray-700 font-normal' : 'text-gray-400'} truncate`}>
+            <span className={`${selectedBank ? 'custom-h5 max-phone:!text-[14px] text-gray-700' : 'text-gray-400'} truncate`}>
               {selectedBank ? selectedBank.name : placeholder}
             </span>
           </div>
