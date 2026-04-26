@@ -41,7 +41,7 @@ const TotalSettlementAmountSection = ({
               <button
                 type="button"
                 onClick={onClickYearSelect}
-                className="flex h-[48px] w-full items-end justify-between rounded-[8px] bg-gray-50 px-[16px] py-[12px]">
+                className="flex h-[48px] w-full items-center justify-between rounded-[8px] bg-gray-50 px-[16px] py-[12px]">
                 <span className="custom-button1 text-text-on-white">{data.selectedYearLabel}</span>
                 <ArrowIcon fillColor="#9CA3AF" />
               </button>
@@ -68,7 +68,7 @@ const TotalSettlementAmountSection = ({
 
           <div className="flex flex-col items-center justify-center gap-[12px] py-[40px]">
             <p className="custom-h5 text-gray-600">해당 연도에 정산된 금액이 없어요.</p>
-            <p className="custom-body2 text-gray-500">프롬프트가 판매되었을 이 시점에 표시됩니다.</p>
+            <p className="custom-body2 text-gray-500">프롬프트가 판매되면 수익이 이곳에 표시돼요.</p>
           </div>
         </div>
       </section>
@@ -95,7 +95,7 @@ const TotalSettlementAmountSection = ({
             <button
               type="button"
               onClick={onClickYearSelect}
-              className="flex h-[48px] w-full items-end justify-between rounded-[8px] bg-gray-50 px-[16px] py-[12px]">
+              className="flex h-[48px] w-full items-center justify-between rounded-[8px] bg-gray-50 px-[16px] py-[12px]">
               <span className="custom-button1 text-text-on-white">{data.selectedYearLabel}</span>
               <ArrowIcon fillColor="#9CA3AF" />
             </button>
