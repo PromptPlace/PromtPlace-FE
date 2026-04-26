@@ -172,7 +172,7 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
               value={realName}
               onChange={(e) => setRealName(e.target.value)}
               placeholder="예) 이은주"
-              className="h-[48px] rounded-[8px] border-[0.8px] border-gray-400 bg-gray-50 px-[16px] py-[12px] custom-body2 text-text-on-white placeholder:text-gray-400 focus:border-primary focus:outline-none"
+              className="h-[48px] rounded-[8px] bg-gray-50 px-[16px] py-[12px] custom-body2 text-text-on-white placeholder:text-gray-400 focus:border-primary focus:outline-none"
             />
           </div>
         )}
@@ -309,7 +309,7 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
             value={accountNumber}
             onChange={(e) => setAccountNumber(e.target.value.replace(/\D/g, ''))}
             placeholder="계좌번호를 입력해주세요"
-            className="h-[48px] rounded-[8px] border-[0.8px] border-gray-400 bg-gray-50 px-[16px] py-[12px] custom-body2 text-text-on-white placeholder:text-gray-400 focus:border-primary focus:outline-none"
+            className="h-[48px] rounded-[8px] bg-gray-50 px-[16px] py-[12px] custom-body2 text-text-on-white placeholder:text-gray-400 focus:border-primary focus:outline-none"
           />
         </div>
 
@@ -326,7 +326,7 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
               value={accountHolder}
               onChange={(e) => setAccountHolder(e.target.value)}
               placeholder="예금주명을 입력해주세요"
-              className="flex-1 h-[48px] rounded-[8px] border-[0.8px] border-gray-400 bg-gray-50 px-[16px] py-[12px] custom-body2 text-text-on-white placeholder:text-gray-400 focus:border-primary focus:outline-none"
+              className="flex-1 h-[48px] rounded-[8px] bg-gray-50 px-[16px] py-[12px] custom-body2 text-text-on-white placeholder:text-gray-400 focus:border-primary focus:outline-none"
             />
             <button
               type="button"
