@@ -7,6 +7,8 @@ import { BANKS, getBankInfoByPortOneCode, getPortOneBankCodeByBankName, type Ban
 import SellerRegistrationStatusModal from './modal/SellerRegistrationStatusModal';
 import type { SellerRegistrationModalType } from '@/types/MyPage/settlement';
 import { getAccountVerificationResult } from '../utils/accountVerification';
+import CheckedSquareIcon from '@assets/icon-bi-check-square-primary.svg';
+import NonCheckedSquareIcon from '@assets/icon-bi-noncheck-square2.svg';
 
 const formatFileSize = (sizeInBytes: number) => {
   if (sizeInBytes >= 1024 * 1024) {
@@ -183,31 +185,6 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
             <div className="flex flex-col gap-[12px]">
               <div className="flex flex-col gap-[4px]">
                 <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em]">
-                  사업자등록번호
-                </label>
-                <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em]">
-                  ※ 숫자만 입력하면 자동으로 형식이 맞춰집니다.
-                </p>
-              </div>
-
-              <input
-                type="text"
-                value={businessRegistrationNumber}
-                onChange={(e) => {
-                  const digits = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
-                  let formatted = digits;
-                  if (digits.length > 5) formatted = `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`;
-                  else if (digits.length > 3) formatted = `${digits.slice(0, 3)}-${digits.slice(3)}`;
-                  setBusinessRegistrationNumber(formatted);
-                }}
-                placeholder="000-00-00000"
-                className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary"
-              />
-            </div>
-
-            <div className="flex flex-col gap-[12px]">
-              <div className="flex flex-col gap-[4px]">
-                <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em]">
                   대표자명
                 </label>
                 <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em]">
@@ -239,6 +216,31 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
                 value={businessName}
                 onChange={(e) => setBusinessName(e.target.value)}
                 placeholder="예) 프롬프트 플레이스"
+                className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+            </div>
+
+            <div className="flex flex-col gap-[12px]">
+              <div className="flex flex-col gap-[4px]">
+                <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em]">
+                  사업자등록번호
+                </label>
+                <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em]">
+                  ※ '-' 제외한 숫자만 입력해 주세요.
+                </p>
+              </div>
+
+              <input
+                type="text"
+                value={businessRegistrationNumber}
+                onChange={(e) => {
+                  const digits = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
+                  let formatted = digits;
+                  if (digits.length > 5) formatted = `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`;
+                  else if (digits.length > 3) formatted = `${digits.slice(0, 3)}-${digits.slice(3)}`;
+                  setBusinessRegistrationNumber(formatted);
+                }}
+                placeholder="숫자만 입력해 주세요"
                 className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary"
               />
             </div>
@@ -317,7 +319,6 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
         <div className="flex flex-col gap-[12px]">
           <div className="flex flex-col gap-[4px]">
             <label className="custom-h5 text-text-on-white">예금주명</label>
-            <p className="custom-body3 text-gray-700">※ 실명과 동일해야 해요.</p>
           </div>
 
           <div className="flex gap-[20px]">
@@ -341,39 +342,49 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
         </div>
 
         {/* 7. 개인정보 동의 */}
-        <div className="flex items-start gap-[12px]">
+        <div className="flex items-center gap-[8px]">
           <input
             type="checkbox"
             id="privacy-agree"
             checked={privacyAgreed}
             onChange={(e) => setPrivacyAgreed(e.target.checked)}
-            className="mt-[4px] h-[24px] w-[24px] cursor-pointer rounded border-[0.8px] border-gray-400 accent-primary"
+            className="sr-only"
           />
-          <label htmlFor="privacy-agree" className="flex-1 cursor-pointer custom-body2 text-text-on-white">
-            <span className="text-primary underline">판매자 등록 개인정보 수집 및 이용</span>
-            <span>에 동의합니다.</span>
+          <label htmlFor="privacy-agree" className="flex items-center gap-[8px] cursor-pointer">
+            <img
+              src={privacyAgreed ? CheckedSquareIcon : NonCheckedSquareIcon}
+              alt=""
+              aria-hidden="true"
+              className="size-[20px] shrink-0"
+            />
+            <span className="custom-body2 leading-[1.6] tracking-[0.02em]">
+              <span className="custom-button1 leading-[1.5] text-primary underline">
+                판매자 등록 개인정보 수집 및 이용
+              </span>
+              에 동의합니다.
+            </span>
           </label>
         </div>
-      </div>
 
-      {/* 버튼 */}
-      <div className="flex gap-[20px]">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="h-[65px] flex-1 rounded-[12px] border-[0.8px] border-primary bg-white py-[20px] custom-h5 text-primary transition-colors hover:bg-secondary">
-          취소
-        </button>
-        <button
-          type="button"
-          onClick={handleFormSubmit}
-          disabled={isSubmitDisabled}
-          className="h-[65px] flex-1 rounded-[12px] bg-primary py-[20px] custom-h5 text-white transition-colors disabled:bg-gray-400">
-          수정하기
-        </button>
-      </div>
+        {/* 버튼 */}
+        <div className="flex gap-[20px]">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="h-[65px] flex-1 rounded-[12px] border-[0.8px] border-primary bg-white py-[20px] custom-h5 text-primary transition-colors hover:bg-secondary">
+            취소
+          </button>
+          <button
+            type="button"
+            onClick={handleFormSubmit}
+            disabled={isSubmitDisabled}
+            className="h-[65px] flex-1 rounded-[12px] bg-primary py-[20px] custom-h5 text-white transition-colors disabled:bg-gray-400">
+            수정하기
+          </button>
+        </div>
 
-      <SellerRegistrationStatusModal modalType={activeModalType} onClose={() => setActiveModalType(null)} />
+        <SellerRegistrationStatusModal modalType={activeModalType} onClose={() => setActiveModalType(null)} />
+      </div>
     </div>
   );
 };
