@@ -33,7 +33,7 @@ export const SELLER_REGISTRATION_MODAL_CONTENT: Record<SellerRegistrationModalTy
   },
   bankMaintenanceTime: {
     title: FAILURE_TITLE,
-    description: '현재 은행 정기 점검 시간(약 23:30~00:30)입니다. 점검 종료 후 다시 시도해 주세요.',
+    description: '현재 은행 정기 점검 시간(가능시간 : 01시 ~ 23시)입니다. 점검 종료 후 다시 시도해 주세요.',
   },
   dailyVerificationLimitExceeded: {
     title: FAILURE_TITLE,
