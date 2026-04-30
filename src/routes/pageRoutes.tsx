@@ -77,6 +77,7 @@ export const adminRoutes: RouteObject[] = [
       { path: 'guide/tip/create', element: <lazyRoutes.PromptGuideCreatePage type="tip" /> },
       { path: 'guide/notice/create', element: <lazyRoutes.PromptGuideCreatePage type="notice" /> },
       { path: 'complaint/:id', element: <lazyRoutes.AdminComplaintDetailPage /> },
+      { path: 'dashboard', element: <lazyRoutes.AdminDashboardPage /> },
     ],
   },
 ];

@@ -15,6 +15,7 @@ import React from 'react';
 import PromptCard from './PromptCard';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Box } from '@mui/material';
+import PromptCardSkeleton from '@components/PromptCardSkeleton.tsx';
 
 const customTheme = createTheme({
   breakpoints: {
@@ -28,7 +29,7 @@ const customTheme = createTheme({
   },
 });
 
-const PromptGrid = ({ prompts }: { prompts: Prompt[] }) => {
+const PromptGrid = ({ prompts, isPending }: { prompts: Prompt[]; isPending: boolean }) => {
   return (
     <ThemeProvider theme={customTheme}>
       <Box
@@ -58,9 +59,13 @@ const PromptGrid = ({ prompts }: { prompts: Prompt[] }) => {
 
           marginY: '20px',
         }}>
-        {prompts.map((prompt) => (
-          <PromptCard key={prompt.prompt_id} prompt={prompt} />
-        ))}
+        {prompts.map((prompt) =>
+          isPending ? (
+            <PromptCard key={prompt.prompt_id} prompt={prompt} />
+          ) : (
+            <PromptCardSkeleton key={prompt.prompt_id} />
+          ),
+        )}
       </Box>
     </ThemeProvider>
   );
