@@ -20,14 +20,14 @@ import { useQueryClient } from '@tanstack/react-query';
 import useGetPromptReviews from '@/hooks/queries/PromptDetailPage/useGetAllPromptReviews';
 import useUpdateReview from '@/hooks/mutations/PromptDetailPage/useUpdateReview';
 import { useLocation } from 'react-router-dom';
+import { useOpenChatRoom } from '@/hooks/useOpenChatRoom';
+import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 
 import InstaIcon from '@assets/icon-instagram-logo.svg';
 import YoutubeIcon from '@assets/icon-youtube-logo.svg';
 import XIcon from '@assets/icon-x-logo.svg';
 import TextModal from '@components/Modal/TextModal';
 import star from '../assets/star.png';
-import usePostChatRooms from '@/hooks/mutations/ChatPage/usePostChatRooms';
-import { useOpenChatRoom } from '@/hooks/useOpenChatRoom';
 
 interface Review {
   review_id: number;
@@ -93,7 +93,7 @@ const PromptAuthorAndReview = ({
   });
   const { mutate: mutateFollow } = usePatchFollow({ member_id });
   const { mutate: mutateUnFollow } = useDeleteFollow({ member_id });
-  const { handleShowLoginModal } = useShowLoginModal();
+  const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
 
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
@@ -282,6 +282,13 @@ const PromptAuthorAndReview = ({
     }
   };
 
+  // 채팅하기 로그인 관련
+  const handleChatting = () => {
+    handleShowLoginModal(() => {
+      openChatRoom(member_id);
+    });
+  };
+
   return (
     <section className="flex flex-col lg:flex-row gap-[40px] mt-8 w-full max-w-[1236px] xl:px-0 mx-auto">
       {/* 작성자 프로필 카드 */}
@@ -318,8 +325,8 @@ const PromptAuthorAndReview = ({
         <div className="mt-5 flex gap-2 flex-row w-full">
           <button
             className="flex-1 h-[48px] border border-gray-400 rounded-[12px] text-[14px] text-gray-700 flex items-center justify-center gap-3 hover:bg-gray-100 transition"
-            // onClick={() => openChatRoom(member_id)}
-            onClick={() => setShowModal(true)}>
+            // onClick={() => setShowModal(true)}
+            onClick={handleChatting}>
             <img src={mail} alt="문의하기" className="w-4 h-4" />
             문의하기
           </button>
@@ -413,6 +420,9 @@ const PromptAuthorAndReview = ({
       </div>
 
       {showModal && <TextModal text="아직 오픈하지 않은 페이지예요!" onClick={() => setShowModal(false)} size="lg" />}
+      {loginModalShow && (
+        <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
+      )}
     </section>
   );
 };

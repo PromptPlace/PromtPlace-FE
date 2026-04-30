@@ -94,6 +94,13 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
     });
   };
 
+  // 채팅하기 로그인 관련
+  const handleChatting = () => {
+    handleShowLoginModal(() => {
+      openChatRoom(member_id);
+    });
+  };
+
   const normalizedFollowerList: FollowerWithStatus[] =
     followerData?.data.map((f) => ({
       ...f,
@@ -215,7 +222,7 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
 
           {!isMyProfile && !isAdmin && (
             <div className="flex gap-[20px]">
-              <ProfileButton text="문의하기" type="chat" onClick={() => openChatRoom(member_id)} />
+              <ProfileButton text="문의하기" type="chat" onClick={handleChatting} />
               <ProfileButton
                 text={isFollow ? '팔로우 완료' : '팔로우'}
                 type={isFollow ? 'check' : 'plus'}

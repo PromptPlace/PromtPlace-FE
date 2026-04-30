@@ -139,8 +139,8 @@ const Navbar = () => {
                     src={data?.data.has_unread_messages ? MessageIcon : MessageIcon}
                     alt="메세지 알림"
                     className="self-center max-phone:w-[16px] max-phone:h-[16px]"
-                    // onClick={() => navigate('/chat')}
-                    onClick={() => setIsMessageModalShow((prev) => !prev)}
+                    onClick={() => navigate('/chat')}
+                    // onClick={() => setIsMessageModalShow((prev) => !prev)}
                   />
                   <img
                     src={data?.data.profile_image || UserIcon}

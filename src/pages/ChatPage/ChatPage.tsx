@@ -1,10 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ChatList from './components/ChatList';
 import ChattingRoom from './components/ChattingRoom';
+import useGetInfiniteChatRooms from '@/hooks/queries/ChatPage/useGetInfiniteChatRooms';
 
 const ChatPage = () => {
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
   const isTablet = window.innerWidth < 1024;
+
+  const { data } = useGetInfiniteChatRooms({ limit: 20 }); // 채팅 목록 조회
+
+  useEffect(() => {
+    const latestRoomId = data?.pages?.[0]?.data?.rooms?.[0].room_id;
+
+    if (latestRoomId) {
+      setSelectedRoomId(latestRoomId);
+    }
+  }, [data]);
 
   return (
     <div className="px-[102px] max-lg:px-[40px] max-phone:px-[20px] max-lg:bg-white max-lg:h-dvh">
@@ -13,7 +24,9 @@ const ChatPage = () => {
       )}
 
       <div className="lg:flex gap-[20px]">
-        {(!isTablet || selectedRoomId === null) && <ChatList setSelectedRoomId={setSelectedRoomId} />}
+        {(!isTablet || selectedRoomId === null) && (
+          <ChatList setSelectedRoomId={setSelectedRoomId} selectedRoomId={selectedRoomId!} />
+        )}
         {(!isTablet || selectedRoomId !== null) && <ChattingRoom selectedRoomId={selectedRoomId!} />}
       </div>
     </div>
