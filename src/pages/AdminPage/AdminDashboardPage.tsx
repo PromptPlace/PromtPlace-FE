@@ -1,4 +1,6 @@
 import AdminUserDashboard from '@pages/AdminPage/components/AdminDashboardComponents/AdminUserDashboard.tsx';
+import AdminSellerDashboard from '@pages/AdminPage/components/AdminDashboardComponents/AdminSellerDashboard.tsx';
+import PromptDashboard from '@pages/AdminPage/components/AdminDashboardComponents/PromptDashboard.tsx';
 
 const AdminDashboardPage = () => {
   return (
@@ -7,9 +9,11 @@ const AdminDashboardPage = () => {
       <div className="flex gap-5">
         <div className="bg-white rounded-xl px-8 py-8">
           <AdminUserDashboard />
-          <div>판매자 관리</div>
+          <AdminSellerDashboard />
         </div>
-        <div>프롬프트 대시보드</div>
+        <div>
+          <PromptDashboard />
+        </div>
       </div>
     </div>
   );
