@@ -6,8 +6,8 @@ import ProfileView from './components/ProfileView';
 import ProfileEditView from './components/ProfileEditView';
 import { useAuth } from '@/context/AuthContext';
 import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
-import DownloadedPromptPage from './components/DownloadedPromptPage';
-import AuthoredPromptPage from './components/AuthoredPromptPage';
+import DownloadedPromptPage from './DownloadedPromptPage';
+import AuthoredPromptPage from './AuthoredPromptPage';
 import PromptList from './components/PromptList';
 import DashboardTabContent from './components/DashboardTabContent';
 // MyProfilePage 컴포넌트

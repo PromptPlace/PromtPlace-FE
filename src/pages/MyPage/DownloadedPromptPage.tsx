@@ -1,5 +1,5 @@
 import useGetMyDownloadedPrompts from '@/hooks/queries/MyPage/useGetMyDownloadedPrompts.tsx';
-import DownloadedPromptCard from './DownlodadPromptCard';
+import DownloadedPromptCard from './components/DownlodadPromptCard';
 const DownloadedPromptPage = () => {
   const { data, isLoading, isError } = useGetMyDownloadedPrompts();
 
