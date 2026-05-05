@@ -4,15 +4,9 @@ export const lazyRoutes = {
   SocialLoginCallbackPage: React.lazy(() => import('../pages/callback/SocialLoginCallback')),
   MainPage: React.lazy(() => import('../pages/MainPage/NewMainPage')),
   HomePage: React.lazy(() => import('../pages/HomePage/HomePage')),
-  MyInfoPage: React.lazy(() => import('../pages/MyPage/MyInfoPage')),
-  MyAccountPage: React.lazy(() => import('../pages/MyPage/MyAccountPage')),
   MyMessagePage: React.lazy(() => import('../pages/MyPage/MyMessagePage')),
   MyMessageDetailPage: React.lazy(() => import('../pages/MyPage/MyMessageDetailPage')),
   MyPage: React.lazy(() => import('../pages/MyPage/MyPage')),
-  MyPayPage: React.lazy(() => import('../pages/MyPage/MyPayPage')),
-  MyPaymentHistory: React.lazy(() => import('../pages/MyPage/MyPaymentHistoryPage')),
-  MyPromptPage: React.lazy(() => import('../pages/MyPage/MyPromptPage')),
-  MyReviewPage: React.lazy(() => import('../pages/MyPage/MyReviewPage')),
   MyProfilePage: React.lazy(() => import('../pages/MyPage/MyProfilePage')),
   NotFoundPage: React.lazy(() => import('../pages/NotFoundPage/NotFoundPage')),
   ProfilePage: React.lazy(() => import('../pages/ProfilePage/NewProfilePage')),
@@ -31,6 +25,10 @@ export const lazyRoutes = {
   AdminComplaintPage: React.lazy(() => import('../pages/AdminPage/AdiminComplaintPage')),
   PromptGuideCreatePage: React.lazy(() => import('../pages/AdminPage/PromptGuideCreatePage')),
   AdminComplaintDetailPage: React.lazy(() => import('../pages/AdminPage/AdminComplaintDetailPage')),
+<<<<<<< HEAD
+=======
+  TestPage: React.lazy(() => import('../pages/TestPage')),
+>>>>>>> 8a06a32 (♻️ refactor: 미사용 파일 삭제 및 라우팅 처리에서 제거(#390))
   ChatPage: React.lazy(() => import('../pages/ChatPage/ChatPage')),
   ChatRoomPage: React.lazy(() => import('../pages/ChatPage/ChatRoomPage')),
   TestPage: React.lazy(() => import('../pages/TestPage')),

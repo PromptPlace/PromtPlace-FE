@@ -22,7 +22,11 @@ export const publicRoutes: RouteObject[] = [
       { path: 'guide/notice', element: <lazyRoutes.PromptNoticePage /> },
       { path: 'guide/notice/:id', element: <lazyRoutes.PromptNoticeDetailPage /> },
       { path: 'profile/:id', element: <lazyRoutes.ProfilePage /> },
+<<<<<<< HEAD
       //{ path: '/test', element: <lazyRoutes.TestPage /> },
+=======
+      { path: '/test', element: <lazyRoutes.TestPage /> },
+>>>>>>> 8a06a32 (♻️ refactor: 미사용 파일 삭제 및 라우팅 처리에서 제거(#390))
       { path: 'mypage', element: <lazyRoutes.MyPage /> },
       { path: '/auth/callback', element: <lazyRoutes.SocialLoginCallbackPage /> },
       // { path: 'guide/tip', element: <lazyRoutes.PromptGuidePage type="tip" /> },
@@ -41,19 +45,10 @@ export const protectedRoutes: RouteObject[] = [
     //element: <ProtectedLayout />,
     element: <HomeLayout />,
     children: [
-      {
-        path: 'prompt',
-        element: <lazyRoutes.MyPromptPage />,
-      },
-      { path: 'review', element: <lazyRoutes.MyReviewPage /> },
-      { path: 'pay', element: <lazyRoutes.MyPayPage /> },
-      { path: 'paymentHistory', element: <lazyRoutes.MyPaymentHistory /> },
       { path: 'message/message', element: <lazyRoutes.MyMessagePage type="message" /> },
       { path: 'message/message/:id', element: <lazyRoutes.MyMessageDetailPage type="message" /> },
       { path: 'message/notification', element: <lazyRoutes.MyMessagePage type="notification" /> },
       { path: 'message/notification/:id', element: <lazyRoutes.MyMessageDetailPage type="notification" /> },
-      { path: 'info', element: <lazyRoutes.MyInfoPage /> },
-      { path: 'info/account', element: <lazyRoutes.MyAccountPage /> },
       { path: 'edit/text/:id', element: <lazyRoutes.PromptCreateTextPage mode="edit" /> },
       { path: 'edit/img/:id', element: <lazyRoutes.PromptCreateImgPage mode="edit" /> },
       { path: 'profile', element: <lazyRoutes.MyProfilePage /> },
