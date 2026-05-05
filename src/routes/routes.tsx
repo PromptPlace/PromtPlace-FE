@@ -25,10 +25,6 @@ export const lazyRoutes = {
   AdminComplaintPage: React.lazy(() => import('../pages/AdminPage/AdiminComplaintPage')),
   PromptGuideCreatePage: React.lazy(() => import('../pages/AdminPage/PromptGuideCreatePage')),
   AdminComplaintDetailPage: React.lazy(() => import('../pages/AdminPage/AdminComplaintDetailPage')),
-<<<<<<< HEAD
-=======
-  TestPage: React.lazy(() => import('../pages/TestPage')),
->>>>>>> 8a06a32 (♻️ refactor: 미사용 파일 삭제 및 라우팅 처리에서 제거(#390))
   ChatPage: React.lazy(() => import('../pages/ChatPage/ChatPage')),
   ChatRoomPage: React.lazy(() => import('../pages/ChatPage/ChatRoomPage')),
   TestPage: React.lazy(() => import('../pages/TestPage')),

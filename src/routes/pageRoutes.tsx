@@ -22,11 +22,6 @@ export const publicRoutes: RouteObject[] = [
       { path: 'guide/notice', element: <lazyRoutes.PromptNoticePage /> },
       { path: 'guide/notice/:id', element: <lazyRoutes.PromptNoticeDetailPage /> },
       { path: 'profile/:id', element: <lazyRoutes.ProfilePage /> },
-<<<<<<< HEAD
-      //{ path: '/test', element: <lazyRoutes.TestPage /> },
-=======
-      { path: '/test', element: <lazyRoutes.TestPage /> },
->>>>>>> 8a06a32 (♻️ refactor: 미사용 파일 삭제 및 라우팅 처리에서 제거(#390))
       { path: 'mypage', element: <lazyRoutes.MyPage /> },
       { path: '/auth/callback', element: <lazyRoutes.SocialLoginCallbackPage /> },
       // { path: 'guide/tip', element: <lazyRoutes.PromptGuidePage type="tip" /> },
