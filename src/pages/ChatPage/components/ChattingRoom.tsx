@@ -544,7 +544,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
 
             {/* 입력창 */}
             <div className="flex flex-col w-full relative bg-white pt-[20px]">
-              <div className="w-full px-[20px] py-[16px] rounded-[8px] flex gap-[20px] items-start bg-background">
+              <div className="w-full h-max px-[20px] py-[16px] rounded-[8px] flex gap-[20px] items-start bg-background">
                 <div className="flex gap-[8px]">
                   {/* 파일 선택 */}
                   <label>
@@ -559,7 +559,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
                   </label>
                 </div>
 
-                <div className="flex-1 flex flex-col gap-[4px]">
+                <div className="flex-1 flex flex-col gap-[4px] h-max">
                   {/* 채팅 입력 */}
                   <textarea
                     value={input}
@@ -579,7 +579,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
                     onKeyDown={handleEnter}
                     placeholder="메시지를 입력해주세요."
                     rows={1}
-                    className="flex-1 w-full resize-none cursor-pointer custom-body1 placeholder:font-['SCoreDream'] placeholder:custom-body1 placeholder:text-gray500"
+                    className="w-full min-h-[24px] max-h-[102px] resize-none cursor-pointer custom-body1 placeholder:font-['SCoreDream'] placeholder:custom-body1 placeholder:text-gray500"
                   />
 
                   {fileError && <div className="custom-button2 text-alert">{fileError}</div>}
