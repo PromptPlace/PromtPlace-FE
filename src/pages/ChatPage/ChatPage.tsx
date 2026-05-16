@@ -10,7 +10,7 @@ const ChatPage = () => {
   const { data } = useGetInfiniteChatRooms({ limit: 20 }); // 채팅 목록 조회
 
   useEffect(() => {
-    const latestRoomId = data?.pages?.[0]?.data?.rooms?.[0].room_id;
+    const latestRoomId = data?.pages?.[0]?.data?.rooms?.[0]?.room_id;
 
     if (latestRoomId) {
       setSelectedRoomId(latestRoomId);
@@ -25,7 +25,7 @@ const ChatPage = () => {
 
       <div className="lg:flex gap-[20px]">
         {(!isTablet || selectedRoomId === null) && (
-          <ChatList setSelectedRoomId={setSelectedRoomId} selectedRoomId={selectedRoomId!} />
+          <ChatList setSelectedRoomId={setSelectedRoomId} selectedRoomId={selectedRoomId} />
         )}
         {(!isTablet || selectedRoomId !== null) && <ChattingRoom selectedRoomId={selectedRoomId!} />}
       </div>
