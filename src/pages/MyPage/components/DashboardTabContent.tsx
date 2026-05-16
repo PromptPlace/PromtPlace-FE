@@ -359,7 +359,7 @@ const DashboardTabContent = ({ sellerStatusFromQuery }: DashboardTabContentProps
     return (
       <SellerRegistrationForm
         onSubmit={(data) => {
-          if (data.sellerType === 'business') {
+          if (data.sellerType !== 'individual') {
             setIsSellerApprovalPending(true);
             setIsSellerRegistered(false);
           } else {
