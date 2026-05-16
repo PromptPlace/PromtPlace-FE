@@ -487,7 +487,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
               {/* 날짜 */}
               <div className="py-[16px] flex items-center">
                 <div className="w-full h-[1px] bg-gray400"></div>
-                <div className="px-[20px] text-gray400 custom-button2">{`${year}.${month}.${day}(${dayOfWeek})`}</div>
+                <div className="px-[20px] text-gray400 ">{`${year}.${month}.${day}(${dayOfWeek})`}</div>
                 <div className="w-full h-[1px] bg-gray400"></div>
               </div>
 
@@ -511,8 +511,8 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
             </section>
 
             {/* 입력창 */}
-            <div className="flex flex-col w-full relative bg-background">
-              <div className="w-full px-[20px] py-[16px] rounded-[8px] flex gap-[20px] items-start">
+            <div className="flex flex-col w-full relative bg-white pt-[20px]">
+              <div className="w-full px-[20px] py-[16px] rounded-[8px] flex gap-[20px] items-start bg-background">
                 <div className="flex gap-[8px]">
                   {/* 파일 선택 */}
                   <label>
