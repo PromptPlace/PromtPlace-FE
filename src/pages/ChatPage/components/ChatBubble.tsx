@@ -13,9 +13,10 @@ interface ChatBubbleProps {
   isMine: boolean;
   popup?: boolean;
   date: string;
+  showTime?: boolean;
 }
 
-const ChatBubble = ({ text, files, isMine, popup, date }: ChatBubbleProps) => {
+const ChatBubble = ({ text, files, isMine, popup, date, showTime }: ChatBubbleProps) => {
   const [preview, setPreview] = useState<string | null>(null);
   const [selected, setSelected] = useState<Attachment | null>(null);
   const hasFile = files.some((file) => file.type === 'FILE');
@@ -32,7 +33,7 @@ const ChatBubble = ({ text, files, isMine, popup, date }: ChatBubbleProps) => {
 
   return (
     <div className={clsx('flex gap-2', isMine ? 'justify-end' : 'justify-end flex-row-reverse')}>
-      <div className={clsx('custom-body3 text-gray700 self-end')}>{formatTime(date)}</div>
+      {showTime && <div className={clsx('custom-body3 text-gray700 self-end')}>{formatTime(date)}</div>}
 
       <div
         className={clsx(

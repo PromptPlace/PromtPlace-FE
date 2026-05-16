@@ -510,16 +510,32 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
               {/* 메시지 */}
               {messages && (
                 <div className="flex flex-col gap-[8px] flex-1">
-                  {messages.map((msg) => (
-                    <ChatBubble
-                      key={msg.message_id}
-                      text={msg.content}
-                      files={msg.attachments}
-                      isMine={(msg.sender_id ?? msg?.sender?.user_id) === user.user_id}
-                      popup={popup}
-                      date={msg.sent_at}
-                    />
-                  ))}
+                  {messages.map((msg, idx) => {
+                    const nextMessage = messages[idx + 1];
+
+                    const isSameSender =
+                      (msg.sender_id ?? msg?.sender?.user_id) ===
+                      (nextMessage?.sender_id ?? nextMessage?.sender?.user_id);
+
+                    const isSameMinute =
+                      nextMessage &&
+                      new Date(msg.sent_at).getHours() === new Date(nextMessage.sent_at).getHours() &&
+                      new Date(msg.sent_at).getMinutes() === new Date(nextMessage.sent_at).getMinutes();
+
+                    const showTime = !(isSameSender && isSameMinute);
+
+                    return (
+                      <ChatBubble
+                        key={msg.message_id}
+                        text={msg.content}
+                        files={msg.attachments}
+                        isMine={(msg.sender_id ?? msg?.sender?.user_id) === user.user_id}
+                        popup={popup}
+                        date={msg.sent_at}
+                        showTime={showTime}
+                      />
+                    );
+                  })}
                 </div>
               )}
 
