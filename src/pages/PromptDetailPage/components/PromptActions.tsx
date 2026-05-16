@@ -17,6 +17,7 @@ import ReviewList from './ReviewList';
 import ReportModal from '../components/ReportModal';
 import DownloadModal from '../components/DownloadModal';
 import CreateModal from '../components/CreateModal';
+import ShareModal from '../components/ShareModal';
 
 import usePromptDownload from '@/hooks/mutations/PromptDetailPage/usePromptDownload';
 import usePromptLike from '@/hooks/mutations/PromptDetailPage/usePromptLike';
@@ -109,6 +110,7 @@ const PromptActions = ({
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const handlePaid = () => {
     setIsPaid(true);
@@ -350,9 +352,6 @@ const PromptActions = ({
       {/* 제목 */}
       <div className="font-bold text-[24px] pt-[25px]">[{truncateTitle(title)}]</div>
 
-      {/* 가격 */}
-      <div className="text-[24px] pt-[30px] font-bold">{isFree ? '무료' : `${price.toLocaleString()}원`}</div>
-
       {/* 버튼 영역 */}
       <div className="h-[96px] pt-[30px] box-border flex items-center">
         {isAdmin ? (
@@ -368,7 +367,15 @@ const PromptActions = ({
               buttonType="squareBig"
               style="fill"
               imgType="download"
-              text={isDownloading ? '불러오는 중…' : '다운로드'}
+              text={
+                isDownloading
+                  ? '불러오는 중…'
+                  : isPaid && !isFree
+                    ? '구매완료'
+                    : isFree
+                      ? '다운로드'
+                      : `₩${price.toLocaleString()}`
+              }
               onClick={() => handleShowLoginModal(handleDownloadClick)}
             />
             {isPaymentModalOpen && ( //유료프롬프트 & 미결제 시 PaymentModal 열기
@@ -402,6 +409,22 @@ const PromptActions = ({
           className="ml-[34px] w-[28px] h-[25px] cursor-pointer"
           onClick={handleToggleLike}
         />
+
+        {/* 공유 버튼 (찜하기 버튼 UI 재사용) */}
+        <button
+          className="ml-[10px] w-[49px] h-[49px] rounded-[12px] bg-[#FFFEFB] border-[1px] border-[#D1D5DB] flex items-center justify-center"
+          onClick={() => setIsShareModalOpen(true)}
+          aria-label="공유하기">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="18" cy="5" r="3" stroke="#6B7280" strokeWidth="1.8" />
+            <circle cx="6" cy="12" r="3" stroke="#6B7280" strokeWidth="1.8" />
+            <circle cx="18" cy="19" r="3" stroke="#6B7280" strokeWidth="1.8" />
+            <line x1="8.82" y1="10.59" x2="15.18" y2="6.41" stroke="#6B7280" strokeWidth="1.8" />
+            <line x1="8.82" y1="13.41" x2="15.18" y2="17.59" stroke="#6B7280" strokeWidth="1.8" />
+          </svg>
+        </button>
+
+        <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} title={title} />
       </div>
 
       {/* 별점 및 리뷰보기 */}

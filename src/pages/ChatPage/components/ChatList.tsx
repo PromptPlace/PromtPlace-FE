@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 interface ChatListProps {
   setSelectedRoomId: (roomId: number) => void;
+  selectedRoomId: number | null;
 }
 
 type ActiveButton = {
@@ -21,7 +22,7 @@ const BUTTONS: ActiveButton[] = [
   { id: 3, label: '고정된 메시지', filter: 'pinned' },
 ];
 
-const ChatList = ({ setSelectedRoomId }: ChatListProps) => {
+const ChatList = ({ setSelectedRoomId, selectedRoomId }: ChatListProps) => {
   const [search, setSearch] = useState('');
   const [activeButton, setActiveButton] = useState<ActiveButton>(BUTTONS[0]);
   const isTablet = window.innerWidth < 1024;
@@ -81,6 +82,7 @@ const ChatList = ({ setSelectedRoomId }: ChatListProps) => {
               last_message={list.last_message}
               unread_count={list.unread_count}
               is_pinned={list.is_pinned}
+              is_clicked={list.room_id === selectedRoomId}
               onClick={() => {
                 if (isTablet) {
                   navigate(`/chat/${list.room_id}`);

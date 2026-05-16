@@ -16,7 +16,7 @@ const PreviewItem = ({ imageURL, fileSize, type, name, handleDeleteImage }: Prev
   return (
     <div
       className={clsx(
-        'bg-white p-[8px] border border-gray300 rounded-[12px] w-full flex gap-[16px] items-center',
+        'bg-white p-[8px] border border-gray300 rounded-[12px] w-full flex gap-[8px] items-center',
         type.startsWith('image/') ? 'max-w-[150px]' : 'max-w-[256px] h-[56px] min-w-0',
       )}>
       {/* 이미지 */}
@@ -28,19 +28,25 @@ const PreviewItem = ({ imageURL, fileSize, type, name, handleDeleteImage }: Prev
 
       {/* 파일 */}
       {!type.startsWith('image/') && (
-        <div className="flex gap-[10px] items-center flex-1 min-w-0">
+        <div className="flex gap-[4px] items-center flex-1 min-w-0">
           <AttachIcon className="text-black size-[24px] shrink-0" />
-          <p className={clsx('custom-button2 truncate text-black max-w-fit')}>{name}</p>
+          <p
+            className={clsx(
+              'truncate text-black max-w-fit',
+              type.startsWith('image/') ? 'custom-button2' : 'custom-button1',
+            )}>
+            {name}
+          </p>
         </div>
       )}
 
       {handleDeleteImage && (
         <div className="flex items-center gap-[16px] shrink-0">
           {/* 파일 및 이미지 선택 시 파일 사이즈 */}
-          <p className="custom-button3">{fileSize}</p>
+          <p className="custom-button2">{fileSize}</p>
 
           {/* 파일 및 이미지 삭제 */}
-          <XIcon onClick={handleDeleteImage} className="cursor-pointer shrink-0 text-gray500" />
+          <XIcon onClick={handleDeleteImage} className="cursor-pointer shrink-0 text-gray500 size-[24px]" />
         </div>
       )}
 

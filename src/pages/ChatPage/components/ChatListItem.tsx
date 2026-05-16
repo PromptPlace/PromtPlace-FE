@@ -1,5 +1,6 @@
 import formatDate from '@/utils/formatDate';
 import Default from '@assets/icon-profile-image-default.svg';
+import clsx from 'clsx';
 
 interface ChatListItemProps {
   partner: {
@@ -13,16 +14,20 @@ interface ChatListItemProps {
   };
   unread_count: number;
   is_pinned: boolean;
+  is_clicked: boolean;
   onClick: () => void;
 }
 
-const ChatListItem = ({ partner, last_message, unread_count, onClick }: ChatListItemProps) => {
+const ChatListItem = ({ partner, last_message, unread_count, is_clicked, onClick }: ChatListItemProps) => {
   const { month, day } = formatDate(last_message.sent_at);
 
   return (
     <div
       onClick={onClick}
-      className="p-[16px] flex gap-[16px] items-center lg:max-w-[317px] w-full cursor-pointer hover:bg-background rounded-[8px]">
+      className={clsx(
+        'p-[16px] flex gap-[16px] items-start lg:max-w-[317px] w-full cursor-pointer hover:bg-background rounded-[8px]',
+        is_clicked && 'bg-background',
+      )}>
       <div className="size-[48px] shrink-0">
         <img
           src={partner.profile_image_url || Default}

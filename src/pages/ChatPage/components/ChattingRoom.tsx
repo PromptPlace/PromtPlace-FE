@@ -42,6 +42,11 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
   const [showMenu, setShowMenu] = useState<boolean>(false); // 메뉴 클릭 여부
   const [showDownload, setShowDownload] = useState<boolean>(false); // 내가 다운받은 프롬프트
   const [showDownloadAll, setShowDownloadAll] = useState<boolean>(false); // 내가 다운받은 프롬프트 더 보기
+  const [fileError, setFileError] = useState<string>('');
+
+  const MAX_FILE_COUNT = 3;
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
   const menuRef = useRef<HTMLDivElement | null>(null);
   const isFirstLoad = useRef(true); // 처음 입장했는지
   const prevHeightRef = useRef(0);
@@ -135,7 +140,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
     });
   };
 
-  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (e.key === 'Enter') {
       handleSubmit();
     }
@@ -157,10 +162,19 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files;
     if (!selected) return;
-    if (files.length === 3) return;
-    if (previews.length === 3) return;
+
+    setFileError('');
 
     const fileArr = Array.from(selected);
+
+    const countError = files.length + fileArr.length > MAX_FILE_COUNT;
+    const sizeError = fileArr.find((file) => file.size > MAX_FILE_SIZE);
+
+    if (countError || sizeError) {
+      setFileError('이미지, 파일은 최대 3개, 10mb까지 업로드할 수 있어요!');
+      e.target.value = '';
+      return;
+    }
 
     setFiles((prev) => [...prev, ...fileArr]);
 
@@ -176,6 +190,8 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
 
     setPreviews((prev) => prev.filter((_, i) => i !== idx));
     setFiles((prev) => prev.filter((_, i) => i !== idx));
+
+    setFileError('');
   };
 
   const isNearBottom = () => {
@@ -428,7 +444,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
                 ) : (
                   <PinIcon onClick={() => mutatePatchPinChat(selectedRoomId)} className="cursor-pointer" />
                 )}
-                <DotsIcon className="cursor-pointer" onClick={() => setShowMenu((prev) => !prev)} />
+                <DotsIcon className="cursor-pointer w-[24px]" onClick={() => setShowMenu((prev) => !prev)} />
 
                 {/* 메뉴 */}
                 {showMenu && (
@@ -443,7 +459,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
             <section
               ref={scrollRef}
               onScroll={handleScroll}
-              className="flex flex-col gap-[20px] flex-1 min-h-0 overflow-auto">
+              className="flex flex-col gap-[20px] flex-1 min-h-0 overflow-auto pr-[16px]">
               <div ref={ref} className="h-2 shrink-0"></div>
 
               {/* 사용자 정보 부분 */}
@@ -487,22 +503,39 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
               {/* 날짜 */}
               <div className="py-[16px] flex items-center">
                 <div className="w-full h-[1px] bg-gray400"></div>
-                <div className="px-[20px] text-gray400">{`${year}.${month}.${day}(${dayOfWeek})`}</div>
+                <div className="px-[20px] text-gray400 ">{`${year}.${month}.${day}(${dayOfWeek})`}</div>
                 <div className="w-full h-[1px] bg-gray400"></div>
               </div>
 
               {/* 메시지 */}
               {messages && (
                 <div className="flex flex-col gap-[8px] flex-1">
-                  {messages.map((msg) => (
-                    <ChatBubble
-                      key={msg.message_id}
-                      text={msg.content}
-                      files={msg.attachments}
-                      isMine={(msg.sender_id ?? msg?.sender?.user_id) === user.user_id}
-                      popup={popup}
-                    />
-                  ))}
+                  {messages.map((msg, idx) => {
+                    const nextMessage = messages[idx + 1];
+
+                    const isSameSender =
+                      (msg.sender_id ?? msg?.sender?.user_id) ===
+                      (nextMessage?.sender_id ?? nextMessage?.sender?.user_id);
+
+                    const isSameMinute =
+                      nextMessage &&
+                      new Date(msg.sent_at).getHours() === new Date(nextMessage.sent_at).getHours() &&
+                      new Date(msg.sent_at).getMinutes() === new Date(nextMessage.sent_at).getMinutes();
+
+                    const showTime = !(isSameSender && isSameMinute);
+
+                    return (
+                      <ChatBubble
+                        key={msg.message_id}
+                        text={msg.content}
+                        files={msg.attachments}
+                        isMine={(msg.sender_id ?? msg?.sender?.user_id) === user.user_id}
+                        popup={popup}
+                        date={msg.sent_at}
+                        showTime={showTime}
+                      />
+                    );
+                  })}
                 </div>
               )}
 
@@ -510,8 +543,8 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
             </section>
 
             {/* 입력창 */}
-            <div className="flex flex-col w-full relative bg-background">
-              <div className="w-full px-[20px] py-[16px] rounded-[8px] flex gap-[20px] items-start">
+            <div className="flex flex-col w-full relative bg-white pt-[20px]">
+              <div className="w-full h-max px-[20px] py-[16px] rounded-[8px] flex gap-[20px] items-start bg-background">
                 <div className="flex gap-[8px]">
                   {/* 파일 선택 */}
                   <label>
@@ -526,15 +559,30 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
                   </label>
                 </div>
 
-                <div className="flex-1">
+                <div className="flex-1 flex flex-col gap-[4px] h-max">
                   {/* 채팅 입력 */}
-                  <input
+                  <textarea
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
+                    onInput={(e) => {
+                      const target = e.currentTarget;
+
+                      target.style.height = 'auto';
+                      target.style.height = `${Math.min(target.scrollHeight, 102)}px`;
+
+                      if (target.scrollHeight > 102) {
+                        target.style.overflowY = 'auto';
+                      } else {
+                        target.style.overflowY = 'hidden';
+                      }
+                    }}
                     onKeyDown={handleEnter}
                     placeholder="메시지를 입력해주세요."
-                    className="flex-1 cursor-pointer custom-body1 plcaeholder:font-['SCoreDream'] placeholder:custom-body1 placeholder:text-gray500"
+                    rows={1}
+                    className="w-full min-h-[24px] max-h-[102px] resize-none cursor-pointer custom-body1 placeholder:font-['SCoreDream'] placeholder:custom-body1 placeholder:text-gray500"
                   />
+
+                  {fileError && <div className="custom-button2 text-alert">{fileError}</div>}
 
                   <div className="flex gap-[4px] flex-wrap">
                     {previews.length > 0 &&
