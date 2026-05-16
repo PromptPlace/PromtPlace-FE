@@ -40,6 +40,7 @@ const ChatBubble = ({ text, files, isMine, popup, date }: ChatBubbleProps) => {
           isMine
             ? 'bg-primary text-white rounded-l-[32px] rounded-tr-[32px]'
             : 'bg-background rounded-r-[32px] rounded-bl-[32px]',
+          hasFile && 'flex flex-col gap-[16px]',
         )}>
         {text}
 
