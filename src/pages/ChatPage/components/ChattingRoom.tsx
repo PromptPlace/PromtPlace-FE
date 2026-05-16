@@ -42,6 +42,11 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
   const [showMenu, setShowMenu] = useState<boolean>(false); // 메뉴 클릭 여부
   const [showDownload, setShowDownload] = useState<boolean>(false); // 내가 다운받은 프롬프트
   const [showDownloadAll, setShowDownloadAll] = useState<boolean>(false); // 내가 다운받은 프롬프트 더 보기
+  const [fileError, setFileError] = useState<string>('');
+
+  const MAX_FILE_COUNT = 3;
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
   const menuRef = useRef<HTMLDivElement | null>(null);
   const isFirstLoad = useRef(true); // 처음 입장했는지
   const prevHeightRef = useRef(0);
@@ -157,10 +162,19 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files;
     if (!selected) return;
-    if (files.length === 3) return;
-    if (previews.length === 3) return;
+
+    setFileError('');
 
     const fileArr = Array.from(selected);
+
+    const countError = files.length + fileArr.length > MAX_FILE_COUNT;
+    const sizeError = fileArr.find((file) => file.size > MAX_FILE_SIZE);
+
+    if (countError || sizeError) {
+      setFileError('이미지, 파일은 최대 3개, 10mb까지 업로드할 수 있어요!');
+      e.target.value = '';
+      return;
+    }
 
     setFiles((prev) => [...prev, ...fileArr]);
 
@@ -176,6 +190,8 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
 
     setPreviews((prev) => prev.filter((_, i) => i !== idx));
     setFiles((prev) => prev.filter((_, i) => i !== idx));
+
+    setFileError('');
   };
 
   const isNearBottom = () => {
@@ -527,7 +543,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
                   </label>
                 </div>
 
-                <div className="flex-1">
+                <div className="flex-1 flex flex-col gap-[4px]">
                   {/* 채팅 입력 */}
                   <textarea
                     value={input}
@@ -549,6 +565,8 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
                     rows={1}
                     className="flex-1 w-full resize-none cursor-pointer custom-body1 placeholder:font-['SCoreDream'] placeholder:custom-body1 placeholder:text-gray500"
                   />
+
+                  {fileError && <div className="custom-button2 text-alert">{fileError}</div>}
 
                   <div className="flex gap-[4px] flex-wrap">
                     {previews.length > 0 &&
