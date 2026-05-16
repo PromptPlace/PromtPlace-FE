@@ -75,7 +75,7 @@ const Footer = () => {
         ))}
         <div
           onClick={handleFollowChannel}
-          className="relative cursor-pointer py-[12px] custom-h4 text-gray700 max-lg:text-[16px] max-phone:text-[14px] max-lg:px-[0px]">
+          className="cursor-pointer py-[12px] custom-h4 text-gray700 max-lg:text-[16px] max-phone:text-[14px] max-lg:px-[0px]">
           고객센터
         </div>
       </nav>

@@ -25,7 +25,7 @@ const ChatListItem = ({ partner, last_message, unread_count, is_clicked, onClick
     <div
       onClick={onClick}
       className={clsx(
-        'p-[16px] flex gap-[16px] items-center lg:max-w-[317px] w-full cursor-pointer hover:bg-background rounded-[8px]',
+        'p-[16px] flex gap-[16px] items-start lg:max-w-[317px] w-full cursor-pointer hover:bg-background rounded-[8px]',
         is_clicked && 'bg-background',
       )}>
       <div className="size-[48px] shrink-0">
