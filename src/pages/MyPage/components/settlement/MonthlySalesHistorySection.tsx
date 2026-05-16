@@ -119,7 +119,7 @@ const MonthlySalesHistorySection = ({
                           {item.title}
                         </button>
 
-                        <div className="hidden items-center justify-between max-phone:flex">
+                        <div className="hidden items-center justify-between max-mypage:flex">
                           <p className={`custom-h4 max-phone:!text-[16px] ${priceClass}`}>{formatPrice(salePrice)}</p>
                           <span
                             className={`inline-flex items-center justify-center rounded-[4px] px-[12px] py-[4px] custom-button1 max-phone:!text-[12px] ${isRefunded ? 'bg-gray-200 text-gray-400' : 'bg-secondary-pressed text-primary-hover'}`}>
@@ -131,7 +131,7 @@ const MonthlySalesHistorySection = ({
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-[40px] max-phone:hidden">
+                    <div className="flex items-center gap-[40px] max-mypage:hidden">
                       <p className={`w-[88px] custom-h4 max-phone:!text-[16px] ${priceClass}`}>
                         {formatPrice(salePrice)}
                       </p>

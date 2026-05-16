@@ -113,10 +113,12 @@ export const formatBankAccountNumber = (bankName: string, accountNumber: string)
     case 'KB국민은행':
       return formatAccountNumberByLength(digitsOnly, {
         11: [3, 2, 6],
+        12: [3, 2, 3, 3],
         14: [6, 2, 6],
       });
     case '신한은행':
       return formatAccountNumberByLength(digitsOnly, {
+        11: [3, 2, 6],
         12: [3, 3, 6],
       });
     case '우리은행':
@@ -145,7 +147,8 @@ export const formatBankAccountNumber = (bankName: string, accountNumber: string)
       });
     case '토스뱅크':
       return formatAccountNumberByLength(digitsOnly, {
-        12: [4, 4, 4],
+        12: [4, 2, 6],
+        13: [4, 3, 6],
       });
     case '케이뱅크':
       return formatAccountNumberByLength(digitsOnly, {
@@ -192,6 +195,6 @@ export const formatBankAccountNumber = (bankName: string, accountNumber: string)
         11: [3, 2, 6],
       });
     default:
-      return accountNumber;
+      return digitsOnly;
   }
 };
