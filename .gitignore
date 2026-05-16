@@ -26,3 +26,4 @@ dist-ssr
 
 EditerExample.tsx
 .vercel
+.mcp.json

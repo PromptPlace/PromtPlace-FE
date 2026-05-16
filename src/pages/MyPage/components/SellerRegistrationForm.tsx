@@ -20,11 +20,12 @@ const formatFileSize = (sizeInBytes: number) => {
   return `${sizeInBytes}B`;
 };
 
-type SellerType = 'individual' | 'business';
+type SellerType = 'individual' | 'business_individual' | 'business_corporate';
 
 interface IndividualSellerRegistrationData {
   sellerType: SellerType;
   name?: string;
+  birthDate?: string;
   representativeName?: string;
   businessNumber?: string;
   companyName?: string;
@@ -44,6 +45,7 @@ interface SellerRegistrationFormProps {
 export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationFormProps) {
   const [sellerType, setSellerType] = useState<SellerType>('individual');
   const [realName, setRealName] = useState('');
+  const [birthDate, setBirthDate] = useState('');
   const [businessRegistrationNumber, setBusinessRegistrationNumber] = useState('');
   const [representativeName, setRepresentativeName] = useState('');
   const [businessName, setBusinessName] = useState('');
@@ -106,7 +108,16 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
 
     if (sellerType === 'individual') {
       data.name = realName;
+      data.birthDate = birthDate;
+    } else if (sellerType === 'business_individual') {
+      data.birthDate = birthDate;
+      // TODO: 파일 업로드 API 연동 후 반환받은 URL을 businessLicenseUrl에 사용하세요.
+      data.businessLicenseUrl = businessRegistrationFile ? URL.createObjectURL(businessRegistrationFile) : '';
+      data.representativeName = representativeName;
+      data.businessNumber = businessRegistrationNumber.replace(/-/g, '');
+      data.companyName = businessName;
     } else {
+      // business_corporate
       // TODO: 파일 업로드 API 연동 후 반환받은 URL을 businessLicenseUrl에 사용하세요.
       data.businessLicenseUrl = businessRegistrationFile ? URL.createObjectURL(businessRegistrationFile) : '';
       data.representativeName = representativeName;
@@ -115,7 +126,7 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
     }
 
     const completedModalType =
-      sellerType === 'business' ? 'businessRegistrationComplete' : 'individualRegistrationComplete';
+      sellerType === 'individual' ? 'individualRegistrationComplete' : 'businessRegistrationComplete';
     setPendingSubmitData(data);
     setActiveModalType(completedModalType);
   };
@@ -131,6 +142,93 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
 
     setActiveModalType(null);
   };
+
+  const BusinessFields = (
+    <>
+      <div className="flex flex-col gap-[12px]">
+        <div className="flex flex-col gap-[4px]">
+          <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em] max-phone:text-[14px]">
+            상호명
+          </label>
+          <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em] max-phone:text-[10px]">
+            ※ 사업자등록증에 표기된 상호명을 입력해 주세요.
+          </p>
+        </div>
+        <input
+          type="text"
+          value={businessName}
+          onChange={(e) => setBusinessName(e.target.value)}
+          placeholder="예) 프롬프트 플레이스"
+          className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 max-phone:text-[12px] focus:outline-none focus:ring-1 focus:ring-primary"
+        />
+      </div>
+      <div className="flex flex-col gap-[12px]">
+        <div className="flex flex-col gap-[4px]">
+          <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em] max-phone:text-[14px]">
+            사업자등록번호
+          </label>
+          <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em] max-phone:text-[10px]">
+            ※ '-' 제외한 숫자만 입력해 주세요.
+          </p>
+        </div>
+        <input
+          type="text"
+          value={businessRegistrationNumber}
+          onChange={(e) => {
+            const digits = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
+            let formatted = digits;
+            if (digits.length > 5) formatted = `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`;
+            else if (digits.length > 3) formatted = `${digits.slice(0, 3)}-${digits.slice(3)}`;
+            setBusinessRegistrationNumber(formatted);
+          }}
+          placeholder="000-00-00000"
+          className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 max-phone:text-[12px] focus:outline-none focus:ring-1 focus:ring-primary"
+        />
+      </div>
+      <div className="flex flex-col gap-[12px]">
+        <div className="flex flex-col gap-[4px]">
+          <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em] max-phone:text-[14px]">
+            사업자등록증
+          </label>
+          <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em] max-phone:text-[10px]">
+            ※ 최대 10MB 이하의 JPG, PNG, PDF 파일만 업로드 가능합니다.
+          </p>
+        </div>
+        <div className="flex items-center gap-[12px]">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".jpg,.jpeg,.png,.pdf"
+            onChange={(e) => setBusinessRegistrationFile(e.target.files?.[0] || null)}
+            className="hidden"
+          />
+          {businessRegistrationFile ? (
+            <div className="flex h-[48px] w-full items-center gap-[16px] rounded-[8px] border-[0.8px] border-gray-400 bg-white px-[16px] py-[12px]">
+              <div className="flex min-w-0 flex-1 items-center gap-[4px]">
+                <img src={AttachFileIcon} alt="첨부 파일" className="size-[24px] shrink-0" />
+                <p className="truncate text-[14px] font-medium leading-[1.5] text-gray-700 max-phone:text-[12px]">
+                  {businessRegistrationFile.name}
+                </p>
+              </div>
+              <p className="shrink-0 text-[12px] font-medium leading-[1.5] text-gray-700 max-phone:text-[10px]">
+                {formatFileSize(businessRegistrationFile.size)}
+              </p>
+              <button type="button" onClick={handleBusinessFileClear} className="size-[24px] shrink-0">
+                <img src={DeleteIcon} alt="파일 삭제" className="size-full object-contain" />
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="rounded-[8px] border-[0.8px] border-primary bg-white px-[12px] py-[6px] text-center text-[12px] font-medium leading-[1.5] text-primary max-phone:text-[10px] hover:bg-secondary focus:outline-none">
+              파일 업로드
+            </button>
+          )}
+        </div>
+      </div>
+    </>
+  );
 
   return (
     <div className="flex flex-col gap-[20px]">
@@ -158,51 +256,68 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
               ※ 개인•법인 사업자의 경우 사업자등록증이 필요합니다.
             </p>
           </div>
-          <div className="flex gap-[20px] max-phone:gap-[16px]">
-            <button
-              onClick={() => setSellerType('individual')}
-              className={`flex-1 h-[48px] px-[20px] py-[12px] rounded-xl border-[0.8px] font-medium text-[14px] leading-[1.5] max-phone:text-[12px] ${
-                sellerType === 'individual'
-                  ? 'bg-secondary border-primary text-primary'
-                  : 'bg-white border-gray-400 text-gray-700'
-              }`}>
-              일반 개인 판매자
-            </button>
-            <button
-              onClick={() => setSellerType('business')}
-              className={`flex-1 h-[48px] px-[20px] py-[12px] rounded-xl border-[0.8px] font-medium text-[14px] leading-[1.5] max-phone:text-[12px] ${
-                sellerType === 'business'
-                  ? 'bg-secondary border-primary text-primary'
-                  : 'bg-white border-gray-400 text-gray-700'
-              }`}>
-              개인•법인 사업자
-            </button>
+          <div className="flex gap-[20px] max-phone:gap-[8px]">
+            {(['individual', 'business_individual', 'business_corporate'] as SellerType[]).map((type) => {
+              const label =
+                type === 'individual' ? '일반 개인 판매자' : type === 'business_individual' ? '개인 사업자' : '법인 사업자';
+              return (
+                <button
+                  key={type}
+                  onClick={() => setSellerType(type)}
+                  className={`flex-1 h-[48px] px-[20px] py-[12px] rounded-xl border-[0.8px] font-medium text-[14px] leading-[1.5] max-phone:text-[12px] ${
+                    sellerType === type
+                      ? 'bg-secondary border-primary text-primary'
+                      : 'bg-white border-gray-400 text-gray-700'
+                  }`}>
+                  {label}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* 2. 실명 */}
+        {/* 2. 일반 개인 판매자 필드 */}
         {sellerType === 'individual' && (
-          <div className="flex flex-col gap-[12px]">
-            <div className="flex flex-col gap-[4px]">
-              <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em] max-phone:text-[14px]">
-                실명
-              </label>
-              <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em] max-phone:text-[10px]">
-                ※ 예금주와 동일한 이름을 입력해 주세요.
-              </p>
+          <>
+            <div className="flex flex-col gap-[12px]">
+              <div className="flex flex-col gap-[4px]">
+                <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em] max-phone:text-[14px]">
+                  실명
+                </label>
+                <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em] max-phone:text-[10px]">
+                  ※ 예금주와 동일한 이름을 입력해 주세요.
+                </p>
+              </div>
+              <input
+                type="text"
+                value={realName}
+                onChange={(e) => setRealName(e.target.value)}
+                placeholder="예) 이은주"
+                className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 max-phone:text-[12px] focus:outline-none focus:ring-1 focus:ring-primary"
+              />
             </div>
-            <input
-              type="text"
-              value={realName}
-              onChange={(e) => setRealName(e.target.value)}
-              placeholder="예) 이은주"
-              className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 max-phone:text-[12px] focus:outline-none focus:ring-1 focus:ring-primary"
-            />
-          </div>
+            <div className="flex flex-col gap-[12px]">
+              <div className="flex flex-col gap-[4px]">
+                <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em] max-phone:text-[14px]">
+                  생년월일
+                </label>
+                <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em] max-phone:text-[10px]">
+                  ※ 6자리(YYMMDD) 형식으로 입력해 주세요.
+                </p>
+              </div>
+              <input
+                type="text"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
+                placeholder="예) 971211"
+                className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 max-phone:text-[12px] focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+            </div>
+          </>
         )}
 
-        {/* 3. 사업자 정보 (개인•법인 사업자 선택 시) */}
-        {sellerType === 'business' && (
+        {/* 3. 개인 사업자 필드 */}
+        {sellerType === 'business_individual' && (
           <>
             <div className="flex flex-col gap-[12px]">
               <div className="flex flex-col gap-[4px]">
@@ -221,91 +336,48 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
                 className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 max-phone:text-[12px] focus:outline-none focus:ring-1 focus:ring-primary"
               />
             </div>
-
             <div className="flex flex-col gap-[12px]">
               <div className="flex flex-col gap-[4px]">
                 <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em] max-phone:text-[14px]">
-                  상호명
+                  생년월일
                 </label>
                 <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em] max-phone:text-[10px]">
-                  ※ 사업자등록증에 표기된 상호명을 입력해 주세요.
+                  ※ 6자리(YYMMDD) 형식으로 입력해 주세요.
                 </p>
               </div>
               <input
                 type="text"
-                value={businessName}
-                onChange={(e) => setBusinessName(e.target.value)}
-                placeholder="예) 프롬프트 플레이스"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
+                placeholder="예) 971211"
                 className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 max-phone:text-[12px] focus:outline-none focus:ring-1 focus:ring-primary"
               />
             </div>
+            {BusinessFields}
+          </>
+        )}
 
+        {/* 4. 법인 사업자 필드 */}
+        {sellerType === 'business_corporate' && (
+          <>
             <div className="flex flex-col gap-[12px]">
               <div className="flex flex-col gap-[4px]">
                 <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em] max-phone:text-[14px]">
-                  사업자등록번호
+                  대표자명
                 </label>
                 <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em] max-phone:text-[10px]">
-                  ※ '-' 제외한 숫자만 입력해 주세요.
+                  ※ 사업자등록증에 표기된 대표자명을 입력해 주세요.
                 </p>
               </div>
               <input
                 type="text"
-                value={businessRegistrationNumber}
-                onChange={(e) => {
-                  const digits = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
-                  let formatted = digits;
-                  if (digits.length > 5) formatted = `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`;
-                  else if (digits.length > 3) formatted = `${digits.slice(0, 3)}-${digits.slice(3)}`;
-                  setBusinessRegistrationNumber(formatted);
-                }}
-                placeholder="000-00-00000"
+                value={representativeName}
+                onChange={(e) => setRepresentativeName(e.target.value)}
+                placeholder="예) 이은주"
                 className="w-full px-[16px] py-[12px] bg-gray-50 rounded-lg text-[14px] font-light leading-[1.6] tracking-[0.02em] placeholder:text-gray-400 max-phone:text-[12px] focus:outline-none focus:ring-1 focus:ring-primary"
               />
             </div>
-
-            <div className="flex flex-col gap-[12px]">
-              <div className="flex flex-col gap-[4px]">
-                <label className="text-[16px] font-medium text-text-on-white leading-[1.4] tracking-[-0.01em] max-phone:text-[14px]">
-                  사업자등록증
-                </label>
-                <p className="text-[12px] font-light text-gray-700 leading-[1.4] tracking-[-0.01em] max-phone:text-[10px]">
-                  ※ 최대 10MB 이하의 JPG, PNG, PDF 파일만 업로드 가능합니다.
-                </p>
-              </div>
-              <div className="flex items-center gap-[12px]">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".jpg,.jpeg,.png,.pdf"
-                  onChange={(e) => setBusinessRegistrationFile(e.target.files?.[0] || null)}
-                  className="hidden"
-                />
-                {businessRegistrationFile ? (
-                  <div className="flex h-[48px] w-full items-center gap-[16px] rounded-[8px] border-[0.8px] border-gray-400 bg-white px-[16px] py-[12px]">
-                    <div className="flex min-w-0 flex-1 items-center gap-[4px]">
-                      <img src={AttachFileIcon} alt="첨부 파일" className="size-[24px] shrink-0" />
-                      <p className="truncate text-[14px] font-medium leading-[1.5] text-gray-700 max-phone:text-[12px]">
-                        {businessRegistrationFile.name}
-                      </p>
-                    </div>
-                    <p className="shrink-0 text-[12px] font-medium leading-[1.5] text-gray-700 max-phone:text-[10px]">
-                      {formatFileSize(businessRegistrationFile.size)}
-                    </p>
-                    <button type="button" onClick={handleBusinessFileClear} className="size-[24px] shrink-0">
-                      <img src={DeleteIcon} alt="파일 삭제" className="size-full object-contain" />
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="rounded-[8px] border-[0.8px] border-primary bg-white px-[12px] py-[6px] text-center text-[12px] font-medium leading-[1.5] text-primary max-phone:text-[10px] hover:bg-secondary focus:outline-none">
-                    파일 업로드
-                  </button>
-                )}
-              </div>
-            </div>
+            {BusinessFields}
           </>
         )}
 

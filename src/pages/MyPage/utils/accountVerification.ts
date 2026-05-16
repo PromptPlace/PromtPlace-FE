@@ -1,7 +1,7 @@
 import type { SellerRegistrationModalType } from '@/types/MyPage/settlement';
 import type { Bank } from './banks';
 
-type SellerType = 'individual' | 'business';
+type SellerType = 'individual' | 'business_individual' | 'business_corporate';
 
 export type AccountVerificationResult = {
   isVerified: boolean;
@@ -37,7 +37,7 @@ export const getAccountVerificationResult = ({
     };
   }
 
-  if (sellerType === 'individual' && realName?.trim() && realName.trim() !== accountHolder.trim()) {
+  if ((sellerType === 'individual') && realName?.trim() && realName.trim() !== accountHolder.trim()) {
     return {
       isVerified: false,
       modalType: 'nameMismatch',

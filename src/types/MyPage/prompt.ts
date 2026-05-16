@@ -48,6 +48,7 @@ export interface NewDownloadedPromptDTO {
   imageUrls: string[] | null;
   has_review: boolean;
   is_recent_review: boolean;
+  is_refundable?: boolean;
   userNickname: string;
   userProfileImageUrl: string | null;
   userReview: {

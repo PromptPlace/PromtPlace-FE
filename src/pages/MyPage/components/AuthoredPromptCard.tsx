@@ -12,10 +12,11 @@ import { useNavigate } from 'react-router-dom';
 import default_icon from '@/assets/icon-profile-image-default.svg';
 interface AuthoredPromptCardProps {
   prompt: NewAuthoredPromptDTO;
+  maxReviews?: number;
 }
 
 //여기는 하나의 프롬프트만 받아오면 됨
-const AuthoredPromptCard = ({ prompt }: AuthoredPromptCardProps) => {
+const AuthoredPromptCard = ({ prompt, maxReviews = 3 }: AuthoredPromptCardProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { mutate: DeletePrompt } = usePatchDeletePrompts({ member_id: user.user_id });
@@ -168,7 +169,7 @@ const AuthoredPromptCard = ({ prompt }: AuthoredPromptCardProps) => {
         </div>
       </div>
       <div className="flex flex-col gap-[16px]">
-        {prompt.reviews.data.slice(0, 3).map((review) => (
+        {prompt.reviews.data.slice(0, maxReviews).map((review) => (
           <div>
             <div className="flex flex-col gap-[8px] px-[28px]">
               <div className="flex justify-between">
@@ -186,7 +187,7 @@ const AuthoredPromptCard = ({ prompt }: AuthoredPromptCardProps) => {
               </div>
               <div className="custom-body3 text-gray-700">{review.content}</div>
             </div>
-            {prompt.reviews.data.length > 3 && (
+            {prompt.reviews.data.length > maxReviews && (
               <div className="flex justify-end pr-[20px] mt-[8px]">
                 <Link to={`/prompt/${prompt.prompt_id}`}>
                   <button className="custom-button2 text-gray-500">리뷰 더 보기</button>
