@@ -135,7 +135,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
     });
   };
 
-  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (e.key === 'Enter') {
       handleSubmit();
     }
@@ -428,7 +428,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
                 ) : (
                   <PinIcon onClick={() => mutatePatchPinChat(selectedRoomId)} className="cursor-pointer" />
                 )}
-                <DotsIcon className="cursor-pointer" onClick={() => setShowMenu((prev) => !prev)} />
+                <DotsIcon className="cursor-pointer w-[24px]" onClick={() => setShowMenu((prev) => !prev)} />
 
                 {/* 메뉴 */}
                 {showMenu && (
@@ -443,7 +443,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
             <section
               ref={scrollRef}
               onScroll={handleScroll}
-              className="flex flex-col gap-[20px] flex-1 min-h-0 overflow-auto">
+              className="flex flex-col gap-[20px] flex-1 min-h-0 overflow-auto pr-[16px]">
               <div ref={ref} className="h-2 shrink-0"></div>
 
               {/* 사용자 정보 부분 */}
@@ -529,12 +529,25 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
 
                 <div className="flex-1">
                   {/* 채팅 입력 */}
-                  <input
+                  <textarea
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
+                    onInput={(e) => {
+                      const target = e.currentTarget;
+
+                      target.style.height = 'auto';
+                      target.style.height = `${Math.min(target.scrollHeight, 102)}px`;
+
+                      if (target.scrollHeight > 102) {
+                        target.style.overflowY = 'auto';
+                      } else {
+                        target.style.overflowY = 'hidden';
+                      }
+                    }}
                     onKeyDown={handleEnter}
                     placeholder="메시지를 입력해주세요."
-                    className="flex-1 cursor-pointer custom-body1 plcaeholder:font-['SCoreDream'] placeholder:custom-body1 placeholder:text-gray500"
+                    rows={1}
+                    className="flex-1 w-full resize-none cursor-pointer custom-body1 placeholder:font-['SCoreDream'] placeholder:custom-body1 placeholder:text-gray500"
                   />
 
                   <div className="flex gap-[4px] flex-wrap">
