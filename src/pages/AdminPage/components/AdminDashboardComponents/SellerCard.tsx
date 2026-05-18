@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import type { sellerProps } from '@/types/AdminPage/dashboard.ts';
 import rightArrow from '../../assets/icon-arrow-right-blue.svg';
+import AdminModal from '@components/Modal/AdminModal.tsx';
+import SellerCancelModal from '@pages/AdminPage/components/AdminDashboardComponents/SellerCancelModal.tsx';
 
 const SellerCard = ({ seller }: { seller: sellerProps }) => {
   const [isSelected, setIsSelected] = useState();
+  const [isCancelledModalOpen, setIsCancelledModalOpen] = useState(false);
 
   return (
     <div className="px-11 py-4">
@@ -56,10 +59,22 @@ const SellerCard = ({ seller }: { seller: sellerProps }) => {
             <div className="flex justify-center items-center text-primary text-sm">메시지</div>
           </div>
           <div className="w-full h-12 px-5 py-3 bg-white rounded-xl outline-[0.88px] outline-gray-400">
-            <div className="flex justify-center items-center text-gray-700 text-sm">등록 취소</div>
+            <div
+              className="flex justify-center items-center text-gray-700 text-sm"
+              onClick={() => {
+                setIsCancelledModalOpen(true);
+              }}>
+              등록 취소
+            </div>
           </div>
         </div>
       )}
+      {isCancelledModalOpen && (
+        <div className="absolute items-center justify-center w-96 z-[9999]">
+          <SellerCancelModal />
+        </div>
+      )}
+      ;
     </div>
   );
 };

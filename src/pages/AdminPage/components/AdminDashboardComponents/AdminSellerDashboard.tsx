@@ -2,6 +2,7 @@ import React from 'react';
 import SellerCard from '@pages/AdminPage/components/AdminDashboardComponents/SellerCard.tsx';
 import arrow from '../../assets/arrow-right.svg';
 import { useNavigate } from 'react-router-dom';
+import SellerDashboardSection from '@pages/AdminPage/components/AdminDashboardComponents/SellerDashboardSection.tsx';
 
 const dummySellers = [
   {
@@ -61,23 +62,7 @@ const AdminSellerDashboard = () => {
           <img className="left-2 w-1.5 h-3" src={arrow} alt="arrow" />
         </div>
       </div>
-      <div className="pl-4 py-5 gap-3 flex items-center">
-        <input className="px-5 py-4 bg-background rounded-lg w-100 h-[54px]" placeholder="검색어를 입력해주세요. " />
-        <div className="flex gap-3">
-          <div className="px-4 py-2 bg-secondary rounded-[50px] items-center justify-center text-primary text-sm">
-            개인 판매자
-          </div>
-          <div className="px-4 py-2 bg-secondary rounded-[50px] items-center justify-center text-primary text-sm">
-            사업자 판매자
-          </div>
-          <div className="px-4 py-2 bg-secondary rounded-[50px] items-center justify-center text-primary text-sm">
-            승인 대기
-          </div>
-        </div>
-      </div>
-      {dummySellers.map((item) => (
-        <SellerCard key={item.id} seller={item} />
-      ))}
+      <SellerDashboardSection />
     </div>
   );
 };
