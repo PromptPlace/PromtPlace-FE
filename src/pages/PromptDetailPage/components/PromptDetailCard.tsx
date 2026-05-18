@@ -24,11 +24,8 @@ import reportIcon from '../assets/report.svg';
 import star from '../assets/star.png';
 import ReportModal from '../components/ReportModal';
 import arrowRightBlack from '../assets/arrow_right.svg';
-import XIcon from '@assets/icon-x-logo.svg';
-import KakaoIcon from '../assets/kakaotalk-logo.svg';
-import LinkIcon from '../assets/link-logo.svg';
-import FacebookIcon from '../assets/facebook-logo.svg';
 import usePayment from '@/hooks/mutations/MainPage/usePostRequestPayment';
+import ShareModal from './ShareModal';
 
 interface Props {
   title: string;
@@ -126,6 +123,7 @@ const PromptDetailCard = ({
   const displayMain = normalizedImages[activeIdx] ?? '';
 
   const [liked, setLiked] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const { data: likedSet } = useMyLikedPrompts();
 
@@ -222,73 +220,10 @@ const PromptDetailCard = ({
   //   downloadPrompt(promptId);
   // };
 
-  const currentUrl = window.location.href;
-
-  // Kakao SDK 초기화
-  useEffect(() => {
-    if (!window.Kakao) return;
-    if (!window.Kakao.isInitialized()) {
-      window.Kakao.init(import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY);
-    }
-  }, []);
-
-  // Facebook 공유
-  const handleFacebookShare = () => {
-    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
-    window.open(url, '_blank', 'width=600,height=400');
-  };
-
-  // X (트위터)
-  const handleXShare = () => {
-    const text = encodeURIComponent(`${title} - PromptPlace`);
-    const url = `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(currentUrl)}`;
-    window.open(url, '_blank', 'width=600,height=400');
-  };
-
-  // Kakao 공유
-  const handleKakaoShare = () => {
-    if (!window.Kakao) {
-      alert('카카오 SDK를 불러오지 못했습니다.');
-      return;
-    }
-
-    window.Kakao.Share.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: title,
-        description: 'PromptPlace에서 확인해보세요!',
-        imageUrl: displayMain || 'https://your-default-image-url.com/logo.png',
-        link: {
-          mobileWebUrl: currentUrl,
-          webUrl: currentUrl,
-        },
-      },
-      buttons: [
-        {
-          title: '프롬프트 보러가기',
-          link: {
-            mobileWebUrl: currentUrl,
-            webUrl: currentUrl,
-          },
-        },
-      ],
-    });
-  };
-
-  // 링크 복사
-  const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(currentUrl);
-      alert('링크가 복사되었습니다!');
-    } catch {
-      alert('복사에 실패했습니다.');
-    }
-  };
-
   const isPaidPrompt = !isFree; // 유료 프롬프트 여부
   const hasPurchased = isPaidPrompt && isPaid; // 구매 완료 여부(유료일 때만 의미 있음)
 
-  const actionLabel = hasPurchased || isFree ? '프롬프트 다운로드' : '프롬프트 구매하기';
+  const actionLabel = isFree ? '다운로드' : hasPurchased ? '구매완료' : `₩${price.toLocaleString()}`;
 
   const guideText =
     hasPurchased || isFree
@@ -457,27 +392,21 @@ const PromptDetailCard = ({
 
               <div className="mt-[12px] flex justify-between items-center flex-wrap font-medium">
                 {/* 왼쪽 영역 */}
-                <div className="flex flex-wrap items-center gap-6">
-                  <span className="text-[14px] text-[#6B7280]">업로드&nbsp;&nbsp;&nbsp;{uploadedAt}</span>
-                  <Count imgType="eye" count={views} />
-                  <Count imgType="download" count={downloads} />
-                </div>
-
-                {/* 오른쪽 공유 */}
-                <div className="flex items-center gap-3">
-                  <span className="text-[14px] text-[#6B7280]">공유</span>
-                  <button onClick={handleFacebookShare}>
-                    <img src={FacebookIcon} alt="Facebook 공유" className="w-[18px] h-[18px] cursor-pointer" />
-                  </button>
-                  <button onClick={handleKakaoShare}>
-                    <img src={KakaoIcon} alt="Kakao 공유" className="w-[18px] h-[18px] cursor-pointer" />
-                  </button>
-                  <button onClick={handleXShare}>
-                    <img src={XIcon} alt="X 공유" className="w-[18px] h-[18px] cursor-pointer" />
-                  </button>
-                  <button onClick={handleCopyLink}>
-                    <img src={LinkIcon} alt="링크 복사" className="w-[18px] h-[18px] cursor-pointer" />
-                  </button>
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-wrap items-center gap-6">
+                    <span className="text-[14px] text-[#6B7280]">업로드&nbsp;&nbsp;&nbsp;{uploadedAt}</span>
+                    <Count imgType="eye" count={views} />
+                    <Count imgType="download" count={downloads} />
+                  </div>
+                  <div>
+                    <IconButton
+                      buttonType="squareBig"
+                      style="fill"
+                      imgType="download"
+                      text={actionLabel}
+                      onClick={onPrimaryAction}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -564,28 +493,33 @@ const PromptDetailCard = ({
                 <span className="text-[12px] text-[#9aa0a6]">태그가 없습니다.</span>
               )}
             </div>
-            {/* 가격 + 버튼 */}
+            {/* 찜하기 + 공유 버튼 */}
             <div className="flex flex-col items-end text-right w-full lg:w-auto">
-              <p className="font-medium text-[24px]">{isFree ? '무료' : `${price.toLocaleString()}원`}</p>
-              {isPaid && !isFree && <span className="text-sm text-green-600">구매 완료</span>}
-              <span className="text-[12px] font-light text-[#374151] mb-[8px]">{guideText}</span>
-
-              <div className="flex items-center gap-5 mt-2 lg:mt-0">
-                <IconButton
-                  buttonType="squareBig"
-                  style="fill"
-                  imgType="download"
-                  text={actionLabel}
-                  onClick={onPrimaryAction}
-                />
-
+              <div className="flex items-center gap-3 mt-2 lg:mt-0">
+                {/* 찜하기 버튼 */}
                 <button
                   className="w-[49px] h-[49px] rounded-[12px] bg-[#FFFEFB] border-[1px] border-[#D1D5DB] flex items-center justify-center"
                   onClick={handleToggleLike}
-                  aria-label="좋아요">
-                  <img src={liked ? heartOnClick : heartNone} alt="like" className="w-[28px] h-[28px]" />
+                  aria-label="찜하기">
+                  <img src={liked ? heartOnClick : heartNone} alt="찜하기" className="w-[28px] h-[28px]" />
+                </button>
+
+                {/* 공유 버튼 */}
+                <button
+                  className="w-[49px] h-[49px] rounded-[12px] bg-[#FFFEFB] border-[1px] border-[#D1D5DB] flex items-center justify-center"
+                  onClick={() => setIsShareModalOpen(true)}
+                  aria-label="공유하기">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="18" cy="5" r="3" stroke="#6B7280" strokeWidth="1.8" />
+                    <circle cx="6" cy="12" r="3" stroke="#6B7280" strokeWidth="1.8" />
+                    <circle cx="18" cy="19" r="3" stroke="#6B7280" strokeWidth="1.8" />
+                    <line x1="8.82" y1="10.59" x2="15.18" y2="6.41" stroke="#6B7280" strokeWidth="1.8" />
+                    <line x1="8.82" y1="13.41" x2="15.18" y2="17.59" stroke="#6B7280" strokeWidth="1.8" />
+                  </svg>
                 </button>
               </div>
+
+              <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} title={title} />
             </div>
           </div>
         </div>

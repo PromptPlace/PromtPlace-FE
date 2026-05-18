@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 interface ChatListProps {
   setSelectedRoomId: (roomId: number) => void;
-  selectedRoomId: number;
+  selectedRoomId: number | null;
 }
 
 type ActiveButton = {
