@@ -20,6 +20,7 @@ const ChatBubble = ({ text, files, isMine, popup, date, showTime }: ChatBubblePr
   const [preview, setPreview] = useState<string | null>(null);
   const [selected, setSelected] = useState<Attachment | null>(null);
   const hasFile = files.some((file) => file.type === 'FILE');
+  const hasImg = files.some((file) => file.type === 'IMAGE');
 
   const formatTime = (date: string) => {
     const d = new Date(date);
@@ -41,7 +42,7 @@ const ChatBubble = ({ text, files, isMine, popup, date, showTime }: ChatBubblePr
           isMine
             ? 'bg-primary text-white rounded-l-[32px] rounded-tr-[32px]'
             : 'bg-background rounded-r-[32px] rounded-bl-[32px]',
-          hasFile && 'flex flex-col gap-[16px]',
+          (hasFile || hasImg) && 'flex flex-col gap-[16px]',
         )}>
         {text}
 
