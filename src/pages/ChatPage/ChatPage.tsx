@@ -2,20 +2,25 @@ import { useEffect, useState } from 'react';
 import ChatList from './components/ChatList';
 import ChattingRoom from './components/ChattingRoom';
 import useGetInfiniteChatRooms from '@/hooks/queries/ChatPage/useGetInfiniteChatRooms';
+import { useMediaQuery } from 'react-responsive';
 
 const ChatPage = () => {
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
-  const isTablet = window.innerWidth < 1024;
+  const isTablet = useMediaQuery({
+    maxWidth: 1023,
+  });
 
   const { data } = useGetInfiniteChatRooms({ limit: 20 }); // 채팅 목록 조회
 
   useEffect(() => {
+    if (isTablet) return;
+
     const latestRoomId = data?.pages?.[0]?.data?.rooms?.[0]?.room_id;
 
     if (latestRoomId) {
       setSelectedRoomId(latestRoomId);
     }
-  }, [data]);
+  }, [data, isTablet]);
 
   return (
     <div className="px-[102px] max-lg:px-[40px] max-phone:px-[20px] max-lg:bg-white max-lg:h-dvh">
