@@ -503,7 +503,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
               {/* 날짜 */}
               <div className="py-[16px] flex items-center">
                 <div className="w-full h-[1px] bg-gray400"></div>
-                <div className="px-[20px] text-gray400 ">{`${year}.${month}.${day}(${dayOfWeek})`}</div>
+                <div className="px-[20px] text-gray400 text-[12px]">{`${year}.${month}.${day}(${dayOfWeek})`}</div>
                 <div className="w-full h-[1px] bg-gray400"></div>
               </div>
 
