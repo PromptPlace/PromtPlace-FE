@@ -76,6 +76,9 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
 
   // 메시지 전송
   const handleSubmit = async () => {
+    // 메시지 없고 파일도 없을 때 전송 불가
+    if (!input.trim() && files.length === 0) return;
+
     const content = input;
     setInput('');
 
@@ -142,6 +145,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
 
   const handleEnter = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (e.key === 'Enter') {
+      e.preventDefault();
       handleSubmit();
     }
   };
