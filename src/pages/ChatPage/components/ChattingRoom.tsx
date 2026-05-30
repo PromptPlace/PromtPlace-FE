@@ -28,6 +28,7 @@ import SendIcon from '@assets/chat/icon-send.svg?react';
 import ArrowIcon from '@assets/header/icon-arrow_fill.svg?react';
 import useGetMyDownloadedPrompts from '@/hooks/queries/MyPage/useGetMyDownloadedPrompts';
 import clsx from 'clsx';
+import useGetMemberPrompts from '@/hooks/queries/ChatPage/useGetMemberPrompts';
 
 interface ChattingRoomProps {
   selectedRoomId: number;
@@ -56,7 +57,6 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
   const { data, hasNextPage, fetchNextPage, isFetching } = useGetChatRoomsDetail(selectedRoomId); // 채팅방 상세 조회
   const { mutateAsync: postPresignUrl } = usePostPresignUrl();
   const { mutate: mutatePatchPinChat } = usePatchPinChat();
-  const { data: downloadPromptsData } = useGetMyDownloadedPrompts();
 
   const { user } = useAuth();
   const queryClient = useQueryClient(); // 캐시 업데이트를 위해서 queryClient 가져옴
@@ -71,11 +71,24 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
   const { data: userData } = useGetMember({ member_id: firstPage?.partner.user_id as number }); // 상대방 정보
   const { year, month, day, dayOfWeek } = formatDate(firstPage?.room.created_at || '');
 
+  const { data: downloadPromptsData } = useGetMyDownloadedPrompts();
+  const downloadedPromptIds = new Set(downloadPromptsData?.data.map((prompt) => prompt.prompt_id) ?? []);
+
+  const { data: partnerPromptsData } = useGetMemberPrompts(firstPage?.partner.user_id as number);
+  const partnerDownloadedPrompts =
+    partnerPromptsData?.pages
+      .flatMap((page) => page.data)
+      .filter((prompt) => downloadedPromptIds.has(prompt.prompt_id)) ?? [];
+  console.log(partnerDownloadedPrompts);
+
   const scrollRef = useRef<HTMLDivElement | null>(null); // 채팅 스크롤 영역
   const { ref } = useInView({ threshold: 0, root: scrollRef.current });
 
   // 메시지 전송
   const handleSubmit = async () => {
+    // 메시지 없고 파일도 없을 때 전송 불가
+    if (!input.trim() && files.length === 0) return;
+
     const content = input;
     setInput('');
 
@@ -142,6 +155,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
 
   const handleEnter = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (e.key === 'Enter') {
+      e.preventDefault();
       handleSubmit();
     }
   };
@@ -349,24 +363,25 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
               className,
             )}>
             {/* 내가 다운받은 프롬프트 */}
-            {showDownload && (
+            {/* 내가 다운받은 프롬프트 */}
+            {partnerDownloadedPrompts.length !== 0 && showDownload && (
               <div className={clsx('z-10 inset-0 top-[92px] bg-overlay', popup ? 'fixed h-dvh' : 'absolute h-full')}>
                 <div
                   className={clsx(
                     'absolute inset-0 bg-white flex flex-col gap-[16px] p-[32px]',
                     showDownloadAll ? (popup ? 'h-dvh' : 'h-full') : 'h-max max-h-[215px]',
                   )}>
-                  <ul className="list-disc ">
+                  <ul className="list-disc pl-5 flex-1 overflow-scroll">
                     {/* 3개까지 잘라서 보여줌 */}
                     {!showDownloadAll &&
-                      downloadPromptsData?.data.slice(0, 3).map((data) => (
+                      partnerDownloadedPrompts?.slice(0, 3).map((data) => (
                         <li key={data.prompt_id} className="custom-body2">
                           {data.title}
                         </li>
                       ))}
                     {/* 더 보기인 경우 전체 다 보여줌 */}
                     {showDownloadAll &&
-                      downloadPromptsData?.data.map((data) => (
+                      partnerDownloadedPrompts?.map((data) => (
                         <li key={data.prompt_id} className="custom-body2">
                           {data.title}
                         </li>
@@ -375,7 +390,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
 
                   {/* 4개 이상인 경우 더 보기 버튼 */}
                   {downloadPromptsData?.data && downloadPromptsData.data.length > 4 && (
-                    <div className={clsx('flex justify-center', showDownloadAll && 'flex-1 pb-[112px] items-end')}>
+                    <div className={clsx('flex justify-center', showDownloadAll && 'pb-[112px] items-end')}>
                       <button
                         onClick={() => {
                           setShowDownloadAll((prev) => !prev);
@@ -503,7 +518,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
               {/* 날짜 */}
               <div className="py-[16px] flex items-center">
                 <div className="w-full h-[1px] bg-gray400"></div>
-                <div className="px-[20px] text-gray400 ">{`${year}.${month}.${day}(${dayOfWeek})`}</div>
+                <div className="px-[20px] text-gray400 text-[12px]">{`${year}.${month}.${day}(${dayOfWeek})`}</div>
                 <div className="w-full h-[1px] bg-gray400"></div>
               </div>
 
