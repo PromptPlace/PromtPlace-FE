@@ -37,12 +37,12 @@ const TotalSettlementAmountSection = ({
           <p className="custom-button1 text-gray-700 max-phone:!text-[12px]">{TOTAL_SETTLEMENT_NOTICE_TEXT}</p>
 
           <div className="flex flex-col gap-[20px] lg:flex-row lg:items-center lg:justify-between">
-            <div className="relative w-[223px]">
+            <div className="relative w-[223px] max-phone:ml-auto max-phone:w-[159px]">
               <button
                 type="button"
                 onClick={onClickYearSelect}
                 className="flex h-[48px] w-full items-center justify-between rounded-[8px] bg-gray-50 px-[16px] py-[12px]">
-                <span className="custom-button1 text-text-on-white">{data.selectedYearLabel}</span>
+                <span className="custom-button1 text-text-on-white max-phone:!text-[12px]">{data.selectedYearLabel}</span>
                 <ArrowIcon fillColor="#9CA3AF" />
               </button>
 
@@ -93,12 +93,12 @@ const TotalSettlementAmountSection = ({
             <p className="custom-h1 text-primary max-phone:!text-[24px]">{formatPrice(data.totalAccumulatedAmount)}</p>
           </div>
 
-          <div className="relative w-[223px]">
+          <div className="relative w-[223px] max-phone:ml-auto max-phone:w-[159px]">
             <button
               type="button"
               onClick={onClickYearSelect}
               className="flex h-[48px] w-full items-center justify-between rounded-[8px] bg-gray-50 px-[16px] py-[12px]">
-              <span className="custom-button1 text-text-on-white">{data.selectedYearLabel}</span>
+              <span className="custom-button1 text-text-on-white max-phone:!text-[12px]">{data.selectedYearLabel}</span>
               <ArrowIcon fillColor="#9CA3AF" />
             </button>
 
