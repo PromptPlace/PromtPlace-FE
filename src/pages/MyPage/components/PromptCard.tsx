@@ -4,7 +4,7 @@ import kebabMenu from '@/assets/icon-kebabMenu.svg';
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import Portal from './Portal';
+import Portal from '../utils/Portal';
 
 export interface Prompt {
   prompt_id: number;

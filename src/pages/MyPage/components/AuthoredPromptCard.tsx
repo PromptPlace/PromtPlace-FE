@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { NewAuthoredPromptDTO } from '@/types/MyPage/prompt';
 import logo from '@/assets/logo/app/app-logo-default.svg';
-import Portal from './Portal';
+import Portal from '../utils/Portal';
 import kebabMenu from '@/assets/icon-kebabMenu.svg';
 import { useState, useRef, useEffect } from 'react';
 import Rating from './Rating';

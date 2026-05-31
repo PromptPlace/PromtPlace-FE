@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import ArrowIcon from './ArrowIcon';
+import ArrowIcon from '../utils/ArrowIcon';
 import { BANKS, getBankLogoUrl, type Bank } from '../utils/banks';
 
 interface BankSelectDropdownProps {

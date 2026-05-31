@@ -1,4 +1,4 @@
-import ArrowIcon from '../ArrowIcon';
+import ArrowIcon from '../../utils/ArrowIcon';
 import type { MonthlySettlement, TotalSettlementAmountSectionProps } from '@/types/MyPage/settlement';
 import { formatPrice } from '@/pages/MyPage/utils/format';
 
