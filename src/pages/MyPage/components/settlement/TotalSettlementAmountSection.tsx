@@ -87,10 +87,10 @@ const TotalSettlementAmountSection = ({
       <div className="flex flex-col gap-[20px] rounded-[12px] bg-white p-[24px]">
         <p className="custom-button1 text-gray-700 max-phone:!text-[12px]">{TOTAL_SETTLEMENT_NOTICE_TEXT}</p>
 
-        <div className="flex flex-col gap-[20px] lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex  gap-[20px] lg:flex-row lg:items-end justify-between">
           <div>
             <h3 className="custom-h4 text-text-on-white max-phone:!text-[16px]">{TOTAL_SETTLEMENT_LABEL}</h3>
-            <p className="custom-h1 text-primary max-phone:!text-[24px]">{formatPrice(data.totalAccumulatedAmount)}</p>
+            <p className="custom-h1 text-primary max-phone:!text-[24px] mt-[20px]">{formatPrice(data.totalAccumulatedAmount)}</p>
           </div>
 
           <div className="relative w-[223px] max-phone:ml-auto max-phone:w-[159px]">
