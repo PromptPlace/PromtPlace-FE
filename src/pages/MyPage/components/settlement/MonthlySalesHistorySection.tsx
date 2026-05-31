@@ -1,5 +1,5 @@
 import RightArrowIcon from '../RightArrowIcon';
-import ArrowIcon from '../ArrowIcon';
+import ArrowIcon from '../../utils/ArrowIcon';
 import { useNavigate } from 'react-router-dom';
 import type { MonthlySalesHistorySectionProps } from '@/types/MyPage/settlement';
 import { toMonthLabelFromSaleDate } from '@/pages/MyPage/utils/date';
@@ -114,7 +114,7 @@ const MonthlySalesHistorySection = ({
                       <div className="flex min-w-0 flex-1 flex-col gap-[8px] px-[24px] pb-[16px] pt-[8px] max-phone:gap-[12px] max-phone:px-[16px] max-phone:py-[8px]">
                         <button
                           type="button"
-                          className={`truncate text-left custom-h5 max-phone:!text-[14px] max-phone:!font-light max-phone:!leading-[1.4] max-phone:!tracking-[-0.14px] ${textClass}`}
+                          className={`break-keep text-left custom-h5 max-phone:!text-[14px] max-phone:!font-light max-phone:!leading-[1.4] max-phone:!tracking-[-0.14px] ${textClass}`}
                           onClick={() => navigate(`/prompt/${item.promptId}`)}>
                           {item.title}
                         </button>
