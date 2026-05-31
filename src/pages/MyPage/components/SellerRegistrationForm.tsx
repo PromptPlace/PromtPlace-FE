@@ -256,7 +256,7 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
               ※ 개인•법인 사업자의 경우 사업자등록증이 필요합니다.
             </p>
           </div>
-          <div className="flex gap-[20px] max-phone:gap-[8px]">
+          <div className="flex gap-[20px] max-mypage:flex-col max-mypage:gap-[12px]">
             {(['individual', 'business_individual', 'business_corporate'] as SellerType[]).map((type) => {
               const label =
                 type === 'individual' ? '일반 개인 판매자' : type === 'business_individual' ? '개인 사업자' : '법인 사업자';

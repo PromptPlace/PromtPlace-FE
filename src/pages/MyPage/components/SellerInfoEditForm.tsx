@@ -214,7 +214,7 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
             </p>
           </div>
 
-          <div className="flex gap-[20px] max-phone:gap-[8px]">
+          <div className="flex gap-[20px] max-mypage:flex-col max-mypage:gap-[12px]">
             {(['individual', 'business_individual', 'business_corporate'] as SellerType[]).map((type) => {
               const label =
                 type === 'individual' ? '일반 개인 판매자' : type === 'business_individual' ? '개인 사업자' : '법인 사업자';
