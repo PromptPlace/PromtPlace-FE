@@ -41,8 +41,7 @@ const iconButtonTheme = {
   buttonType: {
     round:
       'px-[29px] max-phone:px-[12px] py-[21px] rounded-[50px] text-xl max-phone:text-[18px] font-medium leading-[25px] max-phone:leading-[13px] gap-[15px] max-phone:gap-[5px]',
-    squareBig:
-      'custom-h4 px-[20px] py-[12px] max-lg:py-[8px] rounded-[10px] max-lg:rounded-[4px] max-lg:text-[14px] max-lg:leading-[18px] gap-[15px] max-lg:gap-[8px]',
+    squareBig: 'custom-h4 px-[20px] py-[12px] max-lg:py-[11px] rounded-[10px] text-[14px] leading-[18px] gap-[8px]',
     squareMd:
       'px-[20px] max-lg:px-[8px] py-[10px] max-lg:py-[2px] rounded-[10px] max-lg:rounded-[4px] h-[45px] max-lg:h-auto text-xl max-lg:text-[10px] font-medium leading-[25px] max-lg:leading-[13px] gap-[15px] max-lg:gap-[4px]',
     squreSm:
