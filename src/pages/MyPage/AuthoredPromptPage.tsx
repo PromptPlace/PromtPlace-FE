@@ -1,5 +1,5 @@
 import { useGetMyPrompts } from '@/hooks/queries/MyPage/useGetMyPrompt';
-import AuthoredPromptCard from './AuthoredPromptCard';
+import AuthoredPromptCard from './components/AuthoredPromptCard';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';

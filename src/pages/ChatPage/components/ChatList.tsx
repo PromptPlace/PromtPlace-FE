@@ -29,7 +29,6 @@ const ChatList = ({ setSelectedRoomId, selectedRoomId }: ChatListProps) => {
   const navigate = useNavigate();
 
   const { data } = useGetInfiniteChatRooms({ filter: activeButton.filter, search, limit: 20 }); // 채팅 목록 조회
-
   const handleSearch = () => {
     setSearch('');
     console.log(search);
