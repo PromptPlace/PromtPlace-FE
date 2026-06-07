@@ -11,6 +11,10 @@ interface ChatListItemProps {
     content: string;
     sent_at: Date | string;
     has_attachments: boolean;
+    attachment_summary?: {
+      image_count: number;
+      file_count: number;
+    } | null;
   };
   unread_count: number;
   is_pinned: boolean;
@@ -20,6 +24,10 @@ interface ChatListItemProps {
 
 const ChatListItem = ({ partner, last_message, unread_count, is_clicked, onClick }: ChatListItemProps) => {
   const { month, day } = formatDate(last_message.sent_at);
+  console.log(last_message?.attachment_summary);
+
+  const attachmentMsg =
+    (last_message.attachment_summary?.image_count ?? 0) > 0 ? '사진을 보냈습니다.' : '파일을 보냈습니다.';
 
   return (
     <div
@@ -43,7 +51,7 @@ const ChatListItem = ({ partner, last_message, unread_count, is_clicked, onClick
         </div>
 
         <div className="flex items-center justify-between">
-          <p className="custom-body3 text-gray700 truncate">{last_message.content}</p>
+          <p className="custom-body3 text-gray700 truncate">{last_message.content || attachmentMsg}</p>
 
           {unread_count > 0 && (
             <button className="rounded-[200px] py-[2px] px-[6px] h-[19px] bg-alert custom-button3 text-white text-center">
