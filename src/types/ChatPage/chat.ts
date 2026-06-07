@@ -45,6 +45,10 @@ export type Room = {
     content: string;
     sent_at: string;
     has_attachments: boolean;
+    attachment_summary?: {
+      image_count: number;
+      file_count: number;
+    } | null;
   };
   unread_count: number;
   is_pinned: boolean;
