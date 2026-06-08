@@ -1,5 +1,6 @@
-const Bone = ({ className }: { className: string }) => (
-  <div className={`animate-pulse bg-gray-200 rounded-md ${className}`} />
+import React from 'react';
+const Bone = ({ className, style }: { className: string; style?: React.CSSProperties }) => (
+  <div className={`animate-pulse bg-gray-200 rounded-md ${className}`} style={style} />
 );
 const Circle = ({ className }: { className: string }) => (
   <div className={`animate-pulse bg-gray-200 rounded-full ${className}`} />
