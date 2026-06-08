@@ -9,6 +9,7 @@ import PromptAuthorAndReview from './components/PromptAuthorAndReview';
 import ReportModal from './components/ReportModal';
 import DownloadModal from './components/DownloadModal';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
+import PromptDetailPageSkeleton from './components/PromptDetailPageSkeleton';
 
 // hooks
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
@@ -196,7 +197,7 @@ const PromptDetailPage = () => {
   };
 
   if (!Number.isFinite(promptId)) return <div>잘못된 접근입니다.</div>;
-  if (isLoading) return <div className="text-center text-gray-500 text-sm py-12">프롬프트 불러오는 중...</div>;
+  if (isLoading) return <PromptDetailPageSkeleton />;
   if (!prompt) return <div>프롬프트를 불러오지 못했습니다.</div>;
 
   const modelNames = Array.isArray(prompt.models) ? prompt.models.map((m) => m?.name).filter(Boolean) : [];

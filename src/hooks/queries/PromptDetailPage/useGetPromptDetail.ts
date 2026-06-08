@@ -10,6 +10,8 @@ export const promptKeys = {
 type Options = { enabled?: boolean };
 
 export default function useGetPromptDetail(id: number, options?: Options) {
+  // return { data: undefined, isLoading: true } as any;
+
   return useQuery<PromptDetailDto>({
     queryKey: promptKeys.detail(id),
     queryFn: () => getPromptDetail(id),
