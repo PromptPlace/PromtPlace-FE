@@ -41,6 +41,7 @@ export interface NewDownloadedPromptDTO {
   message: string;
   statusCode: number;
   prompt_id: number;
+  purchase_id: number;
   title: string;
   description: string;
   price: number;
