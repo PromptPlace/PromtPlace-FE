@@ -27,12 +27,9 @@ export const lazyRoutes = {
   AdminComplaintDetailPage: React.lazy(() => import('../pages/AdminPage/AdminComplaintDetailPage')),
   ChatPage: React.lazy(() => import('../pages/ChatPage/ChatPage')),
   ChatRoomPage: React.lazy(() => import('../pages/ChatPage/ChatRoomPage')),
-<<<<<<< HEAD
   AdminDashboardPage: React.lazy(() => import('../pages/AdminPage/AdminDashboardPage.tsx')),
   AdminSellerDetailPage: React.lazy(() => import('../pages/AdminPage/AdminSellerDetailPage.tsx')),
-=======
   TestPage: React.lazy(() => import('../pages/TestPage')),
   SellerModalTestPage: React.lazy(() => import('../pages/Test/SellerModalTestPage')),
   SellerNotRegisteredTestPage: React.lazy(() => import('../pages/Test/SellerNotRegisteredTestPage')),
->>>>>>> bba222ec0e02f2caacad65d81f3182ef9dc2a112
 };
