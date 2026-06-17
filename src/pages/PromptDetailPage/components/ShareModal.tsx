@@ -3,6 +3,7 @@ import FacebookIcon from '../assets/facebook-logo.svg';
 import KakaoIcon from '../assets/kakaotalk-logo.svg';
 import LinkIcon from '../assets/link-logo.svg';
 import XIcon from '@assets/icon-x-logo.svg';
+import CloseIcon from '@assets/icon-close.svg';
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -71,8 +72,7 @@ const ShareModal = ({ isOpen, onClose, title }: ShareModalProps) => {
 
   // 데스크탑: 버튼 64×64 / 모바일: 56×56
   const btnSize = isMobile ? 'w-[56px] h-[56px]' : 'w-[64px] h-[64px]';
-  // 아이콘은 버튼보다 살짝 작게 (여백감 유지)
-  const iconSize = isMobile ? 'w-[36px] h-[36px]' : 'w-[44px] h-[44px]';
+  const iconSize = isMobile ? 'w-[40px] h-[40px]' : 'w-[48px] h-[48px]';
   const labelSize = isMobile ? 'text-[10px]' : 'text-[12px]';
 
   const items = [
@@ -90,15 +90,12 @@ const ShareModal = ({ isOpen, onClose, title }: ShareModalProps) => {
         onClick={(e) => e.stopPropagation()}>
         {/* 헤더 */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="font-semibold text-[18px] text-[#111827]">공유</h2>
+          <h2 className="font-medium text-[18px] text-[#111827]">공유</h2>
           <button
             onClick={onClose}
             aria-label="닫기"
-            className="w-[28px] h-[28px] flex items-center justify-center text-[#6B7280] hover:text-[#111827] transition-colors">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <line x1="5" y1="5" x2="19" y2="19" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-              <line x1="19" y1="5" x2="5" y2="19" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-            </svg>
+            className="w-[13.5px] h-[13.5px] flex items-center justify-center transition-opacity">
+            <img src={CloseIcon} alt="닫기" className="w-[14px] h-[14px]" />
           </button>
         </div>
 
@@ -108,7 +105,7 @@ const ShareModal = ({ isOpen, onClose, title }: ShareModalProps) => {
             <button key={label} className="flex flex-col items-center gap-[10px]" onClick={onClick}>
               {/* 둥근 사각형 버튼, 흰 배경 + 테두리 */}
               <div
-                className={`${btnSize} rounded-[16px] bg-white border border-[#E5E7EB] flex items-center justify-center shadow-sm hover:border-[#6198FF] transition-colors`}>
+                className={`${btnSize} rounded-[16px] bg-white border border-[#D1D5DB] flex items-center justify-center hover:border-[#6198FF] transition-colors`}>
                 <img src={icon} alt={label} className={`${iconSize} object-contain`} />
               </div>
               <span className={`${labelSize} text-[#374151] whitespace-nowrap font-medium`}>{label}</span>

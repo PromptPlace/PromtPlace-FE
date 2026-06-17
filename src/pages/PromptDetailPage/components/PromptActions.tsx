@@ -10,7 +10,7 @@ import TagButton from '@components/Button/TagButton';
 
 import profile from '@/assets/icon-profile-gray.svg';
 import heartNone from '../../../assets/icon-heart-none-big.svg';
-import heartOnClick from '../../../assets/icon-heart-blue-big.svg';
+import heartActive from '../../../assets/icon-heart-active-big.svg';
 import contentCheckIcon from '../assets/contentcheck.png';
 
 import ReviewList from './ReviewList';
@@ -404,7 +404,7 @@ const PromptActions = ({
         )}
 
         <img
-          src={liked ? heartOnClick : heartNone}
+          src={liked ? heartActive : heartNone}
           alt="heart"
           className="ml-[34px] w-[28px] h-[25px] cursor-pointer"
           onClick={handleToggleLike}

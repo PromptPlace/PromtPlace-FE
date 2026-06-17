@@ -112,7 +112,7 @@ const DownloadModal = ({
         {/* 타이틀 */}
         {!hideTitle || isDesktop ? (
           <>
-            <h2 className="custom-h4 text-[14px] text-text-on-white mb-[16px] max-lg:text-[16px] max-lg:mb-[12px]">
+            <h2 className="custom-h4 text-[18px] text-text-on-white mb-[16px] max-lg:text-[14px] max-lg:mb-[12px]">
               {title}
             </h2>
             <div className="h-[1px] bg-[#CCCCCC] w-full mb-[16px] max-lg:mb-[16px]" />
@@ -120,7 +120,7 @@ const DownloadModal = ({
         ) : null}
 
         {/* (추가) 저작권 관련 멘트: 칩인데 10px + gray-700 */}
-        <p className="custom-chip text-[10px] text-gray700 mt-[16px]">
+        <p className="custom-chip text-[12px] max-lg:text-[10px] text-gray700 mt-[16px]">
           ※ 본 프롬프트의 상업적 이용 및 타사이트 무단 재배포를 금지합니다.
         </p>
 
@@ -129,7 +129,7 @@ const DownloadModal = ({
           <div className="flex justify-end ml-[790px]">
             <CopyActionButton onClick={handleCopy} />
           </div>
-          <div className="custom-body2 text-[10px] text-gray700 pt-[16px] whitespace-pre-wrap leading-relaxed">
+          <div className="custom-body2 text-[14px] max-lg:text-[10px] text-gray700 pt-[16px] whitespace-pre-wrap leading-relaxed">
             {content}
           </div>
         </div>
