@@ -1,7 +1,11 @@
 import useGetMyDownloadedPrompts from '@/hooks/queries/MyPage/useGetMyDownloadedPrompts.tsx';
 import DownloadedPromptCard from './components/DownlodadPromptCard';
+import { DownloadedPromptTabSkeleton } from './components/MyPageSkeleton';
+
 const DownloadedPromptPage = () => {
   const { data, isLoading, isError } = useGetMyDownloadedPrompts();
+
+  if (isLoading) return <DownloadedPromptTabSkeleton />;
 
   return (
     <div className="mt-[64px] w-full">

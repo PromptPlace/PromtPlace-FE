@@ -6,21 +6,25 @@ import useGetMyDownloadedPrompts from '@/hooks/queries/MyPage/useGetMyDownloaded
 import { NoAuthoredPrompts, NoDownloadedPrompts, NoLikedPrompts } from './NoPrompts';
 import { useGetLikedPrompts } from '@/hooks/queries/MyPage/useGetPrompts';
 import arrow from '@/assets/icon-arrow-right-prompt.svg';
+import { PromptListSkeleton } from './MyPageSkeleton';
 interface PromptListProps {
   setActiveTab: (tab: 'prompt' | 'dashboard' | 'profile' | 'profileEdit' | 'authored' | 'downloaded') => void;
 }
 
 const PromptList = ({ setActiveTab }: PromptListProps) => {
   // (useQuery 등으로 writtenData, downloadedData, likedData를 가져옴)
-  const { data: downloadedData } = useGetMyDownloadedPrompts();
-  const { data: authoredData } = useGetMyPrompts();
-  const { data: likedPromptsData } = useGetLikedPrompts();
+  const { data: downloadedData, isLoading: isDownloadedLoading } = useGetMyDownloadedPrompts();
+  const { data: authoredData, isLoading: isAuthoredLoading } = useGetMyPrompts();
+  const { data: likedPromptsData, isLoading: isLikedLoading } = useGetLikedPrompts();
 
+  const isLoading = isDownloadedLoading || isAuthoredLoading || isLikedLoading;
   const AuthoredPromptsNum = authoredData?.pages[0].total_prompts || 0;
   const DownloadedPromptsNum = downloadedData?.data.length || 0;
   const LikedPromptsNum = likedPromptsData?.data.data.length || 0;
   console.log('찜한 프롬프트 수:', LikedPromptsNum);
   console.log('찜한 프롬프트 데이터 2차검증:', likedPromptsData);
+
+  if (isLoading) return <PromptListSkeleton />;
 
   return (
     <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-[40px] mt-[64px]">
