@@ -3,10 +3,12 @@ import type { sellerProps } from '@/types/AdminPage/dashboard.ts';
 import rightArrow from '../../assets/icon-arrow-right-blue.svg';
 import AdminModal from '@components/Modal/AdminModal.tsx';
 import SellerCancelModal from '@pages/AdminPage/components/AdminDashboardComponents/SellerCancelModal.tsx';
+import SellerDeclineModal from '@pages/AdminPage/components/AdminDashboardComponents/SellerDeclineModal.tsx';
 
 const SellerCard = ({ seller }: { seller: sellerProps }) => {
   const [isSelected, setIsSelected] = useState();
   const [isCancelledModalOpen, setIsCancelledModalOpen] = useState(false);
+  const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
 
   return (
     <div className="px-11 py-4">
@@ -47,7 +49,13 @@ const SellerCard = ({ seller }: { seller: sellerProps }) => {
             <div className="flex justify-center items-center text-primary text-sm">메시지</div>
           </div>
           <div className="w-full h-12 px-5 py-3 bg-white rounded-xl outline-[0.88px] outline-gray-400">
-            <div className="flex items-center justify-center text-gray-700">반려</div>
+            <div
+              className="flex items-center justify-center text-gray-700 cursor-pointer"
+              onClick={() => {
+                setIsDeclineModalOpen(true);
+              }}>
+              반려
+            </div>
           </div>
           <div className="w-full h-12 px-5 py-3 bg-primary rounded-xl">
             <div className="flex items-center justify-center text-white">승인</div>
@@ -60,7 +68,7 @@ const SellerCard = ({ seller }: { seller: sellerProps }) => {
           </div>
           <div className="w-full h-12 px-5 py-3 bg-white rounded-xl outline-[0.88px] outline-gray-400">
             <div
-              className="flex justify-center items-center text-gray-700 text-sm"
+              className="flex justify-center items-center text-gray-700 text-sm cursor-pointer"
               onClick={() => {
                 setIsCancelledModalOpen(true);
               }}>
@@ -70,11 +78,24 @@ const SellerCard = ({ seller }: { seller: sellerProps }) => {
         </div>
       )}
       {isCancelledModalOpen && (
-        <div className="absolute items-center justify-center w-96 z-[9999]">
-          <SellerCancelModal />
+        <div
+          className="fixed inset-0 bg-overlay flex items-center justify-center z-[9999]"
+          onClick={() => setIsCancelledModalOpen(false)}>
+          <div onClick={(e) => e.stopPropagation()}>
+            <SellerCancelModal onClose={() => setIsCancelledModalOpen(false)} />
+          </div>
         </div>
       )}
-      ;
+
+      {isDeclineModalOpen && (
+        <div
+          className="fixed inset-0 bg-overlay flex items-center justify-center z-[9999]"
+          onClick={() => setIsDeclineModalOpen(false)}>
+          <div onClick={(e) => e.stopPropagation()}>
+            <SellerDeclineModal onClose={() => setIsDeclineModalOpen(false)} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

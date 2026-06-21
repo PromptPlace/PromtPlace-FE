@@ -1,5 +1,10 @@
 import axios from 'axios';
-import type { CommonSettlementResponseDTO, Account, AccountDetail } from '@/types/AdminPage/settlement.ts';
+import type {
+  CommonSettlementResponseDTO,
+  Account,
+  AccountDetail,
+  MonthlySales,
+} from '@/types/AdminPage/settlement.ts';
 
 export const getSettlementAccount = async (): Promise<CommonSettlementResponseDTO<Account>> => {
   const token = sessionStorage.getItem('accessToken');
@@ -23,4 +28,16 @@ export const getAdjustmentDetail = async (): Promise<CommonSettlementResponseDTO
   });
 
   return data;
+};
+
+export const getMonthlySales = async (): Promise<MonthlySales> => {
+  const { data } = await axios.get(`${import.meta.env.VITE_SERVER_API_URL}/api/settlements/sales/monthly`, {
+    params: {
+      year,
+      month,
+      page,
+      limit,
+      hasNext,
+    },
+  });
 };
