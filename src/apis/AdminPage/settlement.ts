@@ -30,14 +30,14 @@ export const getAdjustmentDetail = async (): Promise<CommonSettlementResponseDTO
   return data;
 };
 
-export const getMonthlySales = async (): Promise<MonthlySales> => {
-  const { data } = await axios.get(`${import.meta.env.VITE_SERVER_API_URL}/api/settlements/sales/monthly`, {
-    params: {
-      year,
-      month,
-      page,
-      limit,
-      hasNext,
-    },
-  });
-};
+// export const getMonthlySales = async (): Promise<MonthlySales> => {
+//   const { data } = await axios.get(`${import.meta.env.VITE_SERVER_API_URL}/api/settlements/sales/monthly`, {
+//     params: {
+//       year,
+//       month,
+//       page,
+//       limit,
+//       hasNext,
+//     },
+//   });
+// };

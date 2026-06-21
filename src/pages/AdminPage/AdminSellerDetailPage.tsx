@@ -1,6 +1,6 @@
 import React from 'react';
 import SellerCard from '@pages/AdminPage/components/AdminDashboardComponents/SellerCard.tsx';
-import leftArrow from '../../assets/icon-arrow-left.svg';
+import leftArrow from '../../assets/icon-arrow-left-black.svg';
 import SellerDashboardSection from '@pages/AdminPage/components/AdminDashboardComponents/SellerDashboardSection.tsx';
 
 const AdminSellerDetailPage = () => {
