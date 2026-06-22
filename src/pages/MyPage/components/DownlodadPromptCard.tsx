@@ -9,19 +9,29 @@ import defaultProfile from '@/assets/icon-profile-image-default.svg';
 import defaultlogo from '@/assets/logo/app/app-logo-default.svg';
 import DualModal from '@components/Modal/DualModal';
 import TextModal from '@components/Modal/TextModal';
-import { useState } from 'react';
+import RefundModal from './RefundModal';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { usePostRefund } from '@/hooks/mutations/MyPage/usePostRefund';
+import { getRefundEligibility } from '@/apis/MyPage/refund';
+
 interface DownloadedPromptCardProps {
   prompt: NewDownloadedPromptDTO;
 }
-
-import { Link } from 'react-router-dom';
 
 const DownloadedPromptCard = ({ prompt }: DownloadedPromptCardProps) => {
   const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDeleteSuccessModal, setShowDeleteSuccessModal] = useState(false);
   const [showExpiredModal, setShowExpiredModal] = useState(false);
+
+  // 환불 관련 상태
+  const [showRefundModal, setShowRefundModal] = useState(false);
+  const [showRefundSuccessModal, setShowRefundSuccessModal] = useState(false);
+  const [isRefundable, setIsRefundable] = useState(false);
+
   const { mutate: deleteReviewMutation } = useDeleteReview();
+  const { mutate: postRefund } = usePostRefund();
 
   const handleDeleteReview = () => {
     deleteReviewMutation(prompt.userReview!.review_id);
@@ -38,13 +48,37 @@ const DownloadedPromptCard = ({ prompt }: DownloadedPromptCardProps) => {
     navigate(targetUrl);
   };
 
+  // 마운트 시 환불 가능 여부 조회 (유료 프롬프트만)
+  useEffect(() => {
+    if (prompt.price === 0 || !prompt.purchase_id) return;
+
+    getRefundEligibility(prompt.purchase_id)
+      .then((res) => setIsRefundable(res.eligible))
+      .catch(() => setIsRefundable(false));
+  }, [prompt.purchase_id, prompt.price]);
+
+  const handleRefund = () => {
+    postRefund(prompt.purchase_id, {
+      onSuccess: () => {
+        setShowRefundModal(false);
+        setIsRefundable(false);
+        setShowRefundSuccessModal(true);
+      },
+      onError: () => {
+        setShowRefundModal(false);
+        alert('환불 처리에 실패했습니다.');
+      },
+    });
+  };
+
   const imageUrl = prompt.imageUrls && prompt.imageUrls.length > 0 ? prompt.imageUrls[0] : defaultlogo;
   const price = prompt.price === 0 ? '무료' : `${prompt.price}원`;
+
   return (
     <div className="w-full bg-white rounded-[12px] p-[24px]">
       {' '}
       <div className="w-full bg-white pr-[24px] mb-[20px]">
-        <div className="flex">
+        <div className="flex items-center justify-between">
           <div className="flex gap-[24px] items-center">
             <img src={imageUrl} alt="프롬프트 이미지" className="w-[80px] h-[80px] rounded-[8px]" />
             <Link to={`/prompt/${prompt.prompt_id}`}>
@@ -52,6 +86,21 @@ const DownloadedPromptCard = ({ prompt }: DownloadedPromptCardProps) => {
               <p className="custom-h5 text-black">{price}</p>
             </Link>
           </div>
+
+          {/* 환불 버튼 / 환불 완료 상태 */}
+          {prompt.price > 0 && (
+            <>
+              {prompt.is_refunded ? (
+                <span className="shrink-0 ml-[16px] custom-body2 text-gray-400">환불 완료</span>
+              ) : isRefundable ? (
+                <button
+                  className="shrink-0 ml-[16px] flex items-center gap-[4px] custom-body2 text-gray-500 hover:text-gray-700 transition-colors"
+                  onClick={() => setShowRefundModal(true)}>
+                  환불하기 <span className="text-gray-400">›</span>
+                </button>
+              ) : null}
+            </>
+          )}
         </div>
       </div>
       {prompt.has_review === false ? (
@@ -128,6 +177,12 @@ const DownloadedPromptCard = ({ prompt }: DownloadedPromptCardProps) => {
       )}
       {showExpiredModal && (
         <TextModal text="지금은 리뷰를 삭제할 수 없습니다." onClick={() => setShowExpiredModal(false)} size="sm" />
+      )}
+      {/* 환불 확인 모달 */}
+      {showRefundModal && <RefundModal onClickRefund={handleRefund} onClose={() => setShowRefundModal(false)} />}
+      {/* 환불 완료 모달 */}
+      {showRefundSuccessModal && (
+        <TextModal text="결제가 취소되었습니다." onClick={() => setShowRefundSuccessModal(false)} size="sm" />
       )}
     </div>
   );

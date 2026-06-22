@@ -10,6 +10,7 @@ import DownloadedPromptPage from './DownloadedPromptPage';
 import AuthoredPromptPage from './AuthoredPromptPage';
 import PromptList from './components/PromptList';
 import DashboardTabContent from './components/DashboardTabContent';
+import { ProfileSettingTabSkeleton, DashboardTabSkeleton } from './components/MyPageSkeleton';
 // MyProfilePage 컴포넌트
 // PromptList 컴포넌트를 이용해 작성한 프롬프트, 다운받은 프롬프트, 찜한 프롬프트를 한번에 보여줌
 // AuthoredPromptPage, DownloadedPromptPage 를 각각 컴포넌트로 구현하여 작성한 프롬프트 전체 목록과 다운로드한 프롬프트 전체 목록을 보여줌
@@ -18,7 +19,7 @@ const MyProfilePage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { user } = useAuth();
-  const { data: userData } = useGetMember({ member_id: user.user_id });
+  const { data: userData, isLoading: isUserLoading } = useGetMember({ member_id: user.user_id });
   const tabFromQuery = useMemo(() => {
     const tab = searchParams.get('tab');
 
@@ -50,9 +51,24 @@ const MyProfilePage = () => {
       <MyProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       <main>
         {activeTab === 'prompt' && <PromptList setActiveTab={setActiveTab} />}
-        {activeTab === 'dashboard' && <DashboardTabContent sellerStatusFromQuery={sellerStatusFromQuery} />}
-        {activeTab === 'profile' && <ProfileView userData={userData} setActiveTab={setActiveTab} />}
-        {activeTab === 'profileEdit' && <ProfileEditView userData={userData} setActiveTab={setActiveTab} />}
+        {activeTab === 'dashboard' &&
+          (isUserLoading ? (
+            <DashboardTabSkeleton />
+          ) : (
+            <DashboardTabContent sellerStatusFromQuery={sellerStatusFromQuery} />
+          ))}
+        {activeTab === 'profile' &&
+          (isUserLoading ? (
+            <ProfileSettingTabSkeleton />
+          ) : (
+            <ProfileView userData={userData} setActiveTab={setActiveTab} />
+          ))}
+        {activeTab === 'profileEdit' &&
+          (isUserLoading ? (
+            <ProfileSettingTabSkeleton />
+          ) : (
+            <ProfileEditView userData={userData} setActiveTab={setActiveTab} />
+          ))}
         {activeTab === 'authored' && <AuthoredPromptPage />}
         {activeTab === 'downloaded' && <DownloadedPromptPage />}
       </main>
