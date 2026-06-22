@@ -42,6 +42,7 @@ export interface NewDownloadedPromptDTO {
   statusCode: number;
   prompt_id: number;
   purchase_id: number;
+  is_refunded: boolean;
   title: string;
   description: string;
   price: number;

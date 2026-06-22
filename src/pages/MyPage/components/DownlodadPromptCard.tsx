@@ -87,13 +87,19 @@ const DownloadedPromptCard = ({ prompt }: DownloadedPromptCardProps) => {
             </Link>
           </div>
 
-          {/* 환불 버튼: 유료 + 환불 가능한 경우만 표시 */}
-          {prompt.price > 0 && isRefundable && (
-            <button
-              className="shrink-0 ml-[16px] flex items-center gap-[4px] custom-body2 text-gray-500 hover:text-gray-700 transition-colors"
-              onClick={() => setShowRefundModal(true)}>
-              환불하기 <span className="text-gray-400">›</span>
-            </button>
+          {/* 환불 버튼 / 환불 완료 상태 */}
+          {prompt.price > 0 && (
+            <>
+              {prompt.is_refunded ? (
+                <span className="shrink-0 ml-[16px] custom-body2 text-gray-400">환불 완료</span>
+              ) : isRefundable ? (
+                <button
+                  className="shrink-0 ml-[16px] flex items-center gap-[4px] custom-body2 text-gray-500 hover:text-gray-700 transition-colors"
+                  onClick={() => setShowRefundModal(true)}>
+                  환불하기 <span className="text-gray-400">›</span>
+                </button>
+              ) : null}
+            </>
           )}
         </div>
       </div>
