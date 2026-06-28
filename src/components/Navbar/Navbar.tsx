@@ -35,7 +35,7 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
-  const { accessToken, user } = useAuth();
+  const { accessToken, user, logout } = useAuth();
   const isAdmin = user.role === 'ADMIN';
   const { data } = useGetMember({ member_id: user.user_id });
   const { data: notificationData } = useGetNewNotification();
@@ -158,6 +158,17 @@ const Navbar = () => {
             <div className="flex justify-center items-center gap-[24px]">
               <PrimaryButton
                 buttonType="admin"
+                text="관리보드"
+                onClick={() => {
+                  navigate('/admin/dashboard');
+                }}
+                py={8}
+                px={39}
+                borderRadius={8}
+              />
+
+              <PrimaryButton
+                buttonType="admin"
                 text="신고함"
                 onClick={() => {
                   navigate('/admin/complaint');
@@ -167,14 +178,7 @@ const Navbar = () => {
                 borderRadius={8}
               />
 
-              <PrimaryButton
-                buttonType="admin"
-                text="접근 상태 : 운영자"
-                onClick={() => {}}
-                py={8}
-                px={10}
-                borderRadius={32}
-              />
+              <PrimaryButton buttonType="admin" text="로그아웃" onClick={logout} py={8} px={39} borderRadius={32} />
 
               <img
                 src={AdminIcon}
