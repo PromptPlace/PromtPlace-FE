@@ -17,21 +17,33 @@ import type {
   initialSetupResponse,
 } from '../../types/LoginPage/auth.ts';
 
+//소셜 로그인
+const CALLBACK_URL = new URL('auth/callback', window.location.origin).toString();
+
 export const postGoogleAuthCode = async (authCode: string) => {
-  const { data } = await axiosInstance.post<loginResponse>('/api/auth/google/token', { code: authCode });
+  const { data } = await axiosInstance.post<loginResponse>('/api/auth/google/token', {
+    code: authCode,
+    redirect_uri: CALLBACK_URL,
+  });
   console.log('Google login response:', data);
   return data;
 };
 
 export const postNaverAuthCode = async (authCode: string) => {
-  const { data } = await axiosInstance.post<loginResponse>('/api/auth/naver/token', { code: authCode });
+  const { data } = await axiosInstance.post<loginResponse>('/api/auth/naver/token', {
+    code: authCode,
+    redirect_uri: CALLBACK_URL,
+  });
   console.log('Naver login response:', data);
   return data;
 };
 
 //카카오는 request body에 인가 코드뿐만 아니라 추가적인 정보까지 담을 듯 합니다
 export const postKakaoAuthCode = async (authCode: string) => {
-  const { data } = await axiosInstance.post<loginResponse>('/api/auth/kakao/token', { code: authCode });
+  const { data } = await axiosInstance.post<loginResponse>('/api/auth/kakao/token', {
+    code: authCode,
+    redirect_uri: CALLBACK_URL,
+  });
   console.log('Kakao login response:', data);
   return data;
 };
@@ -80,7 +92,7 @@ export const postSignin = async (data: signinRequest) => {
   const response = await axiosInstance.post<signinResponse>('/api/auth/signin', data);
   console.log('Signin response:', response.data);
   return response.data;
-}
+};
 
 export const postInitialSetup = async (data: initialSetupRequest) => {
   const response = await axiosInstance.post<initialSetupResponse>('/api/auth/signin/initial-setup', data);
