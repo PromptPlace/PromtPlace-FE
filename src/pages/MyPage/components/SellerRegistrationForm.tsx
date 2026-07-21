@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import SellerRegistrationStatusModal from './modal/SellerRegistrationStatusModal';
 import type { SellerRegistrationModalType } from '@/types/MyPage/settlement';
+import type { VerifyAccountRequestDTO } from '@/types/MyPage/settlement';
 import AttachFileIcon from '@assets/icon-attach-file-black.svg';
 import DeleteIcon from '@assets/icon-delete.svg';
 import CheckedSquareIcon from '@assets/icon-bi-check-square-primary.svg';
@@ -8,7 +9,11 @@ import NonCheckedSquareIcon from '@assets/icon-bi-noncheck-square2.svg';
 import BankSelectDropdown from './BankSelectDropdown';
 import type { Bank } from '../utils/banks';
 import { getPortOneBankCodeByBankName } from '../utils/banks';
-import { getAccountVerificationResult } from '../utils/accountVerification';
+import { getVerifyAccountErrorInfo } from '../utils/accountVerification';
+import usePostVerifyAccount from '@/hooks/mutations/MyPage/usePostVerifyAccount';
+import usePostIndividualRegister from '@/hooks/mutations/MyPage/usePostIndividualRegister';
+import usePostBusinessRegister from '@/hooks/mutations/MyPage/usePostBusinessRegister';
+import usePostBusinessLicense from '@/hooks/mutations/MyPage/usePostBusinessLicense';
 
 const formatFileSize = (sizeInBytes: number) => {
   if (sizeInBytes >= 1024 * 1024) {
@@ -55,10 +60,17 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
   const [accountHolder, setAccountHolder] = useState('');
   const [privacyAgreed, setPrivacyAgreed] = useState(false);
   const [isAccountVerified, setIsAccountVerified] = useState(false);
+  const [registerToken, setRegisterToken] = useState<string | null>(null);
   const [activeModalType, setActiveModalType] = useState<SellerRegistrationModalType | null>(null);
+  const [modalDescriptionOverride, setModalDescriptionOverride] = useState<string | undefined>(undefined);
   const [pendingSubmitData, setPendingSubmitData] = useState<SellerRegistrationData | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const verifyAccountMutation = usePostVerifyAccount();
+  const individualRegisterMutation = usePostIndividualRegister();
+  const businessRegisterMutation = usePostBusinessRegister();
+  const businessLicenseMutation = usePostBusinessLicense();
 
   const handleBusinessFileClear = () => {
     setBusinessRegistrationFile(null);
@@ -67,22 +79,71 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
     }
   };
 
-  //계좌 인증 요청 함수
-  const handleAccountVerify = () => {
-    const result = getAccountVerificationResult({
-      selectedBank,
-      accountNumber,
-      accountHolder,
-      sellerType,
-      realName,
-    });
+  // 계좌 인증 요청에 사용할 payload 구성
+  const buildVerifyAccountPayload = (): VerifyAccountRequestDTO => {
+    const portOneBankCode = selectedBank ? (getPortOneBankCodeByBankName(selectedBank.name) ?? selectedBank.code) : '';
 
-    setIsAccountVerified(result.isVerified);
-    setActiveModalType(result.modalType);
+    if (sellerType === 'individual') {
+      return {
+        sellerType: 'INDIVIDUAL',
+        name: realName,
+        birthDate,
+        bank: portOneBankCode,
+        accountNumber,
+        holderName: accountHolder,
+      };
+    }
+
+    if (sellerType === 'business_individual') {
+      return {
+        sellerType: 'BUSINESS',
+        businessType: 'PERSONAL',
+        name: representativeName,
+        birthDate,
+        bank: portOneBankCode,
+        accountNumber,
+        holderName: accountHolder,
+      };
+    }
+
+    // business_corporate
+    return {
+      sellerType: 'BUSINESS',
+      businessType: 'CORPORATE',
+      name: representativeName,
+      businessNumber: businessRegistrationNumber.replace(/-/g, ''),
+      bank: portOneBankCode,
+      accountNumber,
+      holderName: accountHolder,
+    };
   };
 
-  const handleSubmit = () => {
-    if (!isAccountVerified) {
+  //계좌 인증 요청 함수
+  const handleAccountVerify = () => {
+    if (!selectedBank) {
+      setActiveModalType('bankAccountMismatch');
+      return;
+    }
+
+    verifyAccountMutation.mutate(buildVerifyAccountPayload(), {
+      onSuccess: (data) => {
+        setIsAccountVerified(true);
+        setRegisterToken(data.registerToken);
+        setModalDescriptionOverride(undefined);
+        setActiveModalType('verificationSuccess');
+      },
+      onError: (error) => {
+        setIsAccountVerified(false);
+        setRegisterToken(null);
+        const { modalType, descriptionOverride } = getVerifyAccountErrorInfo(error);
+        setModalDescriptionOverride(descriptionOverride);
+        setActiveModalType(modalType);
+      },
+    });
+  };
+
+  const handleSubmit = async () => {
+    if (!isAccountVerified || !registerToken) {
       setActiveModalType('bankCommunicationError');
       return;
     }
@@ -106,29 +167,48 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
       isTermsAgreed: privacyAgreed,
     };
 
-    if (sellerType === 'individual') {
-      data.name = realName;
-      data.birthDate = birthDate;
-    } else if (sellerType === 'business_individual') {
-      data.birthDate = birthDate;
-      // TODO: 파일 업로드 API 연동 후 반환받은 URL을 businessLicenseUrl에 사용하세요.
-      data.businessLicenseUrl = businessRegistrationFile ? URL.createObjectURL(businessRegistrationFile) : '';
-      data.representativeName = representativeName;
-      data.businessNumber = businessRegistrationNumber.replace(/-/g, '');
-      data.companyName = businessName;
-    } else {
-      // business_corporate
-      // TODO: 파일 업로드 API 연동 후 반환받은 URL을 businessLicenseUrl에 사용하세요.
-      data.businessLicenseUrl = businessRegistrationFile ? URL.createObjectURL(businessRegistrationFile) : '';
-      data.representativeName = representativeName;
-      data.businessNumber = businessRegistrationNumber.replace(/-/g, '');
-      data.companyName = businessName;
-    }
+    try {
+      if (sellerType === 'individual') {
+        data.name = realName;
+        data.birthDate = birthDate;
 
-    const completedModalType =
-      sellerType === 'individual' ? 'individualRegistrationComplete' : 'businessRegistrationComplete';
-    setPendingSubmitData(data);
-    setActiveModalType(completedModalType);
+        await individualRegisterMutation.mutateAsync({
+          registerToken,
+          isTermsAgreed: privacyAgreed,
+        });
+      } else {
+        let businessLicenseUrl = '';
+        if (businessRegistrationFile) {
+          const uploadResult = await businessLicenseMutation.mutateAsync(businessRegistrationFile);
+          businessLicenseUrl = uploadResult.fileUrl;
+        }
+
+        if (sellerType === 'business_individual') {
+          data.birthDate = birthDate;
+        }
+        data.businessLicenseUrl = businessLicenseUrl;
+        data.representativeName = representativeName;
+        data.businessNumber = businessRegistrationNumber.replace(/-/g, '');
+        data.companyName = businessName;
+
+        await businessRegisterMutation.mutateAsync({
+          registerToken,
+          companyName: businessName,
+          businessLicenseUrl,
+          isTermsAgreed: privacyAgreed,
+        });
+      }
+
+      const completedModalType =
+        sellerType === 'individual' ? 'individualRegistrationComplete' : 'businessRegistrationComplete';
+      setPendingSubmitData(data);
+      setModalDescriptionOverride(undefined);
+      setActiveModalType(completedModalType);
+    } catch (error) {
+      const { modalType, descriptionOverride } = getVerifyAccountErrorInfo(error);
+      setModalDescriptionOverride(descriptionOverride);
+      setActiveModalType(modalType);
+    }
   };
 
   const handleModalClose = () => {
@@ -425,7 +505,7 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
             />
             <button
               onClick={handleAccountVerify}
-              disabled={!accountHolder || !accountNumber || !selectedBank}
+              disabled={!accountHolder || !accountNumber || !selectedBank || verifyAccountMutation.isPending}
               className="px-[20px] py-[12px] bg-white border-[0.8px] border-primary text-primary rounded-xl font-medium text-[14px] leading-[1.5] max-phone:text-[12px] whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed">
               계좌 인증하기
             </button>
@@ -461,12 +541,23 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
           type="button"
           onClick={handleSubmit}
           className="h-[48px] rounded-xl bg-primary text-white disabled:text-gray-400 text-[14px] font-medium leading-[1.5] max-phone:text-[12px] disabled:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={!selectedBank || !accountNumber || !accountHolder}>
+          disabled={
+            !selectedBank ||
+            !accountNumber ||
+            !accountHolder ||
+            individualRegisterMutation.isPending ||
+            businessRegisterMutation.isPending ||
+            businessLicenseMutation.isPending
+          }>
           등록하기
         </button>
       </div>
 
-      <SellerRegistrationStatusModal modalType={activeModalType} onClose={handleModalClose} />
+      <SellerRegistrationStatusModal
+        modalType={activeModalType}
+        onClose={handleModalClose}
+        descriptionOverride={modalDescriptionOverride}
+      />
     </div>
   );
 }

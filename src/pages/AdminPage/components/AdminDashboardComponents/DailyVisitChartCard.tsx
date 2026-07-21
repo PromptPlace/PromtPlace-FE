@@ -1,25 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from 'recharts';
-import arrowDown from '../../assets/icon-arrow-orange.svg';
-
-type DailyVisitPoint = {
-  label: string;
-  visitors: number;
-};
-
-const dailyVisitData: DailyVisitPoint[] = [
-  { label: '4.5', visitors: 110 },
-  { label: '4.6', visitors: 145 },
-  { label: '4.7', visitors: 95 },
-  { label: '4.8', visitors: 130 },
-  { label: '4.9', visitors: 120 },
-  { label: '4.10', visitors: 160 },
-  { label: '4.11', visitors: 170 },
-  { label: '오늘', visitors: 180 },
-];
+import ArrowIcon from '@/pages/MyPage/utils/ArrowIcon';
+import useGetVisitorStats from '@hooks/queries/AdminPage/useGetVisitorStats.ts';
+import { buildRecentMonthOptions, formatChartDateLabel, getCurrentYearMonth } from '@pages/AdminPage/utils/format.ts';
 
 const DailyVisitChartCard = () => {
-  const todayVisitors = dailyVisitData[dailyVisitData.length - 1]?.visitors ?? 0;
+  const [month, setMonth] = useState(getCurrentYearMonth);
+  const [isMonthDropdownOpen, setIsMonthDropdownOpen] = useState(false);
+  const { data } = useGetVisitorStats({ params: { month } });
+
+  const dailyVisitData = (data?.data.month_daily ?? []).map((item) => ({
+    label: formatChartDateLabel(item.date),
+    visitors: item.count,
+  }));
+
+  const todayVisitors = data?.data.daily_count ?? 0;
+  const monthOptions = buildRecentMonthOptions();
+  const selectedMonthLabel = monthOptions.find((option) => option.value === month)?.label ?? month;
 
   return (
     <div className="w-full min-w-80 min-h-48 bg-white rounded-2xl p-4 inline-flex flex-col justify-start items-start gap-2 overflow-hidden">
@@ -28,12 +25,36 @@ const DailyVisitChartCard = () => {
           일일 방문자 수 : <span className="text-primary text-lg font-medium leading-6">{todayVisitors}명</span>
         </div>
 
-        <button
-          type="button"
-          className="h-12 px-4 py-3 bg-gray-50 rounded-lg inline-flex justify-start items-center gap-5 text-text-on-white text-sm font-medium leading-5">
-          2026년 4월
-          <img className="w-5 h-5" src={arrowDown} alt="월 선택" />
-        </button>
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setIsMonthDropdownOpen((prev) => !prev)}
+            className="h-12 px-4 py-3 bg-gray-50 rounded-lg inline-flex justify-start items-center gap-5 text-text-on-white text-sm font-medium leading-5">
+            {selectedMonthLabel}
+            <ArrowIcon fillColor="#9CA3AF" />
+          </button>
+
+          {isMonthDropdownOpen && (
+            <div className="absolute right-0 top-[56px] z-10 w-40 max-h-64 overflow-y-auto rounded-[8px] border border-gray-200 bg-white py-[8px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.12)]">
+              {monthOptions.map((option) => {
+                const isSelected = option.value === month;
+
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => {
+                      setMonth(option.value);
+                      setIsMonthDropdownOpen(false);
+                    }}
+                    className={`w-full px-[16px] py-[8px] text-left text-sm ${isSelected ? 'bg-background text-text-on-white' : 'bg-white text-text-on-white hover:bg-gray-50'}`}>
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="self-stretch h-40">
@@ -48,8 +69,8 @@ const DailyVisitChartCard = () => {
 
             <CartesianGrid stroke="#E5E7EB" vertical={true} horizontal={true} />
             <YAxis
-              ticks={[0, 50, 100, 150, 200]}
-              domain={[0, 200]}
+              domain={[0, 'auto']}
+              allowDecimals={false}
               axisLine={false}
               tickLine={false}
               width={30}
@@ -79,4 +100,3 @@ const DailyVisitChartCard = () => {
 };
 
 export default DailyVisitChartCard;
-
