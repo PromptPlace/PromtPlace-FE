@@ -33,6 +33,7 @@ export interface SellerRegistrationStatusModalProps {
   modalType: SellerRegistrationModalType | null;
   onClose: () => void;
   onAction?: () => void;
+  descriptionOverride?: string;
 }
 
 // 사용처: src/pages/MyPage/components/settlement/ExpectedSettlementSection.tsx
@@ -162,4 +163,173 @@ export type SettlementAccountInfoSectionData = SettlementAccountInfoApiData;
 export interface SettlementAccountInfoSectionProps {
   data: SettlementAccountInfoSectionData;
   onClickEdit?: () => void;
+}
+
+export interface register {
+  registerToken: string;
+  isTermsAgreed: boolean;
+}
+
+export interface Account {
+  bank: string;
+  accountNumber: string;
+  holderName: string;
+  birthDate: string;
+}
+
+export type AccountDetail = {
+  sellerType: string;
+  status: string;
+  isActive: boolean;
+  bank: string;
+  accountNumber: string;
+  holderName: string;
+  name: string;
+  birthDate: string;
+  businessType: string;
+  businessNumber: string;
+  representativeName: string;
+  companyName: string;
+  businessLicenseUrl: string;
+};
+
+interface SalesSummary {
+  count: number;
+  total_sales: number;
+  total_settled: number;
+  total_fee: number;
+  refunded_count: number;
+  refunded_amount: number;
+}
+
+interface SalesPagination {
+  page: number;
+  limit: number;
+  total: number;
+  total_pages: number;
+  has_next: boolean;
+}
+
+interface SalesItem {
+  settlement_id: number;
+  sold_at: string;
+  prompt_id: number;
+  prompt_title: string;
+  buyer_id: number;
+  buyer_nickname: string;
+  pay_type: string;
+  card_name: string;
+  sale_price: number;
+  settled_amount: number;
+  fee: number;
+  status: string;
+}
+
+export interface MonthlySales {
+  message: string;
+  year: number;
+  month: number;
+  summary: SalesSummary;
+  pagination: SalesPagination;
+  items: SalesItem[];
+  status: number;
+}
+
+export interface YearlySettlementItem {
+  year: number;
+  count: number;
+  total_sales: number;
+  total_settled: number;
+  total_fee: number;
+  succeeded_amount: number;
+  pending_amount: number;
+  refunded_amount: number;
+  refunded_count: number;
+}
+
+export interface YearlySales {
+  message: string;
+  items: YearlySettlementItem[];
+  statusCode: number;
+}
+
+export interface MonthlySalesRequestDTO {
+  year: number;
+  month: number;
+  page: number;
+  limit: number;
+}
+
+export interface PendingAmount {
+  message: string;
+  pending_amount: number;
+  pending_count: number;
+  statusCode: number;
+}
+
+export interface CommonSettlementResponseDTO<T> {
+  message: string;
+  data: T;
+  statusCode: number;
+}
+
+export interface IndividualRegisterRequestDTO {
+  registerToken: string;
+  isTermsAgreed: boolean;
+}
+
+export interface IndividualRegisterResponseDTO {
+  message: string;
+  status: string;
+  requiresApproval: boolean;
+  statusCode: number;
+}
+
+export interface BusinessLicenseResponseDTO {
+  message: string;
+  fileKey: string;
+  fileUrl: string;
+  statusCode: number;
+}
+
+export interface businessRegisterRequestDTO {
+  registerToken: string;
+  companyName: string;
+  businessLicenseUrl: string;
+  isTermsAgreed: boolean;
+}
+
+export interface businessRegisterResponseDTO {
+  message: string;
+  status: string;
+  requiresApproval: boolean;
+  statusCode: number;
+}
+
+export type SellerType = 'INDIVIDUAL' | 'BUSINESS';
+export type BusinessType = 'PERSONAL' | 'CORPORATE';
+
+export interface VerifyAccountRequestDTO {
+  sellerType: SellerType;
+  businessType?: BusinessType;
+  name: string;
+  birthDate?: string;
+  businessNumber?: string;
+  bank: string;
+  accountNumber: string;
+  holderName: string;
+}
+
+export interface VerifyAccountResponseDTO {
+  message: string;
+  registerToken: string;
+  expiresIn: number;
+  statusCode: number;
+}
+
+export interface SettlementErrorResponseDTO {
+  error: string;
+  subCode?: string;
+  message: string;
+  statusCode: number;
 }

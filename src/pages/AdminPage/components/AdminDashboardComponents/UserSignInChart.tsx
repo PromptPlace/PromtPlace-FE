@@ -3,11 +3,16 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import googleIcon from '@/assets/icon-google-logo.svg';
 import promptplaceIcon from '@/assets/icon-promptplace-logo.svg';
 
-const data = [
-  { name: '자체 가입자', value: 300, color: '#3B82F6' }, // blue-500
-  { name: '구글 가입자', value: 1030, color: '#93C5FD' }, // blue-300
-  { name: '네이버 가입자', value: 670, color: '#DBEAFE' }, // secondary-pressed
-];
+export interface UserSignInChartDatum {
+  name: string;
+  value: number;
+  color: string;
+}
+
+interface UserSignInChartProps {
+  data: UserSignInChartDatum[];
+  total: number;
+}
 
 type IconLabelProps = {
   cx?: number;
@@ -68,9 +73,7 @@ const renderUserSignInIconLabel = ({ cx = 0, cy = 0, midAngle = 0, outerRadius =
   );
 };
 
-export function UserSignInChart() {
-  const totalUsers = data.reduce((acc, cur) => acc + cur.value, 0);
-
+export function UserSignInChart({ data, total }: UserSignInChartProps) {
   return (
     <div className="flex flex-col items-center justify-center p-8 bg-white">
       {/* 타이틀 영역 */}
@@ -82,7 +85,7 @@ export function UserSignInChart() {
         <div className="absolute inset-0 flex flex-col justify-center items-center pointer-events-none z-10">
           <div className="text-gray-700 text-xs font-medium font-['S-Core_Dream'] leading-4 mb-1">총 회원수</div>
           <div className="text-gray-900 text-base font-bold font-['S-Core_Dream'] leading-6">
-            {totalUsers.toLocaleString()}명
+            {total.toLocaleString()}명
           </div>
         </div>
 

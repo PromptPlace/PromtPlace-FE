@@ -8,6 +8,8 @@ import type {
   SettlementAccountInfoSectionData,
   TotalSettlementAmountSectionData,
 } from '@/types/MyPage/settlement';
+import useGetSettlementAccount from '@hooks/queries/AdminPage/useGetSettlementAccount.ts';
+import { mapToSettlementAccount } from '@/pages/MyPage/utils/settlementsMapper';
 
 export interface SellerSettlementDashboardData {
   expectedSettlement: ExpectedSettlementSectionData;
@@ -37,9 +39,12 @@ const SellerSettlementDashboard = ({
   onClickEditAccount,
   onClickUploadPrompt,
 }: SellerSettlementDashboardProps) => {
+  const { data: settlementAccountData } = useGetSettlementAccount();
+
   return (
     <div className="flex flex-col gap-[56px]">
       <ExpectedSettlementSection data={data.expectedSettlement} />
+
       <MonthlySalesHistorySection
         data={data.monthlySalesHistory}
         onClickViewMore={onClickViewMore}
@@ -47,12 +52,19 @@ const SellerSettlementDashboard = ({
         onClickMonthOption={onClickMonthOption}
         onClickUploadPrompt={onClickUploadPrompt}
       />
+
       <TotalSettlementAmountSection
         data={data.totalSettlementAmount}
         onClickYearSelect={onClickYearSelect}
         onClickYearOption={onClickYearOption}
       />
-      <SettlementAccountInfoSection data={data.settlementAccountInfo} onClickEdit={onClickEditAccount} />
+
+      {settlementAccountData && (
+        <SettlementAccountInfoSection
+          data={mapToSettlementAccount(settlementAccountData.data)}
+          onClickEdit={onClickEditAccount}
+        />
+      )}
     </div>
   );
 };

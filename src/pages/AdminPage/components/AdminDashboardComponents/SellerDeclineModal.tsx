@@ -1,13 +1,18 @@
 import React from 'react';
 
-interface SellerCancelModalProps {
+interface SellerDeclineModalProps {
+  sellerName: string;
+  isSubmitting?: boolean;
   onClose: () => void;
+  onConfirm: () => void;
 }
 
-const SellerDeclineModal = ({ onClose }: SellerCancelModalProps) => {
+const SellerDeclineModal = ({ sellerName, isSubmitting, onClose, onConfirm }: SellerDeclineModalProps) => {
   return (
     <div className="rounded-2xl px-8 py-10 w-[940px] h-[213px] bg-white">
-      <div className="flex text-center justify-center text-2xl">000님의 판매자 등록 신청을 반려하겠습니까?</div>
+      <div className="flex text-center justify-center text-2xl">
+        {sellerName}님의 판매자 등록 신청을 반려하겠습니까?
+      </div>
       <div className="flex mt-3 font-light tracking-tight items-center justify-center">
         판매자 등록 신청 반려 시, 해당 사용자의 폼은 ~일 내 삭제됩니다.
       </div>
@@ -17,8 +22,10 @@ const SellerDeclineModal = ({ onClose }: SellerCancelModalProps) => {
           onClick={onClose}>
           뒤로 가기
         </div>
-        <div className="w-[432px] h-[57px] bg-primary text-white items-center justify-center rounded-xl flex cursor-pointer hover:bg-opacity-90">
-          등록 취소
+        <div
+          className="w-[432px] h-[57px] bg-primary text-white items-center justify-center rounded-xl flex cursor-pointer hover:bg-opacity-90"
+          onClick={onConfirm}>
+          {isSubmitting ? '처리 중...' : '반려'}
         </div>
       </div>
     </div>
