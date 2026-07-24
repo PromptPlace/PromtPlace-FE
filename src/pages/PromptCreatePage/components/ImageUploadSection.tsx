@@ -31,23 +31,31 @@ export default function ImageUploadSection({ files, existingImages, setFiles, se
   const removeExisting = (idx: number) => setExistingImages((prev) => prev.filter((_, i) => i !== idx));
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
+    <div className="flex flex-col gap-6 my-4">
+      <div className="flex flex-col gap-1">
         <p className="text-[16px] font-medium mb-1">결과 미리보기</p>
         <p className="text-xs font-light text-gray700">프롬프트 결과 이미지를 업로드해주세요 (최대 3개)</p>
       </div>
 
-      <div className="flex items-start gap-5 max-lg:flex-col">
-        <div className="w-[195px] max-lg:w-full flex flex-col items-center gap-4 p-4 border border-dashed border-primary bg-secondary rounded-[16px]">
+      <div className="flex items-start max-lg:flex-col gap-[20px]">
+        <div className="w-[195px] h-[195px] max-lg:w-full flex flex-col items-center justify-center gap-4 p-4 border border-dashed border-primary bg-secondary rounded-[16px]">
           <img src={imgUpload} alt="upload" className="w-12 h-12" />
 
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            disabled={files.length >= 3}
-            className="px-4 py-2 text-xs border border-primary rounded-[8px] bg-white disabled:opacity-50">
-            이미지 업로드
-          </button>
+          <div className="flex flex-col gap-3">
+            <p className="text-center custom-button2">
+              이미지를 업로드해주세요.
+              <br />
+              (최대 3개)
+            </p>
+
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              disabled={files.length >= 3}
+              className="px-4 py-2 text-xs border border-primary rounded-[8px] bg-white disabled:opacity-50">
+              이미지 업로드
+            </button>
+          </div>
 
           <input ref={inputRef} type="file" accept="image/*" multiple onChange={handleChange} className="hidden" />
         </div>
