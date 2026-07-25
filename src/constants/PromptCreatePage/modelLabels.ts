@@ -1,5 +1,5 @@
 export const MODEL_DATA = {
-  '언어모델(LLM)': ['ChatGPT', 'Perplexity', 'Claude', 'Gemini', 'Grok', 'DeepSeek'],
+  '언어모델(LLM)': ['ChatGPT', 'Gemini', 'Claude', 'Perplexity', 'Grok', 'DeepSeek'],
 
   '이미지 생성 모델': ['DALL-E', 'Nano Banana', 'Midjourney', 'Stable Diffusion', 'Firefly'],
 
