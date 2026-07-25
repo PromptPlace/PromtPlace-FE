@@ -150,6 +150,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
       console.log('sendMessage 성공');
       setFiles([]);
       setPreviews([]);
+      setFileError('');
     });
   };
 
