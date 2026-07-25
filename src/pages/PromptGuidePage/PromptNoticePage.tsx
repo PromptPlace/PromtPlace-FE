@@ -6,11 +6,10 @@ import attachFile from '@assets/icon-attach-file-gray.svg';
 import leftArrow from '@assets/icon-arrow-left-black.svg';
 import rightArrow from '@assets/icon-arrow-right-black.svg';
 import { useNavigate } from 'react-router-dom';
-import { useShowLoginModal } from '@/hooks/useShowLoginModal';
-import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 import { useAuth } from '@/context/AuthContext';
 import clsx from 'clsx';
 import PrimaryButton from '@/components/Button/PrimaryButton';
+import NoticeSkeleton from './components/NoticeSkeleton';
 
 interface Notice {
   announcement_id: number;
@@ -84,20 +83,12 @@ const PromptNoticePage = () => {
 
   // 게시글 클릭시 상세로 이동
   const navigate = useNavigate();
-  const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
   const handleRowClick = (id: number) => {
-    handleShowLoginModal(() => {
-      navigate(`/guide/notice/${id}`);
-    });
+    navigate(`/guide/notice/${id}`);
   };
 
   return (
     <>
-      {/** 소셜 로그인 트리거  */}
-      {loginModalShow && (
-        <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
-      )}
-
       <div className="px-[102px] mt-[64px] max-lg:px-[40px] max-phone:px-[20px]">
         <div>
           {/* 헤더 */}
@@ -131,12 +122,8 @@ const PromptNoticePage = () => {
             </p>
           </div>
 
-          {/* 로딩 상태 */}
-          {loading && (
-            <div className="flex justify-center items-center py-[100px]">
-              <p className="text-[16px] text-gray-500">로딩 중...</p>
-            </div>
-          )}
+          {/* 로딩 */}
+          {loading && <NoticeSkeleton />}
 
           {/* 공지 리스트 */}
           <div className="flex flex-col items-center bg-white rounded-[12px] px-[12px] py-[16px] mb-[72px]">

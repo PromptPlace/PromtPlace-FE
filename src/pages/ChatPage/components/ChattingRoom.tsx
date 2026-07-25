@@ -29,6 +29,7 @@ import ArrowIcon from '@assets/header/icon-arrow_fill.svg?react';
 import useGetMyDownloadedPrompts from '@/hooks/queries/MyPage/useGetMyDownloadedPrompts';
 import clsx from 'clsx';
 import useGetMemberPrompts from '@/hooks/queries/ChatPage/useGetMemberPrompts';
+import ChattingRoomSkeleton from './ChattigRoomSkeleton';
 
 interface ChattingRoomProps {
   selectedRoomId: number;
@@ -54,7 +55,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
 
   const isTablet = window.innerWidth < 1024;
 
-  const { data, hasNextPage, fetchNextPage, isFetching } = useGetChatRoomsDetail(selectedRoomId); // 채팅방 상세 조회
+  const { data, hasNextPage, fetchNextPage, isFetching, isLoading } = useGetChatRoomsDetail(selectedRoomId); // 채팅방 상세 조회
   const { mutateAsync: postPresignUrl } = usePostPresignUrl();
   const { mutate: mutatePatchPinChat } = usePatchPinChat();
 
@@ -150,6 +151,7 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
       console.log('sendMessage 성공');
       setFiles([]);
       setPreviews([]);
+      setFileError('');
     });
   };
 
@@ -351,6 +353,10 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
     };
   }, [selectedRoomId, queryClient]);
 
+  if (isLoading) {
+    return <ChattingRoomSkeleton />;
+  }
+
   return (
     <>
       {selectedRoomId !== null && (
@@ -362,7 +368,6 @@ const ChattingRoom = ({ selectedRoomId, className, popup }: ChattingRoomProps) =
               'max-lg:fixed max-lg:inset-0 max-lg:h-dvh',
               className,
             )}>
-            {/* 내가 다운받은 프롬프트 */}
             {/* 내가 다운받은 프롬프트 */}
             {partnerDownloadedPrompts.length !== 0 && showDownload && (
               <div className={clsx('z-10 inset-0 top-[92px] bg-overlay', popup ? 'fixed h-dvh' : 'absolute h-full')}>
