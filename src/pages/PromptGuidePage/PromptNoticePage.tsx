@@ -6,8 +6,6 @@ import attachFile from '@assets/icon-attach-file-gray.svg';
 import leftArrow from '@assets/icon-arrow-left-black.svg';
 import rightArrow from '@assets/icon-arrow-right-black.svg';
 import { useNavigate } from 'react-router-dom';
-import { useShowLoginModal } from '@/hooks/useShowLoginModal';
-import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 import { useAuth } from '@/context/AuthContext';
 import clsx from 'clsx';
 import PrimaryButton from '@/components/Button/PrimaryButton';
@@ -84,20 +82,12 @@ const PromptNoticePage = () => {
 
   // 게시글 클릭시 상세로 이동
   const navigate = useNavigate();
-  const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
   const handleRowClick = (id: number) => {
-    handleShowLoginModal(() => {
-      navigate(`/guide/notice/${id}`);
-    });
+    navigate(`/guide/notice/${id}`);
   };
 
   return (
     <>
-      {/** 소셜 로그인 트리거  */}
-      {loginModalShow && (
-        <SocialLoginModal isOpen={loginModalShow} onClose={() => setLoginModalShow(false)} onClick={() => {}} />
-      )}
-
       <div className="px-[102px] mt-[64px] max-lg:px-[40px] max-phone:px-[20px]">
         <div>
           {/* 헤더 */}
