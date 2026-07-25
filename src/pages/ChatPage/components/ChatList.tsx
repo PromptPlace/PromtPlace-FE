@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import useGetInfiniteChatRooms from '@/hooks/queries/ChatPage/useGetInfiniteChatRooms';
 import { useNavigate } from 'react-router-dom';
+import ChatListItemSkeleton from './ChatListItemSkeleton';
 
 interface ChatListProps {
   setSelectedRoomId: (roomId: number) => void;
@@ -28,7 +29,7 @@ const ChatList = ({ setSelectedRoomId, selectedRoomId }: ChatListProps) => {
   const isTablet = window.innerWidth < 1024;
   const navigate = useNavigate();
 
-  const { data } = useGetInfiniteChatRooms({ filter: activeButton.filter, search, limit: 20 }); // 채팅 목록 조회
+  const { data, isLoading } = useGetInfiniteChatRooms({ filter: activeButton.filter, search, limit: 20 }); // 채팅 목록 조회
   const handleSearch = () => {
     setSearch('');
     console.log(search);
@@ -71,26 +72,29 @@ const ChatList = ({ setSelectedRoomId, selectedRoomId }: ChatListProps) => {
       </section>
 
       <section>
-        {data?.pages
-          .map((page) => page.data.rooms)
-          .flat()
-          .map((list) => (
-            <ChatListItem
-              key={list.room_id}
-              partner={list.partner}
-              last_message={list.last_message}
-              unread_count={list.unread_count}
-              is_pinned={list.is_pinned}
-              is_clicked={list.room_id === selectedRoomId}
-              onClick={() => {
-                if (isTablet) {
-                  navigate(`/chat/${list.room_id}`);
-                } else {
-                  setSelectedRoomId(list.room_id);
-                }
-              }}
-            />
-          ))}
+        {isLoading && Array.from({ length: 4 }).map((_, idx) => <ChatListItemSkeleton key={idx} />)}
+
+        {!isLoading &&
+          data?.pages
+            .map((page) => page.data.rooms)
+            .flat()
+            .map((list) => (
+              <ChatListItem
+                key={list.room_id}
+                partner={list.partner}
+                last_message={list.last_message}
+                unread_count={list.unread_count}
+                is_pinned={list.is_pinned}
+                is_clicked={list.room_id === selectedRoomId}
+                onClick={() => {
+                  if (isTablet) {
+                    navigate(`/chat/${list.room_id}`);
+                  } else {
+                    setSelectedRoomId(list.room_id);
+                  }
+                }}
+              />
+            ))}
       </section>
     </div>
   );
