@@ -52,7 +52,7 @@ export default function ImageUploadSection({ files, existingImages, setFiles, se
               type="button"
               onClick={() => inputRef.current?.click()}
               disabled={files.length >= 3}
-              className="px-4 py-2 text-xs border border-primary rounded-[8px] bg-white disabled:opacity-50">
+              className="px-4 py-2 text-xs border border-primary rounded-[8px] bg-white disabled:opacity-50 text-primary">
               이미지 업로드
             </button>
           </div>
