@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import clsx from 'clsx';
 import PrimaryButton from '@/components/Button/PrimaryButton';
+import NoticeSkeleton from './components/NoticeSkeleton';
 
 interface Notice {
   announcement_id: number;
@@ -121,12 +122,8 @@ const PromptNoticePage = () => {
             </p>
           </div>
 
-          {/* 로딩 상태 */}
-          {loading && (
-            <div className="flex justify-center items-center py-[100px]">
-              <p className="text-[16px] text-gray-500">로딩 중...</p>
-            </div>
-          )}
+          {/* 로딩 */}
+          {loading && <NoticeSkeleton />}
 
           {/* 공지 리스트 */}
           <div className="flex flex-col items-center bg-white rounded-[12px] px-[12px] py-[16px] mb-[72px]">
