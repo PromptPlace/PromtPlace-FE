@@ -74,6 +74,9 @@ export const adminRoutes: RouteObject[] = [
       { path: 'complaint/:id', element: <lazyRoutes.AdminComplaintDetailPage /> },
       { path: 'dashboard', element: <lazyRoutes.AdminDashboardPage /> },
       { path: 'dashboard/sellers', element: <lazyRoutes.AdminSellerDetailPage /> },
+      { path: 'dashboard/sellers/individual/:userId', element: <lazyRoutes.AdminSellerFormPage type="individual" /> },
+      { path: 'dashboard/sellers/business/:userId', element: <lazyRoutes.AdminSellerFormPage type="business" /> },
+      { path: 'dashboard/sellers/pending/:userId', element: <lazyRoutes.AdminSellerFormPage type="pending" /> },
     ],
   },
 ];

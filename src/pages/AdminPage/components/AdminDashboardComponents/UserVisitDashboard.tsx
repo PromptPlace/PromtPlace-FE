@@ -5,13 +5,17 @@ import DailyVisitChartCard from './DailyVisitChartCard';
 import useGetVisitorStats from '@hooks/queries/AdminPage/useGetVisitorStats.ts';
 import useGetActiveUserStats from '@hooks/queries/AdminPage/useGetActiveUserStats.ts';
 import { formatChangeRate } from '@pages/AdminPage/utils/format.ts';
+import { DUMMY_VISITOR_STATS, DUMMY_ACTIVE_USER_STATS } from '@pages/AdminPage/utils/dummyDashboardData.ts';
 
 const UserVisitDashboard = () => {
-  const { data: visitorStats } = useGetVisitorStats();
-  const { data: activeUserStats } = useGetActiveUserStats();
+  // 데이터 부족으로 확인이 어려워 PM 요청에 따라 더미 데이터로 대체. API 호출 자체는 유지.
+  useGetVisitorStats();
+  useGetActiveUserStats();
+  const visitorStats = DUMMY_VISITOR_STATS;
+  const activeUserStats = DUMMY_ACTIVE_USER_STATS;
 
-  const visitorChange = formatChangeRate(visitorStats?.data.change_rate ?? null);
-  const activeUserChange = formatChangeRate(activeUserStats?.data.change_rate ?? null);
+  const visitorChange = formatChangeRate(visitorStats.change_rate);
+  const activeUserChange = formatChangeRate(activeUserStats.change_rate);
 
   return (
     <div className="flex flex-col justify-center items-center gap-6">
@@ -23,7 +27,7 @@ const UserVisitDashboard = () => {
         <div className="bg-background rounded-xl w-58 h-20 px-4 py-3 gap-2">
           <div className="text-gray-500 text-sm">최근 30일 방문자</div>
           <div className="flex mt-2 gap-2">
-            <div className="text-lg text-gray-700">{(visitorStats?.data.current_count ?? 0).toLocaleString()}명</div>
+            <div className="text-lg text-gray-700">{visitorStats.current_count.toLocaleString()}명</div>
             {visitorChange && (
               <div className="flex">
                 <img
@@ -43,7 +47,7 @@ const UserVisitDashboard = () => {
         <div className="bg-background rounded-xl w-58 h-20 px-4 py-3 gap-2">
           <div className="text-gray-500 text-sm">최근 30일 활성 사용자</div>
           <div className="flex mt-2 gap-2">
-            <div className="text-lg text-gray-700">{(activeUserStats?.data.current_count ?? 0).toLocaleString()}명</div>
+            <div className="text-lg text-gray-700">{activeUserStats.current_count.toLocaleString()}명</div>
             {activeUserChange && (
               <div className="flex">
                 <img

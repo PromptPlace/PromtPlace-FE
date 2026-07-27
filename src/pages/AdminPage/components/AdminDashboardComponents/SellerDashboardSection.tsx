@@ -10,6 +10,11 @@ import {
   mapIndividualSellerToCard,
   mapPendingSellerToCard,
 } from '@pages/AdminPage/utils/sellerMapper.ts';
+import {
+  getDummyIndividualSellers,
+  getDummyBusinessSellers,
+  getDummyPendingSellers,
+} from '@pages/AdminPage/utils/dummyDashboardData.ts';
 
 type SellerTab = 'individual' | 'business' | 'pending';
 
@@ -37,18 +42,23 @@ const SellerDashboardSection = ({ isDetailView = false }: SellerDashboardSection
   const isNumericSearch = trimmedSearch !== '' && /^\d+$/.test(trimmedSearch);
   const backendSearch = !isNumericSearch && trimmedSearch ? trimmedSearch : undefined;
 
-  const { data: individualData } = useGetIndividualSellers({
+  // 데이터 부족으로 확인이 어려워 PM 요청에 따라 더미 데이터로 대체. API 호출 자체는 유지.
+  useGetIndividualSellers({
     params: { page, limit, search: backendSearch },
     enabled: activeTab === 'individual',
   });
-  const { data: businessData } = useGetBusinessSellers({
+  useGetBusinessSellers({
     params: { page, limit, search: backendSearch },
     enabled: activeTab === 'business',
   });
-  const { data: pendingData } = useGetPendingSellers({
+  useGetPendingSellers({
     params: { page, limit },
     enabled: activeTab === 'pending',
   });
+
+  const dummyIndividualData = getDummyIndividualSellers({ page, limit, search: backendSearch });
+  const dummyBusinessData = getDummyBusinessSellers({ page, limit, search: backendSearch });
+  const dummyPendingData = getDummyPendingSellers({ page, limit });
 
   const handleTabChange = (tab: SellerTab) => {
     setActiveTab(tab);
@@ -62,10 +72,10 @@ const SellerDashboardSection = ({ isDetailView = false }: SellerDashboardSection
 
   const sellers =
     activeTab === 'individual'
-      ? (individualData?.data.items ?? []).map(mapIndividualSellerToCard)
+      ? dummyIndividualData.items.map(mapIndividualSellerToCard)
       : activeTab === 'business'
-        ? (businessData?.data.items ?? []).map(mapBusinessSellerToCard)
-        : (pendingData?.data.items ?? []).map(mapPendingSellerToCard);
+        ? dummyBusinessData.items.map(mapBusinessSellerToCard)
+        : dummyPendingData.items.map(mapPendingSellerToCard);
 
   // 현재 페이지에 이미 불러온 목록 안에서만 user_id를 매칭합니다 (다른 페이지에 있는 대상은 찾지 못하는 한계가 있음).
   const filteredSellers = isNumericSearch
@@ -74,10 +84,10 @@ const SellerDashboardSection = ({ isDetailView = false }: SellerDashboardSection
 
   const pagination =
     activeTab === 'individual'
-      ? individualData?.data.pagination
+      ? dummyIndividualData.pagination
       : activeTab === 'business'
-        ? businessData?.data.pagination
-        : pendingData?.data.pagination;
+        ? dummyBusinessData.pagination
+        : dummyPendingData.pagination;
 
   return (
     <div>
