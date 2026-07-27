@@ -9,9 +9,20 @@ import useRejectPendingSeller from '@hooks/mutations/AdminPage/useRejectPendingS
 import useCancelSellerRegistration from '@hooks/mutations/AdminPage/useCancelSellerRegistration.ts';
 import { useOpenChatRoom } from '@/hooks/useOpenChatRoom';
 
-const SellerCard = ({ seller }: { seller: SellerCardData }) => {
+interface SellerCardProps {
+  seller: SellerCardData;
+  showFormLink?: boolean;
+}
+
+const SellerCard = ({ seller, showFormLink = true }: SellerCardProps) => {
   const navigate = useNavigate();
   const { openChatRoom } = useOpenChatRoom();
+
+  const sellerFormPath = seller.isWaiting
+    ? `/admin/dashboard/sellers/pending/${seller.userId}`
+    : seller.isBusiness
+      ? `/admin/dashboard/sellers/business/${seller.userId}`
+      : `/admin/dashboard/sellers/individual/${seller.userId}`;
 
   const [isCancelledModalOpen, setIsCancelledModalOpen] = useState(false);
   const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
@@ -55,12 +66,14 @@ const SellerCard = ({ seller }: { seller: SellerCardData }) => {
               </div>
             </div>
           </div>
-          <div
-            className="flex gap-1 w-[126px] h-[68px] items-center justify-center cursor-pointer"
-            onClick={() => navigate(`/profile/${seller.userId}`)}>
-            <div className=" text-primary text-sm">등록품 보기</div>
-            <img className="w-6 h-6" src={rightArrow} alt="오른쪽 화살표 아이콘" />
-          </div>
+          {showFormLink && (
+            <div
+              className="flex gap-1 w-[126px] h-[68px] items-center justify-center cursor-pointer"
+              onClick={() => navigate(sellerFormPath)}>
+              <div className=" text-primary text-sm">등록폼 보기</div>
+              <img className="w-6 h-6" src={rightArrow} alt="오른쪽 화살표 아이콘" />
+            </div>
+          )}
         </div>
       </div>
       {/*사업자 등록증 링크는 API가 URL을 제공하는 승인 대기 카드에서만 노출됩니다. 승인 완료 목록 API에는 해당 필드가 없습니다.*/}

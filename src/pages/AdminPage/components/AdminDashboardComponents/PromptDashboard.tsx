@@ -7,13 +7,16 @@ import useGetNewPromptStats from '@hooks/queries/AdminPage/useGetNewPromptStats.
 import useGetPopularPrompts from '@hooks/queries/AdminPage/useGetPopularPrompts.ts';
 import useGetTopSalesPrompts from '@hooks/queries/AdminPage/useGetTopSalesPrompts.ts';
 import { formatChartDateLabel } from '@pages/AdminPage/utils/format.ts';
+import { DUMMY_NEW_PROMPT_STATS, DUMMY_TOP_SALES_PROMPTS } from '@pages/AdminPage/utils/dummyDashboardData.ts';
 
 const PromptDashboard = () => {
-  const { data: newPromptStats } = useGetNewPromptStats();
+  // 신규 프롬프트/매출 상위 프롬프트는 데이터 부족으로 확인이 어려워 PM 요청에 따라 더미 데이터로 대체.
+  // API 호출 자체는 유지. 인기 프롬프트는 기존 실데이터를 그대로 사용.
+  useGetNewPromptStats();
+  useGetTopSalesPrompts();
   const { data: popularPrompts } = useGetPopularPrompts();
-  const { data: topSalesPrompts } = useGetTopSalesPrompts();
 
-  const dailyUploadsChartData = (newPromptStats?.data.daily_uploads ?? []).map((item) => ({
+  const dailyUploadsChartData = DUMMY_NEW_PROMPT_STATS.daily_uploads.map((item) => ({
     label: formatChartDateLabel(item.date),
     count: item.count,
   }));
@@ -25,7 +28,7 @@ const PromptDashboard = () => {
     downloads: item.downloads_delta,
   }));
 
-  const topSalesRanking = (topSalesPrompts?.data.items ?? []).map((item) => ({
+  const topSalesRanking = DUMMY_TOP_SALES_PROMPTS.map((item) => ({
     rank: item.rank,
     title: item.title,
     totalSales: item.total_sales,
@@ -59,11 +62,11 @@ const PromptDashboard = () => {
           <div className="flex items-center justify-center w-full gap-[15px]">
             <div className="bg-background rounded-xl px-4 py-3 w-full">
               <div className="text-gray-500 text-sm">일일 업로드</div>
-              <div className="text-gray-700 text-lg">{newPromptStats?.data.daily_count ?? 0}개</div>
+              <div className="text-gray-700 text-lg">{DUMMY_NEW_PROMPT_STATS.daily_count}개</div>
             </div>
             <div className="bg-background rounded-xl px-4 py-3 w-full">
               <div className="text-gray-500 text-sm">주간 업로드</div>
-              <div className="text-gray-700 text-lg">{newPromptStats?.data.weekly_count ?? 0}개</div>
+              <div className="text-gray-700 text-lg">{DUMMY_NEW_PROMPT_STATS.weekly_count}개</div>
             </div>
           </div>
         </div>

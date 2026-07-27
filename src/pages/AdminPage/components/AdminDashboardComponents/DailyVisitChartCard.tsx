@@ -3,18 +3,20 @@ import { Area, AreaChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } fro
 import ArrowIcon from '@/pages/MyPage/utils/ArrowIcon';
 import useGetVisitorStats from '@hooks/queries/AdminPage/useGetVisitorStats.ts';
 import { buildRecentMonthOptions, formatChartDateLabel, getCurrentYearMonth } from '@pages/AdminPage/utils/format.ts';
+import { DUMMY_VISITOR_STATS, buildDummyMonthDaily } from '@pages/AdminPage/utils/dummyDashboardData.ts';
 
 const DailyVisitChartCard = () => {
   const [month, setMonth] = useState(getCurrentYearMonth);
   const [isMonthDropdownOpen, setIsMonthDropdownOpen] = useState(false);
-  const { data } = useGetVisitorStats({ params: { month } });
+  // 데이터 부족으로 확인이 어려워 PM 요청에 따라 더미 데이터로 대체. API 호출 자체는 유지.
+  useGetVisitorStats({ params: { month } });
 
-  const dailyVisitData = (data?.data.month_daily ?? []).map((item) => ({
+  const dailyVisitData = buildDummyMonthDaily(month).map((item) => ({
     label: formatChartDateLabel(item.date),
     visitors: item.count,
   }));
 
-  const todayVisitors = data?.data.daily_count ?? 0;
+  const todayVisitors = DUMMY_VISITOR_STATS.daily_count;
   const monthOptions = buildRecentMonthOptions();
   const selectedMonthLabel = monthOptions.find((option) => option.value === month)?.label ?? month;
 

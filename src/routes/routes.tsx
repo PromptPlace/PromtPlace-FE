@@ -29,6 +29,7 @@ export const lazyRoutes = {
   ChatRoomPage: React.lazy(() => import('../pages/ChatPage/ChatRoomPage')),
   AdminDashboardPage: React.lazy(() => import('../pages/AdminPage/AdminDashboardPage.tsx')),
   AdminSellerDetailPage: React.lazy(() => import('../pages/AdminPage/AdminSellerDetailPage.tsx')),
+  AdminSellerFormPage: React.lazy(() => import('../pages/AdminPage/AdminSellerFormPage.tsx')),
   TestPage: React.lazy(() => import('../pages/TestPage')),
   SellerModalTestPage: React.lazy(() => import('../pages/Test/SellerModalTestPage')),
   SellerNotRegisteredTestPage: React.lazy(() => import('../pages/Test/SellerNotRegisteredTestPage')),

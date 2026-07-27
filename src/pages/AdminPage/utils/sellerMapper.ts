@@ -1,4 +1,11 @@
-import type { BusinessSellerItem, IndividualSellerItem, PendingSellerItem } from '@/types/AdminPage/seller';
+import type {
+  BusinessSellerItem,
+  IndividualSellerItem,
+  PendingSellerItem,
+  IndividualSellerDetailData,
+  BusinessSellerDetailData,
+  PendingSellerDetailData,
+} from '@/types/AdminPage/seller';
 
 export interface SellerCardData {
   userId: number;
@@ -57,4 +64,47 @@ export const mapBusinessSellerToCard = (item: BusinessSellerItem): SellerCardDat
   isBusiness: true,
   isWaiting: false,
   businessLicenseUrl: null,
+});
+
+// 등록폼 보기 페이지에서 사용합니다. 상세 조회 API는 목록 API와 달리 사업자등록증 URL을 포함합니다.
+export const mapIndividualDetailToCard = (item: IndividualSellerDetailData): SellerCardData => ({
+  userId: item.user_id,
+  hasImage: Boolean(item.profile_image_url),
+  image: item.profile_image_url,
+  nickname: item.nickname,
+  name: item.name,
+  email: item.email,
+  bank: item.settlement_account.bank_code,
+  account: item.settlement_account.account_number,
+  isBusiness: false,
+  isWaiting: false,
+  businessLicenseUrl: null,
+});
+
+export const mapBusinessDetailToCard = (item: BusinessSellerDetailData): SellerCardData => ({
+  userId: item.user_id,
+  hasImage: Boolean(item.profile_image_url),
+  image: item.profile_image_url,
+  nickname: item.nickname,
+  name: item.name,
+  email: item.email,
+  bank: item.settlement_account.bank_code,
+  account: item.settlement_account.account_number,
+  isBusiness: true,
+  isWaiting: false,
+  businessLicenseUrl: item.business_license_url,
+});
+
+export const mapPendingDetailToCard = (item: PendingSellerDetailData): SellerCardData => ({
+  userId: item.user.user_id,
+  hasImage: Boolean(item.user.profile_image_url),
+  image: item.user.profile_image_url,
+  nickname: item.user.nickname,
+  name: item.user.name,
+  email: item.user.email,
+  bank: item.bank_code,
+  account: item.account_number,
+  isBusiness: true,
+  isWaiting: true,
+  businessLicenseUrl: item.business_license_url,
 });
