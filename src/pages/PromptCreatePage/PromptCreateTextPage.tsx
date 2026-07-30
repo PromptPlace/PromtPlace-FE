@@ -6,7 +6,9 @@ import useCreatePromptText from '@/hooks/mutations/PromptCreatePage/useCreateTex
 import useGetPromptDetail from '@/hooks/queries/PromptDetailPage/useGetPromptDetail';
 import useEditPrompt from '@/hooks/mutations/PromptCreatePage/useEditPrompt';
 import usePromptInitialize from '@/hooks/PromptCreatePage/usePromptInitialize';
+
 import { validateTextPrompt } from '@/utils/PromptCreatePage/promptValidation';
+import { submitTextPrompt } from '@/utils/PromptCreatePage/submitTextPrompt';
 
 import TextModal from '@/components/Modal/TextModal';
 import PromptHeader from './components/PromptHeader';
@@ -16,7 +18,7 @@ import TextPreviewSection from './components/TextPreviewSection';
 import PromptUploadButton from './components/PromptUploadButton';
 import PromptDescriptionSection from './components/PromptDescriptionSection';
 
-import { submitTextPrompt } from '@/utils/PromptCreatePage/submitTextPrompt';
+import type { FilterModalType } from '@/types/PromptCreatePage/filterModal';
 
 interface PromptCreateTextPageProps {
   mode?: 'create' | 'edit';
@@ -48,7 +50,7 @@ const PromptCreateTextPage = ({ mode = 'create', promptId }: PromptCreateTextPag
   const [howToUseText, setHowToUseText] = useState<string>(''); // 상세 설명
 
   //모달
-  const [modalInitialTab, setModalInitialTab] = useState<'model' | 'category'>('model');
+  const [modalInitialTab, setModalInitialTab] = useState<FilterModalType>('model');
 
   const [isUploaded, setIsUploaded] = useState<boolean>(false); //업로드 되었는지 여부
 

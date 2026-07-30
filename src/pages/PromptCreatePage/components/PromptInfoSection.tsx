@@ -1,6 +1,7 @@
 import FilterModal from './FilterModal';
 import CategorySelector from './CategorySelector';
 import ModelSelector from './ModelSelector';
+import type { FilterModalType } from '@/types/PromptCreatePage/filterModal';
 
 interface Props {
   title: string;
@@ -18,8 +19,8 @@ interface Props {
   uploadModal: boolean;
   setuploadModal: (v: boolean) => void;
 
-  modalInitialTab: 'model' | 'category';
-  setModalInitialTab: (v: 'model' | 'category') => void;
+  modalInitialTab: FilterModalType;
+  setModalInitialTab: (v: FilterModalType) => void;
 }
 
 export default function PromptInfoSection(props: Props) {
@@ -41,9 +42,10 @@ export default function PromptInfoSection(props: Props) {
 
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1">
-          <p className="text-[16px] font-medium pb-[4px]">기본 정보 입력</p>
-          <p className="text-[12px] font-light pb-[4px] text-gray700">※ 모델 버전이 있는 경우 작성해주세요.</p>
+          <p className="text-[16px] font-medium">기본 정보 입력</p>
+          <p className="text-[12px] font-light text-gray700">※ 모델 버전이 있는 경우 작성해주세요.</p>
           <p className="text-[12px] font-light text-gray700">※ 모델과 카테고리는 최대 5개까지 선택 가능합니다.</p>
+          <p className="text-[12px] font-light text-gray700">※ 가격은 100원부터 10,000원까지 입력 가능합니다.</p>
         </div>
 
         <CategorySelector

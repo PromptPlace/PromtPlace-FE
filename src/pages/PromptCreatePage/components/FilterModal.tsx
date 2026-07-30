@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import TagButton from '@/components/Button/TagButton';
 import { CATEGORY_DATA } from '@/constants/PromptCreatePage/categoryLabels';
 import { MODEL_DATA } from '@/constants/PromptCreatePage/modelLabels';
+import type { FilterModalType } from '@/types/PromptCreatePage/filterModal';
 
 interface FilterModalProps {
   isOpen: boolean;
@@ -10,7 +11,7 @@ interface FilterModalProps {
   setSelectedModels: (models: string[]) => void;
   categories: string[];
   setCategories: (categories: string[]) => void;
-  initialTab?: 'model' | 'category';
+  initialTab?: FilterModalType;
 }
 
 const FilterModal: React.FC<FilterModalProps> = ({
@@ -22,7 +23,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
   setCategories,
   initialTab = 'model',
 }) => {
-  const [activeTab, setActiveTab] = useState<'model' | 'category'>('model');
+  const [activeTab, setActiveTab] = useState<FilterModalType>('model');
   const [localSelectedModels, setLocalSelectedModels] = useState<string[]>(selectedModels);
   const [localSelectedCategories, setLocalSelectedCategories] = useState<string[]>(categories);
 

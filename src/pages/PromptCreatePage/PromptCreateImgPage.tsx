@@ -1,20 +1,24 @@
 import { useState } from 'react';
-
-import TextModal from '@/components/Modal/TextModal';
-import useCreatePromptWithImage from '@/hooks/mutations/PromptCreatePage/useCreateImg';
 import { useNavigate, useParams } from 'react-router-dom';
 import clsx from 'clsx';
+
+import useCreatePromptWithImage from '@/hooks/mutations/PromptCreatePage/useCreateImg';
 import useGetPromptDetail from '@/hooks/queries/PromptDetailPage/useGetPromptDetail';
 import useEditPrompt from '@/hooks/mutations/PromptCreatePage/useEditPrompt';
+import usePromptInitialize from '@/hooks/PromptCreatePage/usePromptInitialize';
+
+import { validateImagePrompt } from '@/utils/PromptCreatePage/promptValidation';
+import { submitImgPrompt } from '@/utils/PromptCreatePage/submitImgPrompt';
+
+import type { FilterModalType } from '@/types/PromptCreatePage/filterModal';
+
+import TextModal from '@/components/Modal/TextModal';
 import PromptHeader from './components/PromptHeader';
 import PromptEditor from './components/PromptEditor';
 import PromptInfoSection from './components/PromptInfoSection';
 import ImageUploadSection from './components/ImageUploadSection';
 import PromptDescriptionSection from './components/PromptDescriptionSection';
 import PromptUploadButton from './components/PromptUploadButton';
-import usePromptInitialize from '@/hooks/PromptCreatePage/usePromptInitialize';
-import { validateImagePrompt } from '@/utils/PromptCreatePage/promptValidation';
-import { submitImgPrompt } from '@/utils/PromptCreatePage/submitImgPrompt';
 
 interface PromptCreateImgPageProps {
   mode?: 'create' | 'edit';
@@ -52,7 +56,7 @@ const PromptCreateImgPage = ({ mode = 'create', promptId }: PromptCreateImgPageP
   const [isUploaded, setIsUploaded] = useState<boolean>(false); //업로드 되었는지 여부 - 중복 업로드 방지용
 
   //모달
-  const [modalInitialTab, setModalInitialTab] = useState<'model' | 'category'>('model');
+  const [modalInitialTab, setModalInitialTab] = useState<FilterModalType>('model');
 
   //API 연동 관련
   const { mutateAsync: createPromptWithImage } = useCreatePromptWithImage();
