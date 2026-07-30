@@ -212,54 +212,61 @@ const FilterModal: React.FC<FilterModalProps> = ({
 
             {/* 가격 탭 */}
             {activeTab === 'price' && (
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-3">
-                  <p className="custom-button1 text-primary">설정</p>
-                  <div className="flex gap-2">
-                    {priceButtons.map((data) => (
-                      <button
-                        key={data.label}
-                        className={clsx(
-                          data.isPaid === localIsPaid ? 'bg-secondary-pressed' : 'white',
-                          'rounded-full max-w-[44px] w-full h-[27px] border border-primary',
-                          'text-[10px] leading-[150%] font-[500] text-primary',
-                        )}
-                        onClick={() => {
-                          setLocalIsPaid(data.isPaid);
+              <>
+                {' '}
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-3">
+                    <p className="custom-button1 text-primary">설정</p>
+                    <div className="flex gap-2">
+                      {priceButtons.map((data) => (
+                        <button
+                          key={data.label}
+                          className={clsx(
+                            data.isPaid === localIsPaid ? 'bg-secondary-pressed' : 'white',
+                            'rounded-full max-w-[44px] w-full h-[27px] border border-primary',
+                            'text-[10px] leading-[150%] font-[500] text-primary',
+                          )}
+                          onClick={() => {
+                            setLocalIsPaid(data.isPaid);
 
-                          if (!data.isPaid) {
-                            setLocalPrice(null);
-                          }
-                        }}>
-                        {data.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-3">
-                  <div className="flex flex-col gap-1">
-                    <p className="custom-button1 text-primary">가격 입력</p>
-                    <p className="custom-button1 text-text-on-background">
-                      ※가격은 100원부터 10,000원까지 입력 가능해요.
-                    </p>
+                            if (!data.isPaid) {
+                              setLocalPrice(null);
+                            }
+                          }}>
+                          {data.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
-                  <input
-                    value={localPrice ?? ''}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setLocalPrice(value === '' ? null : Number(value));
-                    }}
-                    placeholder={localIsPaid ? '예) 1,000원' : '가격 입력을 할 수 없어요.'}
-                    className={clsx(
-                      'w-full py-3 px-4 rounded-[8px] outline-none text-sm font-light',
-                      localIsPaid ? 'bg-gray50' : 'bg-gray200 cursor-not-allowed',
-                    )}
-                    disabled={!localIsPaid}
-                  />
+                  <div className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-1">
+                      <p className="custom-button1 text-primary">가격 입력</p>
+                      <p className="custom-button1 text-text-on-background">
+                        ※가격은 100원부터 10,000원까지 입력 가능해요.
+                      </p>
+                    </div>
+
+                    <input
+                      value={localPrice ?? ''}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/[^0-9]/g, '');
+                        setLocalPrice(value === '' ? null : Number(value));
+                      }}
+                      placeholder={localIsPaid ? '예) 1,000원' : '가격 입력을 할 수 없어요.'}
+                      className={clsx(
+                        'w-full py-3 px-4 rounded-[8px] outline-none text-sm font-light',
+                        localIsPaid ? 'bg-gray50' : 'bg-gray200 cursor-not-allowed',
+                      )}
+                      disabled={!localIsPaid}
+                    />
+                  </div>
                 </div>
-              </div>
+                <p className="custom-button1 text-alert">
+                  {localPrice !== null && localPrice < 100 && <>최소 100원부터 설정 가능해요.</>}
+                  {localPrice !== null && localPrice > 10000 && <>최대 10000원까지 설정 가능해요.</>}
+                </p>
+              </>
             )}
           </div>
 

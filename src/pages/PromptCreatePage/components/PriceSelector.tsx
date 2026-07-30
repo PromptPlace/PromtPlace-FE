@@ -21,17 +21,24 @@ const PriceSelector = ({ isPaid, price, setPrice, onOpen }: PriceSelectorProps) 
 
       {/* 유료인 경우 */}
       {isPaid && (
-        <div className="w-full py-[8px] px-[16px] bg-gray50 rounded-[8px] items-center">
-          <input
-            value={price ?? ''}
-            onChange={(e) => {
-              const value = e.target.value;
-              setPrice(value === '' ? null : Number(value));
-            }}
-            placeholder="예) 1,000원"
-            className="w-full h-[46px] bg-gray50 rounded-[8px] outline-none text-sm font-light"
-          />
-        </div>
+        <>
+          <div className="w-full py-[8px] px-[16px] bg-gray50 rounded-[8px] items-center">
+            <input
+              value={price ?? ''}
+              onChange={(e) => {
+                const value = e.target.value.replace(/[^0-9]/g, '');
+                setPrice(value === '' ? null : Number(value));
+              }}
+              placeholder="예) 1,000원"
+              className="w-full h-[46px] bg-gray50 rounded-[8px] outline-none text-sm font-light"
+            />
+          </div>
+
+          <p className="custom-button1 text-alert">
+            {price !== null && price < 100 && <>최소 100원부터 설정 가능해요.</>}
+            {price !== null && price > 10000 && <>최대 10000원까지 설정 가능해요.</>}
+          </p>
+        </>
       )}
     </div>
   );
