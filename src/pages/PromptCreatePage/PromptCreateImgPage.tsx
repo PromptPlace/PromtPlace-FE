@@ -38,13 +38,16 @@ const PromptCreateImgPage = ({ mode = 'create', promptId }: PromptCreateImgPageP
   const [uploadModal, setuploadModal] = useState<boolean>(false); // 세부 설정 모달
 
   const [alertModal, setAlertModal] = useState<boolean>(false); // 알림 모달
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [modalText, setModalText] = useState<string>(''); // 알림 모달 텍스트
 
   // 모달에서 작성되는 state
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [modelver, setModelver] = useState<string>('');
   const [categories, setCategories] = useState<string[]>([]);
+
+  // 가격 설정
+  const [isPaid, setIsPaid] = useState(false);
+  const [price, setPrice] = useState<number | null>(null);
 
   const [files, setFiles] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<string[]>([]); // 서버에서 온 이미지
@@ -161,6 +164,10 @@ const PromptCreateImgPage = ({ mode = 'create', promptId }: PromptCreateImgPageP
                   setSelectedModels={setSelectedModels}
                   modelver={modelver}
                   setModelver={setModelver}
+                  isPaid={isPaid}
+                  setIsPaid={setIsPaid}
+                  price={price}
+                  setPrice={setPrice}
                   uploadModal={uploadModal}
                   setuploadModal={setuploadModal}
                   modalInitialTab={modalInitialTab}
