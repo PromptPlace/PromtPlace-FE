@@ -45,6 +45,10 @@ const PromptCreateTextPage = ({ mode = 'create', promptId }: PromptCreateTextPag
   const [modelver, setModelver] = useState<string>('');
   const [categories, setCategories] = useState<string[]>([]);
 
+  // 가격 설정
+  const [isPaid, setIsPaid] = useState(false);
+  const [price, setPrice] = useState<number | null>(null);
+
   const [previewText, setPreviewText] = useState<string>(''); // 결과 미리보기
   const [descriptionText, setDescriptionText] = useState<string>(''); //한줄 소개
   const [howToUseText, setHowToUseText] = useState<string>(''); // 상세 설명
@@ -153,6 +157,10 @@ const PromptCreateTextPage = ({ mode = 'create', promptId }: PromptCreateTextPag
                   setSelectedModels={setSelectedModels}
                   modelver={modelver}
                   setModelver={setModelver}
+                  isPaid={isPaid}
+                  setIsPaid={setIsPaid}
+                  price={price}
+                  setPrice={setPrice}
                   uploadModal={uploadModal}
                   setuploadModal={setuploadModal}
                   modalInitialTab={modalInitialTab}

@@ -3,6 +3,7 @@ import TagButton from '@/components/Button/TagButton';
 import { CATEGORY_DATA } from '@/constants/PromptCreatePage/categoryLabels';
 import { MODEL_DATA } from '@/constants/PromptCreatePage/modelLabels';
 import type { FilterModalType } from '@/types/PromptCreatePage/filterModal';
+import clsx from 'clsx';
 
 interface FilterModalProps {
   isOpen: boolean;
@@ -12,7 +13,23 @@ interface FilterModalProps {
   categories: string[];
   setCategories: (categories: string[]) => void;
   initialTab?: FilterModalType;
+
+  isPaid: boolean;
+  setIsPaid: (v: boolean) => void;
+  price: number | null;
+  setPrice: (v: number | null) => void;
 }
+
+const tabs = [
+  { key: 'model', label: '모델' },
+  { key: 'category', label: '카테고리' },
+  { key: 'price', label: '가격' },
+] as const;
+
+const priceButtons = [
+  { label: '무료', isPaid: false },
+  { label: '유료', isPaid: true },
+] as const;
 
 const FilterModal: React.FC<FilterModalProps> = ({
   isOpen,
@@ -22,10 +39,16 @@ const FilterModal: React.FC<FilterModalProps> = ({
   categories,
   setCategories,
   initialTab = 'model',
+  isPaid,
+  setIsPaid,
+  price,
+  setPrice,
 }) => {
   const [activeTab, setActiveTab] = useState<FilterModalType>('model');
   const [localSelectedModels, setLocalSelectedModels] = useState<string[]>(selectedModels);
   const [localSelectedCategories, setLocalSelectedCategories] = useState<string[]>(categories);
+  const [localPrice, setLocalPrice] = useState<number | null>(price);
+  const [localIsPaid, setLocalIsPaid] = useState(isPaid);
 
   useEffect(() => {
     if (isOpen) {
@@ -36,7 +59,9 @@ const FilterModal: React.FC<FilterModalProps> = ({
   useEffect(() => {
     setLocalSelectedModels(selectedModels);
     setLocalSelectedCategories(categories);
-  }, [selectedModels, categories, isOpen]);
+    setLocalPrice(price);
+    setLocalIsPaid(isPaid);
+  }, [selectedModels, categories, isOpen, price, isPaid]);
 
   const handleModelClick = (model: string) => {
     if (localSelectedModels.includes(model)) {
@@ -59,12 +84,15 @@ const FilterModal: React.FC<FilterModalProps> = ({
   const handleConfirm = () => {
     setSelectedModels(localSelectedModels);
     setCategories(localSelectedCategories);
+    setIsPaid(localIsPaid);
+    setPrice(localPrice);
     onClose();
   };
 
   const handleReset = () => {
     setLocalSelectedModels([]);
     setLocalSelectedCategories([]);
+    setLocalPrice(null);
   };
 
   const isModelDisabled = (model: string) => {
@@ -78,8 +106,12 @@ const FilterModal: React.FC<FilterModalProps> = ({
   const isConfirmDisabled = () => {
     if (activeTab === 'model') {
       return localSelectedModels.length === 0;
-    } else {
+    }
+    if (activeTab === 'category') {
       return localSelectedCategories.length === 0;
+    }
+    if (activeTab === 'price') {
+      return localIsPaid && (localPrice === null || localPrice < 100 || localPrice > 10000);
     }
   };
 
@@ -101,24 +133,18 @@ const FilterModal: React.FC<FilterModalProps> = ({
 
           {/* 탭 버튼 */}
           <div className="flex gap-[10px] pb-[16px]">
-            <button
-              className={`w-[99px] h-[30px] py-[6px] px-[12px] rounded-[8px] text-[12px] font-medium transition-all border ${
-                activeTab === 'model'
-                  ? 'bg-primary text-white border-primary'
-                  : 'bg-transparent text-primary border-primary '
-              }`}
-              onClick={() => setActiveTab('model')}>
-              모델
-            </button>
-            <button
-              className={`w-[99px] h-[30px] py-[6px] px-[12px] rounded-[8px] text-[12px] font-medium transition-all border ${
-                activeTab === 'category'
-                  ? 'bg-primary text-white border-primary'
-                  : 'bg-transparent text-primary border-primary '
-              }`}
-              onClick={() => setActiveTab('category')}>
-              카테고리
-            </button>
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                className={`w-[99px] h-[30px] py-[6px] px-[12px] rounded-[8px] text-[12px] font-medium transition-all border ${
+                  activeTab === tab.key
+                    ? 'bg-primary text-white border-primary'
+                    : 'bg-transparent text-primary border-primary'
+                }`}
+                onClick={() => setActiveTab(tab.key)}>
+                {tab.label}
+              </button>
+            ))}
           </div>
 
           {/* 스크롤 가능 영역 */}
@@ -181,6 +207,58 @@ const FilterModal: React.FC<FilterModalProps> = ({
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {/* 가격 탭 */}
+            {activeTab === 'price' && (
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-3">
+                  <p className="custom-button1 text-primary">설정</p>
+                  <div className="flex gap-2">
+                    {priceButtons.map((data) => (
+                      <button
+                        key={data.label}
+                        className={clsx(
+                          data.isPaid === localIsPaid ? 'bg-secondary-pressed' : 'white',
+                          'rounded-full max-w-[44px] w-full h-[27px] border border-primary',
+                          'text-[10px] leading-[150%] font-[500] text-primary',
+                        )}
+                        onClick={() => {
+                          setLocalIsPaid(data.isPaid);
+
+                          if (!data.isPaid) {
+                            setLocalPrice(null);
+                          }
+                        }}>
+                        {data.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-1">
+                    <p className="custom-button1 text-primary">가격 입력</p>
+                    <p className="custom-button1 text-text-on-background">
+                      ※가격은 100원부터 10,000원까지 입력 가능해요.
+                    </p>
+                  </div>
+
+                  <input
+                    value={localPrice ?? ''}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setLocalPrice(value === '' ? null : Number(value));
+                    }}
+                    placeholder={localIsPaid ? '예) 1,000원' : '가격 입력을 할 수 없어요.'}
+                    className={clsx(
+                      'w-full py-3 px-4 rounded-[8px] outline-none text-sm font-light',
+                      localIsPaid ? 'bg-gray50' : 'bg-gray200 cursor-not-allowed',
+                    )}
+                    disabled={!localIsPaid}
+                  />
+                </div>
               </div>
             )}
           </div>

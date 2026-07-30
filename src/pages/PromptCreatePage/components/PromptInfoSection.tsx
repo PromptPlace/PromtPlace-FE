@@ -2,6 +2,7 @@ import FilterModal from './FilterModal';
 import CategorySelector from './CategorySelector';
 import ModelSelector from './ModelSelector';
 import type { FilterModalType } from '@/types/PromptCreatePage/filterModal';
+import PriceSelector from './PriceSelector';
 
 interface Props {
   title: string;
@@ -15,6 +16,12 @@ interface Props {
 
   modelver: string;
   setModelver: (v: string) => void;
+
+  isPaid: boolean;
+  setIsPaid: (v: boolean) => void;
+
+  price: number | null;
+  setPrice: (v: number | null) => void;
 
   uploadModal: boolean;
   setuploadModal: (v: boolean) => void;
@@ -67,6 +74,17 @@ export default function PromptInfoSection(props: Props) {
           }}
           onVersionChange={props.setModelver}
         />
+
+        <PriceSelector
+          isPaid={props.isPaid}
+          setIsPaid={props.setIsPaid}
+          price={props.price}
+          setPrice={props.setPrice}
+          onOpen={() => {
+            props.setModalInitialTab('price');
+            props.setuploadModal(true);
+          }}
+        />
       </div>
 
       <FilterModal
@@ -77,6 +95,10 @@ export default function PromptInfoSection(props: Props) {
         categories={props.categories}
         setCategories={props.setCategories}
         initialTab={props.modalInitialTab}
+        isPaid={props.isPaid}
+        setIsPaid={props.setIsPaid}
+        price={props.price}
+        setPrice={props.setPrice}
       />
     </div>
   );
