@@ -12,6 +12,7 @@ import profile from '@/assets/icon-profile-gray.svg';
 import heartNone from '../../../assets/icon-heart-none-big.svg';
 import heartActive from '../../../assets/icon-heart-active-big.svg';
 import contentCheckIcon from '../assets/contentcheck.png';
+import shareIcon from '../assets/share.svg';
 
 import ReviewList from './ReviewList';
 import ReportModal from '../components/ReportModal';
@@ -412,17 +413,17 @@ const PromptActions = ({
 
         {/* 공유 버튼 (찜하기 버튼 UI 재사용) */}
         <button
-          className="ml-[10px] w-[49px] h-[49px] rounded-[12px] bg-[#FFFEFB] border-[1px] border-[#D1D5DB] flex items-center justify-center"
-          onClick={() => setIsShareModalOpen(true)}
-          aria-label="공유하기">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="18" cy="5" r="3" stroke="#6B7280" strokeWidth="1.8" />
-            <circle cx="6" cy="12" r="3" stroke="#6B7280" strokeWidth="1.8" />
-            <circle cx="18" cy="19" r="3" stroke="#6B7280" strokeWidth="1.8" />
-            <line x1="8.82" y1="10.59" x2="15.18" y2="6.41" stroke="#6B7280" strokeWidth="1.8" />
-            <line x1="8.82" y1="13.41" x2="15.18" y2="17.59" stroke="#6B7280" strokeWidth="1.8" />
-          </svg>
-        </button>
+  className="ml-[10px] w-[49px] h-[49px] rounded-[12px] bg-[#FFFEFB] border border-[#D1D5DB] flex items-center justify-center"
+  onClick={() => setIsShareModalOpen(true)}
+  aria-label="공유하기"
+>
+  <img
+    src={shareIcon}
+    alt="공유하기"
+    className="w-[22px] h-[22px]"
+  />
+</button>
+      
 
         <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} title={title} />
       </div>

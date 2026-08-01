@@ -17,6 +17,7 @@ import DualModal from '@components/Modal/DualModal';
 import TextModal from '@components/Modal/TextModal';
 
 import updateIcon from '../assets/updatebutton.png';
+import shareIcon from '../assets/share.svg';
 import deleteIcon from '../assets/deletebutton.png';
 import heartNone from '../../../assets/promptDetail/icon-heart-none_gray-300_28px.svg';
 import heartOnClick from '../../../assets/promptDetail/icon-heart-fill_gradient_28px.svg';
@@ -506,17 +507,16 @@ const PromptDetailCard = ({
 
                 {/* 공유 버튼 */}
                 <button
-                  className="w-[49px] h-[49px] rounded-[12px] bg-[#FFFEFB] border-[1px] border-[#D1D5DB] flex items-center justify-center"
-                  onClick={() => setIsShareModalOpen(true)}
-                  aria-label="공유하기">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="18" cy="5" r="3" stroke="#6B7280" strokeWidth="1.8" />
-                    <circle cx="6" cy="12" r="3" stroke="#6B7280" strokeWidth="1.8" />
-                    <circle cx="18" cy="19" r="3" stroke="#6B7280" strokeWidth="1.8" />
-                    <line x1="8.82" y1="10.59" x2="15.18" y2="6.41" stroke="#6B7280" strokeWidth="1.8" />
-                    <line x1="8.82" y1="13.41" x2="15.18" y2="17.59" stroke="#6B7280" strokeWidth="1.8" />
-                  </svg>
-                </button>
+  className="w-[49px] h-[49px] rounded-[12px] bg-[#FFFEFB] border border-[#D1D5DB] flex items-center justify-center"
+  onClick={() => setIsShareModalOpen(true)}
+  aria-label="공유하기"
+>
+  <img
+    src={shareIcon}
+    alt="공유하기"
+    className="w-[22px] h-[22px]"
+  />
+</button>
               </div>
 
               <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} title={title} />
