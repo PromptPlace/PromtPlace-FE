@@ -1,12 +1,12 @@
 import React from 'react';
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import PromptRanking, {
   PromptSalesRanking,
 } from '@pages/AdminPage/components/AdminDashboardComponents/PromptRanking.tsx';
 import useGetNewPromptStats from '@hooks/queries/AdminPage/useGetNewPromptStats.ts';
 import useGetPopularPrompts from '@hooks/queries/AdminPage/useGetPopularPrompts.ts';
 import useGetTopSalesPrompts from '@hooks/queries/AdminPage/useGetTopSalesPrompts.ts';
-import { formatChartDateLabel } from '@pages/AdminPage/utils/format.ts';
+import { formatChartDateLabel, getTodayDateString } from '@pages/AdminPage/utils/format.ts';
 import { DUMMY_NEW_PROMPT_STATS, DUMMY_TOP_SALES_PROMPTS } from '@pages/AdminPage/utils/dummyDashboardData.ts';
 
 const PromptDashboard = () => {
@@ -16,9 +16,11 @@ const PromptDashboard = () => {
   useGetTopSalesPrompts();
   const { data: popularPrompts } = useGetPopularPrompts();
 
+  const todayDateString = getTodayDateString();
   const dailyUploadsChartData = DUMMY_NEW_PROMPT_STATS.daily_uploads.map((item) => ({
     label: formatChartDateLabel(item.date),
     count: item.count,
+    isToday: item.date === todayDateString,
   }));
 
   const popularRanking = (popularPrompts?.data.items ?? []).map((item) => ({
@@ -55,7 +57,12 @@ const PromptDashboard = () => {
                   width={24}
                   tick={{ fill: '#6B7280', fontSize: 10 }}
                 />
-                <Bar dataKey="count" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                  <LabelList dataKey="count" position="top" style={{ fontSize: 10, fill: '#6B7280' }} />
+                  {dailyUploadsChartData.map((entry) => (
+                    <Cell key={entry.label} fill={entry.isToday ? '#2979FF' : '#6198FF'} />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

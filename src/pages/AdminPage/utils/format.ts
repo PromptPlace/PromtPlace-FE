@@ -4,7 +4,7 @@ export const formatChangeRate = (changeRate: number | null) => {
   if (changeRate === null) return null;
 
   return {
-    percent: `${Math.abs(changeRate * 100).toFixed(1)}%`,
+    percent: `${Math.round(Math.abs(changeRate * 100))}%`,
     isPositive: changeRate >= 0,
   };
 };
@@ -17,11 +17,27 @@ export const getCurrentYearMonth = () => {
   return `${now.getFullYear()}-${month}`;
 };
 
+// 사용처: src/pages/AdminPage/components/AdminDashboardComponents/PromptDashboard.tsx
+// 오늘 날짜를 YYYY-MM-DD 형식(로컬 타임존 기준)으로 반환합니다.
+export const getTodayDateString = () => {
+  const now = new Date();
+  const month = `${now.getMonth() + 1}`.padStart(2, '0');
+  const day = `${now.getDate()}`.padStart(2, '0');
+  return `${now.getFullYear()}-${month}-${day}`;
+};
+
 // 사용처: src/pages/AdminPage/components/AdminDashboardComponents/DailyVisitChartCard.tsx, PromptDashboard.tsx
 // YYYY-MM-DD 형식의 날짜를 차트 라벨용 M.D 형식으로 변환합니다.
 export const formatChartDateLabel = (date: string) => {
   const [, month, day] = date.split('-');
   return `${Number(month)}.${Number(day)}`;
+};
+
+// 사용처: src/pages/AdminPage/components/AdminDashboardComponents/DailyVisitChartCard.tsx
+// YYYY-MM-DD 형식의 날짜를 X축 라벨용 '일'만 표시하도록 변환합니다(날짜가 많아 M.D 표기 시 겹침 발생).
+export const formatChartDayLabel = (date: string) => {
+  const [, , day] = date.split('-');
+  return `${Number(day)}`;
 };
 
 // 사용처: src/pages/AdminPage/components/AdminDashboardComponents/DailyVisitChartCard.tsx
