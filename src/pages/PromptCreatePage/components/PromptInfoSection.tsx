@@ -17,6 +17,8 @@ interface Props {
   modelver: string;
   setModelver: (v: string) => void;
 
+  canSetPrice: boolean;
+
   isPaid: boolean;
   setIsPaid: (v: boolean) => void;
 
@@ -75,16 +77,18 @@ export default function PromptInfoSection(props: Props) {
           onVersionChange={props.setModelver}
         />
 
-        <PriceSelector
-          isPaid={props.isPaid}
-          setIsPaid={props.setIsPaid}
-          price={props.price}
-          setPrice={props.setPrice}
-          onOpen={() => {
-            props.setModalInitialTab('price');
-            props.setuploadModal(true);
-          }}
-        />
+        {props.canSetPrice && (
+          <PriceSelector
+            isPaid={props.isPaid}
+            setIsPaid={props.setIsPaid}
+            price={props.price}
+            setPrice={props.setPrice}
+            onOpen={() => {
+              props.setModalInitialTab('price');
+              props.setuploadModal(true);
+            }}
+          />
+        )}
       </div>
 
       <FilterModal

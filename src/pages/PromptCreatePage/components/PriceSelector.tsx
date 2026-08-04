@@ -33,11 +33,6 @@ const PriceSelector = ({ isPaid, price, setPrice, onOpen }: PriceSelectorProps) 
               className="w-full h-[46px] bg-gray50 rounded-[8px] outline-none text-sm font-light"
             />
           </div>
-
-          <p className="custom-button1 text-alert">
-            {price !== null && price < 100 && <>최소 100원부터 설정 가능해요.</>}
-            {price !== null && price > 10000 && <>최대 10000원까지 설정 가능해요.</>}
-          </p>
         </>
       )}
     </div>

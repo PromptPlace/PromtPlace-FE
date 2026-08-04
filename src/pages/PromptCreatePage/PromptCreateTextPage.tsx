@@ -19,6 +19,7 @@ import PromptUploadButton from './components/PromptUploadButton';
 import PromptDescriptionSection from './components/PromptDescriptionSection';
 
 import type { FilterModalType } from '@/types/PromptCreatePage/filterModal';
+import { useAuth } from '@/context/AuthContext';
 
 interface PromptCreateTextPageProps {
   mode?: 'create' | 'edit';
@@ -27,6 +28,7 @@ interface PromptCreateTextPageProps {
 
 const PromptCreateTextPage = ({ mode = 'create', promptId }: PromptCreateTextPageProps) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const params = useParams();
   const idFormUrl = params.id ? Number(params.id) : undefined;
@@ -48,6 +50,7 @@ const PromptCreateTextPage = ({ mode = 'create', promptId }: PromptCreateTextPag
   // 가격 설정
   const [isPaid, setIsPaid] = useState(false);
   const [price, setPrice] = useState<number | null>(null);
+  const canSetPrice = user.status === 'APPROVED'; // 승인된 유저만 가격 설정 가능
 
   const [previewText, setPreviewText] = useState<string>(''); // 결과 미리보기
   const [descriptionText, setDescriptionText] = useState<string>(''); //한줄 소개
@@ -96,6 +99,9 @@ const PromptCreateTextPage = ({ mode = 'create', promptId }: PromptCreateTextPag
       previewText,
       descriptionText,
       howToUseText,
+      canSetPrice,
+      isPaid,
+      price,
     });
 
     if (error) {
@@ -157,6 +163,7 @@ const PromptCreateTextPage = ({ mode = 'create', promptId }: PromptCreateTextPag
                   setSelectedModels={setSelectedModels}
                   modelver={modelver}
                   setModelver={setModelver}
+                  canSetPrice={canSetPrice}
                   isPaid={isPaid}
                   setIsPaid={setIsPaid}
                   price={price}

@@ -5,6 +5,9 @@ interface BaseValidation {
   categories: string[];
   descriptionText: string;
   howToUseText: string;
+  canSetPrice: boolean;
+  isPaid: boolean;
+  price: number | null;
 }
 
 export const validateTextPrompt = (data: BaseValidation & { previewText: string }): string | null => {
@@ -17,7 +20,26 @@ export const validateTextPrompt = (data: BaseValidation & { previewText: string 
     data.descriptionText.trim() &&
     data.howToUseText.trim();
 
-  return isValid ? null : '※ 입력하지 않은 정보가 있어요! 전부 작성 후 업로드하기를 눌러주세요';
+  if (!isValid) {
+    return '※ 입력하지 않은 정보가 있어요! 전부 작성 후 업로드하기를 눌러주세요';
+  }
+
+  // 승인된 유저 + 유료인 경우에만 가격 검사
+  if (data.canSetPrice && data.isPaid) {
+    if (data.price === null) {
+      return '※ 가격을 입력해주세요.';
+    }
+
+    if (data.price < 100) {
+      return '※ 가격은 최소 100원부터 설정 가능해요.';
+    }
+
+    if (data.price > 10000) {
+      return '※ 가격은 최대 10,000원부터 설정 가능해요.';
+    }
+  }
+
+  return null;
 };
 
 export const validateImagePrompt = (data: BaseValidation & { files: File[] }): string | null => {
