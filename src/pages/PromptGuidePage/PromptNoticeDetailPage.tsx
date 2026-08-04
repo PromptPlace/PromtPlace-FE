@@ -125,7 +125,7 @@ const PromptNoticeDetailPage = () => {
     mutate(Number(id), {
       onSuccess: () => {
         alert('공지사항이 삭제되었습니다.');
-        navigation.navigate('/guide/notice');
+        navigate('/guide/notice');
       },
     });
   };
@@ -236,6 +236,7 @@ const PromptNoticeDetailPage = () => {
                         state: {
                           post,
                           mode: 'edit',
+                          id,
                         },
                       });
                     }}

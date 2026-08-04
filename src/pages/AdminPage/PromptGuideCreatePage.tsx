@@ -20,6 +20,7 @@ interface PromptGuideCreatePageProps {
 interface LocationState {
   post: Post;
   mode: 'edit';
+  id: number;
 }
 
 const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
@@ -35,7 +36,7 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
   const navigate = useNavigate();
 
   const location = useLocation() as { state: LocationState };
-  const { post, mode } = location.state || {};
+  const { post, mode, id } = location.state || {};
 
   const { mutate: mutatePostTip } = usePostTipAdmin(); // AI 꿀팁 작성
   const { mutate: mutatePatchTip } = usePatchTipAdmin(); // AI 꿀팁 수정
@@ -141,6 +142,7 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
           {
             onSuccess: () => {
               alert('공지사항이 수정되었습니다.');
+              navigate(`/guide/notice/${id}`);
             },
             onError: () => {
               alert('공지사항 수정에 실패했습니다.');
@@ -157,7 +159,8 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
           },
           {
             onSuccess: () => {
-              alert('게시글이 업로드되었습니다.');
+              alert('공지사항이 업로드되었습니다.');
+              navigate(`/guide/notice`);
             },
             onError: () => {
               alert('공지사항 업로드에 실패했습니다.');

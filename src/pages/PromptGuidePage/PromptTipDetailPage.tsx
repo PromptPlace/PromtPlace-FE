@@ -115,7 +115,12 @@ const PromptTipDetailPage = () => {
   }, [currentUrl]);
 
   const handleDeleteTip = () => {
-    setShowDeleteModal(true);
+    mutate(Number(id), {
+      onSuccess: () => {
+        alert('꿀팁이 삭제되었습니다.');
+        navigate('/guide/tip');
+      },
+    });
   };
 
   return (
