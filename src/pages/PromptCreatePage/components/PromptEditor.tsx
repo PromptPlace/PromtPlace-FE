@@ -3,7 +3,7 @@ interface Props {
   onChange: (v: string) => void;
 }
 
-export default function PromptEditor({ value, onChange }: Props) {
+const PromptEditor = ({ value, onChange }: Props) => {
   return (
     <div className="lg:max-w-[450px] w-full bg-white rounded-[16px] p-[24px] max-lg:mt-[20px]">
       <textarea
@@ -15,4 +15,6 @@ export default function PromptEditor({ value, onChange }: Props) {
       />
     </div>
   );
-}
+};
+
+export default PromptEditor;

@@ -9,7 +9,7 @@ interface Props {
   setExistingImages: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-export default function ImageUploadSection({ files, existingImages, setFiles, setExistingImages }: Props) {
+const ImageUploadSection = ({ files, existingImages, setFiles, setExistingImages }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,4 +79,6 @@ export default function ImageUploadSection({ files, existingImages, setFiles, se
       </div>
     </div>
   );
-}
+};
+
+export default ImageUploadSection;

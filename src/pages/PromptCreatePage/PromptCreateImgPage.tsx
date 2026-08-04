@@ -1,20 +1,25 @@
 import { useState } from 'react';
-
-import TextModal from '@/components/Modal/TextModal';
-import useCreatePromptWithImage from '@/hooks/mutations/PromptCreatePage/useCreateImg';
 import { useNavigate, useParams } from 'react-router-dom';
 import clsx from 'clsx';
+
+import useCreatePromptWithImage from '@/hooks/mutations/PromptCreatePage/useCreateImg';
 import useGetPromptDetail from '@/hooks/queries/PromptDetailPage/useGetPromptDetail';
 import useEditPrompt from '@/hooks/mutations/PromptCreatePage/useEditPrompt';
+import usePromptInitialize from '@/hooks/PromptCreatePage/usePromptInitialize';
+
+import { validateImagePrompt } from '@/utils/PromptCreatePage/promptValidation';
+import { submitImgPrompt } from '@/utils/PromptCreatePage/submitImgPrompt';
+
+import type { FilterModalType } from '@/types/PromptCreatePage/filterModal';
+
+import TextModal from '@/components/Modal/TextModal';
 import PromptHeader from './components/PromptHeader';
 import PromptEditor from './components/PromptEditor';
 import PromptInfoSection from './components/PromptInfoSection';
 import ImageUploadSection from './components/ImageUploadSection';
 import PromptDescriptionSection from './components/PromptDescriptionSection';
 import PromptUploadButton from './components/PromptUploadButton';
-import usePromptInitialize from '@/hooks/PromptCreatePage/usePromptInitialize';
-import { validateImagePrompt } from '@/utils/PromptCreatePage/promptValidation';
-import { submitImgPrompt } from '@/utils/PromptCreatePage/submitImgPrompt';
+import { useAuth } from '@/context/AuthContext';
 
 interface PromptCreateImgPageProps {
   mode?: 'create' | 'edit';
@@ -23,6 +28,7 @@ interface PromptCreateImgPageProps {
 
 const PromptCreateImgPage = ({ mode = 'create', promptId }: PromptCreateImgPageProps) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const params = useParams();
   const idFormUrl = params.id ? Number(params.id) : undefined;
@@ -34,13 +40,17 @@ const PromptCreateImgPage = ({ mode = 'create', promptId }: PromptCreateImgPageP
   const [uploadModal, setuploadModal] = useState<boolean>(false); // 세부 설정 모달
 
   const [alertModal, setAlertModal] = useState<boolean>(false); // 알림 모달
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [modalText, setModalText] = useState<string>(''); // 알림 모달 텍스트
 
   // 모달에서 작성되는 state
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [modelver, setModelver] = useState<string>('');
   const [categories, setCategories] = useState<string[]>([]);
+
+  // 가격 설정
+  const [isPaid, setIsPaid] = useState(false);
+  const [price, setPrice] = useState<number | null>(null);
+  const canSetPrice = user.status === 'APPROVED'; // 승인된 유저만 가격 설정 가능
 
   const [files, setFiles] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<string[]>([]); // 서버에서 온 이미지
@@ -52,7 +62,7 @@ const PromptCreateImgPage = ({ mode = 'create', promptId }: PromptCreateImgPageP
   const [isUploaded, setIsUploaded] = useState<boolean>(false); //업로드 되었는지 여부 - 중복 업로드 방지용
 
   //모달
-  const [modalInitialTab, setModalInitialTab] = useState<'model' | 'category'>('model');
+  const [modalInitialTab, setModalInitialTab] = useState<FilterModalType>('model');
 
   //API 연동 관련
   const { mutateAsync: createPromptWithImage } = useCreatePromptWithImage();
@@ -73,8 +83,8 @@ const PromptCreateImgPage = ({ mode = 'create', promptId }: PromptCreateImgPageP
     has_image: files.length > 0,
     description: descriptionText,
     usage_guide: howToUseText,
-    is_free: true,
-    price: 0,
+    is_free: !isPaid,
+    price: price || 0,
     model_version: modelver,
     categories,
     models: selectedModels,
@@ -94,6 +104,9 @@ const PromptCreateImgPage = ({ mode = 'create', promptId }: PromptCreateImgPageP
       descriptionText,
       howToUseText,
       files,
+      canSetPrice,
+      isPaid,
+      price,
     });
 
     if (error) {
@@ -157,6 +170,11 @@ const PromptCreateImgPage = ({ mode = 'create', promptId }: PromptCreateImgPageP
                   setSelectedModels={setSelectedModels}
                   modelver={modelver}
                   setModelver={setModelver}
+                  canSetPrice={canSetPrice}
+                  isPaid={isPaid}
+                  setIsPaid={setIsPaid}
+                  price={price}
+                  setPrice={setPrice}
                   uploadModal={uploadModal}
                   setuploadModal={setuploadModal}
                   modalInitialTab={modalInitialTab}

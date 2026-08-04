@@ -6,7 +6,9 @@ import useCreatePromptText from '@/hooks/mutations/PromptCreatePage/useCreateTex
 import useGetPromptDetail from '@/hooks/queries/PromptDetailPage/useGetPromptDetail';
 import useEditPrompt from '@/hooks/mutations/PromptCreatePage/useEditPrompt';
 import usePromptInitialize from '@/hooks/PromptCreatePage/usePromptInitialize';
+
 import { validateTextPrompt } from '@/utils/PromptCreatePage/promptValidation';
+import { submitTextPrompt } from '@/utils/PromptCreatePage/submitTextPrompt';
 
 import TextModal from '@/components/Modal/TextModal';
 import PromptHeader from './components/PromptHeader';
@@ -16,7 +18,8 @@ import TextPreviewSection from './components/TextPreviewSection';
 import PromptUploadButton from './components/PromptUploadButton';
 import PromptDescriptionSection from './components/PromptDescriptionSection';
 
-import { submitTextPrompt } from '@/utils/PromptCreatePage/submitTextPrompt';
+import type { FilterModalType } from '@/types/PromptCreatePage/filterModal';
+import { useAuth } from '@/context/AuthContext';
 
 interface PromptCreateTextPageProps {
   mode?: 'create' | 'edit';
@@ -25,6 +28,7 @@ interface PromptCreateTextPageProps {
 
 const PromptCreateTextPage = ({ mode = 'create', promptId }: PromptCreateTextPageProps) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const params = useParams();
   const idFormUrl = params.id ? Number(params.id) : undefined;
@@ -43,12 +47,17 @@ const PromptCreateTextPage = ({ mode = 'create', promptId }: PromptCreateTextPag
   const [modelver, setModelver] = useState<string>('');
   const [categories, setCategories] = useState<string[]>([]);
 
+  // 가격 설정
+  const [isPaid, setIsPaid] = useState(false);
+  const [price, setPrice] = useState<number | null>(null);
+  const canSetPrice = user.status === 'APPROVED'; // 승인된 유저만 가격 설정 가능
+
   const [previewText, setPreviewText] = useState<string>(''); // 결과 미리보기
   const [descriptionText, setDescriptionText] = useState<string>(''); //한줄 소개
   const [howToUseText, setHowToUseText] = useState<string>(''); // 상세 설명
 
   //모달
-  const [modalInitialTab, setModalInitialTab] = useState<'model' | 'category'>('model');
+  const [modalInitialTab, setModalInitialTab] = useState<FilterModalType>('model');
 
   const [isUploaded, setIsUploaded] = useState<boolean>(false); //업로드 되었는지 여부
 
@@ -69,8 +78,8 @@ const PromptCreateTextPage = ({ mode = 'create', promptId }: PromptCreateTextPag
     has_image: false,
     description: descriptionText,
     usage_guide: howToUseText,
-    is_free: true,
-    price: 0,
+    is_free: !isPaid,
+    price: price || 0,
     model_version: modelver,
     categories,
     models: selectedModels,
@@ -90,6 +99,9 @@ const PromptCreateTextPage = ({ mode = 'create', promptId }: PromptCreateTextPag
       previewText,
       descriptionText,
       howToUseText,
+      canSetPrice,
+      isPaid,
+      price,
     });
 
     if (error) {
@@ -151,6 +163,11 @@ const PromptCreateTextPage = ({ mode = 'create', promptId }: PromptCreateTextPag
                   setSelectedModels={setSelectedModels}
                   modelver={modelver}
                   setModelver={setModelver}
+                  canSetPrice={canSetPrice}
+                  isPaid={isPaid}
+                  setIsPaid={setIsPaid}
+                  price={price}
+                  setPrice={setPrice}
                   uploadModal={uploadModal}
                   setuploadModal={setuploadModal}
                   modalInitialTab={modalInitialTab}

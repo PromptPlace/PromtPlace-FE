@@ -5,8 +5,7 @@ interface Props {
   mode: 'create' | 'edit';
   onClick: () => void;
 }
-
-export default function PromptUploadButton({ disabled, mode, onClick }: Props) {
+const PromptUploadButton = ({ disabled, mode, onClick }: Props) => {
   return (
     <button
       className="w-full h-[65px] flex justify-center items-center gap-[16px] bg-primary rounded-[12px] py-[20px]"
@@ -16,4 +15,6 @@ export default function PromptUploadButton({ disabled, mode, onClick }: Props) {
       <p className="custom-h4 text-white max-phone:text-[16px]">{mode === 'create' ? '업로드 하기' : '수정하기'}</p>
     </button>
   );
-}
+};
+
+export default PromptUploadButton;
