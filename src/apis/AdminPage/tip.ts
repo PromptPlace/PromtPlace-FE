@@ -2,6 +2,7 @@ import type {
   RequestPatchTipAdminDto,
   RequestTipAdminDto,
   ResponseNoticeAdminDto,
+  ResponsePatchDeleteTipAdminDto,
   ResponsePatchTipAdminDto,
   ResponseTipAdminDto,
 } from '@/types/AdminPage/tip';
@@ -27,6 +28,13 @@ export const patchTipAdmin = async ({
   body: RequestPatchTipAdminDto;
 }): Promise<ResponsePatchTipAdminDto> => {
   const { data } = await axiosInstance.patch(`/api/tips/${tip_id}`, body);
+
+  return data;
+};
+
+// 프롬프트 팁 삭제 (관리자)
+export const patchDeleteTipAdmin = async (tip_id: number): Promise<ResponsePatchDeleteTipAdminDto> => {
+  const { data } = await axiosInstance.patch(`/api/tips/${tip_id}/delete`);
 
   return data;
 };
