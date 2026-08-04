@@ -58,3 +58,10 @@ export const patchNoticeAdmin = async ({
 
   return data;
 };
+
+// 공지사항 삭제 (관리자)
+export const patchDeleteNoticeAdmin = async (announcement_id: number): Promise<ResponseNoticeAdminDto> => {
+  const { data } = await axiosInstance.patch(`/api/announcements/${announcement_id}/delete`);
+
+  return data;
+};
