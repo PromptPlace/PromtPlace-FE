@@ -144,7 +144,7 @@ const PromptTipDetailPage = () => {
             <div className="w-full">
               {isAdmin && (
                 <div className="w-full flex flex-row justify-end">
-                  <DeleteIcon className="size-5 text-alert cursor-pointer" onClick={handleDeleteTip} />
+                  <DeleteIcon className="size-5 text-alert cursor-pointer" onClick={() => setShowDeleteModal(true)} />
                 </div>
               )}
               {/**상단 */}
@@ -245,7 +245,7 @@ const PromptTipDetailPage = () => {
       {showDeleteModal && (
         <DualModal
           text="해당 꿀팁을 삭제 조치 하시겠습니까?"
-          onClickYes={() => mutate(Number(id))}
+          onClickYes={handleDeleteTip}
           onClickNo={() => setShowDeleteModal(false)}
         />
       )}
