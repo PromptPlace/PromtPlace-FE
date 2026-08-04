@@ -35,7 +35,7 @@ export const validateTextPrompt = (data: BaseValidation & { previewText: string 
     }
 
     if (data.price > 10000) {
-      return '※ 가격은 최대 10,000원부터 설정 가능해요.';
+      return '※ 가격은 최대 10,000원까지 설정 가능해요.';
     }
   }
 
