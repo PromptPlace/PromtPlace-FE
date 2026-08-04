@@ -32,7 +32,7 @@ interface Props {
   setModalInitialTab: (v: FilterModalType) => void;
 }
 
-export default function PromptInfoSection(props: Props) {
+const PromptInfoSection = (props: Props) => {
   return (
     <div className="flex flex-col gap-4">
       <div className="w-full">
@@ -106,4 +106,6 @@ export default function PromptInfoSection(props: Props) {
       />
     </div>
   );
-}
+};
+
+export default PromptInfoSection;

@@ -3,7 +3,7 @@ interface Props {
   onChange: (v: string) => void;
 }
 
-export default function TextPreviewSection({ value, onChange }: Props) {
+const TextPreviewSection = ({ value, onChange }: Props) => {
   return (
     <div className="my-4 flex flex-col gap-3">
       <div className="gap-1">
@@ -21,4 +21,6 @@ export default function TextPreviewSection({ value, onChange }: Props) {
       </div>
     </div>
   );
-}
+};
+
+export default TextPreviewSection;

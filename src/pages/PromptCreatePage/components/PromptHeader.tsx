@@ -5,7 +5,7 @@ interface Props {
   description: string;
 }
 
-export default function PromptHeader({ title, description }: Props) {
+const PromptHeader = ({ title, description }: Props) => {
   return (
     <>
       <div className="mt-[64px] flex flex-col gap-[12px]">
@@ -21,4 +21,6 @@ export default function PromptHeader({ title, description }: Props) {
       </div>
     </>
   );
-}
+};
+
+export default PromptHeader;
