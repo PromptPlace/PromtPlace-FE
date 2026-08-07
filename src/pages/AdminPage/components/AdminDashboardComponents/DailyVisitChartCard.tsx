@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import ArrowIcon from '@/pages/MyPage/utils/ArrowIcon';
 import useGetVisitorStats from '@hooks/queries/AdminPage/useGetVisitorStats.ts';
-import { buildRecentMonthOptions, formatChartDateLabel, getCurrentYearMonth } from '@pages/AdminPage/utils/format.ts';
+import {
+  buildRecentMonthOptions,
+  formatChartDateLabel,
+  formatChartDayLabel,
+  getCurrentYearMonth,
+} from '@pages/AdminPage/utils/format.ts';
 import { DUMMY_VISITOR_STATS, buildDummyMonthDaily } from '@pages/AdminPage/utils/dummyDashboardData.ts';
 
 const DailyVisitChartCard = () => {
@@ -12,7 +17,8 @@ const DailyVisitChartCard = () => {
   useGetVisitorStats({ params: { month } });
 
   const dailyVisitData = buildDummyMonthDaily(month).map((item) => ({
-    label: formatChartDateLabel(item.date),
+    label: formatChartDayLabel(item.date),
+    fullDateLabel: formatChartDateLabel(item.date),
     visitors: item.count,
   }));
 
@@ -84,6 +90,11 @@ const DailyVisitChartCard = () => {
               axisLine={false}
               tickLine={false}
               tick={{ fill: '#6B7280', fontSize: 10 }}
+            />
+            <Tooltip
+              formatter={(value) => [`${Number(value).toLocaleString()}명`, '방문자 수']}
+              labelFormatter={(_, payload) => payload?.[0]?.payload?.fullDateLabel ?? ''}
+              contentStyle={{ borderRadius: 8, fontSize: 12 }}
             />
             <Area
               type="monotone"
