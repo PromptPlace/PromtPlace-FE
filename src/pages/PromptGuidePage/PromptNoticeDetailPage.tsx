@@ -8,11 +8,15 @@ import url from '@assets/icon-linkhub-logo.svg';
 import instagram from '@assets/icon-instagram-logo.svg';
 import facebook from '@assets/icon-facebook-logo.svg';
 import twitter from '@assets/icon-x-logo.svg';
-
 import attachFile from '@assets/icon-attach-file-gray.svg';
+import DeleteIcon from '@assets/icon-delete-Xbutton.svg?react';
+
 import ReactMarkdown from 'react-markdown';
 import { useAuth } from '@/context/AuthContext';
 import PrimaryButton from '@/components/Button/PrimaryButton';
+import NoticeDetailSkeleton from './components/NoticeDetailSkeleton';
+import DualModal from '@/components/Modal/DualModal';
+import usePatchDeleteNotice from '@/hooks/mutations/AdminPage/usePatchDeleteNotice';
 
 // 게시글 타입
 interface Post {
@@ -38,14 +42,20 @@ const PromptNoticeDetailPage = () => {
   });
 
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
+
+  const { mutate } = usePatchDeleteNotice();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   /**api 연동 */
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        setLoading(true);
+
         const base = import.meta.env.VITE_SERVER_API_URL;
         const res = await axiosInstance.get(`${base}/api/announcements/${id}/details`);
         console.log(res.data.data.data);
@@ -64,6 +74,8 @@ const PromptNoticeDetailPage = () => {
         setPost(noticedetail);
       } catch (err) {
         console.log(err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchPosts();
@@ -109,6 +121,15 @@ const PromptNoticeDetailPage = () => {
     window.open('https://www.instagram.com', '_blank', 'noopener,noreferrer');
   }, [currentUrl]);
 
+  const handleDeleteNotice = () => {
+    mutate(Number(id), {
+      onSuccess: () => {
+        alert('공지사항이 삭제되었습니다.');
+        navigate('/guide/notice');
+      },
+    });
+  };
+
   return (
     <>
       <div className="px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
@@ -123,99 +144,117 @@ const PromptNoticeDetailPage = () => {
           </div>
         </div>
 
-        <div className="flex flex-col items-center rounded-[12px] bg-white pt-[56px] px-[80px] pb-[32px] max-lg:px-[32px]">
-          <div className="w-full ">
-            {/**상단 */}
-            <div className="w-full border-b-[1px] border-white-stroke flex flex-col gap-[24px] pb-[32px]">
-              <div className="flex">
-                {new Date().getTime() - new Date(post.created_at).getTime() <= 14 * 24 * 60 * 60 * 1000 && (
-                  <img src={newBadgeImg} alt="NEW" className="w-[20px] h-[20px] mr-[8px]" />
-                )}
-                <p className="custom-h4 max-phone:text-[16px]">{post.title}</p>
-              </div>
+        {loading && <NoticeDetailSkeleton />}
 
-              <div className="flex justify-between items-center max-lg:flex-col max-lg:items-start max-lg:gap-[16px]">
-                <div className="flex items-center gap-[12px]">
-                  <div className="custom-body3 max-phone:text-[10px] border-r border-gray-400">
-                    <span className="custom-body3 max-phone:text-[10px]">작성자 : </span>
-                    <span className="text-gray500 pr-[8px]">프롬프트플레이스</span>
-                  </div>
-
-                  <div className="custom-body3 max-phone:text-[10px]">
-                    <span className="custom-body3 max-phone:text-[10px]">등록일 : </span>
-                    <span className="text-gray500">{post.created_at}</span>
-                  </div>
-                </div>
-
-                <div className="flex gap-[8px] items-center">
-                  <p className="custom-body3 text-text-on-white max-phone:text-[10px]">공유 :</p>
-
-                  <div className="flex justify-between items-center gap-[16px]">
-                    <img
-                      className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
-                      src={instagram}
-                      alt="instagram"
-                      onClick={handleInstagram}
-                    />
-                    <img
-                      className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
-                      src={facebook}
-                      alt="facebook"
-                      onClick={handleFacebook}
-                    />
-                    <img
-                      className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
-                      src={twitter}
-                      alt="twitter"
-                      onClick={handleTwitter}
-                    />
-                    <img
-                      className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
-                      src={url}
-                      alt="url"
-                      onClick={handleCopyUrl}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/**본문 */}
-
-            <div className="custom-body2 py-[40px] border-b-[1px] border-white-stroke [&_p]:mb-4 max-phone:text-[12px]">
-              <ReactMarkdown>{post.content}</ReactMarkdown>
-            </div>
-
-            <div className="flex items-end justify-between">
-              {post.file_url ? (
-                <div className="w-[98px] h-[36px] gap-[8px] flex mt-[32px] border border-gray400 rounded-[8px] items-center justify-center cursor-pointer">
-                  <p className="text-[12px] font-light text-gray700">첨부파일</p>
-                  <img src={attachFile} alt="첨부 파일" className=" w-[20px] h-[20px]" />
-                </div>
-              ) : (
-                <div className="h-[36px] mt-[32px]"></div>
-              )}
-
-              {/* 관리자 */}
+        {!loading && (
+          <div className="flex flex-col items-center rounded-[12px] bg-white pt-[56px] px-[80px] pb-[32px] max-lg:px-[32px]">
+            <div className="w-full ">
               {isAdmin && (
-                <PrimaryButton
-                  buttonType="adminBG"
-                  text="수정하기"
-                  borderRadius={8}
-                  py={8}
-                  onClick={() => {
-                    navigate('/admin/guide/notice/create', {
-                      state: {
-                        post,
-                        mode: 'edit',
-                      },
-                    });
-                  }}
-                />
+                <div className="w-full flex flex-row justify-end">
+                  <DeleteIcon className="size-5 text-alert cursor-pointer" onClick={() => setShowDeleteModal(true)} />
+                </div>
               )}
+              {/**상단 */}
+              <div className="w-full border-b-[1px] border-white-stroke flex flex-col gap-[24px] pb-[32px]">
+                <div className="flex">
+                  {new Date().getTime() - new Date(post.created_at).getTime() <= 14 * 24 * 60 * 60 * 1000 && (
+                    <img src={newBadgeImg} alt="NEW" className="w-[20px] h-[20px] mr-[8px]" />
+                  )}
+                  <p className="custom-h4 max-phone:text-[16px]">{post.title}</p>
+                </div>
+
+                <div className="flex justify-between items-center max-lg:flex-col max-lg:items-start max-lg:gap-[16px]">
+                  <div className="flex items-center gap-[12px]">
+                    <div className="custom-body3 max-phone:text-[10px] border-r border-gray-400">
+                      <span className="custom-body3 max-phone:text-[10px]">작성자 : </span>
+                      <span className="text-gray500 pr-[8px]">프롬프트플레이스</span>
+                    </div>
+
+                    <div className="custom-body3 max-phone:text-[10px]">
+                      <span className="custom-body3 max-phone:text-[10px]">등록일 : </span>
+                      <span className="text-gray500">{post.created_at}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-[8px] items-center">
+                    <p className="custom-body3 text-text-on-white max-phone:text-[10px]">공유 :</p>
+
+                    <div className="flex justify-between items-center gap-[16px]">
+                      <img
+                        className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
+                        src={instagram}
+                        alt="instagram"
+                        onClick={handleInstagram}
+                      />
+                      <img
+                        className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
+                        src={facebook}
+                        alt="facebook"
+                        onClick={handleFacebook}
+                      />
+                      <img
+                        className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
+                        src={twitter}
+                        alt="twitter"
+                        onClick={handleTwitter}
+                      />
+                      <img
+                        className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
+                        src={url}
+                        alt="url"
+                        onClick={handleCopyUrl}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/**본문 */}
+
+              <div className="custom-body2 py-[40px] border-b-[1px] border-white-stroke [&_p]:mb-4 max-phone:text-[12px]">
+                <ReactMarkdown>{post.content}</ReactMarkdown>
+              </div>
+
+              <div className="flex items-end justify-between">
+                {post.file_url ? (
+                  <div className="w-[98px] h-[36px] gap-[8px] flex mt-[32px] border border-gray400 rounded-[8px] items-center justify-center cursor-pointer">
+                    <p className="text-[12px] font-light text-gray700">첨부파일</p>
+                    <img src={attachFile} alt="첨부 파일" className=" w-[20px] h-[20px]" />
+                  </div>
+                ) : (
+                  <div className="h-[36px] mt-[32px]"></div>
+                )}
+
+                {/* 관리자 */}
+                {isAdmin && (
+                  <PrimaryButton
+                    buttonType="adminBG"
+                    text="수정하기"
+                    borderRadius={8}
+                    py={8}
+                    onClick={() => {
+                      navigate('/admin/guide/notice/create', {
+                        state: {
+                          post,
+                          mode: 'edit',
+                          id,
+                        },
+                      });
+                    }}
+                  />
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
+
+      {showDeleteModal && (
+        <DualModal
+          text="해당 공지사항을 삭제 조치 하시겠습니까?"
+          onClickYes={handleDeleteNotice}
+          onClickNo={() => setShowDeleteModal(false)}
+        />
+      )}
     </>
   );
 };

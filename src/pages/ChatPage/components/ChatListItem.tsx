@@ -1,5 +1,6 @@
 import formatDate from '@/utils/formatDate';
 import Default from '@assets/icon-profile-image-default.svg';
+import clsx from 'clsx';
 
 interface ChatListItemProps {
   partner: {
@@ -10,19 +11,31 @@ interface ChatListItemProps {
     content: string;
     sent_at: Date | string;
     has_attachments: boolean;
+    attachment_summary?: {
+      image_count: number;
+      file_count: number;
+    } | null;
   };
   unread_count: number;
   is_pinned: boolean;
+  is_clicked: boolean;
   onClick: () => void;
 }
 
-const ChatListItem = ({ partner, last_message, unread_count, onClick }: ChatListItemProps) => {
+const ChatListItem = ({ partner, last_message, unread_count, is_clicked, onClick }: ChatListItemProps) => {
   const { month, day } = formatDate(last_message.sent_at);
+  console.log(last_message?.attachment_summary);
+
+  const attachmentMsg =
+    (last_message.attachment_summary?.image_count ?? 0) > 0 ? '사진을 보냈습니다.' : '파일을 보냈습니다.';
 
   return (
     <div
       onClick={onClick}
-      className="p-[16px] flex gap-[16px] items-center lg:max-w-[317px] w-full cursor-pointer hover:bg-background rounded-[8px]">
+      className={clsx(
+        'p-[16px] flex gap-[16px] items-start lg:max-w-[317px] w-full cursor-pointer hover:bg-background rounded-[8px]',
+        is_clicked && 'bg-background',
+      )}>
       <div className="size-[48px] shrink-0">
         <img
           src={partner.profile_image_url || Default}
@@ -38,7 +51,7 @@ const ChatListItem = ({ partner, last_message, unread_count, onClick }: ChatList
         </div>
 
         <div className="flex items-center justify-between">
-          <p className="custom-body3 text-gray700 truncate">{last_message.content}</p>
+          <p className="custom-body3 text-gray700 truncate">{last_message.content || attachmentMsg}</p>
 
           {unread_count > 0 && (
             <button className="rounded-[200px] py-[2px] px-[6px] h-[19px] bg-alert custom-button3 text-white text-center">

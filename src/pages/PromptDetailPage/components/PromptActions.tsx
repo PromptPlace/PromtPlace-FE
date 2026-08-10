@@ -10,13 +10,15 @@ import TagButton from '@components/Button/TagButton';
 
 import profile from '@/assets/icon-profile-gray.svg';
 import heartNone from '../../../assets/icon-heart-none-big.svg';
-import heartOnClick from '../../../assets/icon-heart-blue-big.svg';
+import heartActive from '../../../assets/icon-heart-active-big.svg';
 import contentCheckIcon from '../assets/contentcheck.png';
+import shareIcon from '../assets/share.svg';
 
 import ReviewList from './ReviewList';
 import ReportModal from '../components/ReportModal';
 import DownloadModal from '../components/DownloadModal';
 import CreateModal from '../components/CreateModal';
+import ShareModal from '../components/ShareModal';
 
 import usePromptDownload from '@/hooks/mutations/PromptDetailPage/usePromptDownload';
 import usePromptLike from '@/hooks/mutations/PromptDetailPage/usePromptLike';
@@ -109,6 +111,7 @@ const PromptActions = ({
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const handlePaid = () => {
     setIsPaid(true);
@@ -350,9 +353,6 @@ const PromptActions = ({
       {/* 제목 */}
       <div className="font-bold text-[24px] pt-[25px]">[{truncateTitle(title)}]</div>
 
-      {/* 가격 */}
-      <div className="text-[24px] pt-[30px] font-bold">{isFree ? '무료' : `${price.toLocaleString()}원`}</div>
-
       {/* 버튼 영역 */}
       <div className="h-[96px] pt-[30px] box-border flex items-center">
         {isAdmin ? (
@@ -368,7 +368,15 @@ const PromptActions = ({
               buttonType="squareBig"
               style="fill"
               imgType="download"
-              text={isDownloading ? '불러오는 중…' : '다운로드'}
+              text={
+                isDownloading
+                  ? '불러오는 중…'
+                  : isPaid && !isFree
+                    ? '구매완료'
+                    : isFree
+                      ? '다운로드'
+                      : `₩${price.toLocaleString()}`
+              }
               onClick={() => handleShowLoginModal(handleDownloadClick)}
             />
             {isPaymentModalOpen && ( //유료프롬프트 & 미결제 시 PaymentModal 열기
@@ -397,11 +405,27 @@ const PromptActions = ({
         )}
 
         <img
-          src={liked ? heartOnClick : heartNone}
+          src={liked ? heartActive : heartNone}
           alt="heart"
           className="ml-[34px] w-[28px] h-[25px] cursor-pointer"
           onClick={handleToggleLike}
         />
+
+        {/* 공유 버튼 (찜하기 버튼 UI 재사용) */}
+        <button
+  className="ml-[10px] w-[49px] h-[49px] rounded-[12px] bg-[#FFFEFB] border border-[#D1D5DB] flex items-center justify-center"
+  onClick={() => setIsShareModalOpen(true)}
+  aria-label="공유하기"
+>
+  <img
+    src={shareIcon}
+    alt="공유하기"
+    className="w-[22px] h-[22px]"
+  />
+</button>
+      
+
+        <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} title={title} />
       </div>
 
       {/* 별점 및 리뷰보기 */}

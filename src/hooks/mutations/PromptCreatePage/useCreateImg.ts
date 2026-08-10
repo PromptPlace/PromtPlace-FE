@@ -1,11 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import { uploadImages, postPromptWithImage, mapImagesToPrompt } from '@/apis/PromptCreatePage/createImg';
-import type {
-  UploadPromptWithImageRequest,
-  UploadPromptWithImageResponse,
-  ImageKeyInfo,
-} from '@/types/PromptCreatePage/createImg';
+import type { UploadPromptWithImageRequest, ImageKeyInfo } from '@/types/PromptCreatePage/createImg';
 
 type HttpError = AxiosError<{ message?: string; code?: string }>;
 

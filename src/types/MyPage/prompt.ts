@@ -41,6 +41,8 @@ export interface NewDownloadedPromptDTO {
   message: string;
   statusCode: number;
   prompt_id: number;
+  purchase_id: number;
+  is_refunded: boolean;
   title: string;
   description: string;
   price: number;
@@ -48,6 +50,7 @@ export interface NewDownloadedPromptDTO {
   imageUrls: string[] | null;
   has_review: boolean;
   is_recent_review: boolean;
+  is_refundable?: boolean;
   userNickname: string;
   userProfileImageUrl: string | null;
   userReview: {

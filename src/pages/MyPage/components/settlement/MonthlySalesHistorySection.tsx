@@ -1,0 +1,160 @@
+import RightArrowIcon from '../RightArrowIcon';
+import ArrowIcon from '../../utils/ArrowIcon';
+import { useNavigate } from 'react-router-dom';
+import type { MonthlySalesHistorySectionProps } from '@/types/MyPage/settlement';
+import { toMonthLabelFromSaleDate } from '@/pages/MyPage/utils/date';
+import { formatPrice } from '@/pages/MyPage/utils/format';
+import { useState } from 'react';
+import useGetMonthlySales from '@hooks/queries/MyPage/useGetMonthlySales.ts';
+
+const MONTHLY_SALES_SECTION_TITLE = '월별 판매 내역';
+const MONTHLY_SALES_NOTICE_TEXT = '선택한 월에 발생한 판매 내역이에요. 환불 건은 정산에서 제외됩니다.';
+
+const STATUS_LABELS = {
+  COMPLETED: '판매 완료',
+  REFUNDED: '환불 처리',
+} as const;
+
+const MonthlySalesHistorySection = ({
+  data,
+  onClickViewMore,
+  onClickMonthSelect,
+  onClickMonthOption,
+  isDetailView = false,
+  onClickUploadPrompt,
+}: MonthlySalesHistorySectionProps) => {
+  const navigate = useNavigate();
+
+  const displayedItems = data.sales.filter(
+    (item) => toMonthLabelFromSaleDate(item.saleDate) === data.selectedMonthLabel,
+  );
+  const showButton = !isDetailView && data.pagination.hasNextPage;
+
+  // const { data: monthlySalesData, isLoading, isPending } = useGetMonthlySales(filter);
+  console.log(data);
+  return (
+    <section className="flex flex-col gap-[20px]">
+      <div className="flex items-center justify-between">
+        <h2 className="custom-h2 text-text-on-white max-phone:!text-[20px]">{MONTHLY_SALES_SECTION_TITLE}</h2>
+        {showButton && (
+          <button type="button" className="flex items-center gap-[4px]" onClick={onClickViewMore}>
+            <span className="custom-button1 text-gray-500">더 보기</span>
+            <RightArrowIcon fillColor="#6B7280" />
+          </button>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-[20px] rounded-[12px] bg-white p-[24px] max-phone:gap-[12px] max-phone:p-[16px]">
+        <p className="custom-button1 text-gray-700 max-phone:!text-[12px]">{MONTHLY_SALES_NOTICE_TEXT}</p>
+
+        <div className="relative w-[223px] max-phone:ml-auto max-phone:w-[159px]">
+          <button
+            type="button"
+            onClick={onClickMonthSelect}
+            className="flex h-[48px] w-full items-center justify-between rounded-[8px] bg-gray-50 px-[16px] py-[12px]">
+            <span className="custom-button1 text-text-on-white max-phone:!text-[12px]">{data.selectedMonthLabel}</span>
+            <ArrowIcon fillColor="#9CA3AF" />
+          </button>
+
+          {data.isMonthDropdownOpen && data.monthOptions && data.monthOptions.length > 0 && (
+            <div className="absolute left-0 top-[56px] z-10 w-full overflow-hidden rounded-[8px] border border-gray-200 bg-white py-[8px]">
+              {data.monthOptions.map((option) => {
+                const isSelected = option === data.selectedMonthLabel;
+
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => onClickMonthOption?.(option)}
+                    className={`w-full px-[16px] py-[8px] text-left custom-body1 max-phone:!text-[14px] ${isSelected ? 'bg-background text-text-on-white' : 'bg-white text-text-on-white hover:bg-gray-50'}`}>
+                    {option}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        <div className="px-[20px] max-phone:px-0">
+          {displayedItems.length > 0 && (
+            <div className="flex items-center justify-end gap-[40px] pb-[20px]">
+              <span className="w-[88px] custom-h5 text-gray-700 max-mypage:hidden">판매가</span>
+              <span className="w-[88px] custom-h5 text-gray-700 max-mypage:hidden">결제상태</span>
+            </div>
+          )}
+
+          {/* 판매 내역이 없는 경우*/}
+          {displayedItems.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-[40px]">
+              <p className="custom-h5 text-gray-600 mb-[8px] max-phone:!text-[14px]">해당 월의 판매내역이 없어요.</p>
+              <p className="custom-body2 text-gray-500 mb-[16px] max-phone:!text-[12px]">프롬프트를 등록해보세요!</p>
+              <button
+                type="button"
+                className="rounded-[8px] bg-primary px-[20px] py-[9px] custom-button1 text-white"
+                onClick={onClickUploadPrompt}>
+                프롬프트 올리기
+              </button>
+            </div>
+          ) : (
+            <>
+              {/* 판매 내역이 있는 경우 */}
+              {displayedItems.map((item, index) => {
+                const isRefunded = item.status === 'REFUNDED';
+                const textClass = isRefunded ? 'text-gray-400 line-through' : 'text-text-on-white';
+                const priceClass = isRefunded ? 'text-gray-400 line-through' : 'text-text-on-white';
+                const salePrice = item.price;
+                const thumbnailSrc = item.thumbnailUrl;
+
+                return (
+                  <div
+                    key={item.purchaseId}
+                    className={`flex items-center justify-between py-[16px] ${index < displayedItems.length - 1 ? 'border-b border-gray-200' : ''}`}>
+                    <div className="flex min-w-0 flex-1 items-start">
+                      <img
+                        src={thumbnailSrc}
+                        alt="프롬프트 썸네일"
+                        className="size-[80px] rounded-[8px] object-cover max-phone:size-[64px]"
+                      />
+                      <div className="flex min-w-0 flex-1 flex-col gap-[8px] px-[24px] pb-[16px] pt-[8px] max-phone:gap-[12px] max-phone:px-[16px] max-phone:py-[8px]">
+                        <button
+                          type="button"
+                          className={`break-keep text-left custom-h5 max-phone:!text-[14px] max-phone:!font-light max-phone:!leading-[1.4] max-phone:!tracking-[-0.14px] ${textClass}`}
+                          onClick={() => navigate(`/prompt/${item.promptId}`)}>
+                          {item.title}
+                        </button>
+
+                        <div className="hidden items-center justify-between max-mypage:flex">
+                          <p className={`custom-h4 max-phone:!text-[16px] ${priceClass}`}>{formatPrice(salePrice)}</p>
+                          <span
+                            className={`inline-flex items-center justify-center rounded-[4px] px-[12px] py-[4px] custom-button1 max-phone:!text-[12px] ${isRefunded ? 'bg-gray-200 text-gray-400' : 'bg-secondary-pressed text-primary-hover'}`}>
+                            {STATUS_LABELS[item.status]}
+                          </span>
+                        </div>
+
+                        <p className={`custom-body2 max-phone:!text-[12px] ${textClass}`}>판매일: {item.saleDate}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-[40px] max-mypage:hidden">
+                      <p className={`w-[88px] custom-h4 max-phone:!text-[16px] ${priceClass}`}>
+                        {formatPrice(salePrice)}
+                      </p>
+                      <div className="w-[88px]">
+                        <span
+                          className={`inline-flex items-center justify-center rounded-[4px] px-[12px] py-[4px] custom-button1 ${isRefunded ? 'bg-gray-200 text-gray-400' : 'bg-secondary-pressed text-primary-hover'}`}>
+                          {STATUS_LABELS[item.status]}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default MonthlySalesHistorySection;

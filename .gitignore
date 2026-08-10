@@ -26,3 +26,8 @@ dist-ssr
 
 EditerExample.tsx
 .vercel
+.mcp.json
+
+CLAUDE.md
+.claude
+.docs

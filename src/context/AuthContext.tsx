@@ -1,5 +1,4 @@
-import { LOCAL_STORAGE_KEY,SESSION_STORAGE_KEY } from '@constants/key';
-import { useLocalStorage } from '@hooks/useLocalStorage';
+import { SESSION_STORAGE_KEY } from '@constants/key';
 import { useSessionStorage } from '@/hooks/useSessionStorage';
 import { createContext, useContext, useState, type PropsWithChildren } from 'react';
 import { postGoogleAuthCode, postNaverAuthCode } from '@apis/Login/auth.ts';
@@ -19,7 +18,7 @@ import { postSignin } from '@apis/Login/auth.ts';
 export const defaultUser: User = {
   user_id: -1,
   email: '',
-  status: true, // 'ACTIVE' or 'INACTIVE'로 변경 필요
+  status: 'ACTIVE', // 'ACTIVE' or 'INACTIVE'로 변경 필요
   role: 'USER',
 };
 
@@ -108,7 +107,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       }
 
       console.log('사용자 status:', response.data.user.status);
-      if (response.data.user.status === false) {
+      if (response.data.user.status === 'INACTIVE') {
         console.log('dl 계정은 비활성화된 계정입니다.');
         console.warn('비활성화된 계정입니다. 관리자에게 문의하세요.');
         alert('비활성화된 계정입니다. 관리자에게 문의하세요.');
@@ -116,7 +115,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         return;
       }
 
-      if (response.data.user.status === true) {
+      if (response.data.user.status === 'ACTIVE') {
         console.log('dl 계정은 활성화된 계정입니다.');
       }
     } catch (error) {

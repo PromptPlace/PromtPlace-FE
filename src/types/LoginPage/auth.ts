@@ -1,7 +1,5 @@
 import type { CommonResponse } from '../common';
 
-
-
 export interface initialSetupRequest {
   nickname: string;
   intro: string;
@@ -9,13 +7,12 @@ export interface initialSetupRequest {
 
 export interface initialSetupResponseData {
   message: string;
-  data:{
+  data: {
     user_id: number;
     nickname: string;
-  }
+  };
 }
 export type initialSetupResponse = CommonResponse<initialSetupResponseData>;
-
 
 export interface signinRequest {
   email: string;
@@ -124,7 +121,7 @@ export type signupResponse = CommonResponse<signupResponseData>;
 export interface User {
   user_id: number;
   email: string;
-  status?: boolean;
+  status?: 'ACTIVE' | 'INACTIVE' | 'APPROVED';
   role: 'USER' | 'ADMIN';
 }
 

@@ -6,21 +6,25 @@ import useGetMyDownloadedPrompts from '@/hooks/queries/MyPage/useGetMyDownloaded
 import { NoAuthoredPrompts, NoDownloadedPrompts, NoLikedPrompts } from './NoPrompts';
 import { useGetLikedPrompts } from '@/hooks/queries/MyPage/useGetPrompts';
 import arrow from '@/assets/icon-arrow-right-prompt.svg';
+import { PromptListSkeleton } from './MyPageSkeleton';
 interface PromptListProps {
   setActiveTab: (tab: 'prompt' | 'dashboard' | 'profile' | 'profileEdit' | 'authored' | 'downloaded') => void;
 }
 
 const PromptList = ({ setActiveTab }: PromptListProps) => {
   // (useQuery 등으로 writtenData, downloadedData, likedData를 가져옴)
-  const { data: downloadedData } = useGetMyDownloadedPrompts();
-  const { data: authoredData } = useGetMyPrompts();
-  const { data: likedPromptsData } = useGetLikedPrompts();
+  const { data: downloadedData, isLoading: isDownloadedLoading } = useGetMyDownloadedPrompts();
+  const { data: authoredData, isLoading: isAuthoredLoading } = useGetMyPrompts();
+  const { data: likedPromptsData, isLoading: isLikedLoading } = useGetLikedPrompts();
 
+  const isLoading = isDownloadedLoading || isAuthoredLoading || isLikedLoading;
   const AuthoredPromptsNum = authoredData?.pages[0].total_prompts || 0;
   const DownloadedPromptsNum = downloadedData?.data.length || 0;
   const LikedPromptsNum = likedPromptsData?.data.data.length || 0;
   console.log('찜한 프롬프트 수:', LikedPromptsNum);
   console.log('찜한 프롬프트 데이터 2차검증:', likedPromptsData);
+
+  if (isLoading) return <PromptListSkeleton />;
 
   return (
     <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-[40px] mt-[64px]">
@@ -33,7 +37,7 @@ const PromptList = ({ setActiveTab }: PromptListProps) => {
               {AuthoredPromptsNum}
             </div>
           </div>
-          {AuthoredPromptsNum > 6 && (
+          {AuthoredPromptsNum > 3 && (
             <button onClick={() => setActiveTab('authored')} className="flex items-center custom-button2 text-gray-500">
               더보기 <img src={arrow} className="w-[24px] h-[20px]" alt="arrow" />
             </button>
@@ -44,9 +48,9 @@ const PromptList = ({ setActiveTab }: PromptListProps) => {
             {authoredData?.pages
               .flatMap((page) => page.data)
               .filter(Boolean)
-              .slice(0, 6)
+              .slice(0, 3)
               .map((prompt) => (
-                <AuthoredPromptCard key={prompt.prompt_id} prompt={prompt} />
+                <AuthoredPromptCard key={prompt.prompt_id} prompt={prompt} maxReviews={1} />
               ))}
           </div>
         )}
@@ -61,12 +65,12 @@ const PromptList = ({ setActiveTab }: PromptListProps) => {
         <div className="flex justify-between mb-[20px]">
           {/*<AuthoredPromptCard>*/}
           <div className="flex gap-[20px]">
-            <p className="custom-h2 text-black">다운받은 프롬프트</p>
+            <p className="custom-h2 text-black">구매•다운받은 프롬프트</p>
             <div className="rounded-[50px] h-[32px] border-[0.8px] px-[10px] py-[5px] bg-white text-gray-500 border-gray-400 custom-h5">
               {DownloadedPromptsNum}
             </div>
           </div>
-          {DownloadedPromptsNum > 6 && (
+          {DownloadedPromptsNum > 2 && (
             <button
               onClick={() => setActiveTab('downloaded')}
               className="flex items-center custom-button2 text-gray-500">
@@ -77,7 +81,7 @@ const PromptList = ({ setActiveTab }: PromptListProps) => {
         {DownloadedPromptsNum > 0 && (
           <div>
             {downloadedData?.data
-              .slice(0, 6)
+              .slice(0, 2)
               .filter(Boolean)
               .map((prompt) => (
                 <DownloadedPromptCard key={prompt.prompt_id} prompt={prompt} />

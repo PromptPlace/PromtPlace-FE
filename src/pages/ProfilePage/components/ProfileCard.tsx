@@ -28,6 +28,7 @@ import AdminMessageModal from './AdminMessageModal';
 import AdminBanModal from './AdminBanModal';
 import DualModal from '@/components/Modal/DualModal';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
+import { ProfileCardSkeleton } from '@/pages/MyPage/components/MyPageSkeleton';
 
 interface ProfileCardProps {
   mypage?: boolean;
@@ -57,7 +58,7 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
   ); // 팔로우 여부
 
   // 회원 정보 불러오기
-  const { data: userData } = useGetMember({ member_id });
+  const { data: userData, isLoading: isMemberLoading } = useGetMember({ member_id });
 
   // 팔로워, 팔로잉 목록
   const { data: followerData } = useGetFollower({ member_id });
@@ -94,6 +95,13 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
     });
   };
 
+  // 채팅하기 로그인 관련
+  const handleChatting = () => {
+    handleShowLoginModal(() => {
+      openChatRoom(member_id);
+    });
+  };
+
   const normalizedFollowerList: FollowerWithStatus[] =
     followerData?.data.map((f) => ({
       ...f,
@@ -121,6 +129,8 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
       setIsFollow(followed);
     }
   }, [myFollowingData, member_id]);
+
+  if (isMemberLoading) return <ProfileCardSkeleton />;
 
   return (
     <>
@@ -215,7 +225,7 @@ const ProfileCard = ({ mypage }: ProfileCardProps) => {
 
           {!isMyProfile && !isAdmin && (
             <div className="flex gap-[20px]">
-              <ProfileButton text="문의하기" type="chat" onClick={() => openChatRoom(member_id)} />
+              <ProfileButton text="문의하기" type="chat" onClick={handleChatting} />
               <ProfileButton
                 text={isFollow ? '팔로우 완료' : '팔로우'}
                 type={isFollow ? 'check' : 'plus'}

@@ -66,3 +66,15 @@ export const patchPinChat = async (roomId: number): Promise<ResponsePatchPinChat
 
   return data;
 };
+
+// 특정 회원이 작성한 프롬프트 목록 조회
+export const getMemberPrompts = async ({ memberId, cursor }: { memberId: number; cursor?: number }) => {
+  const { data } = await axiosInstance.get(`/api/members/${memberId}/prompts`, {
+    params: {
+      cursor,
+      limit: 50,
+    },
+  });
+
+  return data;
+};
