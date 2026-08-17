@@ -33,7 +33,7 @@ const ImageBox = ({ url, to }: ImageBoxProps) => {
               rel="noopener noreferrer"
               className="custom-button1 max-phone:text-[8px]"
               onClick={(e) => e.stopPropagation()}>
-              프롬프트 바로가기
+              인스타 바로가기
             </a>
           ) : (
             <NavLink to={to} className="custom-button1 max-phone:text-[8px]">
