@@ -1,38 +1,48 @@
-import type { CommonResponse } from '../common';
-
 export type RequestPaymentDTO = {
   prompt_id: number;
-  pg: string;
-  merchant_uid: string;
-  amount: number;
-  buyer_name: string;
-  redirect_url: string;
-  imp_uid?: string; // 포트원 거래 고유번호 (선택적)
-  custom_data: {
-    promptId: { promptId: number };
-  };
+  pay_type: 'card';
+  refund_policy_agreed: boolean;
 };
 
 export type ResponsePaymentDTO = {
   message: string;
-  storeId: string;
-  channelKey: string;
-  paymentId: string;
-  orderName: string;
-  totalAmount: number;
   statusCode: number;
-  customData: {
-    prompt_id: { promptId: number };
-    user_id: { userId: number };
-  };
+  PCD_CST_ID: string;
+  PCD_CUST_KEY: string;
+  PCD_AUTH_KEY: string;
+  PCD_PAY_TYPE: string;
+  PCD_PAY_WORK: string;
+  PCD_PAY_HOST: string;
+  PCD_PAY_URL: string;
+  PCD_PAY_OID: string;
+  PCD_PAY_GOODS: string;
+  PCD_PAY_TOTAL: number;
+  PCD_USER_DEFINE1: string;
+  PCD_RST_URL: string;
+};
+
+// 페이플 콜백(callbackFunction) 결과를 그대로 전달하는 검증 요청 바디.
+// PCD_PAY_REQKEY로 백엔드가 페이플에 재검증하므로 필수 필드로 취급한다.
+export type RequestCompletePurchaseDTO = {
+  PCD_PAY_RST: string;
+  PCD_PAY_CODE?: string;
+  PCD_PAY_MSG?: string;
+  PCD_PAY_OID: string;
+  PCD_PAY_REQKEY: string;
+  PCD_AUTH_KEY?: string;
+  PCD_PAY_HOST?: string;
+  PCD_PAY_URL?: string;
+  PCD_PAY_TOTAL?: number;
+  PCD_PAY_TYPE?: string;
+  PCD_USER_DEFINE1?: string;
 };
 
 export type ResponseCompletePurchaseDTO = {
   message: string;
-  purchaseId: number;
+  status: 'Succeed' | 'Failed';
+  purchase_id: number;
   statusCode: number;
-  status: number;
-}
+};
 
 export type ResponseError = {
   error: string;
