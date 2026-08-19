@@ -1,70 +1,79 @@
+import { isAxiosError } from 'axios';
 import { postCompletePurchase, postRequestPayment } from '@/apis/MainPage/prompt';
+import { SESSION_STORAGE_KEY } from '@/constants/key';
+import type { RequestCompletePurchaseDTO } from '@/types/PromptDetailPage/payments';
+
+// 페이플 callbackFunction이 넘겨주는 결과 객체.
+// /api/prompts/purchases/complete 요청 바디(PCD_PAY_REQKEY 등)와 1:1로 맞춰서 그대로 전달한다.
+type PaypleAuthResult = RequestCompletePurchaseDTO;
 
 declare global {
   interface Window {
-    PortOne: any;
+    PaypleCpayAuthCheck: (payObj: Record<string, unknown>) => void;
   }
 }
 
 export const usePayment = () => {
-  const handlePayment = async (promptId: number) => {
+  const handlePayment = async (promptId: number, refundPolicyAgreed: boolean = true) => {
+    // 페이플이 결제 취소 시 콜백 없이 PCD_RST_URL로 브라우저를 직접 리다이렉트시키는 경우가 있어,
+    // 그 착지 페이지(PurchaseResultPage)에서 원래 보던 프롬프트로 돌아갈 수 있도록 미리 기록해둔다.
+    sessionStorage.setItem(SESSION_STORAGE_KEY.pendingPurchasePromptId, String(promptId));
+
     try {
-      // 1. 주문서 생성
-      const order = await postRequestPayment(promptId);
+      // 1. 주문서 생성 (페이플 인증에 필요한 PCD_* 필드 반환)
+      const order = await postRequestPayment(promptId, refundPolicyAgreed);
       console.log('주문서 생성', order);
 
-      // 2. 포트원 결제 SDK 호출 => sdk/결제 요청/결제 완료 순차적 실행하도록 구현
-      const payment: any = await new Promise((resolve, reject) => {
-        if (!window.PortOne) return reject(new Error('PortOne SDK 미로드'));
+      // 2. 페이플 결제창(PaypleCpayAuthCheck) 호출
+      const authResult = await new Promise<PaypleAuthResult>((resolve, reject) => {
+        if (!window.PaypleCpayAuthCheck) return reject(new Error('Payple SDK 미로드'));
 
-        window.PortOne.requestPayment(
-          {
-            storeId: order.storeId,
-            channelKey: order.channelKey,
-            paymentId: order.paymentId,
-            orderName: order.orderName,
-            totalAmount: order.totalAmount,
-            currency: 'CURRENCY_KRW',
-            payMethod: 'CARD',
-            customData: {
-              user_id: order.customData.user_id,
-              prompt_id: order.customData.prompt_id,
-            },
-            customer: {
-              customerId: String(order.customData.user_id),
-            },
-          },
-          (result: any) => {
-            console.log('Payment Result Callback:', result);
+        const payObj: Record<string, unknown> = {
+          clientKey: import.meta.env.VITE_PAYPLE_CLIENT_KEY,
+          PCD_CST_ID: order.PCD_CST_ID,
+          PCD_CUST_KEY: order.PCD_CUST_KEY,
+          PCD_AUTH_KEY: order.PCD_AUTH_KEY,
+          PCD_PAY_TYPE: order.PCD_PAY_TYPE,
+          PCD_PAY_WORK: order.PCD_PAY_WORK,
+          PCD_PAY_HOST: order.PCD_PAY_HOST,
+          PCD_PAY_URL: order.PCD_PAY_URL,
+          PCD_PAY_OID: order.PCD_PAY_OID,
+          PCD_PAY_GOODS: order.PCD_PAY_GOODS,
+          PCD_PAY_TOTAL: order.PCD_PAY_TOTAL,
+          PCD_USER_DEFINE1: order.PCD_USER_DEFINE1,
+          PCD_RST_URL: order.PCD_RST_URL, // 백엔드 웹훅 URL — 프론트에서 임의로 덮어쓰면 안 됨
+          callbackFunction: (result: PaypleAuthResult) => {
+            console.log('Payple Auth Result:', result);
 
-            // 사용자가 결제창에서 취소했거나 오류가 있는 경우
-            if (!result || result.code !== undefined) {
-              reject(new Error('결제가 취소되었습니다.'));
+            if (!result || result.PCD_PAY_RST !== 'success') {
+              reject(new Error(result?.PCD_PAY_MSG || '결제가 취소되었습니다.'));
             } else {
               resolve(result);
             }
           },
-        );
+        };
+
+        window.PaypleCpayAuthCheck(payObj);
       });
 
-      // 3. SDK 결제 완료 이후 해당 정보를 서버에서 검증
-      const result = await postCompletePurchase(payment.paymentId, Number(order.customData.prompt_id));
+      // 3. 결제 인증 완료 이후 페이플 콜백 결과를 그대로 서버에 전달해 검증
+      // (PCD_PAY_REQKEY로 서버가 페이플에 재검증하므로 콜백 결과 원본을 유지해야 함)
+      const result = await postCompletePurchase(authResult);
 
       console.log('서버 검증 결과:', result);
 
-      if (result.status === 200) {
-        return true;
-      }
-
-      return false;
-    } catch (error: any) {
+      return result.status === 'Succeed';
+    } catch (error) {
       // 409: 이미 구매한 프롬프트 (즉시 다운로드 진행)
-      if (error.response?.status === 409) {
+      if (isAxiosError(error) && error.response?.status === 409) {
         console.log('이미 구매한 프롬프트입니다. 다운로드를 진행합니다.');
         return true;
       }
       console.error('결제 처리 중 오류 발생:', error);
       throw error;
+    } finally {
+      // 정상적으로 콜백을 받아 이 지점까지 실행됐다면(=페이지 이동 없이 끝났다면) 더 이상 필요 없는 기록이므로 정리한다.
+      sessionStorage.removeItem(SESSION_STORAGE_KEY.pendingPurchasePromptId);
     }
   };
 
