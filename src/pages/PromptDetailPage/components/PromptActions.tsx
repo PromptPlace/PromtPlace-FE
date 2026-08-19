@@ -384,6 +384,7 @@ const PromptActions = ({
                 promptId={Number(id)}
                 title={title}
                 price={price}
+                authorNickname={user.nickname}
                 onClose={() => setIsPaymentModalOpen(false)}
                 onPaid={handlePaid}
               />

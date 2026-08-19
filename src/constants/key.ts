@@ -17,4 +17,5 @@ export const SESSION_STORAGE_KEY = {
   accessToken: 'accessToken',
   refreshToken: 'refreshToken',
   user: 'user',
+  pendingPurchasePromptId: 'pendingPurchasePromptId',
 };

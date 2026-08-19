@@ -7,6 +7,7 @@ interface ImportMetaEnv {
   readonly VITE_GTM_ID: string;
   readonly VITE_KAKAO_JAVASCRIPT_KEY: string;
   readonly VITE_CHANNEL_PUBLIC_ID: string;
+  readonly VITE_PAYPLE_CLIENT_KEY: string;
 }
 
 interface ImportMeta {
