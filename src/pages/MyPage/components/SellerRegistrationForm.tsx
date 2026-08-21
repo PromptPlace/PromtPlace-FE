@@ -8,7 +8,6 @@ import CheckedSquareIcon from '@assets/icon-bi-check-square-primary.svg';
 import NonCheckedSquareIcon from '@assets/icon-bi-noncheck-square2.svg';
 import BankSelectDropdown from './BankSelectDropdown';
 import type { Bank } from '../utils/banks';
-import { getPortOneBankCodeByBankName } from '../utils/banks';
 import { getVerifyAccountErrorInfo } from '../utils/accountVerification';
 import usePostVerifyAccount from '@/hooks/mutations/MyPage/usePostVerifyAccount';
 import usePostIndividualRegister from '@/hooks/mutations/MyPage/usePostIndividualRegister';
@@ -81,14 +80,14 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
 
   // 계좌 인증 요청에 사용할 payload 구성
   const buildVerifyAccountPayload = (): VerifyAccountRequestDTO => {
-    const portOneBankCode = selectedBank ? (getPortOneBankCodeByBankName(selectedBank.name) ?? selectedBank.code) : '';
+    const bankCode = selectedBank?.code ?? '';
 
     if (sellerType === 'individual') {
       return {
         sellerType: 'INDIVIDUAL',
         name: realName,
         birthDate,
-        bank: portOneBankCode,
+        bank: bankCode,
         accountNumber,
         holderName: accountHolder,
       };
@@ -100,7 +99,7 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
         businessType: 'PERSONAL',
         name: representativeName,
         birthDate,
-        bank: portOneBankCode,
+        bank: bankCode,
         accountNumber,
         holderName: accountHolder,
       };
@@ -112,7 +111,7 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
       businessType: 'CORPORATE',
       name: representativeName,
       businessNumber: businessRegistrationNumber.replace(/-/g, ''),
-      bank: portOneBankCode,
+      bank: bankCode,
       accountNumber,
       holderName: accountHolder,
     };
@@ -157,11 +156,9 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
       return;
     }
 
-    const portOneBankCode = getPortOneBankCodeByBankName(selectedBank.name) ?? selectedBank.code;
-
     const data: SellerRegistrationData = {
       sellerType,
-      bank: portOneBankCode,
+      bank: selectedBank.code,
       accountNumber,
       holderName: accountHolder,
       isTermsAgreed: privacyAgreed,
@@ -545,6 +542,8 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
             !selectedBank ||
             !accountNumber ||
             !accountHolder ||
+            !isAccountVerified ||
+            !privacyAgreed ||
             individualRegisterMutation.isPending ||
             businessRegisterMutation.isPending ||
             businessLicenseMutation.isPending

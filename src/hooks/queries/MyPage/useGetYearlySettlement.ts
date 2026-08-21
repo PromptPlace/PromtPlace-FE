@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getPendingAmount, getYearlySales } from '@apis/MyPage/settlement.ts';
+import { getYearlySales } from '@apis/MyPage/settlement.ts';
 
 function useGetYearlySettlement() {
   return useQuery({

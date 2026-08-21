@@ -1,7 +1,6 @@
 import ReportIcon from '@assets/icon-report.svg';
 import { formatNextSettlementDate } from '@/pages/MyPage/utils/date';
 import type { ExpectedSettlementSectionProps } from '@/types/MyPage/settlement';
-import useGetSettlementPendingAmount from '@hooks/queries/MyPage/useGetSettlementPendingAmount.ts';
 
 const SETTLEMENT_GUIDE_TITLE = '정산 관련 안내 사항';
 const SETTLEMENT_GUIDE_ITEMS = [
@@ -24,11 +23,8 @@ const toDeductionWon = (amount: number) => {
 };
 
 const ExpectedSettlementSection = ({ data, onClickGuideLink }: ExpectedSettlementSectionProps) => {
-  const pendingAmountData = useGetSettlementPendingAmount();
-  console.log(pendingAmountData);
-
   const periodLabel = `${data.targetMonth} 정산 예정 금액`;
-  const formattedExpectedAmount = toWon(pendingAmountData.data?.pending_amount ?? 0);
+  const formattedExpectedAmount = toWon(data.expectedAmount);
   const formattedNextSettlementDate = formatNextSettlementDate(data.nextSettlementDate);
 
   return (
@@ -42,7 +38,7 @@ const ExpectedSettlementSection = ({ data, onClickGuideLink }: ExpectedSettlemen
 
             <div className="flex flex-col gap-[8px]">
               <p
-                className={`custom-h1 max-phone:!text-[24px] ${formattedExpectedAmount ? 'text-gray-400' : 'text-primary'}`}>
+                className={`custom-h1 max-phone:!text-[24px] ${data.expectedAmount <= 0 ? 'text-gray-400' : 'text-primary'}`}>
                 {formattedExpectedAmount}
               </p>
               <p className="custom-body1 text-gray-700 max-phone:!text-[14px]">{formattedNextSettlementDate}</p>
@@ -51,9 +47,7 @@ const ExpectedSettlementSection = ({ data, onClickGuideLink }: ExpectedSettlemen
             <div className="flex flex-col gap-[12px] rounded-[8px] bg-gray-50 px-[16px] py-[12px]">
               <div className="flex items-center justify-between">
                 <span className="custom-body1 text-text-on-white max-phone:!text-[14px]">총 판매 금액</span>
-                <span className="custom-h5 text-gray-700 max-phone:!text-[14px]">
-                  {/*{toWon(pendingAmountData.data.pending_amount)}*/}
-                </span>
+                <span className="custom-h5 text-gray-700 max-phone:!text-[14px]">{toWon(data.totalSalesAmount)}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="custom-body1 text-text-on-white max-phone:!text-[14px]">서비스 수수료</span>
