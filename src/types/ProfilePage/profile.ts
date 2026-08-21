@@ -14,7 +14,7 @@ export type ResponseMemberDto = CommonResponse<{
   profile_image: null | string;
   created_at: string;
   updated_at: string;
-  status: number;
+  status: number | string;
   role: string;
   has_unread_messages: boolean;
 }>;
