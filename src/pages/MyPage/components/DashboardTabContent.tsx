@@ -9,6 +9,7 @@ import SellerNotRegistered from './SellerNotRegistered';
 import SellerRegistrationForm from './SellerRegistrationForm';
 import SellerInfoEditForm from './SellerInfoEditForm';
 import MonthlySalesHistorySection from './settlement/MonthlySalesHistorySection';
+import { DashboardTabSkeleton } from './MyPageSkeleton';
 import useGetMonthlySales from '@/hooks/queries/MyPage/useGetMonthlySales.ts';
 import useGetSettlementPendingAmount from '@/hooks/queries/MyPage/useGetSettlementPendingAmount.ts';
 import useGetYearlySettlement from '@hooks/queries/MyPage/useGetYearlySettlement.ts';
@@ -58,7 +59,11 @@ const DashboardTabContent = ({ sellerStatusFromQuery }: DashboardTabContentProps
   const navigate = useNavigate();
 
   // 판매자 상태 조회 (등록 여부/승인 상태/계좌 정보 prefill)
-  const { data: accountDetailResponse, isError: isAccountDetailError } = useGetSettlementAccountDetail();
+  const {
+    data: accountDetailResponse,
+    isError: isAccountDetailError,
+    isLoading: isAccountDetailLoading,
+  } = useGetSettlementAccountDetail();
   const accountDetail = accountDetailResponse?.data;
 
   // 판매자 상태 관리
@@ -206,6 +211,13 @@ const DashboardTabContent = ({ sellerStatusFromQuery }: DashboardTabContentProps
     }
     setIsMonthDropdownOpen(false);
   };
+
+  // 판매자 등록 여부 조회가 끝나기 전에는 등록/미등록 화면을 미리 확정하지 않음
+  // (isAccountDetailError가 로딩 중엔 false라 미등록 사용자에게도 대시보드가 먼저 보였다가
+  //  조회가 끝난 뒤에야 등록 화면으로 바뀌는 깜빡임이 있었음)
+  if (isAccountDetailLoading) {
+    return <DashboardTabSkeleton />;
+  }
 
   // 판매자 승인 대기 중
   if (isSellerApprovalPending) {

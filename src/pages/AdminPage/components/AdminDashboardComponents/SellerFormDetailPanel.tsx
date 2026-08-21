@@ -1,5 +1,5 @@
 import React from 'react';
-import { getBankInfoByPortOneCode, formatBankAccountNumber } from '@/pages/MyPage/utils/banks';
+import { getBankInfoByCode, formatBankAccountNumber } from '@/pages/MyPage/utils/banks';
 
 interface SellerFormDetailPanelProps {
   registrationTypeLabel: string;
@@ -35,7 +35,7 @@ const SellerFormDetailPanel = ({
   accountNumber,
   accountHolder,
 }: SellerFormDetailPanelProps) => {
-  const bankInfo = getBankInfoByPortOneCode(bankCode);
+  const bankInfo = getBankInfoByCode(bankCode);
   const bankName = bankInfo?.name ?? bankCode;
   const formattedAccountNumber = formatBankAccountNumber(bankName, accountNumber);
 

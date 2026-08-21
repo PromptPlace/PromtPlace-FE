@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import PromptPlaceLogo from '@assets/logo/text/text-logo-black.svg';
+import PromptPlaceLogo from '@assets/logo/text/text-logo-default.svg';
 import xButton from '@/assets/icon-x-button.svg';
-import alertIcon from '@/assets/icon-alert.svg';
-import CheckIcon from '@assets/icon-terms-check.svg';
-import UnCheckIcon from '@assets/icon-terms-check-white-stroke.svg';
+import alertIcon from '@/assets/icon-payment-error.png';
+import CheckIcon from '@assets/icon-bi-check-square.svg';
+import UnCheckIcon from '@assets/icon-bi-noncheck-square.svg';
 import { usePayment } from '@/hooks/mutations/MainPage/usePostRequestPayment';
 
 interface PaymentModalProps {
@@ -26,12 +26,11 @@ interface AgreementRowProps {
 const AgreementRow = ({ checked, onToggle, label, action }: AgreementRowProps) => (
   <div className="flex items-center gap-3">
     <button type="button" onClick={onToggle} className="flex flex-1 items-center gap-3 text-left">
-      <span
-        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-[2px] border ${
-          checked ? 'border-primary' : 'border-stone-300'
-        }`}>
-        <img src={checked ? CheckIcon : UnCheckIcon} alt={checked ? '동의함' : '동의 안 함'} className="w-2.5" />
-      </span>
+      <img
+        src={checked ? CheckIcon : UnCheckIcon}
+        alt={checked ? '동의함' : '동의 안 함'}
+        className="h-5 w-5 shrink-0"
+      />
       <span className="text-sm font-light text-black">
         <span className="text-primary">(필수)</span> {label}
       </span>
