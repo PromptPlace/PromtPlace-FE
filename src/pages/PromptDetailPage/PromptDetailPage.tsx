@@ -15,7 +15,8 @@ import PromptDetailPageSkeleton from './components/PromptDetailPageSkeleton';
 // hooks
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import usePromptDownload from '@/hooks/mutations/PromptDetailPage/usePromptDownload';
-import useGetPromptDetail from '@/hooks/queries/PromptDetailPage/useGetPromptDetail';
+import useGetPromptDetail, { promptKeys } from '@/hooks/queries/PromptDetailPage/useGetPromptDetail';
+import { QUERY_KEY } from '@/hooks/queries/MyPage/useGetPrompts';
 import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
 import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
 import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
@@ -133,6 +134,14 @@ const PromptDetailPage = () => {
     try {
       const retryResult = await fetchDownload(promptId);
       setIsPaid(true);
+
+      // 결제 반영: 프롬프트 상세(is_paid)와 마이페이지 구매·다운로드 목록 캐시를 갱신한다.
+      await Promise.allSettled([
+        qc.invalidateQueries({ queryKey: promptKeys.detail(promptId) }),
+        qc.invalidateQueries({ queryKey: ['myDownloadedPrompts'] }),
+        qc.invalidateQueries({ queryKey: QUERY_KEY.downloadedPrompts }),
+      ]);
+
       setDownloadData({
         title: retryResult.title,
         content: retryResult.content ?? '',
@@ -222,7 +231,7 @@ const PromptDetailPage = () => {
           content={downloadData.content}
           price={prompt.price}
           isFree={prompt.is_free}
-          isPaid={prompt.is_paid}
+          isPaid={isPaid}
           onPaid={() => setIsPaid(true)}
           variant={isMobile ? 'fullscreen' : 'modal'}
         />

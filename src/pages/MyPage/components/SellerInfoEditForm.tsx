@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import type { SellerInfoEditFormData, SellerType } from '@/types/MyPage/sellerInfo';
 import AttachFileIcon from '@assets/icon-attach-file-black.svg';
 import DeleteIcon from '@assets/icon-delete.svg';
@@ -474,9 +475,14 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
               className="size-[20px] shrink-0"
             />
             <span className="custom-body2 leading-[1.6] tracking-[0.02em] max-phone:!text-[12px]">
-              <span className="custom-button1 leading-[1.5] text-primary underline max-phone:!text-[12px]">
+              <Link
+                to="/guide/notice/37"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="custom-button1 leading-[1.5] text-primary underline max-phone:!text-[12px]">
                 판매자 등록 개인정보 수집 및 이용
-              </span>
+              </Link>
               에 동의합니다.
             </span>
           </label>

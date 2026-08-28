@@ -62,8 +62,8 @@ const PaymentModal = ({ promptId, title, price, authorNickname, onClose, onPaid 
     if (!canPay || loading) return;
     setLoading(true);
     try {
-      await handlePayment(promptId, canPay);
-      onPaid();
+      const paid = await handlePayment(promptId, canPay);
+      if (paid) onPaid();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : undefined;
       if (message !== '결제가 취소되었습니다.') {
@@ -116,7 +116,7 @@ const PaymentModal = ({ promptId, title, price, authorNickname, onClose, onPaid 
               label="이용약관 및 환불정책에 동의합니다."
               action={
                 <Link
-                  to="/terms"
+                  to="/guide/notice/34"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="shrink-0 text-sm text-neutral-500">
@@ -178,7 +178,7 @@ const PaymentModal = ({ promptId, title, price, authorNickname, onClose, onPaid 
               label="이용약관 및 환불정책에 동의합니다."
               action={
                 <Link
-                  to="/terms"
+                  to="/guide/notice/34"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="shrink-0 text-sm text-neutral-500">
