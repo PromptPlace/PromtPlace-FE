@@ -72,7 +72,13 @@ export const usePayment = () => {
 
       console.log('서버 검증 결과:', result);
 
-      return result.status === 'Succeed';
+      // 결제창 인증은 끝났지만 서버 검증/구매 확정이 실패한 경우.
+      // 조용히 false를 반환하면 호출부에서 성공으로 오인하므로 백엔드 메시지로 예외를 던진다.
+      if (result.status !== 'Succeed') {
+        throw new Error(result.message || '결제 검증에 실패했습니다.');
+      }
+
+      return true;
     } catch (error) {
       // 409: 이미 구매한 프롬프트 (즉시 다운로드 진행)
       if (isAxiosError(error) && error.response?.status === 409) {
