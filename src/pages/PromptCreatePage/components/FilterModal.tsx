@@ -18,6 +18,7 @@ interface FilterModalProps {
   setIsPaid: (v: boolean) => void;
   price: number | null;
   setPrice: (v: number | null) => void;
+  canSetPrice: boolean;
 }
 
 const tabs = [
@@ -43,6 +44,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
   setIsPaid,
   price,
   setPrice,
+  canSetPrice,
 }) => {
   const [activeTab, setActiveTab] = useState<FilterModalType>('model');
   const [localSelectedModels, setLocalSelectedModels] = useState<string[]>(selectedModels);
@@ -133,18 +135,20 @@ const FilterModal: React.FC<FilterModalProps> = ({
 
           {/* 탭 버튼 */}
           <div className="flex gap-[10px] pb-[16px]">
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                className={`w-[99px] h-[30px] py-[6px] px-[12px] rounded-[8px] text-[12px] font-medium transition-all border ${
-                  activeTab === tab.key
-                    ? 'bg-primary text-white border-primary'
-                    : 'bg-transparent text-primary border-primary'
-                }`}
-                onClick={() => setActiveTab(tab.key)}>
-                {tab.label}
-              </button>
-            ))}
+            {tabs
+              .filter((tab) => tab.key !== 'price' || canSetPrice)
+              .map((tab) => (
+                <button
+                  key={tab.key}
+                  className={`w-[99px] h-[30px] py-[6px] px-[12px] rounded-[8px] text-[12px] font-medium transition-all border ${
+                    activeTab === tab.key
+                      ? 'bg-primary text-white border-primary'
+                      : 'bg-transparent text-primary border-primary'
+                  }`}
+                  onClick={() => setActiveTab(tab.key)}>
+                  {tab.label}
+                </button>
+              ))}
           </div>
 
           {/* 스크롤 가능 영역 */}
@@ -211,9 +215,8 @@ const FilterModal: React.FC<FilterModalProps> = ({
             )}
 
             {/* 가격 탭 */}
-            {activeTab === 'price' && (
+            {activeTab === 'price' && canSetPrice && (
               <>
-                {' '}
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-3">
                     <p className="custom-button1 text-primary">설정</p>

@@ -52,7 +52,7 @@ const PromptCreateTextPage = ({ mode = 'create', promptId }: PromptCreateTextPag
   // 가격 설정
   const [isPaid, setIsPaid] = useState(false);
   const [price, setPrice] = useState<number | null>(null);
-  const canSetPrice = userData?.data.status === 'APPROVED'; // 승인된 유저만 가격 설정 가능
+  const canSetPrice = userData?.data?.status === 'APPROVED'; // 승인된 유저만 가격 설정 가능
 
   const [previewText, setPreviewText] = useState<string>(''); // 결과 미리보기
   const [descriptionText, setDescriptionText] = useState<string>(''); //한줄 소개
