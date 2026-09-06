@@ -5,15 +5,15 @@ import { Link } from 'react-router-dom';
 const Footer = () => {
   const LINKS = [
     {
-      to: '/guide/notice/22',
+      to: '/guide/notice/32',
       label: '이용약관',
     },
     {
-      to: '/guide/notice/23',
+      to: '/guide/notice/35',
       label: '개인정보처리방침',
     },
     {
-      to: '/guide/notice/21',
+      to: '/guide/notice/36',
       label: '운영정책',
     },
   ];
