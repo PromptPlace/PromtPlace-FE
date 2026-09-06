@@ -5,15 +5,15 @@ import { Link } from 'react-router-dom';
 const Footer = () => {
   const LINKS = [
     {
-      to: '/guide/notice/22',
+      to: '/guide/notice/32',
       label: '이용약관',
     },
     {
-      to: '/guide/notice/23',
+      to: '/guide/notice/35',
       label: '개인정보처리방침',
     },
     {
-      to: '/guide/notice/21',
+      to: '/guide/notice/36',
       label: '운영정책',
     },
   ];
@@ -33,7 +33,7 @@ const Footer = () => {
     },
     {
       title: '주소',
-      content: '서울특별시 관악구 인헌12가길 7, 402호(봉천동, 청운빌라)',
+      content: '서울특별시 관악구 남부순환로 1895 2층 A127호',
     },
     {
       title: '전화번호',
