@@ -20,6 +20,7 @@ import ImageUploadSection from './components/ImageUploadSection';
 import PromptDescriptionSection from './components/PromptDescriptionSection';
 import PromptUploadButton from './components/PromptUploadButton';
 import { useAuth } from '@/context/AuthContext';
+import useGetMember from '@/hooks/queries/ProfilePage/useGetMember';
 
 interface PromptCreateImgPageProps {
   mode?: 'create' | 'edit';
@@ -29,6 +30,7 @@ interface PromptCreateImgPageProps {
 const PromptCreateImgPage = ({ mode = 'create', promptId }: PromptCreateImgPageProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { data: userData } = useGetMember({ member_id: user.user_id });
 
   const params = useParams();
   const idFormUrl = params.id ? Number(params.id) : undefined;
@@ -50,7 +52,7 @@ const PromptCreateImgPage = ({ mode = 'create', promptId }: PromptCreateImgPageP
   // 가격 설정
   const [isPaid, setIsPaid] = useState(false);
   const [price, setPrice] = useState<number | null>(null);
-  const canSetPrice = user.status === 'APPROVED'; // 승인된 유저만 가격 설정 가능
+  const canSetPrice = userData?.data.status === 'APPROVED'; // 승인된 유저만 가격 설정 가능
 
   const [files, setFiles] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<string[]>([]); // 서버에서 온 이미지

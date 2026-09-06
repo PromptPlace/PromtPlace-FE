@@ -13,6 +13,16 @@ declare global {
   }
 }
 
+// payment.js(PaypleCpayPopup)는 PCD_PAY_URL을 PCD_PAY_HOST와 조합하지 않고 폼 action에 그대로 사용한다.
+// 백엔드가 PCD_PAY_URL을 상대경로로 내려줘도 결제창이 뜰 수 있도록 여기서 절대경로로 보정한다.
+const resolvePayUrl = (host: string | undefined, url: string | undefined) => {
+  if (!url) return url ?? '';
+  if (/^https?:\/\//i.test(url)) return url;
+  const normalizedHost = (host ?? '').replace(/\/+$/, '');
+  const normalizedPath = url.startsWith('/') ? url : `/${url}`;
+  return `${normalizedHost}${normalizedPath}`;
+};
+
 export const usePayment = () => {
   const handlePayment = async (promptId: number, refundPolicyAgreed: boolean = true) => {
     // 페이플이 결제 취소 시 콜백 없이 PCD_RST_URL로 브라우저를 직접 리다이렉트시키는 경우가 있어,
@@ -36,7 +46,7 @@ export const usePayment = () => {
           PCD_PAY_TYPE: order.PCD_PAY_TYPE,
           PCD_PAY_WORK: order.PCD_PAY_WORK,
           PCD_PAY_HOST: order.PCD_PAY_HOST,
-          PCD_PAY_URL: order.PCD_PAY_URL,
+          PCD_PAY_URL: resolvePayUrl(order.PCD_PAY_HOST, order.PCD_PAY_URL),
           PCD_PAY_OID: order.PCD_PAY_OID,
           PCD_PAY_GOODS: order.PCD_PAY_GOODS,
           PCD_PAY_TOTAL: order.PCD_PAY_TOTAL,
@@ -62,7 +72,13 @@ export const usePayment = () => {
 
       console.log('서버 검증 결과:', result);
 
-      return result.status === 'Succeed';
+      // 결제창 인증은 끝났지만 서버 검증/구매 확정이 실패한 경우.
+      // 조용히 false를 반환하면 호출부에서 성공으로 오인하므로 백엔드 메시지로 예외를 던진다.
+      if (result.status !== 'Succeed') {
+        throw new Error(result.message || '결제 검증에 실패했습니다.');
+      }
+
+      return true;
     } catch (error) {
       // 409: 이미 구매한 프롬프트 (즉시 다운로드 진행)
       if (isAxiosError(error) && error.response?.status === 409) {

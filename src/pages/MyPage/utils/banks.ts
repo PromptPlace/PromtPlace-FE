@@ -31,51 +31,19 @@ export const getBankLogoUrl = (fileName: string) => {
   return new URL(`/src/assets/banks/${fileName}`, import.meta.url).href;
 };
 
-interface PortOneBankInfo {
-  name: string;
-  fileName: string;
-}
+// 백엔드(계좌 인증/정산 API)는 KFTC 표준 은행 코드(BANKS[].code)를 그대로 사용한다.
+// (예전 PortOne 문자열 코드('HANA' 등)는 페이플 마이그레이션 이후 더 이상 쓰지 않음)
+export const getBankInfoByCode = (bankCode: string) => {
+  const matched = BANKS.find((bank) => bank.code === bankCode);
 
-const PORTONE_BANK_MAP: Record<string, PortOneBankInfo> = {
-  KOOKMIN: { name: 'KB국민은행', fileName: 'KB.svg' },
-  SHINHAN: { name: '신한은행', fileName: 'Shinhan.svg' },
-  WOORI: { name: '우리은행', fileName: 'Woori.svg' },
-  HANA: { name: '하나은행', fileName: 'Hana.svg' },
-  NONGHYUP: { name: 'NH농협은행', fileName: 'NH.svg' },
-  KAKAOBANK: { name: '카카오뱅크', fileName: 'Kakao.svg' },
-  TOSSBANK: { name: '토스뱅크', fileName: 'Toss.svg' },
-  KBANK: { name: '케이뱅크', fileName: 'K.svg' },
-  IBK: { name: 'IBK기업은행', fileName: 'IBK.svg' },
-  KDB: { name: 'KDB산업은행', fileName: 'KDB.svg' },
-  SUHYUP: { name: 'Sh수협은행', fileName: 'Suhyup.svg' },
-  SC: { name: 'SC제일은행', fileName: 'SC.svg' },
-  CITI: { name: '씨티은행', fileName: 'City.svg' },
-  DAEGU: { name: 'iM뱅크', fileName: 'iM.svg' },
-  BUSAN: { name: '부산은행', fileName: 'Busan.svg' },
-  GWANGJU: { name: '광주은행', fileName: 'Gwangju.svg' },
-  JEONBUK: { name: '전북은행', fileName: 'Jeonbuk.svg' },
-  JEJU: { name: '제주은행', fileName: 'Jeju.svg' },
-  POST: { name: '우체국', fileName: 'Post.svg' },
-  SAEMAEUL: { name: '새마을금고', fileName: 'Saemaul.svg' },
-};
-
-export const getBankInfoByPortOneCode = (bankCode: string) => {
-  const mapped = PORTONE_BANK_MAP[bankCode];
-
-  if (!mapped) {
+  if (!matched) {
     return null;
   }
 
   return {
-    name: mapped.name,
-    logoUrl: getBankLogoUrl(mapped.fileName),
+    name: matched.name,
+    logoUrl: getBankLogoUrl(matched.fileName),
   };
-};
-
-export const getPortOneBankCodeByBankName = (bankName: string) => {
-  const entry = Object.entries(PORTONE_BANK_MAP).find(([, info]) => info.name === bankName);
-
-  return entry?.[0] ?? null;
 };
 
 const formatAccountNumberBySegments = (accountNumber: string, segments: number[]) => {
