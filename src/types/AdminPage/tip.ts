@@ -23,6 +23,11 @@ export type ResponsePatchTipAdminDto = CommonResponse<{
   updated_at: Date;
 }>;
 
+// 프롬프트 팁 삭제 (관리자)
+export type ResponsePatchDeleteTipAdminDto = CommonResponse<{
+  tip_id: number;
+}>;
+
 // 공지사항 작성 (관리자)
 export type ResponseNoticeAdminDto = CommonResponse<{
   announcement_id: number;

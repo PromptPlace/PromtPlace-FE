@@ -8,14 +8,17 @@ import url from '@assets/icon-linkhub-logo.svg';
 import instagram from '@assets/icon-instagram-logo.svg';
 import facebook from '@assets/icon-facebook-logo.svg';
 import twitter from '@assets/icon-x-logo.svg';
-
 import defaultImg from '@assets/icon-example-image.png';
 import attachFile from '@assets/icon-attach-file-gray.svg';
+import DeleteIcon from '@assets/icon-delete-Xbutton.svg?react';
+
 import ReactMarkdown from 'react-markdown';
 import { useAuth } from '@/context/AuthContext';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import type { Post } from '@/types/PromptGuidePage/post';
 import TipDetailSkeleton from './components/TipDetailSkeleton';
+import usePatchDeleteTipAdmin from '@/hooks/mutations/AdminPage/usePatchDeleteTipAdmin';
+import DualModal from '@/components/Modal/DualModal';
 
 const PromptTipDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,6 +34,9 @@ const PromptTipDetailPage = () => {
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const { mutate } = usePatchDeleteTipAdmin();
 
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
@@ -108,6 +114,15 @@ const PromptTipDetailPage = () => {
     window.open('https://www.instagram.com', '_blank', 'noopener,noreferrer');
   }, [currentUrl]);
 
+  const handleDeleteTip = () => {
+    mutate(Number(id), {
+      onSuccess: () => {
+        alert('꿀팁이 삭제되었습니다.');
+        navigate('/guide/tip');
+      },
+    });
+  };
+
   return (
     <>
       <div className="px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
@@ -127,6 +142,11 @@ const PromptTipDetailPage = () => {
         {!loading && (
           <div className="flex flex-col items-center rounded-[12px] bg-white pt-[56px] px-[80px] pb-[32px] max-lg:px-[32px]">
             <div className="w-full">
+              {isAdmin && (
+                <div className="w-full flex flex-row justify-end">
+                  <DeleteIcon className="size-5 text-alert cursor-pointer" onClick={() => setShowDeleteModal(true)} />
+                </div>
+              )}
               {/**상단 */}
               <div className="w-full border-b-[1px] border-white-stroke pb-[34px] flex flex-col gap-[24px]">
                 <div className="flex">
@@ -221,6 +241,14 @@ const PromptTipDetailPage = () => {
           </div>
         )}
       </div>
+
+      {showDeleteModal && (
+        <DualModal
+          text="해당 꿀팁을 삭제 조치 하시겠습니까?"
+          onClickYes={handleDeleteTip}
+          onClickNo={() => setShowDeleteModal(false)}
+        />
+      )}
     </>
   );
 };

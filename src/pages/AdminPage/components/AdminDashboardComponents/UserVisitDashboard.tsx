@@ -35,8 +35,9 @@ const UserVisitDashboard = () => {
                   src={visitorChange.isPositive ? arrowUp : arrowDown}
                   alt={visitorChange.isPositive ? '상승 아이콘' : '하락 아이콘'}
                 />
-                <div className="h-[21px] text-sm text-primary justify-center items-center">
-                  {visitorChange.percent} 전 구간 대비
+                <div
+                  className={`h-[21px] text-sm justify-center items-center ${visitorChange.isPositive ? 'text-primary' : 'text-alert'}`}>
+                  {visitorChange.percent} 전달 대비
                 </div>
               </div>
             )}
@@ -55,8 +56,9 @@ const UserVisitDashboard = () => {
                   src={activeUserChange.isPositive ? arrowUp : arrowDown}
                   alt={activeUserChange.isPositive ? '상승 아이콘' : '하락 아이콘'}
                 />
-                <div className="h-[21px] text-sm text-primary justify-center items-center">
-                  {activeUserChange.percent} 전 구간 대비
+                <div
+                  className={`h-[21px] text-sm justify-center items-center ${activeUserChange.isPositive ? 'text-primary' : 'text-alert'}`}>
+                  {activeUserChange.percent} 전달 대비
                 </div>
               </div>
             )}

@@ -8,13 +8,15 @@ import PromptDetailCard from './components/PromptDetailCard';
 import PromptAuthorAndReview from './components/PromptAuthorAndReview';
 import ReportModal from './components/ReportModal';
 import DownloadModal from './components/DownloadModal';
+import PaymentModal from './components/PaymentModal';
 import SocialLoginModal from '@/components/Modal/SocialLoginModal';
 import PromptDetailPageSkeleton from './components/PromptDetailPageSkeleton';
 
 // hooks
 import { useShowLoginModal } from '@/hooks/useShowLoginModal';
 import usePromptDownload from '@/hooks/mutations/PromptDetailPage/usePromptDownload';
-import useGetPromptDetail from '@/hooks/queries/PromptDetailPage/useGetPromptDetail';
+import useGetPromptDetail, { promptKeys } from '@/hooks/queries/PromptDetailPage/useGetPromptDetail';
+import { QUERY_KEY } from '@/hooks/queries/MyPage/useGetPrompts';
 import usePatchFollow from '@/hooks/mutations/ProfilePage/usePatchFollow';
 import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
 import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
@@ -22,7 +24,6 @@ import useGetAllPromptReviews from '@/hooks/queries/PromptDetailPage/useGetAllPr
 import useMediaQuery from '@/hooks/queries/PromptDetailPage/useMediaQuery';
 
 import type { Review } from './components/ReviewList';
-import usePayment from '@hooks/mutations/MainPage/usePostRequestPayment.ts';
 
 const PromptDetailPage = () => {
   const navigate = useNavigate();
@@ -50,6 +51,7 @@ const PromptDetailPage = () => {
   const [isPaid, setIsPaid] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [downloadData, setDownloadData] = useState<{ title: string; content: string } | null>(null);
 
   const { loginModalShow, setLoginModalShow, handleShowLoginModal } = useShowLoginModal();
@@ -86,7 +88,11 @@ const PromptDetailPage = () => {
     setFollow(isFollowing);
   }, [myFollowings, targetUserId]);
 
-  const { handlePayment } = usePayment();
+  useEffect(() => {
+    if (!prompt) return;
+    setIsPaid(prompt.is_paid ?? false);
+  }, [prompt]);
+
   const { mutateAsync: fetchDownload } = usePromptDownload();
 
   const handlePrimaryAction = async () => {
@@ -114,23 +120,7 @@ const PromptDetailPage = () => {
         }
 
         if (status === 403) {
-          try {
-            const isPaymentSuccess = await handlePayment(promptId);
-
-            if (isPaymentSuccess) {
-              const retryResult = await fetchDownload(promptId);
-              setIsPaid(true);
-              setDownloadData({
-                title: retryResult.title,
-                content: retryResult.content ?? '',
-              });
-              setIsDownloadModalOpen(true);
-            }
-          } catch (paymentError: any) {
-            if (paymentError.message !== '결제가 취소되었습니다') {
-              alert(paymentError.message || '결제 처리 중 오류가 발생했습니다.');
-            }
-          }
+          setIsPaymentModalOpen(true);
           return;
         }
       }
@@ -138,44 +128,29 @@ const PromptDetailPage = () => {
     }
   };
 
-  // const handleDownloadClick = async () => {
-  //   if (!Number.isFinite(promptId)) return;
-  //
-  //   try {
-  //     const res = await fetchDownload(promptId);
-  //     if (!prompt?.is_free) setIsPaid(res.is_paid ?? false);
-  //     setDownloadData({ title: res.title, content: res.content ?? '' });
-  //     setIsDownloadModalOpen(true);
-  //   } catch (e: unknown) {
-  //     if (isAxiosError(e)) {
-  //       const status = e.response?.status;
-  //       if (status === 401) {
-  //         handleShowLoginModal(() => handleDownloadClick());
-  //         return;
-  //       }
-  //       if (status === 403) {
-  //         try {
-  //           const isPaymentSuccess = await handlePayment(promptId);
-  //
-  //           if (isPaymentSuccess) {
-  //             const retryRes = await fetchDownload(promptId);
-  //             if (!prompt?.is_free) setIsPaid(retryRes.is_paid ?? false);
-  //             setDownloadData({ title: retryRes.title, content: retryRes.content ?? '' });
-  //             setIsDownloadModalOpen(true);
-  //           }
-  //         } catch (paymentError: any) {
-  //           if (paymentError.message !== '결제가 취소되었습니다.') {
-  //             alert(paymentError.message || '결제 처리 중 오류가 발생했습니다.');
-  //           }
-  //         }
-  //         // alert('결제가 필요한 프롬프트입니다. 먼저 결제를 진행해주세요.');
-  //
-  //         return;
-  //       }
-  //     }
-  //     alert('다운로드를 불러오지 못했습니다.');
-  //   }
-  // };
+  const handlePaymentSuccess = async () => {
+    setIsPaymentModalOpen(false);
+
+    try {
+      const retryResult = await fetchDownload(promptId);
+      setIsPaid(true);
+
+      // 결제 반영: 프롬프트 상세(is_paid)와 마이페이지 구매·다운로드 목록 캐시를 갱신한다.
+      await Promise.allSettled([
+        qc.invalidateQueries({ queryKey: promptKeys.detail(promptId) }),
+        qc.invalidateQueries({ queryKey: ['myDownloadedPrompts'] }),
+        qc.invalidateQueries({ queryKey: QUERY_KEY.downloadedPrompts }),
+      ]);
+
+      setDownloadData({
+        title: retryResult.title,
+        content: retryResult.content ?? '',
+      });
+      setIsDownloadModalOpen(true);
+    } catch {
+      alert('다운로드를 불러오지 못했습니다.');
+    }
+  };
 
   const handleToggleFollow = async () => {
     if (!Number.isFinite(targetUserId)) return;
@@ -238,6 +213,16 @@ const PromptDetailPage = () => {
       </div>
 
       <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} promptId={promptId} />
+      {isPaymentModalOpen && (
+        <PaymentModal
+          promptId={promptId}
+          title={prompt.title}
+          price={prompt.price}
+          authorNickname={prompt.user.nickname}
+          onClose={() => setIsPaymentModalOpen(false)}
+          onPaid={handlePaymentSuccess}
+        />
+      )}
       {downloadData && (
         <DownloadModal
           isOpen={isDownloadModalOpen}

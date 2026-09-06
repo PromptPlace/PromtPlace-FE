@@ -1,4 +1,4 @@
-import { getBankInfoByPortOneCode } from '../../utils/banks';
+import { getBankInfoByCode } from '../../utils/banks';
 import type { SettlementAccountInfoSectionProps } from '@/types/MyPage/settlement';
 import { formatBankAccountNumber } from '@/pages/MyPage/utils/banks';
 
@@ -8,7 +8,7 @@ const SETTLEMENT_ACCOUNT_NOTICE_TEXT =
 const EDIT_BUTTON_LABEL = '정보 수정하기';
 
 const SettlementAccountInfoSection = ({ data, onClickEdit }: SettlementAccountInfoSectionProps) => {
-  const bankInfo = getBankInfoByPortOneCode(data.bank);
+  const bankInfo = getBankInfoByCode(data.bank);
   const bankName = bankInfo?.name ?? data.bank;
   const formattedAccountNumber = formatBankAccountNumber(bankName, data.accountNumber);
 

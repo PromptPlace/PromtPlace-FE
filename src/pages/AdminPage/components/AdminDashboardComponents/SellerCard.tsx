@@ -41,7 +41,15 @@ const SellerCard = ({ seller, showFormLink = true }: SellerCardProps) => {
         />
         <div className="flex w-full justify-between">
           <div className="px-4 pb-4 gap-2 flex flex-col">
-            <div className="">{seller.nickname}</div>
+            <div className="flex items-center gap-2">
+              <span>{seller.nickname}</span>
+              <span
+                className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${
+                  seller.isBusiness ? 'bg-background text-gray-700' : 'bg-secondary text-primary'
+                }`}>
+                {seller.isBusiness ? '법인' : '개인'}
+              </span>
+            </div>
             <div className="flex gap-5">
               <div className="flex gap-2 justify-center items-center">
                 <span className="text-gray-700 text-xs">실명</span>

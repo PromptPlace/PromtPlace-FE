@@ -18,6 +18,7 @@ export interface PromptDetailDto {
   has_image: boolean;
   price: number;
   is_free: boolean;
+  is_paid: boolean;
   downloads: number;
   views: number;
   likes: number;

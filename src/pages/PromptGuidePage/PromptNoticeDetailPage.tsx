@@ -8,12 +8,15 @@ import url from '@assets/icon-linkhub-logo.svg';
 import instagram from '@assets/icon-instagram-logo.svg';
 import facebook from '@assets/icon-facebook-logo.svg';
 import twitter from '@assets/icon-x-logo.svg';
-
 import attachFile from '@assets/icon-attach-file-gray.svg';
+import DeleteIcon from '@assets/icon-delete-Xbutton.svg?react';
+
 import ReactMarkdown from 'react-markdown';
 import { useAuth } from '@/context/AuthContext';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import NoticeDetailSkeleton from './components/NoticeDetailSkeleton';
+import DualModal from '@/components/Modal/DualModal';
+import usePatchDeleteNotice from '@/hooks/mutations/AdminPage/usePatchDeleteNotice';
 
 // 게시글 타입
 interface Post {
@@ -43,6 +46,9 @@ const PromptNoticeDetailPage = () => {
 
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
+
+  const { mutate } = usePatchDeleteNotice();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   /**api 연동 */
   useEffect(() => {
@@ -115,6 +121,15 @@ const PromptNoticeDetailPage = () => {
     window.open('https://www.instagram.com', '_blank', 'noopener,noreferrer');
   }, [currentUrl]);
 
+  const handleDeleteNotice = () => {
+    mutate(Number(id), {
+      onSuccess: () => {
+        alert('공지사항이 삭제되었습니다.');
+        navigate('/guide/notice');
+      },
+    });
+  };
+
   return (
     <>
       <div className="px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
@@ -134,6 +149,11 @@ const PromptNoticeDetailPage = () => {
         {!loading && (
           <div className="flex flex-col items-center rounded-[12px] bg-white pt-[56px] px-[80px] pb-[32px] max-lg:px-[32px]">
             <div className="w-full ">
+              {isAdmin && (
+                <div className="w-full flex flex-row justify-end">
+                  <DeleteIcon className="size-5 text-alert cursor-pointer" onClick={() => setShowDeleteModal(true)} />
+                </div>
+              )}
               {/**상단 */}
               <div className="w-full border-b-[1px] border-white-stroke flex flex-col gap-[24px] pb-[32px]">
                 <div className="flex">
@@ -216,6 +236,7 @@ const PromptNoticeDetailPage = () => {
                         state: {
                           post,
                           mode: 'edit',
+                          id,
                         },
                       });
                     }}
@@ -226,6 +247,14 @@ const PromptNoticeDetailPage = () => {
           </div>
         )}
       </div>
+
+      {showDeleteModal && (
+        <DualModal
+          text="해당 공지사항을 삭제 조치 하시겠습니까?"
+          onClickYes={handleDeleteNotice}
+          onClickNo={() => setShowDeleteModal(false)}
+        />
+      )}
     </>
   );
 };

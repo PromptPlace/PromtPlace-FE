@@ -1,5 +1,5 @@
 import EyeIcon from '@assets/icon-eye.svg';
-import DownIcon from '@assets/icon-download-gray.svg';
+import DownIcon from '@assets/icon-download.svg';
 
 /**
  * 조회수 및 다운로드 수를 나타내는 컴포넌트입니다.

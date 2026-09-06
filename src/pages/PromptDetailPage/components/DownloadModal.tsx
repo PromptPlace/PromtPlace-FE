@@ -58,6 +58,8 @@ const DownloadModal = ({
     try {
       await qc.invalidateQueries({ queryKey: QUERY_KEY.downloadedPrompts });
       await qc.refetchQueries({ queryKey: QUERY_KEY.downloadedPrompts });
+      // 마이페이지 '구매•다운받은 프롬프트' 목록도 함께 갱신한다.
+      await qc.invalidateQueries({ queryKey: ['myDownloadedPrompts'] });
     } catch (e) {
       console.error('다운로드 목록 갱신 실패:', e);
     }

@@ -96,7 +96,7 @@ const IconButton = ({ buttonType, style, imgType, textButton, text, onClick, typ
       {imgType === 'attach' && (
         <AttachIcon className="w-[24px] h-[24px] max-lg:w-[12px] max-lg:h-[12px] text-primary group-hover:text-primary-hover group-active:text-primary-pressed" />
       )}
-      {imgType === 'download' && <DownloadIcon className="w-[20px] h-[20px] max-lg:w-[14px] max-lg:h-[14px]" />}
+      {imgType === 'download' && <DownloadIcon className="w-[20px] h-[20px] max-lg:w-[14px] max-lg:h-[14px] text-gray-500" />}
       {imgType === 'alert' && <AlertIcon className="w-[24px] h-[24px] max-lg:w-[12px] max-lg:h-[12px]" />}
       {imgType === 'copy' && <CopyIcon className="w-[20px] h-[20px] max-lg:w-[13px] max-lg:h-[13px]" />}
       {imgType === 'LogoutIcon' && <LogoutIcon className="w-[24px] h-[24px]" />}

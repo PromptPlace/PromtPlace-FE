@@ -1,9 +1,10 @@
 import { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import type { SellerInfoEditFormData, SellerType } from '@/types/MyPage/sellerInfo';
 import AttachFileIcon from '@assets/icon-attach-file-black.svg';
 import DeleteIcon from '@assets/icon-delete.svg';
 import BankSelectDropdown from './BankSelectDropdown';
-import { BANKS, getBankInfoByPortOneCode, getPortOneBankCodeByBankName, type Bank } from '../utils/banks';
+import { BANKS, type Bank } from '../utils/banks';
 import SellerRegistrationStatusModal from './modal/SellerRegistrationStatusModal';
 import type { SellerRegistrationModalType, VerifyAccountRequestDTO } from '@/types/MyPage/settlement';
 import { getVerifyAccountErrorInfo } from '../utils/accountVerification';
@@ -41,12 +42,7 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
   const [businessName, setBusinessName] = useState(initialData?.companyName || '');
   const [businessRegistrationFile, setBusinessRegistrationFile] = useState<File | null>(null);
   const [selectedBank, setSelectedBank] = useState<Bank | null>(
-    initialData
-      ? (() => {
-          const bankInfo = getBankInfoByPortOneCode(initialData.bank);
-          return BANKS.find((b) => b.name === bankInfo?.name) || null;
-        })()
-      : null,
+    initialData ? BANKS.find((b) => b.code === initialData.bank) || null : null,
   );
   const [accountNumber, setAccountNumber] = useState(initialData?.accountNumber || '');
   const [accountHolder, setAccountHolder] = useState(initialData?.holderName || '');
@@ -87,14 +83,14 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
 
   // 계좌 인증 요청에 사용할 payload 구성
   const buildVerifyAccountPayload = (): VerifyAccountRequestDTO => {
-    const portOneBankCode = selectedBank ? (getPortOneBankCodeByBankName(selectedBank.name) ?? selectedBank.code) : '';
+    const bankCode = selectedBank?.code ?? '';
 
     if (sellerType === 'individual') {
       return {
         sellerType: 'INDIVIDUAL',
         name: realName,
         birthDate,
-        bank: portOneBankCode,
+        bank: bankCode,
         accountNumber,
         holderName: accountHolder,
       };
@@ -106,7 +102,7 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
         businessType: 'PERSONAL',
         name: representativeName,
         birthDate,
-        bank: portOneBankCode,
+        bank: bankCode,
         accountNumber,
         holderName: accountHolder,
       };
@@ -118,7 +114,7 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
       businessType: 'CORPORATE',
       name: representativeName,
       businessNumber: businessRegistrationNumber.replace(/-/g, ''),
-      bank: portOneBankCode,
+      bank: bankCode,
       accountNumber,
       holderName: accountHolder,
     };
@@ -129,7 +125,6 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
       return;
     }
 
-    const portOneBankCode = getPortOneBankCodeByBankName(selectedBank.name) ?? selectedBank.code;
     const isBusiness = sellerType !== 'individual';
 
     try {
@@ -163,7 +158,7 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
         representativeName: isBusiness ? representativeName : undefined,
         companyName: isBusiness ? businessName : undefined,
         businessLicenseUrl: isBusiness ? businessLicenseUrl : undefined,
-        bank: portOneBankCode,
+        bank: selectedBank.code,
         accountNumber,
         holderName: accountHolder,
         isTermsAgreed: privacyAgreed,
@@ -480,9 +475,14 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
               className="size-[20px] shrink-0"
             />
             <span className="custom-body2 leading-[1.6] tracking-[0.02em] max-phone:!text-[12px]">
-              <span className="custom-button1 leading-[1.5] text-primary underline max-phone:!text-[12px]">
+              <Link
+                to="/guide/notice/37"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="custom-button1 leading-[1.5] text-primary underline max-phone:!text-[12px]">
                 판매자 등록 개인정보 수집 및 이용
-              </span>
+              </Link>
               에 동의합니다.
             </span>
           </label>

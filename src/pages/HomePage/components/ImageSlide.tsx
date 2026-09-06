@@ -3,8 +3,10 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 import Slide1 from '@assets/home/img-slide1.png';
-import Slide2 from '@assets/home/img-slide2.png';
-import Slide3 from '@assets/home/img-slide3.png';
+// import Slide2 from '@assets/home/img-slide2.png';
+// import Slide3 from '@assets/home/img-slide3.png';
+import Slide2 from '@assets/home/img-slide2.svg';
+import Slide3 from '@assets/home/img-slide3.svg';
 
 import PrevIcon from '@assets/home/icon-slide-prev.svg';
 import NextIcon from '@assets/home/icon-slide-next.svg';
@@ -56,15 +58,21 @@ const ImageSlide = () => {
       url: Slide1,
       to: '/prompt/2131',
     },
+    // {
+    //   id: 2,
+    //   url: Slide2,
+    //   to: '/prompt/2130',
+    // },
+
     {
       id: 2,
       url: Slide2,
-      to: '/prompt/2130',
+      to: 'https://www.instagram.com/promptplace.official?igsh=bnNlN3gxMHFubGJ2',
     },
     {
       id: 3,
       url: Slide3,
-      to: '/prompt/2129',
+      to: '/prompt/2300',
     },
   ];
 

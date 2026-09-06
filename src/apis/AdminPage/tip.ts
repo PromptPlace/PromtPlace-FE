@@ -2,6 +2,7 @@ import type {
   RequestPatchTipAdminDto,
   RequestTipAdminDto,
   ResponseNoticeAdminDto,
+  ResponsePatchDeleteTipAdminDto,
   ResponsePatchTipAdminDto,
   ResponseTipAdminDto,
 } from '@/types/AdminPage/tip';
@@ -31,6 +32,13 @@ export const patchTipAdmin = async ({
   return data;
 };
 
+// 프롬프트 팁 삭제 (관리자)
+export const patchDeleteTipAdmin = async (tip_id: number): Promise<ResponsePatchDeleteTipAdminDto> => {
+  const { data } = await axiosInstance.patch(`/api/tips/${tip_id}/delete`);
+
+  return data;
+};
+
 // 공지사항 작성 (관리자)
 export const postNoticeAdmin = async (body: RequestTipAdminDto): Promise<ResponseNoticeAdminDto> => {
   const { data } = await axiosInstance.post('/api/announcements', body);
@@ -47,6 +55,13 @@ export const patchNoticeAdmin = async ({
   body: RequestPatchTipAdminDto;
 }) => {
   const { data } = await axiosInstance.patch(`/api/announcements/${announcement_id}`, body);
+
+  return data;
+};
+
+// 공지사항 삭제 (관리자)
+export const patchDeleteNoticeAdmin = async (announcement_id: number): Promise<ResponseNoticeAdminDto> => {
+  const { data } = await axiosInstance.patch(`/api/announcements/${announcement_id}/delete`);
 
   return data;
 };

@@ -12,12 +12,38 @@ import { useFilteredPrompts } from '@/hooks/queries/MainPage/useFilteredPrompt';
 import useGetSearchPromptList from '@/hooks/queries/MainPage/useGetSearchList';
 
 const NewMainPage = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('search') || '';
   const categoryIdFromUrl = searchParams.get('categoryId');
   const subcategoryFromUrl = searchParams.get('subcategory');
 
   const categoryFilter = useCategoryFilter();
+
+  const handleCategorySelect = (categoryId: number | null, categoryName: string | null) => {
+    categoryFilter.handleCategorySelect(categoryId, categoryName);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (categoryId !== null) {
+        next.set('categoryId', String(categoryId));
+      } else {
+        next.delete('categoryId');
+      }
+      return next;
+    });
+  };
+
+  const handleSubcategorySelect = (subcategory: string | null) => {
+    categoryFilter.handleSubcategorySelect(subcategory);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (subcategory !== null) {
+        next.set('subcategory', subcategory);
+      } else {
+        next.delete('subcategory');
+      }
+      return next;
+    });
+  };
   const modelFilter = useModelFilter();
   const sortFilter = useSortFilter();
   const pagination = usePagination(20);
@@ -61,8 +87,8 @@ const NewMainPage = () => {
 
       <div className={`${searchQuery ? 'mt-[64px]' : ''}`}>
         <CategorySection
-          onCategorySelect={categoryFilter.handleCategorySelect}
-          onSubcategorySelect={categoryFilter.handleSubcategorySelect}
+          onCategorySelect={handleCategorySelect}
+          onSubcategorySelect={handleSubcategorySelect}
           initialCategoryId={categoryIdFromUrl ? Number(categoryIdFromUrl) : null}
           initialSubcategory={subcategoryFromUrl || '전체'}
           isSearchMode={!!searchQuery}

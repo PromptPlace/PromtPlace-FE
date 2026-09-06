@@ -82,8 +82,8 @@ const DownloadedPromptCard = ({ prompt }: DownloadedPromptCardProps) => {
           <div className="flex gap-[24px] items-center">
             <img src={imageUrl} alt="프롬프트 이미지" className="w-[80px] h-[80px] rounded-[8px]" />
             <Link to={`/prompt/${prompt.prompt_id}`}>
-              <p className="custom-h3 text-black mb-[8px]">{prompt.title}</p>
-              <p className="custom-h5 text-black">{price}</p>
+              <p className={`custom-h3 mb-[8px] ${prompt.is_refunded ? 'line-through text-gray-400' : 'text-black'}`}>{prompt.title}</p>
+              <p className={`custom-h5 ${prompt.is_refunded ? 'line-through text-gray-400' : 'text-black'}`}>{price}</p>
             </Link>
           </div>
 

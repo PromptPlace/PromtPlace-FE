@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import type { MonthlySalesHistorySectionProps } from '@/types/MyPage/settlement';
 import { toMonthLabelFromSaleDate } from '@/pages/MyPage/utils/date';
 import { formatPrice } from '@/pages/MyPage/utils/format';
-import { useState } from 'react';
-import useGetMonthlySales from '@hooks/queries/MyPage/useGetMonthlySales.ts';
 
 const MONTHLY_SALES_SECTION_TITLE = '월별 판매 내역';
 const MONTHLY_SALES_NOTICE_TEXT = '선택한 월에 발생한 판매 내역이에요. 환불 건은 정산에서 제외됩니다.';
@@ -30,8 +28,6 @@ const MonthlySalesHistorySection = ({
   );
   const showButton = !isDetailView && data.pagination.hasNextPage;
 
-  // const { data: monthlySalesData, isLoading, isPending } = useGetMonthlySales(filter);
-  console.log(data);
   return (
     <section className="flex flex-col gap-[20px]">
       <div className="flex items-center justify-between">

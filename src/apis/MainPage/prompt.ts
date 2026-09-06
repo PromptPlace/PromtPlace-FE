@@ -1,6 +1,11 @@
 import axios from 'axios';
 import { type ResponsePromptDTO, type ResponseSearchPromptDTO, type SearchPromptDto } from '@/types/MainPage/prompt';
-import type { ResponseCompletePurchaseDTO, ResponsePaymentDTO } from '@/types/PromptDetailPage/payments';
+import type {
+  RequestCompletePurchaseDTO,
+  RequestPaymentDTO,
+  ResponseCompletePurchaseDTO,
+  ResponsePaymentDTO,
+} from '@/types/PromptDetailPage/payments';
 
 export const getPromptList = async (): Promise<ResponsePromptDTO> => {
   const { data } = await axios.get(`${import.meta.env.VITE_SERVER_API_URL}/api/prompts`);
@@ -13,12 +18,20 @@ export const postSearchPromptList = async (params: SearchPromptDto): Promise<Res
   return data;
 };
 
-export const postRequestPayment = async (promptId: number): Promise<ResponsePaymentDTO> => {
+export const postRequestPayment = async (
+  promptId: number,
+  refundPolicyAgreed: boolean,
+): Promise<ResponsePaymentDTO> => {
   const token = sessionStorage.getItem('accessToken'); // 토큰 가져오기
   const accessToken = token?.replace(/^"|"$/g, ''); // 앞뒤 큰따옴표 제거
+  const payload: RequestPaymentDTO = {
+    prompt_id: promptId,
+    pay_type: 'card',
+    refund_policy_agreed: refundPolicyAgreed,
+  };
   const { data } = await axios.post(
     `${import.meta.env.VITE_SERVER_API_URL}/api/prompts/purchases/requests`,
-    { prompt_id: promptId },
+    payload,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -29,14 +42,13 @@ export const postRequestPayment = async (promptId: number): Promise<ResponsePaym
 };
 
 export const postCompletePurchase = async (
-  paymentId: string,
-  promptId: number,
+  payload: RequestCompletePurchaseDTO,
 ): Promise<ResponseCompletePurchaseDTO> => {
   const token = sessionStorage.getItem('accessToken'); // 토큰 가져오기
   const accessToken = token?.replace(/^"|"$/g, ''); // 앞뒤 큰따옴표 제거
   const { data } = await axios.post(
     `${import.meta.env.VITE_SERVER_API_URL}/api/prompts/purchases/complete`,
-    { paymentId, promptId },
+    payload,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
