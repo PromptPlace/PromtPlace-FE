@@ -103,6 +103,7 @@ const PromptInfoSection = (props: Props) => {
         setIsPaid={props.setIsPaid}
         price={props.price}
         setPrice={props.setPrice}
+        canSetPrice={props.canSetPrice}
       />
     </div>
   );
