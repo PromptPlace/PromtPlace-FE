@@ -212,6 +212,18 @@ const DashboardTabContent = ({ sellerStatusFromQuery }: DashboardTabContentProps
     setIsMonthDropdownOpen(false);
   };
 
+  // [DEBUG] 탭 전환 후 폼 초기화 추적용 — 매 렌더마다 어떤 분기로 가는지/게이트 플래그 값
+  console.log('%c[DashboardTabContent] render', 'color:#16a34a', {
+    isAccountDetailLoading,
+    isAccountDetailError,
+    isSellerRegistered,
+    isSellerApprovalPending,
+    accountDetailStatus: accountDetail?.status,
+    showRegistrationForm,
+    showSellerInfoEditView,
+    showMonthlySalesDetailView,
+  });
+
   // 판매자 등록 여부 조회가 끝나기 전에는 등록/미등록 화면을 미리 확정하지 않음
   // (isAccountDetailError가 로딩 중엔 false라 미등록 사용자에게도 대시보드가 먼저 보였다가
   //  조회가 끝난 뒤에야 등록 화면으로 바뀌는 깜빡임이 있었음)
