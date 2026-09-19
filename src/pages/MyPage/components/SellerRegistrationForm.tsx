@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SellerRegistrationStatusModal from './modal/SellerRegistrationStatusModal';
 import type { SellerRegistrationModalType } from '@/types/MyPage/settlement';
@@ -66,6 +66,14 @@ export default function SellerRegistrationForm({ onSubmit }: SellerRegistrationF
   const [pendingSubmitData, setPendingSubmitData] = useState<SellerRegistrationData | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // [DEBUG] 탭 전환 후 input 초기화 원인 추적용 — 리마운트 여부 판별
+  useEffect(() => {
+    console.log('%c[SellerRegistrationForm] MOUNT', 'color:#e11d48;font-weight:bold', new Date().toISOString());
+    return () => {
+      console.log('%c[SellerRegistrationForm] UNMOUNT', 'color:#e11d48;font-weight:bold', new Date().toISOString());
+    };
+  }, []);
 
   const verifyAccountMutation = usePostVerifyAccount();
   const individualRegisterMutation = usePostIndividualRegister();

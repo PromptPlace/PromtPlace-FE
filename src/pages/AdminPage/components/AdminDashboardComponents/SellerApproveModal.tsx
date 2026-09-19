@@ -1,20 +1,20 @@
 import React from 'react';
 
-interface SellerDeclineModalProps {
+interface SellerApproveModalProps {
   sellerName: string;
   isSubmitting?: boolean;
   onClose: () => void;
   onConfirm: () => void;
 }
 
-const SellerDeclineModal = ({ sellerName, isSubmitting, onClose, onConfirm }: SellerDeclineModalProps) => {
+const SellerApproveModal = ({ sellerName, isSubmitting, onClose, onConfirm }: SellerApproveModalProps) => {
   return (
     <div className="rounded-2xl px-8 py-10 w-[940px] h-[213px] bg-white">
       <div className="flex text-center justify-center text-2xl">
-        {sellerName}님의 판매자 등록 신청을 반려하겠습니까?
+        {sellerName}님의 판매자 등록 신청을 승인하겠습니까?
       </div>
       <div className="flex mt-3 font-light tracking-tight items-center justify-center">
-        판매자 등록 신청 반려 시, 해당 사용자의 폼은 ~일 내 삭제됩니다.
+        판매자 등록 신청 승인 시, 해당 사용자는 판매자로 등록됩니다.
       </div>
       <div className="mt-5 gap-3 flex">
         <div
@@ -27,11 +27,11 @@ const SellerDeclineModal = ({ sellerName, isSubmitting, onClose, onConfirm }: Se
             isSubmitting ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:bg-opacity-90'
           }`}
           onClick={isSubmitting ? undefined : onConfirm}>
-          {isSubmitting ? '처리 중...' : '반려'}
+          {isSubmitting ? '처리 중...' : '승인'}
         </div>
       </div>
     </div>
   );
 };
 
-export default SellerDeclineModal;
+export default SellerApproveModal;

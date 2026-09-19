@@ -4,17 +4,25 @@ import type { SellerCardData } from '@pages/AdminPage/utils/sellerMapper.ts';
 import rightArrow from '../../assets/icon-arrow-right-blue.svg';
 import SellerCancelModal from '@pages/AdminPage/components/AdminDashboardComponents/SellerCancelModal.tsx';
 import SellerDeclineModal from '@pages/AdminPage/components/AdminDashboardComponents/SellerDeclineModal.tsx';
+import SellerApproveModal from '@pages/AdminPage/components/AdminDashboardComponents/SellerApproveModal.tsx';
 import useApprovePendingSeller from '@hooks/mutations/AdminPage/useApprovePendingSeller.ts';
 import useRejectPendingSeller from '@hooks/mutations/AdminPage/useRejectPendingSeller.ts';
 import useCancelSellerRegistration from '@hooks/mutations/AdminPage/useCancelSellerRegistration.ts';
 import { useOpenChatRoom } from '@/hooks/useOpenChatRoom';
 
+const APPROVE_SUCCESS_MESSAGE = '판매자 등록이 승인되었습니다.';
+const REJECT_SUCCESS_MESSAGE = '반려되었습니다.';
+const CANCEL_SUCCESS_MESSAGE = '취소되었습니다.';
+
 interface SellerCardProps {
   seller: SellerCardData;
   showFormLink?: boolean;
+  // 승인/반려/등록 취소가 성공하면 결과 안내 메시지를 넘깁니다.
+  // 처리 후 목록 갱신으로 이 카드가 사라질 수 있어, 결과 모달은 카드가 아닌 부모가 표시합니다.
+  onActionComplete?: (message: string) => void;
 }
 
-const SellerCard = ({ seller, showFormLink = true }: SellerCardProps) => {
+const SellerCard = ({ seller, showFormLink = true, onActionComplete }: SellerCardProps) => {
   const navigate = useNavigate();
   const { openChatRoom } = useOpenChatRoom();
 
@@ -26,6 +34,7 @@ const SellerCard = ({ seller, showFormLink = true }: SellerCardProps) => {
 
   const [isCancelledModalOpen, setIsCancelledModalOpen] = useState(false);
   const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
+  const [isApproveModalOpen, setIsApproveModalOpen] = useState(false);
 
   const { mutate: approvePendingSeller, isPending: isApproving } = useApprovePendingSeller();
   const { mutate: rejectPendingSeller, isPending: isRejecting } = useRejectPendingSeller();
@@ -108,8 +117,8 @@ const SellerCard = ({ seller, showFormLink = true }: SellerCardProps) => {
           </div>
           <div
             className="w-full h-12 px-5 py-3 bg-primary rounded-xl cursor-pointer"
-            onClick={() => approvePendingSeller(seller.userId)}>
-            <div className="flex items-center justify-center text-white">{isApproving ? '승인 중...' : '승인'}</div>
+            onClick={() => setIsApproveModalOpen(true)}>
+            <div className="flex items-center justify-center text-white">승인</div>
           </div>
         </div>
       ) : (
@@ -141,7 +150,10 @@ const SellerCard = ({ seller, showFormLink = true }: SellerCardProps) => {
               onClose={() => setIsCancelledModalOpen(false)}
               onConfirm={() =>
                 cancelSellerRegistration(seller.userId, {
-                  onSuccess: () => setIsCancelledModalOpen(false),
+                  onSuccess: () => {
+                    setIsCancelledModalOpen(false);
+                    onActionComplete?.(CANCEL_SUCCESS_MESSAGE);
+                  },
                 })
               }
             />
@@ -160,7 +172,32 @@ const SellerCard = ({ seller, showFormLink = true }: SellerCardProps) => {
               onClose={() => setIsDeclineModalOpen(false)}
               onConfirm={() =>
                 rejectPendingSeller(seller.userId, {
-                  onSuccess: () => setIsDeclineModalOpen(false),
+                  onSuccess: () => {
+                    setIsDeclineModalOpen(false);
+                    onActionComplete?.(REJECT_SUCCESS_MESSAGE);
+                  },
+                })
+              }
+            />
+          </div>
+        </div>
+      )}
+
+      {isApproveModalOpen && (
+        <div
+          className="fixed inset-0 bg-overlay flex items-center justify-center z-[9999]"
+          onClick={() => setIsApproveModalOpen(false)}>
+          <div onClick={(e) => e.stopPropagation()}>
+            <SellerApproveModal
+              sellerName={seller.name}
+              isSubmitting={isApproving}
+              onClose={() => setIsApproveModalOpen(false)}
+              onConfirm={() =>
+                approvePendingSeller(seller.userId, {
+                  onSuccess: () => {
+                    setIsApproveModalOpen(false);
+                    onActionComplete?.(APPROVE_SUCCESS_MESSAGE);
+                  },
                 })
               }
             />

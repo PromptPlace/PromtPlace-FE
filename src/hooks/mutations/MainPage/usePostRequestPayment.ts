@@ -1,6 +1,5 @@
 import { isAxiosError } from 'axios';
 import { postCompletePurchase, postRequestPayment } from '@/apis/MainPage/prompt';
-import { SESSION_STORAGE_KEY } from '@/constants/key';
 import type { RequestCompletePurchaseDTO } from '@/types/PromptDetailPage/payments';
 
 // 페이플 callbackFunction이 넘겨주는 결과 객체.
@@ -23,12 +22,12 @@ const resolvePayUrl = (host: string | undefined, url: string | undefined) => {
   return `${normalizedHost}${normalizedPath}`;
 };
 
+// payment.js는 PCD_USER_DEFINE1을 <input value="..."> HTML 문자열로 그대로 조립한다.
+// JSON의 "가 속성을 끊어 값이 "{"로 잘리므로, HTML 엔티티로 치환해 파싱 후 원본 JSON으로 복원되게 한다.
+const escapeForPaypleForm = (value: string) => value.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+
 export const usePayment = () => {
   const handlePayment = async (promptId: number, refundPolicyAgreed: boolean = true) => {
-    // 페이플이 결제 취소 시 콜백 없이 PCD_RST_URL로 브라우저를 직접 리다이렉트시키는 경우가 있어,
-    // 그 착지 페이지(PurchaseResultPage)에서 원래 보던 프롬프트로 돌아갈 수 있도록 미리 기록해둔다.
-    sessionStorage.setItem(SESSION_STORAGE_KEY.pendingPurchasePromptId, String(promptId));
-
     try {
       // 1. 주문서 생성 (페이플 인증에 필요한 PCD_* 필드 반환)
       const order = await postRequestPayment(promptId, refundPolicyAgreed);
@@ -50,8 +49,9 @@ export const usePayment = () => {
           PCD_PAY_OID: order.PCD_PAY_OID,
           PCD_PAY_GOODS: order.PCD_PAY_GOODS,
           PCD_PAY_TOTAL: order.PCD_PAY_TOTAL,
-          PCD_USER_DEFINE1: order.PCD_USER_DEFINE1,
-          PCD_RST_URL: order.PCD_RST_URL, // 백엔드 웹훅 URL — 프론트에서 임의로 덮어쓰면 안 됨
+          PCD_USER_DEFINE1: escapeForPaypleForm(order.PCD_USER_DEFINE1),
+          // PCD_RST_URL은 의도적으로 넘기지 않는다. https URL이 있으면 payment.js가 결제창을 페이지 전체 이동으로
+          // 띄워 callbackFunction과 /complete 호출이 실행되지 않는다. (BE는 콜백 결과를 /complete로 받는 흐름)
           callbackFunction: (result: PaypleAuthResult) => {
             console.log('Payple Auth Result:', result);
 
@@ -87,9 +87,6 @@ export const usePayment = () => {
       }
       console.error('결제 처리 중 오류 발생:', error);
       throw error;
-    } finally {
-      // 정상적으로 콜백을 받아 이 지점까지 실행됐다면(=페이지 이동 없이 끝났다면) 더 이상 필요 없는 기록이므로 정리한다.
-      sessionStorage.removeItem(SESSION_STORAGE_KEY.pendingPurchasePromptId);
     }
   };
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import SellerCard from '@pages/AdminPage/components/AdminDashboardComponents/SellerCard.tsx';
 import SearchSellerBar from '@pages/AdminPage/components/AdminDashboardComponents/SearchSellerBar.tsx';
 import Pagination from '@pages/AdminPage/components/Pagination.tsx';
+import TextModal from '@/components/Modal/TextModal.tsx';
 import useGetIndividualSellers from '@hooks/queries/AdminPage/useGetIndividualSellers.ts';
 import useGetBusinessSellers from '@hooks/queries/AdminPage/useGetBusinessSellers.ts';
 import useGetPendingSellers from '@hooks/queries/AdminPage/useGetPendingSellers.ts';
@@ -10,11 +11,6 @@ import {
   mapIndividualSellerToCard,
   mapPendingSellerToCard,
 } from '@pages/AdminPage/utils/sellerMapper.ts';
-import {
-  getDummyIndividualSellers,
-  getDummyBusinessSellers,
-  getDummyPendingSellers,
-} from '@pages/AdminPage/utils/dummyDashboardData.ts';
 
 type SellerTab = 'individual' | 'business' | 'pending';
 
@@ -35,6 +31,7 @@ const SellerDashboardSection = ({ isDetailView = false }: SellerDashboardSection
   const [activeTab, setActiveTab] = useState<SellerTab>('individual');
   const [searchInput, setSearchInput] = useState('');
   const [page, setPage] = useState(1);
+  const [resultMessage, setResultMessage] = useState<string | null>(null);
 
   const limit = isDetailView ? DETAIL_LIMIT : PREVIEW_LIMIT;
   const trimmedSearch = searchInput.trim();
@@ -42,23 +39,18 @@ const SellerDashboardSection = ({ isDetailView = false }: SellerDashboardSection
   const isNumericSearch = trimmedSearch !== '' && /^\d+$/.test(trimmedSearch);
   const backendSearch = !isNumericSearch && trimmedSearch ? trimmedSearch : undefined;
 
-  // 데이터 부족으로 확인이 어려워 PM 요청에 따라 더미 데이터로 대체. API 호출 자체는 유지.
-  useGetIndividualSellers({
+  const { data: individualData } = useGetIndividualSellers({
     params: { page, limit, search: backendSearch },
     enabled: activeTab === 'individual',
   });
-  useGetBusinessSellers({
+  const { data: businessData } = useGetBusinessSellers({
     params: { page, limit, search: backendSearch },
     enabled: activeTab === 'business',
   });
-  useGetPendingSellers({
+  const { data: pendingData } = useGetPendingSellers({
     params: { page, limit },
     enabled: activeTab === 'pending',
   });
-
-  const dummyIndividualData = getDummyIndividualSellers({ page, limit, search: backendSearch });
-  const dummyBusinessData = getDummyBusinessSellers({ page, limit, search: backendSearch });
-  const dummyPendingData = getDummyPendingSellers({ page, limit });
 
   const handleTabChange = (tab: SellerTab) => {
     setActiveTab(tab);
@@ -72,10 +64,10 @@ const SellerDashboardSection = ({ isDetailView = false }: SellerDashboardSection
 
   const sellers =
     activeTab === 'individual'
-      ? dummyIndividualData.items.map(mapIndividualSellerToCard)
+      ? (individualData?.data.items ?? []).map(mapIndividualSellerToCard)
       : activeTab === 'business'
-        ? dummyBusinessData.items.map(mapBusinessSellerToCard)
-        : dummyPendingData.items.map(mapPendingSellerToCard);
+        ? (businessData?.data.items ?? []).map(mapBusinessSellerToCard)
+        : (pendingData?.data.items ?? []).map(mapPendingSellerToCard);
 
   // 현재 페이지에 이미 불러온 목록 안에서만 user_id를 매칭합니다 (다른 페이지에 있는 대상은 찾지 못하는 한계가 있음).
   const filteredSellers = isNumericSearch
@@ -84,10 +76,10 @@ const SellerDashboardSection = ({ isDetailView = false }: SellerDashboardSection
 
   const pagination =
     activeTab === 'individual'
-      ? dummyIndividualData.pagination
+      ? individualData?.data.pagination
       : activeTab === 'business'
-        ? dummyBusinessData.pagination
-        : dummyPendingData.pagination;
+        ? businessData?.data.pagination
+        : pendingData?.data.pagination;
 
   return (
     <div>
@@ -107,7 +99,7 @@ const SellerDashboardSection = ({ isDetailView = false }: SellerDashboardSection
         </div>
       </div>
       {filteredSellers.map((seller) => (
-        <SellerCard key={seller.userId} seller={seller} />
+        <SellerCard key={seller.userId} seller={seller} onActionComplete={setResultMessage} />
       ))}
 
       {isDetailView && pagination && pagination.total_pages > 1 && (
@@ -115,6 +107,8 @@ const SellerDashboardSection = ({ isDetailView = false }: SellerDashboardSection
           <Pagination currentPage={pagination.page} totalPages={pagination.total_pages} onPageChange={setPage} />
         </div>
       )}
+
+      {resultMessage && <TextModal text={resultMessage} onClick={() => setResultMessage(null)} size="lg" />}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { approvePendingSeller } from '@apis/AdminPage/seller.ts';
+import { getErrorMessage } from '@/utils/getErrorMessage.ts';
 
 function useApprovePendingSeller() {
   const queryClient = useQueryClient();
@@ -13,6 +14,7 @@ function useApprovePendingSeller() {
     },
     onError: (error) => {
       console.error(error);
+      alert(getErrorMessage(error));
     },
   });
 }
