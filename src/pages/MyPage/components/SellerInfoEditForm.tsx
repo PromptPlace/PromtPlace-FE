@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import type { SellerInfoEditFormData, SellerType } from '@/types/MyPage/sellerInfo';
 import AttachFileIcon from '@assets/icon-attach-file-black.svg';
@@ -53,6 +53,14 @@ const SellerInfoEditForm = ({ initialData, onSubmit, onCancel, onAccountVerify }
   const [modalDescriptionOverride, setModalDescriptionOverride] = useState<string | undefined>(undefined);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // [DEBUG] 탭 전환 후 input 초기화 원인 추적용 — 리마운트 여부 판별
+  useEffect(() => {
+    console.log('%c[SellerInfoEditForm] MOUNT', 'color:#2563eb;font-weight:bold', new Date().toISOString());
+    return () => {
+      console.log('%c[SellerInfoEditForm] UNMOUNT', 'color:#2563eb;font-weight:bold', new Date().toISOString());
+    };
+  }, []);
 
   const verifyAccountMutation = usePostVerifyAccount();
   const individualRegisterMutation = usePostIndividualRegister();

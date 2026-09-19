@@ -21,8 +21,10 @@ const SellerCancelModal = ({ sellerName, isSubmitting, onClose, onConfirm }: Sel
           뒤로 가기
         </div>
         <div
-          className="w-[432px] h-[57px] bg-primary text-white items-center justify-center rounded-xl flex cursor-pointer hover:bg-opacity-90"
-          onClick={onConfirm}>
+          className={`w-[432px] h-[57px] bg-primary text-white items-center justify-center rounded-xl flex ${
+            isSubmitting ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:bg-opacity-90'
+          }`}
+          onClick={isSubmitting ? undefined : onConfirm}>
           {isSubmitting ? '처리 중...' : '등록 취소'}
         </div>
       </div>

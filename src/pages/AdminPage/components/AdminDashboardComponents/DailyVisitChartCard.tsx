@@ -8,21 +8,19 @@ import {
   formatChartDayLabel,
   getCurrentYearMonth,
 } from '@pages/AdminPage/utils/format.ts';
-import { DUMMY_VISITOR_STATS, buildDummyMonthDaily } from '@pages/AdminPage/utils/dummyDashboardData.ts';
 
 const DailyVisitChartCard = () => {
   const [month, setMonth] = useState(getCurrentYearMonth);
   const [isMonthDropdownOpen, setIsMonthDropdownOpen] = useState(false);
-  // 데이터 부족으로 확인이 어려워 PM 요청에 따라 더미 데이터로 대체. API 호출 자체는 유지.
-  useGetVisitorStats({ params: { month } });
+  const { data: visitorData } = useGetVisitorStats({ params: { month } });
 
-  const dailyVisitData = buildDummyMonthDaily(month).map((item) => ({
+  const dailyVisitData = (visitorData?.data.month_daily ?? []).map((item) => ({
     label: formatChartDayLabel(item.date),
     fullDateLabel: formatChartDateLabel(item.date),
     visitors: item.count,
   }));
 
-  const todayVisitors = DUMMY_VISITOR_STATS.daily_count;
+  const todayVisitors = visitorData?.data.daily_count ?? 0;
   const monthOptions = buildRecentMonthOptions();
   const selectedMonthLabel = monthOptions.find((option) => option.value === month)?.label ?? month;
 

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import leftArrow from '@assets/icon-arrow-left-black.svg';
+import TextModal from '@/components/Modal/TextModal.tsx';
 import SellerCard from '@pages/AdminPage/components/AdminDashboardComponents/SellerCard.tsx';
 import SellerFormDetailPanel from '@pages/AdminPage/components/AdminDashboardComponents/SellerFormDetailPanel.tsx';
 import useGetIndividualSellerDetail from '@hooks/queries/AdminPage/useGetIndividualSellerDetail.ts';
@@ -11,11 +12,6 @@ import {
   mapBusinessDetailToCard,
   mapPendingDetailToCard,
 } from '@pages/AdminPage/utils/sellerMapper.ts';
-import {
-  getDummyIndividualSellerDetail,
-  getDummyBusinessSellerDetail,
-  getDummyPendingSellerDetail,
-} from '@pages/AdminPage/utils/dummyDashboardData.ts';
 
 export type SellerFormType = 'individual' | 'business' | 'pending';
 
@@ -23,14 +19,19 @@ interface AdminSellerFormPageProps {
   type: SellerFormType;
 }
 
-const IndividualSellerFormView = ({ userId }: { userId: number }) => {
-  // 디자인 QA 목적으로 더미 데이터를 사용. API 호출 자체는 유지.
-  useGetIndividualSellerDetail(userId);
-  const detail = getDummyIndividualSellerDetail(userId);
+interface SellerFormViewProps {
+  userId: number;
+  onActionComplete: (message: string) => void;
+}
+
+const IndividualSellerFormView = ({ userId, onActionComplete }: SellerFormViewProps) => {
+  const { data } = useGetIndividualSellerDetail(userId);
+  if (!data) return null;
+  const detail = data.data;
 
   return (
     <>
-      <SellerCard seller={mapIndividualDetailToCard(detail)} showFormLink={false} />
+      <SellerCard seller={mapIndividualDetailToCard(detail)} showFormLink={false} onActionComplete={onActionComplete} />
       <SellerFormDetailPanel
         registrationTypeLabel="일반 개인 판매자"
         realName={detail.name}
@@ -42,14 +43,14 @@ const IndividualSellerFormView = ({ userId }: { userId: number }) => {
   );
 };
 
-const BusinessSellerFormView = ({ userId }: { userId: number }) => {
-  // 디자인 QA 목적으로 더미 데이터를 사용. API 호출 자체는 유지.
-  useGetBusinessSellerDetail(userId);
-  const detail = getDummyBusinessSellerDetail(userId);
+const BusinessSellerFormView = ({ userId, onActionComplete }: SellerFormViewProps) => {
+  const { data } = useGetBusinessSellerDetail(userId);
+  if (!data) return null;
+  const detail = data.data;
 
   return (
     <>
-      <SellerCard seller={mapBusinessDetailToCard(detail)} showFormLink={false} />
+      <SellerCard seller={mapBusinessDetailToCard(detail)} showFormLink={false} onActionComplete={onActionComplete} />
       <SellerFormDetailPanel
         registrationTypeLabel="개인・법인 사업자"
         businessNumber={detail.business_number}
@@ -64,14 +65,14 @@ const BusinessSellerFormView = ({ userId }: { userId: number }) => {
   );
 };
 
-const PendingSellerFormView = ({ userId }: { userId: number }) => {
-  // 디자인 QA 목적으로 더미 데이터를 사용. API 호출 자체는 유지.
-  useGetPendingSellerDetail(userId);
-  const detail = getDummyPendingSellerDetail(userId);
+const PendingSellerFormView = ({ userId, onActionComplete }: SellerFormViewProps) => {
+  const { data } = useGetPendingSellerDetail(userId);
+  if (!data) return null;
+  const detail = data.data;
 
   return (
     <>
-      <SellerCard seller={mapPendingDetailToCard(detail)} showFormLink={false} />
+      <SellerCard seller={mapPendingDetailToCard(detail)} showFormLink={false} onActionComplete={onActionComplete} />
       <SellerFormDetailPanel
         registrationTypeLabel="개인・법인 사업자"
         businessNumber={detail.business_number}
@@ -90,6 +91,13 @@ const AdminSellerFormPage = ({ type }: AdminSellerFormPageProps) => {
   const navigate = useNavigate();
   const { userId } = useParams<{ userId: string }>();
   const numericUserId = Number(userId);
+  const [resultMessage, setResultMessage] = useState<string | null>(null);
+
+  // 처리가 끝난 신청/판매자의 상세 화면에는 더 할 수 있는 작업이 없으므로, 결과 모달을 닫으면 이전 화면으로 돌아갑니다.
+  const handleResultModalClose = () => {
+    setResultMessage(null);
+    navigate(-1);
+  };
 
   return (
     <div className="mx-[102px]">
@@ -101,10 +109,14 @@ const AdminSellerFormPage = ({ type }: AdminSellerFormPageProps) => {
           <div className="text-2xl">판매자 등록폼</div>
         </div>
 
-        {type === 'individual' && <IndividualSellerFormView userId={numericUserId} />}
-        {type === 'business' && <BusinessSellerFormView userId={numericUserId} />}
-        {type === 'pending' && <PendingSellerFormView userId={numericUserId} />}
+        {type === 'individual' && (
+          <IndividualSellerFormView userId={numericUserId} onActionComplete={setResultMessage} />
+        )}
+        {type === 'business' && <BusinessSellerFormView userId={numericUserId} onActionComplete={setResultMessage} />}
+        {type === 'pending' && <PendingSellerFormView userId={numericUserId} onActionComplete={setResultMessage} />}
       </div>
+
+      {resultMessage && <TextModal text={resultMessage} onClick={handleResultModalClose} size="lg" />}
     </div>
   );
 };

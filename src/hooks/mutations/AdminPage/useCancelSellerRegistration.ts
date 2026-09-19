@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { cancelSellerRegistration } from '@apis/AdminPage/seller.ts';
+import { getErrorMessage } from '@/utils/getErrorMessage.ts';
 
 function useCancelSellerRegistration() {
   const queryClient = useQueryClient();
@@ -14,6 +15,7 @@ function useCancelSellerRegistration() {
     },
     onError: (error) => {
       console.error(error);
+      alert(getErrorMessage(error));
     },
   });
 }
