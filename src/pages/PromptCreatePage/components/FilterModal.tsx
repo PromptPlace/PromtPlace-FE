@@ -113,7 +113,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
       return localSelectedCategories.length === 0;
     }
     if (activeTab === 'price') {
-      return localIsPaid && (localPrice === null || localPrice < 100 || localPrice > 10000);
+      return localIsPaid && (localPrice === null || localPrice < 100 || localPrice > 100000);
     }
   };
 
@@ -246,7 +246,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                     <div className="flex flex-col gap-1">
                       <p className="custom-button1 text-primary">가격 입력</p>
                       <p className="custom-button1 text-text-on-background">
-                        ※가격은 100원부터 10,000원까지 입력 가능해요.
+                        ※가격은 100원부터 100,000원까지 입력 가능해요.
                       </p>
                     </div>
 
@@ -267,7 +267,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 </div>
                 <p className="custom-button1 text-alert">
                   {localPrice !== null && localPrice < 100 && <>최소 100원부터 설정 가능해요.</>}
-                  {localPrice !== null && localPrice > 10000 && <>최대 10000원까지 설정 가능해요.</>}
+                  {localPrice !== null && localPrice > 100000 && <>최대 100,000원까지 설정 가능해요.</>}
                 </p>
               </>
             )}
