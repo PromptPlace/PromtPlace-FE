@@ -26,7 +26,12 @@ const PriceSelector = ({ isPaid, price, setPrice, onOpen }: PriceSelectorProps) 
             <input
               value={price ?? ''}
               onChange={(e) => {
-                const value = e.target.value.replace(/[^0-9]/g, '');
+                const value = e.target.value;
+
+                if (!/^\d*$/.test(value)) {
+                  return;
+                }
+
                 setPrice(value === '' ? null : Number(value));
               }}
               placeholder="예) 1,000원"
