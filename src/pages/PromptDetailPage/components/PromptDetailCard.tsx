@@ -401,10 +401,14 @@ const PromptDetailCard = ({
               <div className="mt-[12px] flex justify-between items-center flex-wrap font-medium">
                 {/* 왼쪽 영역 */}
                 <div className="flex flex-col gap-3">
-                  <div className="flex flex-wrap items-center gap-6">
+                  <div className="flex flex-wrap items-center">
                     <span className="text-[14px] text-[#6B7280]">업로드&nbsp;&nbsp;&nbsp;{uploadedAt}</span>
-                    <Count imgType="eye" count={views} />
-                    <Count imgType="download" count={downloads} />
+                    <span className="ml-6">
+                      <Count imgType="eye" count={views} />
+                    </span>
+                    <span className="ml-3">
+                      <Count imgType="download" count={downloads} />
+                    </span>
                   </div>
                   <div>
                     <IconButton
