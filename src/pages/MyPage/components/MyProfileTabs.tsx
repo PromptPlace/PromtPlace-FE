@@ -1,6 +1,6 @@
 const TABS: { id: TabType; title: string }[] = [
   { id: 'prompt', title: '프롬프트' },
-  // { id: 'dashboard', title: '정산관리' },
+  { id: 'dashboard', title: '정산관리' },
   { id: 'profile', title: '프로필 설정' },
 ];
 
