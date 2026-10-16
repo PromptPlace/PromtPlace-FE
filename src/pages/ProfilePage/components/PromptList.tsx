@@ -25,7 +25,7 @@ const PromptList = () => {
   const { data: userData } = useGetMember({ member_id });
 
   // 작성한 프롬프트 목록
-  const { data: promptsData } = useGetPrompts({ member_id });
+  const { data: promptsData, isPending } = useGetPrompts({ member_id });
 
   const allPrompts = promptsData?.pages.flatMap((prompt) => prompt.data) ?? []; // 전체 데이터
 
@@ -72,7 +72,7 @@ const PromptList = () => {
             </div>
 
             {/* @ts-expect-error 타입 통일 예정 */}
-            <PromptGrid prompts={prompts} />
+            <PromptGrid prompts={prompts} isPending={isPending} />
           </div>
         ))}
       </div>

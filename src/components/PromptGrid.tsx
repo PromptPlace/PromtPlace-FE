@@ -61,9 +61,9 @@ const PromptGrid = ({ prompts, isPending }: { prompts: Prompt[]; isPending: bool
         }}>
         {prompts.map((prompt) =>
           isPending ? (
-            <PromptCard key={prompt.prompt_id} prompt={prompt} />
-          ) : (
             <PromptCardSkeleton key={prompt.prompt_id} />
+          ) : (
+            <PromptCard key={prompt.prompt_id} prompt={prompt} />
           ),
         )}
       </Box>

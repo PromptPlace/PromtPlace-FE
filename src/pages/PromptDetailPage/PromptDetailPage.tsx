@@ -22,6 +22,7 @@ import useDeleteFollow from '@/hooks/mutations/ProfilePage/useDeleteFollow';
 import useGetFollowing from '@/hooks/queries/ProfilePage/useGetFollowing';
 import useGetAllPromptReviews from '@/hooks/queries/PromptDetailPage/useGetAllPromptReviews';
 import useMediaQuery from '@/hooks/queries/PromptDetailPage/useMediaQuery';
+import { useAuth } from '@/context/AuthContext';
 
 import type { Review } from './components/ReviewList';
 
@@ -37,8 +38,8 @@ const PromptDetailPage = () => {
   const qc = useQueryClient();
   const { data: prompt, isLoading } = useGetPromptDetail(promptId);
 
-  const storedUser = localStorage.getItem('user');
-  const currentUserId = storedUser ? JSON.parse(storedUser).user_id : null;
+  const { user } = useAuth();
+  const currentUserId = user && Number(user.user_id) >= 0 ? Number(user.user_id) : null;
   const targetUserId = prompt?.user?.user_id ?? -1;
 
   const followMut = usePatchFollow({ member_id: targetUserId });

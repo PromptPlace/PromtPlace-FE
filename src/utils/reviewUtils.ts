@@ -9,7 +9,7 @@ export const canEditReview = (review: Review, currentUserId?: number): boolean =
     ? currentUserId!
     : (() => {
         try {
-          const raw = localStorage.getItem('user');
+          const raw = sessionStorage.getItem('user');
           if (!raw) return null;
           const parsed = JSON.parse(raw);
           const id = typeof parsed.user_id === 'number' ? parsed.user_id : Number(parsed.user_id);

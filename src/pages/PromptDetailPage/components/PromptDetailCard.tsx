@@ -221,13 +221,21 @@ const PromptDetailCard = ({
   //   downloadPrompt(promptId);
   // };
 
+  const { user } = useAuth();
+
   const isPaidPrompt = !isFree; // 유료 프롬프트 여부
   const hasPurchased = isPaidPrompt && isPaid; // 구매 완료 여부(유료일 때만 의미 있음)
 
-  const actionLabel = isFree ? '다운로드' : hasPurchased ? '구매완료' : `₩${price.toLocaleString()}`;
+  // 내가 업로드한(작성자 본인) 프롬프트 여부
+  const authorId = data?.user?.user_id ?? data?.user_id;
+  const isMine =
+    Number.isFinite(Number(user?.user_id)) && Number(user?.user_id) >= 0 && Number(user?.user_id) === Number(authorId);
+
+  // 무료이거나 내가 작성자인 경우: 가격/구매완료 대신 바로 '다운로드' 노출
+  const actionLabel = isFree || isMine ? '다운로드' : hasPurchased ? '구매완료' : `₩${price.toLocaleString()}`;
 
   const guideText =
-    hasPurchased || isFree
+    hasPurchased || isFree || isMine
       ? '※ 다운로드를 하고 실제 프롬프트를 사용해보세요!'
       : '※ 결제 후 ‘프롬프트 다운로드’를 누르면 확인하실 수 있습니다. 열람 후에는 환불이 불가합니다.';
 
@@ -256,7 +264,6 @@ const PromptDetailCard = ({
   // //   onDownload();
   // // };
 
-  const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
 
   const { mutate: adminDeleteMutate, isPending: isAdminDeleting } = useAdminDeletePrompt();
@@ -394,10 +401,14 @@ const PromptDetailCard = ({
               <div className="mt-[12px] flex justify-between items-center flex-wrap font-medium">
                 {/* 왼쪽 영역 */}
                 <div className="flex flex-col gap-3">
-                  <div className="flex flex-wrap items-center gap-6">
+                  <div className="flex flex-wrap items-center">
                     <span className="text-[14px] text-[#6B7280]">업로드&nbsp;&nbsp;&nbsp;{uploadedAt}</span>
-                    <Count imgType="eye" count={views} />
-                    <Count imgType="download" count={downloads} />
+                    <span className="ml-6">
+                      <Count imgType="eye" count={views} />
+                    </span>
+                    <span className="ml-3">
+                      <Count imgType="download" count={downloads} />
+                    </span>
                   </div>
                   <div>
                     <IconButton
@@ -507,16 +518,11 @@ const PromptDetailCard = ({
 
                 {/* 공유 버튼 */}
                 <button
-  className="w-[49px] h-[49px] rounded-[12px] bg-[#FFFEFB] border border-[#D1D5DB] flex items-center justify-center"
-  onClick={() => setIsShareModalOpen(true)}
-  aria-label="공유하기"
->
-  <img
-    src={shareIcon}
-    alt="공유하기"
-    className="w-[22px] h-[22px]"
-  />
-</button>
+                  className="w-[49px] h-[49px] rounded-[12px] bg-[#FFFEFB] border border-[#D1D5DB] flex items-center justify-center"
+                  onClick={() => setIsShareModalOpen(true)}
+                  aria-label="공유하기">
+                  <img src={shareIcon} alt="공유하기" className="w-[22px] h-[22px]" />
+                </button>
               </div>
 
               <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} title={title} />
