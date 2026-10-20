@@ -120,7 +120,7 @@ const NewMainPage = () => {
         </div>
 
         <div className="max-phone:hidden overflow-x-scroll hide-scrollbar">
-          <PromptGrid prompts={paginatedPrompts} isPending={isSearchDataPending || isNormalDataPending} />
+          <PromptGrid prompts={paginatedPrompts} isPending={searchQuery ? isSearchDataPending : isNormalDataPending} />
         </div>
 
         <div className="hidden max-phone:flex flex-col gap-[8px]">
