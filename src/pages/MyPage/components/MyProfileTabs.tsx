@@ -6,6 +6,10 @@ const TABS: { id: TabType; title: string }[] = [
 
 type TabType = 'prompt' | 'dashboard' | 'profile';
 
+const showDashboardTab = import.meta.env.VITE_ENABLE_DASHBOARD_TAB === 'true';
+
+const visibleTabs = TABS.filter((tab) => tab.id !== 'dashboard' || showDashboardTab);
+
 const MyProfileTabs = ({ activeTab, setActiveTab }: { activeTab: string; setActiveTab: (tab: TabType) => void }) => {
   const isTabActive = (tabId: string) => {
     if (tabId === 'prompt') {
@@ -22,7 +26,7 @@ const MyProfileTabs = ({ activeTab, setActiveTab }: { activeTab: string; setActi
 
   return (
     <div className="flex justify-center w-full w-full my-[56px] max-phone:my-[40px]">
-      {TABS.map((tab) => (
+      {visibleTabs.map((tab) => (
         <button
           key={tab.id}
           onClick={() => setActiveTab(tab.id)}
