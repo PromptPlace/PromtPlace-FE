@@ -97,7 +97,7 @@ const PrimaryButton = ({
         'flex items-center justify-center shadow-button hover:shadow-button-hover transition-all ease-in-out duration-300',
         isReviewDelete ? 'border-alert text-alert! text-sm leading-[18px]' : 'border-primary ',
         text === '프롬프트 더 보기' ? 'border-none' : 'border',
-        buttonType === 'square' ? `custom-h4` : 'font-normal tracking-[0.46px]',
+        buttonType === 'square' ? `custom-button1` : 'font-normal tracking-[0.46px]',
         textSize === 12 && 'custom-button2 max-lg:text-[12px] rounded-[8px]',
         textSize === 18 && 'custom-h4 bg-sub2! max-w-[260px] w-full border-none',
         disable && 'border-gray400! text-gray400! bg-gray300! hover:bg-gray300! active:bg-gray300! cursor-not-allowed',

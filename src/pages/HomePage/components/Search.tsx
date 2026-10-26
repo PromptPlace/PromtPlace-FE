@@ -43,9 +43,9 @@ const Search = () => {
       <div className="absolute w-full h-[564px] bg-gradient-to-b from-white/40 to-white z-0 top-0 left-0">
         {/* 왼쪽 배경 blob */}
         <div
-          className="absolute 
+          className="absolute
         w-[100px] h-[100px] left-[48px] top-[92px]
-        lg:w-[180px] lg:w-[180px] lg:left-[106px] lg:mt-[157px] 
+        lg:w-[180px] lg:w-[180px] lg:left-[106px] lg:mt-[157px]
         max-mypage:w-[100px] max-mypage:h-[100px] max-mypage:left-[16px] max-mypage:top-[92px]
         max-phone:w-[80px] max-phone:h-[80px] max-phone:left-[20px] max-phone:top-[64px]
         sm:left-[20px] sm:top-[64px] pointer-events-none">
@@ -56,7 +56,7 @@ const Search = () => {
         <div
           className="absolute
         w-[120px] h-[120px] right-[32px] top-[72px]
-        lg:w-[200px] lg:w-[200px] lg:right-[21px] lg:top-[104px] 
+        lg:w-[200px] lg:w-[200px] lg:right-[21px] lg:top-[104px]
         max-mypage:w-[120px] max-mypage:h-[120px] max-mypage:right-[15px] max-mypage:top-[72px]
         max-phone:w-[64px] max-phone:h-[64px] max-phone:right-[5px] max-phone:top-[309px]
         pointer-events-none">
@@ -71,9 +71,7 @@ const Search = () => {
               프롬프트 탐색하기
             </div>
           </div>
-          <div className="text-center justify-center text-black text-2xl font-medium font-['S-Core_Dream'] leading-8">
-            원하는 프롬프트를 찾아보세요.
-          </div>
+          <div className="text-center justify-center text-black custom-h2">원하는 프롬프트를 찾아보세요.</div>
         </div>
         <div className="w-[510px] lg:w-[708px] max-mypage:w-[438px] max-phone:w-[335px] h-[62px] lg:h-[62px] max-phone:h-[43px] px-8 py-5 bg-white rounded-[53.84px] shadow-[1.8210526704788208px_1.8210526704788208px_27.3157901763916px_0px_rgba(41,121,255,0.25)] flex justify-center items-center gap-[570.70px]">
           <div className="flex-1 flex justify-between items-center">
@@ -83,7 +81,7 @@ const Search = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="원하는 프롬프트를 검색해보세요."
-              className="flex-1 justify-start text-text-on-background text-sm font-light font-['S-Core_Dream'] leading-6 tracking-tight outline-none bg-transparent"
+              className="flex-1 justify-start text-text-on-white placeholder:text-gray-400 outline-none bg-transparent custom-body1"
             />
             <img onClick={handleSearch} src={search} className="w-5 h-5 transition cursor-pointer"></img>
           </div>
@@ -109,7 +107,7 @@ const Search = () => {
                 <img src={workbook} className="w-3 h-3.5 left-[3px] top-[2.25px] absolute"></img>
               </div>
               <div className="text-center justify-center text-primary text-xs font-medium font-['S-Core_Dream'] leading-4 max-mypage:text-[10px]">
-                학습•과제 요약
+                학습 • 과제 요약
               </div>
             </div>
             <div
@@ -119,7 +117,7 @@ const Search = () => {
                 <img src={marketing} className="w-3.5 h-3.5 left-[2px] top-[2px] absolute"></img>
               </div>
               <div className="text-center justify-center text-primary text-xs font-medium font-['S-Core_Dream'] leading-4 max-mypage:text-[10px]">
-                시장조사•분석
+                시장조사 • 분석
               </div>
             </div>
             <div
@@ -130,7 +128,7 @@ const Search = () => {
                 <div className="w-[2.77px] h-1 left-[11.81px] top-[1.95px] absolute bg-blue-500"></div>
               </div>
               <div className="text-center justify-center text-blue-500 text-xs font-medium font-['S-Core_Dream'] leading-4 max-mypage:text-[10px]">
-                광고•카피라이팅
+                광고 • 카피라이팅
               </div>
             </div>
           </div>
