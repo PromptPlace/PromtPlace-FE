@@ -27,7 +27,7 @@ const PromptList = ({ setActiveTab }: PromptListProps) => {
   if (isLoading) return <PromptListSkeleton />;
 
   return (
-    <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-[40px] mt-[64px]">
+    <div className="w-full grid grid-cols-1 desktop:grid-cols-2 gap-[40px] mt-[64px]">
       <section className="flex flex-col">
         <div className="flex justify-between mb-[20px]">
           {/*<AuthoredPromptCard>*/}
@@ -95,7 +95,7 @@ const PromptList = ({ setActiveTab }: PromptListProps) => {
         )}
       </section>
 
-      <section className="lg:col-span-2 mt-[56px] flex flex-col">
+      <section className="desktop:col-span-2 mt-[56px] flex flex-col">
         <div className="flex gap-[20px]">
           <p className="custom-h2 text-black">찜한 프롬프트</p>
           <div className="rounded-[50px] h-[32px] border-[0.8px] px-[10px] py-[5px] bg-white text-gray-500 border-gray-400 custom-h5">

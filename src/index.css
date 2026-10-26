@@ -70,6 +70,7 @@
 
   --breakpoint-phone: 30.0625rem; /* 481px */
   --breakpoint-mypage: 48rem; /* 768px */
+  --breakpoint-desktop: 90rem; /* 1440px */
 }
 
 @layer base {
@@ -86,8 +87,8 @@
 }
 
 @layer base {
-  input:focus, 
-  button:focus, 
+  input:focus,
+  button:focus,
   textarea:focus {
     outline: none !important;
     box-shadow: none !important;
