@@ -1,12 +1,39 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { categoryData } from '@/pages/MainPage/components/categoryData';
+
 import leftblob from '@/assets/icon-left-blob.svg';
 import rightblob from '@/assets/icon-right-blob.svg';
 import search from '@/assets/icon-search.svg';
 import workbook from '@/assets/icon-category-book.svg';
 import marketing from '@/assets/icon-category-market.svg';
 import script from '@/assets/icon-category-paper.svg';
+import Top3 from '@/assets/home/icom-main-top3.svg?react';
+
+const recommendedCategories = [
+  {
+    id: 6,
+    name: '학습 / 과제',
+    subcategory: '학습 / 과제 요약',
+    label: '학습 • 과제 요약',
+    icon: workbook,
+  },
+  {
+    id: 5,
+    name: '비즈니스 / 마케팅',
+    subcategory: '시장조사 / 분석',
+    label: '시장조사 • 분석',
+    icon: marketing,
+  },
+  {
+    id: 1,
+    name: '글쓰기 / 문서 작성',
+    subcategory: '광고 / 카피라이팅',
+    label: '광고 • 카피라이팅',
+    icon: script,
+  },
+];
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -94,46 +121,26 @@ const Search = () => {
               추천 카테고리 Top
             </div>
             <div className="w-3 h-5 relative overflow-hidden">
-              <div className="left-[-2px] top-[-1.38px] absolute origin-top-left rotate-[-13.81deg] text-center justify-center text-primary-hover text-base font-normal font-['Figma_Hand'] leading-6">
-                3
-              </div>
+              <Top3 />
             </div>
           </div>
+
           <div className="flex justify-start items-start gap-3 max-mypage:flex-wrap max-mypage:justify-center max-phone:justify-start max-mypage:self-stretch">
-            <div
-              onClick={() => handleCategoryClick(6, '학습 / 과제', '학습 / 과제 요약')}
-              className="px-3 py-1.5 bg-secondary rounded-full flex justify-center items-center gap-2 cursor-pointer hover:bg-primary-hover/10 transition">
-              <div className="w-4 h-4 relative overflow-hidden">
-                <img src={workbook} className="w-3 h-3.5 left-[3px] top-[2.25px] absolute"></img>
+            {recommendedCategories.map((category) => (
+              <div
+                key={category.id}
+                onClick={() => handleCategoryClick(category.id, category.name, category.subcategory)}
+                className="px-3 py-2 bg-secondary rounded-full flex justify-center items-center gap-2 cursor-pointer hover:bg-primary-hover/10 transition">
+                <img src={category.icon} />
+                <div className={`text-center justify-center text-primary custom-button2 max-mypage:text-[10px]`}>
+                  {category.label}
+                </div>
               </div>
-              <div className="text-center justify-center text-primary text-xs font-medium font-['S-Core_Dream'] leading-4 max-mypage:text-[10px]">
-                학습 • 과제 요약
-              </div>
-            </div>
-            <div
-              onClick={() => handleCategoryClick(5, '비즈니스 / 마케팅', '시장조사 / 분석')}
-              className="px-3 py-1.5 bg-secondary rounded-full flex justify-center items-center gap-2 cursor-pointer hover:bg-primary-hover/10 transition">
-              <div className="w-4 h-4 relative overflow-hidden">
-                <img src={marketing} className="w-3.5 h-3.5 left-[2px] top-[2px] absolute"></img>
-              </div>
-              <div className="text-center justify-center text-primary text-xs font-medium font-['S-Core_Dream'] leading-4 max-mypage:text-[10px]">
-                시장조사 • 분석
-              </div>
-            </div>
-            <div
-              onClick={() => handleCategoryClick(1, '글쓰기 / 문서 작성', '광고 / 카피라이팅')}
-              className="px-3 py-1.5 bg-secondary rounded-full flex justify-center items-center gap-2 cursor-pointer hover:bg-primary-hover/10 transition">
-              <div className="w-4 h-4 relative overflow-hidden">
-                <img src={script} className="w-3 h-3.5 left-[3.19px] top-[1.69px] absolute"></img>
-                <div className="w-[2.77px] h-1 left-[11.81px] top-[1.95px] absolute bg-blue-500"></div>
-              </div>
-              <div className="text-center justify-center text-blue-500 text-xs font-medium font-['S-Core_Dream'] leading-4 max-mypage:text-[10px]">
-                광고 • 카피라이팅
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
+
       <div className="w-full max-w-[1185px] mx-auto mt-[84px] z-10 max-mypage:mt-[40px]">
         {/* 데스크톱: 가로 스크롤 */}
         <div
