@@ -5,8 +5,8 @@ import rightArrow from '@assets/icon-arrow-right-black.svg';
 import newBadgeImg from '@assets/icon-new-notification.svg';
 
 import url from '@assets/icon-linkhub-logo.svg';
-import instagram from '@assets/icon-instagram-logo.svg';
 import facebook from '@assets/icon-facebook-logo.svg';
+import kakao from '@assets/icon-kakao-logo.svg';
 import twitter from '@assets/icon-x-logo.svg';
 import defaultImg from '@assets/icon-example-image.png';
 import attachFile from '@assets/icon-attach-file-gray.svg';
@@ -100,19 +100,36 @@ const PromptTipDetailPage = () => {
     openShareWindow(shareUrl);
   }, [currentUrl]);
 
-  // 클립보드에 복사
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-  };
+  const handleKakaoShare = useCallback(() => {
+    if (!window.Kakao) {
+      alert('카카오 SDK를 불러오지 못했습니다.');
+      return;
+    }
 
-  const handleInstagram = useCallback(() => {
-    copyToClipboard(currentUrl);
-    const ok = window.confirm('인스타그램으로 이동합니다.');
-    if (!ok) return; // 취소했으면 아무 동작도 하지 않음
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init(import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY);
+    }
 
-    // 확인했으면 새 탭으로 인스타그램 웹 열기
-    window.open('https://www.instagram.com', '_blank', 'noopener,noreferrer');
-  }, [currentUrl]);
+    try {
+      window.Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: post.title,
+          description: 'PromptPlace에서 확인해보세요!',
+          imageUrl: post.file_url || `${window.location.origin}/favicon-96x96.png`,
+          link: { mobileWebUrl: currentUrl, webUrl: currentUrl },
+        },
+        buttons: [
+          {
+            title: '꿀팁 보러가기',
+            link: { mobileWebUrl: currentUrl, webUrl: currentUrl },
+          },
+        ],
+      });
+    } catch {
+      alert('카카오톡 공유에 실패했습니다.');
+    }
+  }, [currentUrl, post.file_url, post.title]);
 
   const handleDeleteTip = () => {
     mutate(Number(id), {
@@ -175,15 +192,15 @@ const PromptTipDetailPage = () => {
                     <div className="flex justify-between items-center gap-[16px]">
                       <img
                         className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
-                        src={instagram}
-                        alt="instagram"
-                        onClick={handleInstagram}
-                      />
-                      <img
-                        className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
                         src={facebook}
                         alt="facebook"
                         onClick={handleFacebook}
+                      />
+                      <img
+                        className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
+                        src={kakao}
+                        alt="kakao"
+                        onClick={handleKakaoShare}
                       />
                       <img
                         className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
