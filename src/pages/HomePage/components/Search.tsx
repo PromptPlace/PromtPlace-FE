@@ -65,6 +65,17 @@ const Search = () => {
     navigate(`/prompt?${params.toString()}`);
   };
 
+  const mobileCategoryRows = [
+    {
+      categories: categoryData.slice(0, 4),
+      className: 'flex justify-center items-start gap-0.5',
+    },
+    {
+      categories: categoryData.slice(4, 9),
+      className: 'self-stretch flex justify-center items-start gap-0.5',
+    },
+  ];
+
   return (
     <div className="w-full mx-auto flex flex-col justify-center items-center gap-8 relative">
       <div className="absolute w-full h-[564px] bg-gradient-to-b from-white/40 to-white z-0 top-0 left-0">
@@ -100,6 +111,7 @@ const Search = () => {
           </div>
           <div className="text-center justify-center text-black custom-h2">원하는 프롬프트를 찾아보세요.</div>
         </div>
+
         <div className="w-[510px] lg:w-[708px] max-mypage:w-[438px] max-phone:w-[335px] h-[62px] lg:h-[62px] max-phone:h-[43px] px-8 py-5 bg-white rounded-[53.84px] shadow-[1.8210526704788208px_1.8210526704788208px_27.3157901763916px_0px_rgba(41,121,255,0.25)] flex justify-center items-center gap-[570.70px]">
           <div className="flex-1 flex justify-between items-center">
             <input
@@ -114,15 +126,14 @@ const Search = () => {
           </div>
         </div>
       </div>
+
       <div className="z-10 max-mypage:w-full max-mypage:px-[40px] max-phone:px-[20px]">
         <div className="inline-flex justify-start items-center gap-3 max-mypage:flex-col max-mypage:items-center max-phone:items-start max-mypage:w-full">
           <div className="flex justify-start items-center">
             <div className="text-center justify-center text-text-on-white text-xs font-medium font-['S-Core_Dream'] leading-4">
               추천 카테고리 Top
             </div>
-            <div className="w-3 h-5 relative overflow-hidden">
-              <Top3 />
-            </div>
+            <Top3 className="w-3 h-5 relative overflow-hidden" />
           </div>
 
           <div className="flex justify-start items-start gap-3 max-mypage:flex-wrap max-mypage:justify-center max-phone:justify-start max-mypage:self-stretch">
@@ -154,7 +165,7 @@ const Search = () => {
                 <div className="w-[80px] h-[80px] bg-white rounded-3xl flex items-center justify-center overflow-hidden shadow-[0px_4px_8px_0px_rgba(0,0,0,0.12)]">
                   <img src={category.image} alt={category.name} className="object-cover w-12 h-12" />
                 </div>
-                <div className="w-50 text-center text-xs leading-4 font-light">{category.displayName}</div>
+                <div className="w-50 text-center custom-body3">{category.displayName}</div>
               </div>
             </div>
           ))}
@@ -170,43 +181,31 @@ const Search = () => {
               <div className="w-[80px] h-[80px] bg-white rounded-3xl flex items-center justify-center overflow-hidden shadow-[0px_4px_8px_0px_rgba(0,0,0,0.12)]">
                 <img src={category.image} alt={category.name} className="object-cover w-12 h-12" />
               </div>
-              <div className="text-center text-xs leading-4 font-light">{category.displayName}</div>
+              <div className="text-center custom-body3">{category.displayName}</div>
             </div>
           ))}
         </div>
 
         {/* 모바일: 4열 그리드 (2줄) */}
         <div className="hidden max-phone:flex flex-col justify-center items-center w-96 mx-auto px-[20px]">
-          <div className="flex justify-center items-start gap-0.5">
-            {categoryData.slice(0, 4).map((category) => (
-              <div
-                key={category.id}
-                onClick={() => handleCategoryClick(category.id, category.name)}
-                className="w-16 px-2 py-3 rounded-xl inline-flex flex-col justify-center items-center gap-4 cursor-pointer hover:bg-gray-100 transition">
-                <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center overflow-hidden shadow-[0px_2.4px_4.8px_0px_rgba(0,0,0,0.12)]">
-                  <img src={category.image} alt={category.name} className="object-cover w-8 h-8" />
+          {mobileCategoryRows.map((row) => (
+            <div key={row.categories[0]?.id} className={row.className}>
+              {row.categories.map((category) => (
+                <div
+                  key={category.id}
+                  onClick={() => handleCategoryClick(category.id, category.name)}
+                  className="w-[72px] px-2 py-3 rounded-xl inline-flex flex-col justify-center items-center gap-4 cursor-pointer hover:bg-gray-100 transition">
+                  <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center overflow-hidden shadow-[0px_2.4px_4.8px_0px_rgba(0,0,0,0.12)]">
+                    <img src={category.image} alt={category.name} className="object-cover w-8 h-8" />
+                  </div>
+                  <div
+                    className={`text-center text-text-on-white text-[10px] font-light leading-[140%] tracking-[-0.01px] break-keep`}>
+                    {category.displayName}
+                  </div>
                 </div>
-                <div className="text-center text-text-on-white text-[10px] font-light font-['S-Core_Dream'] leading-3">
-                  {category.displayName}
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="self-stretch flex justify-center items-start gap-0.5">
-            {categoryData.slice(4, 9).map((category) => (
-              <div
-                key={category.id}
-                onClick={() => handleCategoryClick(category.id, category.name)}
-                className="w-16 px-2 py-3 rounded-xl inline-flex flex-col justify-center items-center gap-4 cursor-pointer hover:bg-gray-100 transition">
-                <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center overflow-hidden shadow-[0px_2.4px_4.8px_0px_rgba(0,0,0,0.12)]">
-                  <img src={category.image} alt={category.name} className="object-cover w-8 h-8" />
-                </div>
-                <div className="text-center text-text-on-white text-[10px] font-light font-['S-Core_Dream'] leading-3">
-                  {category.displayName}
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
     </div>
