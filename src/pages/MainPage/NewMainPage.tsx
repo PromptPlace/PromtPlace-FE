@@ -19,17 +19,21 @@ const NewMainPage = () => {
 
   const categoryFilter = useCategoryFilter();
 
-  const handleCategorySelect = (categoryId: number | null, categoryName: string | null) => {
+  const handleCategorySelect = (
+    categoryId: number | null,
+    categoryName: string | null,
+    subcategory: string | null,
+  ) => {
     categoryFilter.handleCategorySelect(categoryId, categoryName);
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      if (categoryId !== null) {
-        next.set('categoryId', String(categoryId));
-      } else {
-        next.delete('categoryId');
-      }
-      return next;
-    });
+    categoryFilter.handleSubcategorySelect(subcategory);
+
+    const next = new URLSearchParams(searchParams);
+    if (categoryId !== null) next.set('categoryId', String(categoryId));
+    else next.delete('categoryId');
+    if (subcategory !== null) next.set('subcategory', subcategory);
+    else next.delete('subcategory');
+
+    if (next.toString() !== searchParams.toString()) setSearchParams(next);
   };
 
   const handleSubcategorySelect = (subcategory: string | null) => {

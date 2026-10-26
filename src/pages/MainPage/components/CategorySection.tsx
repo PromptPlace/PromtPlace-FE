@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { categoryData } from './categoryData';
 
 interface CategorySectionProps {
-  onCategorySelect?: (categoryId: number | null, categoryName: string | null) => void;
+  onCategorySelect?: (categoryId: number | null, categoryName: string | null, subcategory: string | null) => void;
   onSubcategorySelect?: (subcategory: string | null) => void;
   initialCategoryId?: number | null;
   initialSubcategory?: string | null;
@@ -20,6 +20,8 @@ const CategorySection = ({
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(
     initialCategoryId ? initialSubcategory : null,
   );
+  const mobileCategoryListRef = useRef<HTMLDivElement>(null);
+  const selectedMobileCategoryRef = useRef<HTMLDivElement>(null);
 
   // URL 파라미터가 변경될 때마다 카테고리와 서브카테고리 업데이트
   useEffect(() => {
@@ -28,17 +30,26 @@ const CategorySection = ({
       setSelectedSubcategory(initialSubcategory);
       
       const categoryName = categoryData.find((cat) => cat.id === initialCategoryId)?.name || null;
-      onCategorySelect?.(initialCategoryId, categoryName);
-      onSubcategorySelect?.(initialSubcategory); // URL에서 받은 서브카테고리 사용
+      onCategorySelect?.(initialCategoryId, categoryName, initialSubcategory); // URL에서 받은 선택 상태 사용
     } else {
       // 초기값이 null이면 선택 없음
       setSelectedCategory(null);
       setSelectedSubcategory(null);
-      onCategorySelect?.(null, null);
+      onCategorySelect?.(null, null, null);
       onSubcategorySelect?.(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialCategoryId, initialSubcategory]); // URL 파라미터 변경 시 실행
+
+  useEffect(() => {
+    const list = mobileCategoryListRef.current;
+    const selectedItem = selectedMobileCategoryRef.current;
+    if (!list || !selectedItem || selectedItem.getClientRects().length === 0) return;
+
+    const listRect = list.getBoundingClientRect();
+    const itemRect = selectedItem.getBoundingClientRect();
+    list.scrollLeft += itemRect.left - listRect.left - (list.clientWidth - itemRect.width) / 2;
+  }, [selectedCategory]);
 
   const handleSelectCategory = (categoryId: number) => {
     const newCategoryId = selectedCategory === categoryId ? null : categoryId;
@@ -47,8 +58,7 @@ const CategorySection = ({
 
     setSelectedCategory(newCategoryId);
     setSelectedSubcategory(newCategoryId !== null ? '전체' : null); // 카테고리 선택 시 서브카테고리를 "전체"로
-    onCategorySelect?.(newCategoryId, categoryName);
-    onSubcategorySelect?.(newCategoryId !== null ? '전체' : null);
+    onCategorySelect?.(newCategoryId, categoryName, newCategoryId !== null ? '전체' : null);
   };
 
   const handleSelectSubcategory = (subcategory: string) => {
@@ -90,12 +100,14 @@ const CategorySection = ({
 
       {/* 모바일: 탭 형태 */}
       <div
+        ref={mobileCategoryListRef}
         className="hidden max-phone:flex overflow-x-scroll hide-scrollbar w-full"
         style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
         <div className="inline-flex gap-2">
           {categoryData.map((category) => (
             <div
               key={category.id}
+              ref={selectedCategory === category.id ? selectedMobileCategoryRef : null}
               onClick={() => handleSelectCategory(category.id)}
               className={`px-1.5 py-3 h-[39px] rounded-xl flex justify-center items-center gap-2 cursor-pointer whitespace-nowrap transition-all ${
                 selectedCategory === category.id ? 'bg-gray-300' : ''
