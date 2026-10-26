@@ -20,6 +20,17 @@ import TipDetailSkeleton from './components/TipDetailSkeleton';
 import usePatchDeleteTipAdmin from '@/hooks/mutations/AdminPage/usePatchDeleteTipAdmin';
 import DualModal from '@/components/Modal/DualModal';
 
+const isNewPost = (createdAt: string) => {
+  const [year, month, day] = createdAt.split('.').map(Number);
+  if (!year || !month || !day) return false;
+
+  const createdDate = new Date(year, month - 1, day);
+  const ageInMs = Date.now() - createdDate.getTime();
+  const twoWeeksInMs = 14 * 24 * 60 * 60 * 1000;
+
+  return ageInMs >= 0 && ageInMs <= twoWeeksInMs;
+};
+
 const PromptTipDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const [post, setPost] = useState<Post>({
@@ -49,8 +60,6 @@ const PromptTipDetailPage = () => {
 
         const base = import.meta.env.VITE_SERVER_API_URL;
         const res = await axiosInstance.get(`${base}/api/tips/${id}/details`);
-        console.log(res.data.data.data);
-
         const fetched_data = res.data.data.data;
 
         const tipdetail: Post = {
@@ -131,6 +140,13 @@ const PromptTipDetailPage = () => {
     }
   }, [currentUrl, post.file_url, post.title]);
 
+  const shareActions = [
+    { label: '페이스북 공유', icon: facebook, onClick: handleFacebook },
+    { label: '카카오톡 공유', icon: kakao, onClick: handleKakaoShare },
+    { label: 'X 공유', icon: twitter, onClick: handleTwitter },
+    { label: 'URL 복사', icon: url, onClick: handleCopyUrl },
+  ];
+
   const handleDeleteTip = () => {
     mutate(Number(id), {
       onSuccess: () => {
@@ -167,7 +183,7 @@ const PromptTipDetailPage = () => {
               {/**상단 */}
               <div className="w-full border-b-[1px] border-white-stroke pb-[34px] flex flex-col gap-[24px]">
                 <div className="flex">
-                  {new Date().getTime() - new Date(post.created_at).getTime() <= 14 * 24 * 60 * 60 * 1000 && (
+                  {isNewPost(post.created_at) && (
                     <img src={newBadgeImg} alt="NEW" className="w-[20px] h-[20px] mr-[8px]" />
                   )}
                   <p className="custom-h4 max-phone:text-[16px]">{post.title}</p>
@@ -190,30 +206,16 @@ const PromptTipDetailPage = () => {
                     <p className="custom-body3 text-text-on-white max-phone:text-[10px]">공유 :</p>
 
                     <div className="flex justify-between items-center gap-[16px]">
-                      <img
-                        className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
-                        src={facebook}
-                        alt="facebook"
-                        onClick={handleFacebook}
-                      />
-                      <img
-                        className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
-                        src={kakao}
-                        alt="kakao"
-                        onClick={handleKakaoShare}
-                      />
-                      <img
-                        className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
-                        src={twitter}
-                        alt="twitter"
-                        onClick={handleTwitter}
-                      />
-                      <img
-                        className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
-                        src={url}
-                        alt="url"
-                        onClick={handleCopyUrl}
-                      />
+                      {shareActions.map(({ label, icon, onClick }) => (
+                        <button
+                          key={label}
+                          type="button"
+                          aria-label={label}
+                          onClick={onClick}
+                          className="cursor-pointer border-0 bg-transparent p-0">
+                          <img className="w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]" src={icon} alt="" />
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>
