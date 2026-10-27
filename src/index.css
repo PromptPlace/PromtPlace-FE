@@ -26,10 +26,16 @@
 
   --color-white: #fffefb;
   --color-black: #030712;
-  --color-text-on-white: #121212;
   --color-white-stroke: #cccccc;
   --color-background: #f3f4f6;
+
+  --color-text-on-white: #030712;
+  --color-text-secondary: #374151;
+  --color-text-tertiary: #6b7280;
   --color-text-on-background: #999898;
+  --color-text-muted: #9ca3af;
+  --color-text-on-primary: #ffffff;
+
   --color-overlay: rgba(18, 18, 18, 0.4);
   --color-overlay-coach-mark: rgba(18, 18, 18, 0.75);
   --color-transparent-inverse: rgba(0, 0, 0, 0.1);
