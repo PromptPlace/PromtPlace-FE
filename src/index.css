@@ -139,6 +139,28 @@
 
   --color-overlay-coach-mark: rgba(18, 18, 18, 0.75);
 
+  /* Spacing tokens in px, exposed as utilities like gap-space-4 / p-space-8 */
+  --spacing-space-2: 2px;
+  --spacing-space-4: 4px;
+  --spacing-space-6: 6px;
+  --spacing-space-8: 8px;
+  --spacing-space-10: 10px;
+  --spacing-space-12: 12px;
+  --spacing-space-16: 16px;
+  --spacing-space-20: 20px;
+  --spacing-space-24: 24px;
+  --spacing-space-32: 32px;
+  --spacing-space-40: 40px;
+  --spacing-space-48: 48px;
+  --spacing-space-56: 56px;
+  --spacing-space-64: 64px;
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
   --background-image-primary-gradient: linear-gradient(207deg, #2979ff 17.05%, #5bf 107.21%);
   --background-image-notfound-gradient: linear-gradient(
     180deg,
@@ -147,9 +169,13 @@
   );
   --background-image-sub-gradient: linear-gradient(249deg, #94d2ff 15.06%, #6198ff 126.87%);
 
+  --shadow-md: 0px 4px 8px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 2px 2px 30px 0px rgba(0, 0, 0, 0.25);
+  --shadow-glow-primary: 1.8px 1.8px 27px 0px rgba(41, 121, 255, 0.25);
+  --shadow-card: 0px 6px 3.3px rgba(209, 209, 209, 0.2);
+
   --shadow-button: 0px 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-button-hover: 0px 4px 8px rgba(0, 0, 0, 0.12);
-  --shadow-card: 0px 6px 3.3px rgba(209, 209, 209, 0.2);
   --shadow-gradient: 2px 2px 30px 0px rgba(0, 0, 0, 0.25);
   --shadow-alert: 2px 2px 5px 0px rgba(0, 0, 0, 0.1);
   --shadow-tabbar: 2px 2px 10px rgba(0, 0, 0, 0.25);
