@@ -107,7 +107,7 @@ const PromptList = () => {
       {promptCount === 0 && (
         <div className="mt-[80px] flex flex-col justify-center items-center gap-[20px] max-phone:mt-[64px]">
           <TwinkleIcon />
-          <div className="custom-h3 text-gray500 flex flex-col gap-[8px] items-center">
+          <div className="custom-label1 text-gray500 flex flex-col gap-[8px] items-center">
             <p className="max-phone:text-[14px]">아직 올린 프롬프트가 없어요!</p>
             <p className="max-phone:text-[10px]">다음에 확인해주세요.</p>
           </div>

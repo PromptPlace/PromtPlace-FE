@@ -113,18 +113,18 @@ const PromptTipPage = () => {
             <div className="mb-[56px] flex flex-col gap-[12px] max-lg:mb-[20px]">
               <h1 className="custom-h1 max-phone:text-[24px]">AI 꿀팁</h1>
 
-              <p className="custom-h3 hidden lg:block">
+              <p className="custom-label1 hidden lg:block">
                 AI 꿀팁에서는 전문가처럼 쓰는 프롬프트 팁부터 일상 속 AI 활용법, 꼭 알아야 할 AI 트렌드까지 확인할 수
                 있어요!
               </p>
 
-              <p className="custom-h3 hidden max-lg:block max-phone:hidden">
+              <p className="custom-label1 hidden max-lg:block max-phone:hidden">
                 AI 꿀팁에서는 전문가처럼 쓰는 프롬프트 팁부터
                 <br />
                 일상 속 AI 활용법, 꼭 알아야 할 AI 트렌드까지 확인할 수 있어요!
               </p>
 
-              <p className="custom-h3 hidden max-phone:block text-[14px]">
+              <p className="custom-label1 hidden max-phone:block text-[14px]">
                 AI 꿀팁에서는 전문가처럼 쓰는
                 <br />
                 프롬프트 팁부터 일상 속 AI 활용법,

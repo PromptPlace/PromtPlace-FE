@@ -225,7 +225,7 @@ const TestPage = () => {
       <div>
         <p className="custom-h1">H1(큰 타이틀)</p>
         <p className="custom-h2">H2(주요 구역 큰 제목)</p>
-        <p className="custom-h3">H3(주요 구역 소 제목)</p>
+        <p className="custom-label1">H3(주요 구역 소 제목)</p>
         <p className="custom-h4">H4(모달 큰 제목)</p>
         <p className="custom-h5">H5(모달 소 제목)</p>
 
