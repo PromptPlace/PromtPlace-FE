@@ -26,10 +26,16 @@
 
   --color-white: #fffefb;
   --color-black: #030712;
-  --color-text-on-white: #121212;
   --color-white-stroke: #cccccc;
   --color-background: #f3f4f6;
+
+  --color-text-on-white: #030712;
+  --color-text-secondary: #374151;
+  --color-text-tertiary: #6b7280;
   --color-text-on-background: #999898;
+  --color-text-muted: #9ca3af;
+  --color-text-on-primary: #ffffff;
+
   --color-overlay: rgba(18, 18, 18, 0.4);
   --color-overlay-coach-mark: rgba(18, 18, 18, 0.75);
   --color-transparent-inverse: rgba(0, 0, 0, 0.1);
@@ -61,6 +67,7 @@
 
   --shadow-button: 0px 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-button-hover: 0px 4px 8px rgba(0, 0, 0, 0.12);
+  --shadow-card: 0px 6px 3.3px rgba(209, 209, 209, 0.2);
   --shadow-gradient: 2px 2px 30px 0px rgba(0, 0, 0, 0.25);
   --shadow-alert: 2px 2px 5px 0px rgba(0, 0, 0, 0.1);
   --shadow-tabbar: 2px 2px 10px rgba(0, 0, 0, 0.25);
@@ -168,6 +175,13 @@
     font-size: 10px;
     font-weight: 500;
     line-height: 150%;
+  }
+
+  .custom-caption2 {
+    font-size: 10px;
+    font-weight: 300;
+    line-height: 140%;
+    letter-spacing: -0.01em;
   }
 
   /* slick */
