@@ -200,8 +200,8 @@
   }
 
   .custom-h3 {
-    font-size: 16px;
-    font-weight: 300;
+    font-size: 20px;
+    font-weight: 500;
     letter-spacing: -0.01em;
     line-height: 140%;
   }
@@ -220,6 +220,20 @@
     line-height: 140%;
   }
 
+  .custom-label1 {
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    line-height: 140%;
+  }
+
+  .custom-label2 {
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    line-height: 140%;
+  }
+
   .custom-body1 {
     font-size: 16px;
     font-weight: 300;
@@ -234,11 +248,33 @@
     line-height: 160%;
   }
 
+  .custom-body2-link {
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    line-height: 160%;
+    text-decoration: underline;
+  }
+
   .custom-body3 {
     font-size: 12px;
     font-weight: 300;
     letter-spacing: -0.01em;
     line-height: 140%;
+  }
+
+  .custom-caption1 {
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 160%;
+    letter-spacing: 0.02em;
+  }
+
+  .custom-caption2 {
+    font-size: 10px;
+    font-weight: 300;
+    line-height: 140%;
+    letter-spacing: -0.01em;
   }
 
   .custom-button1 {
@@ -257,13 +293,6 @@
     font-size: 10px;
     font-weight: 500;
     line-height: 150%;
-  }
-
-  .custom-caption2 {
-    font-size: 10px;
-    font-weight: 300;
-    line-height: 140%;
-    letter-spacing: -0.01em;
   }
 
   /* slick */
