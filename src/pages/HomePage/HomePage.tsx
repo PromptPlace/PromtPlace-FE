@@ -18,8 +18,8 @@ const HomePage = () => {
         <ImageSlide />
       </div>
       <RecommnedPrompts />
-      <VariousFunction />
       <CreatePrompt />
+      <VariousFunction />
     </>
   );
 };
