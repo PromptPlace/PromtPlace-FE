@@ -74,7 +74,7 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
       {' '}
       <div className="w-full">
         <p className=" custom-h2 mb-[8px] text-black  ">회원가입하기</p>
-        <p className=" custom-h3 mb-[24px] text-black">프롬프트 플레이스에서 나를 위한 프롬프트를 찾아보세요</p>
+        <p className=" custom-label1 mb-[24px] text-black">프롬프트 플레이스에서 나를 위한 프롬프트를 찾아보세요</p>
       </div>
       <div className="relative w-full">
         <label className="custom-h5 mb-[12px] text-black">이메일</label>

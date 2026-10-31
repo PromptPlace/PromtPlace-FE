@@ -40,7 +40,7 @@ const OnBoardingView = ({ setView }: LoginViewProps) => {
         <p className=" custom-h2 max-phone:text-[20px] mb-[8px] text-black">
           시작하기 전에, 닉네임과 소개말을 작성해주세요!
         </p>
-        <p className=" custom-h3 max-phone:text-[14px] text-black">마이페이지에 작성될 정보에요.</p>
+        <p className=" custom-label1 max-phone:text-[14px] text-black">마이페이지에 작성될 정보에요.</p>
       </div>
       <form className="flex flex-col w-full" onSubmit={handleSubmit}>
         <div className="flex flex-col">

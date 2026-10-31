@@ -92,7 +92,7 @@ const AgreeTermsView = ({ setView, email, password, tempToken }: LoginViewProps)
           <br />
           아래의 이용약관에 동의해 주세요.
         </p>
-        <p className=" custom-h3 max-phone:text-[14px] mb-[24px] text-black">
+        <p className=" custom-label1 max-phone:text-[14px] mb-[24px] text-black">
           필수 약관에 동의해야 서비스를 사용할 수 있어요.
         </p>
         <section className="mb-[40px] max-phone:mb-[32px]">
