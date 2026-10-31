@@ -21,7 +21,7 @@ const PromptCard = ({ prompt }: PromptCardProps) => {
 
   return (
     <div
-      className="group w-[294px] h-[495px] rounded-3xl hover:cursor-pointer p-3 bg-white flex flex-col gap-2.5"
+      className="group w-[294px] h-[495px] rounded-3xl hover:cursor-pointer p-3 bg-white flex flex-col gap-2.5 shadow-card"
       onClick={() => navigate(`/prompt/${prompt.prompt_id}`)}>
       {/* 이미지 */}
       <div className="relative w-full h-[260px] bg-secondary rounded-xl overflow-hidden flex-shrink-0">

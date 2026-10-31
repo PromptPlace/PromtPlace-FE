@@ -22,7 +22,7 @@ const PromptMobileCard = ({ prompt }: PromptMobileCardProps) => {
   return (
     <div
       onClick={() => navigate(`/prompt/${prompt.prompt_id}`)}
-      className="group bg-white rounded-2xl flex gap-3 h-[142px] overflow-hidden p-3 hover:cursor-pointer">
+      className="group bg-white rounded-2xl flex gap-3 h-[142px] overflow-hidden p-3 hover:cursor-pointer shadow-card">
       <div className="size-[118px] relative bg-secondary text-text-on-white custom-caption2 rounded-lg overflow-hidden flex-shrink-0">
         {prompt.images?.[0]?.image_url ? (
           <img
