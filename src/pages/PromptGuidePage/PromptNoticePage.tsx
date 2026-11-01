@@ -98,7 +98,7 @@ const PromptNoticePage = () => {
             )}>
             <div className="mb-[56px] flex flex-col gap-[12px]">
               <h1 className="custom-h1 max-phone:text-[24px]">공지사항</h1>
-              <p className="custom-h3 max-phone:text-[14px]">프롬프트 플레이스의 공지사항을 확인해보세요!</p>
+              <p className="custom-label1 max-phone:text-[14px]">프롬프트 플레이스의 공지사항을 확인해보세요!</p>
             </div>
 
             {/* 관리자 */}

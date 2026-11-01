@@ -5,8 +5,8 @@ import rightArrow from '@assets/icon-arrow-right-black.svg';
 import newBadgeImg from '@assets/icon-new-notification.svg';
 
 import url from '@assets/icon-linkhub-logo.svg';
-import instagram from '@assets/icon-instagram-logo.svg';
 import facebook from '@assets/icon-facebook-logo.svg';
+import kakao from '@assets/icon-kakao-logo.svg';
 import twitter from '@assets/icon-x-logo.svg';
 import defaultImg from '@assets/icon-example-image.png';
 import attachFile from '@assets/icon-attach-file-gray.svg';
@@ -19,6 +19,17 @@ import type { Post } from '@/types/PromptGuidePage/post';
 import TipDetailSkeleton from './components/TipDetailSkeleton';
 import usePatchDeleteTipAdmin from '@/hooks/mutations/AdminPage/usePatchDeleteTipAdmin';
 import DualModal from '@/components/Modal/DualModal';
+
+const isNewPost = (createdAt: string) => {
+  const [year, month, day] = createdAt.split('.').map(Number);
+  if (!year || !month || !day) return false;
+
+  const createdDate = new Date(year, month - 1, day);
+  const ageInMs = Date.now() - createdDate.getTime();
+  const twoWeeksInMs = 14 * 24 * 60 * 60 * 1000;
+
+  return ageInMs >= 0 && ageInMs <= twoWeeksInMs;
+};
 
 const PromptTipDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -49,8 +60,6 @@ const PromptTipDetailPage = () => {
 
         const base = import.meta.env.VITE_SERVER_API_URL;
         const res = await axiosInstance.get(`${base}/api/tips/${id}/details`);
-        console.log(res.data.data.data);
-
         const fetched_data = res.data.data.data;
 
         const tipdetail: Post = {
@@ -100,19 +109,43 @@ const PromptTipDetailPage = () => {
     openShareWindow(shareUrl);
   }, [currentUrl]);
 
-  // 클립보드에 복사
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-  };
+  const handleKakaoShare = useCallback(() => {
+    if (!window.Kakao) {
+      alert('카카오 SDK를 불러오지 못했습니다.');
+      return;
+    }
 
-  const handleInstagram = useCallback(() => {
-    copyToClipboard(currentUrl);
-    const ok = window.confirm('인스타그램으로 이동합니다.');
-    if (!ok) return; // 취소했으면 아무 동작도 하지 않음
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init(import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY);
+    }
 
-    // 확인했으면 새 탭으로 인스타그램 웹 열기
-    window.open('https://www.instagram.com', '_blank', 'noopener,noreferrer');
-  }, [currentUrl]);
+    try {
+      window.Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: post.title,
+          description: 'PromptPlace에서 확인해보세요!',
+          imageUrl: post.file_url || `${window.location.origin}/favicon-96x96.png`,
+          link: { mobileWebUrl: currentUrl, webUrl: currentUrl },
+        },
+        buttons: [
+          {
+            title: '꿀팁 보러가기',
+            link: { mobileWebUrl: currentUrl, webUrl: currentUrl },
+          },
+        ],
+      });
+    } catch {
+      alert('카카오톡 공유에 실패했습니다.');
+    }
+  }, [currentUrl, post.file_url, post.title]);
+
+  const shareActions = [
+    { label: '페이스북 공유', icon: facebook, onClick: handleFacebook },
+    { label: '카카오톡 공유', icon: kakao, onClick: handleKakaoShare },
+    { label: 'X 공유', icon: twitter, onClick: handleTwitter },
+    { label: 'URL 복사', icon: url, onClick: handleCopyUrl },
+  ];
 
   const handleDeleteTip = () => {
     mutate(Number(id), {
@@ -150,7 +183,7 @@ const PromptTipDetailPage = () => {
               {/**상단 */}
               <div className="w-full border-b-[1px] border-white-stroke pb-[34px] flex flex-col gap-[24px]">
                 <div className="flex">
-                  {new Date().getTime() - new Date(post.created_at).getTime() <= 14 * 24 * 60 * 60 * 1000 && (
+                  {isNewPost(post.created_at) && (
                     <img src={newBadgeImg} alt="NEW" className="w-[20px] h-[20px] mr-[8px]" />
                   )}
                   <p className="custom-h4 max-phone:text-[16px]">{post.title}</p>
@@ -173,30 +206,16 @@ const PromptTipDetailPage = () => {
                     <p className="custom-body3 text-text-on-white max-phone:text-[10px]">공유 :</p>
 
                     <div className="flex justify-between items-center gap-[16px]">
-                      <img
-                        className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
-                        src={instagram}
-                        alt="instagram"
-                        onClick={handleInstagram}
-                      />
-                      <img
-                        className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
-                        src={facebook}
-                        alt="facebook"
-                        onClick={handleFacebook}
-                      />
-                      <img
-                        className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
-                        src={twitter}
-                        alt="twitter"
-                        onClick={handleTwitter}
-                      />
-                      <img
-                        className="cursor-pointer w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]"
-                        src={url}
-                        alt="url"
-                        onClick={handleCopyUrl}
-                      />
+                      {shareActions.map(({ label, icon, onClick }) => (
+                        <button
+                          key={label}
+                          type="button"
+                          aria-label={label}
+                          onClick={onClick}
+                          className="cursor-pointer border-0 bg-transparent p-0">
+                          <img className="w-[20px] h-[20px] max-phone:w-[16px] max-phone:h-[16px]" src={icon} alt="" />
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>

@@ -135,7 +135,7 @@ const NewLoginSwitchModal = ({ isOpen, onClose, initialView = 'login' }: SocialL
     <div onClick={onClose} className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-110">
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative flex  justify-center items-center max-w-[656px] max-h-[850px]  py-[48px]  flex-col px-[56px] rounded-[16px]  bg-white shadow-gradient 
+        className="relative flex  justify-center items-center max-w-[656px] max-h-[850px]  py-[48px]  flex-col px-[56px] rounded-[16px]  bg-white shadow-gradient
       origin-center"
         style={{ transform: `scale(${scale})` }}>
         <button className="flex  gap-[4px] py-[3px] h-[22px] self-end" onClick={onClose}>
@@ -143,7 +143,7 @@ const NewLoginSwitchModal = ({ isOpen, onClose, initialView = 'login' }: SocialL
           <p className="custom-body2 text-gray-700">나가기</p>
         </button>
 
- <img
+        <img
           src={PromptPlaceLogo}
           alt="PromptPlace 로고"
           className="max-phone:hidden mb-[40px] mt-[40px] max-lg:mt-[72px]"
@@ -157,7 +157,7 @@ const NewLoginSwitchModal = ({ isOpen, onClose, initialView = 'login' }: SocialL
         {renderView()}
 
         <footer>
-          <p className="custom-h3 text-gray-700">
+          <p className="custom-label1 text-gray-700">
             로그인 또는 회원가입 시 서비스의{' '}
             <Link to="/terms" className="underline decoration-1">
               이용약관

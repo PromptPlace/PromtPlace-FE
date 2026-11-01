@@ -17,7 +17,7 @@ const SocialButton = ({ icon, onClick }: { icon: string; text: string; onClick: 
   <button
     onClick={onClick}
     className="w-[56px] h-[56px] max-phone:w-[40px] max-phone:h-[40px] border-[0.5px] border-text-on-white rounded-[50px] px-[16px] py-[16px] max-phone:px-[12px] max-phone:py-[12px] flex items-center shadow-[0_1px_3px_0_rgba(0,0,0,0.08)]
-    hover:bg-secondary hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.12)] 
+    hover:bg-secondary hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.12)]
     active:bg-secondary-pressed">
     <img src={icon} alt="소셜 로고" className="w-[24px] max-lg:w-[20px] h-[24px] max-lg:h-[20px]" />
   </button>
@@ -110,7 +110,7 @@ const LoginSwitchView = ({ setView }: LoginViewProps) => {
       {' '}
       <div className="w-full">
         <p className=" custom-h2 mb-[8px] text-black">로그인하기</p>
-        <p className=" custom-h3 mb-[24px] text-black">로그인하고 더 많은 혜택을 누려보세요!</p>
+        <p className=" custom-label1 mb-[24px] text-black">로그인하고 더 많은 혜택을 누려보세요!</p>
       </div>
       <form className="flex flex-col w-full" onSubmit={handleSubmit}>
         <div className="flex flex-col">

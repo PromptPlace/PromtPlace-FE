@@ -1,7 +1,7 @@
 import ProfileCard from '../ProfilePage/components/ProfileCard';
 import MyProfileTabs from './components/MyProfileTabs';
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import ProfileView from './components/ProfileView';
 import ProfileEditView from './components/ProfileEditView';
 import { useAuth } from '@/context/AuthContext';
@@ -16,7 +16,6 @@ import { ProfileSettingTabSkeleton, DashboardTabSkeleton } from './components/My
 // AuthoredPromptPage, DownloadedPromptPage 를 각각 컴포넌트로 구현하여 작성한 프롬프트 전체 목록과 다운로드한 프롬프트 전체 목록을 보여줌
 
 const MyProfilePage = () => {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const { data: userData, isLoading: isUserLoading } = useGetMember({ member_id: user.user_id });

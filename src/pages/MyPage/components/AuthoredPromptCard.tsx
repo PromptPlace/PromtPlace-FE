@@ -106,7 +106,7 @@ const AuthoredPromptCard = ({ prompt, maxReviews = 3 }: AuthoredPromptCardProps)
           <img src={imageUrl} alt="프롬프트 이미지" className="w-[80px] h-[80px] rounded-[8px]" />
           <div className="flex flex-col py-[16px]">
             <Link to={`/prompt/${prompt.prompt_id}`}>
-              <p className="custom-h3 text-text-on-white break-words">{prompt.title}</p>
+              <p className="custom-label1 text-text-on-white break-words">{prompt.title}</p>
             </Link>
             <div className="lg:hidden flex gap-[16px] mt-[20px] max-phone:mt-[12px]">
               <div className=" flex flex-col items-center">
@@ -149,7 +149,7 @@ const AuthoredPromptCard = ({ prompt, maxReviews = 3 }: AuthoredPromptCardProps)
                         handleDeleteAuthoredPrompts({ prompt_id: prompt.prompt_id });
                         setIsDropdownOpen(false);
                       }}
-                      className="block custom-h3 px-[15px]  py-[8px]  border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary active:bg-secondary-pressed active:text-black rounded-t-[4px]">
+                      className="block custom-label1 px-[15px]  py-[8px]  border-b-[1px] border-b-white-stroke text-text-on-background bg-secondary active:bg-secondary-pressed active:text-black rounded-t-[4px]">
                       삭제하기
                     </button>
 
@@ -158,7 +158,7 @@ const AuthoredPromptCard = ({ prompt, maxReviews = 3 }: AuthoredPromptCardProps)
                         handleEditAuthoredPrompt(prompt);
                         setIsDropdownOpen(false);
                       }}
-                      className="block custom-h3 px-[15px]  py-[8px] text-[16px]  text-text-on-background bg-secondary active:bg-secondary-pressed active:text-black rounded-b-[4px]">
+                      className="block custom-label1 px-[15px]  py-[8px] text-[16px]  text-text-on-background bg-secondary active:bg-secondary-pressed active:text-black rounded-b-[4px]">
                       수정하기
                     </button>
                   </div>

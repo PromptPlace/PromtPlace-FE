@@ -212,7 +212,7 @@ const PromptGuideCreatePage = ({ type }: PromptGuideCreatePageProps) => {
 
               {type === 'tip' && (
                 <input
-                  className="custom-h3 text-text-on-white outline-none placeholder:font-[SCoreDream] placeholder:custom-h3 placeholder:text-text-on-background w-full"
+                  className="custom-label1 text-text-on-white outline-none placeholder:font-[SCoreDream] placeholder:custom-label1 placeholder:text-text-on-background w-full"
                   placeholder="게시글 소개말 작성"
                 />
               )}

@@ -16,7 +16,7 @@ const CreatePrompt = () => {
         <section className="flex flex-col gap-[20px] shrink-0">
           <div className="flex flex-col gap-[8px]">
             <p className="custom-h1 max-phone:text-[24px]">프롬프트 올리기</p>
-            <p className="custom-h3 text-text-on-white max-phone:text-[14px]">
+            <p className="custom-label1 text-text-on-white max-phone:text-[14px]">
               나만의 AI 프롬프트를 업로드하고 판매하세요!
             </p>
           </div>
@@ -44,7 +44,7 @@ const CreatePrompt = () => {
                 <img src={textIcon} alt="Image Result Icon" className="w-[28px] h-[28px]" />
                 <p className="custom-h4 max-phone:text-[16px]">텍스트 결과</p>
               </div>
-              <p className="custom-h3 leading-[160%] tracking-[0.32px] max-phone:text-[14px]">
+              <p className="custom-label1 leading-[160%] tracking-[0.32px] max-phone:text-[14px]">
                 AI의 답변이 텍스트 형태예요.
               </p>
             </div>
@@ -66,7 +66,7 @@ const CreatePrompt = () => {
                 <img src={imageIcon} alt="Image Result Icon" className="w-[28px] h-[28px]" />
                 <p className="custom-h4 max-phone:text-[16px]">이미지 결과</p>
               </div>
-              <p className="custom-h3 leading-[160%] tracking-[0.32px] max-phone:text-[14px]">
+              <p className="custom-label1 leading-[160%] tracking-[0.32px] max-phone:text-[14px]">
                 AI의 답변이 이미지 형태예요.
               </p>
             </div>

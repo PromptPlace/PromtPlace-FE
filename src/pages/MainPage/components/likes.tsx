@@ -75,7 +75,7 @@ const Likes = ({ prompt_id }: { prompt_id: number }) => {
           }
           handleToggleLike();
         }}>
-        <img src={liked ? likeIcon : unLikeIcon} className="w-7 h-6" />
+        <img src={liked ? likeIcon : unLikeIcon} />
       </button>
     </>
   );

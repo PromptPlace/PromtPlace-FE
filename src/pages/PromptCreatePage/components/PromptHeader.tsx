@@ -10,7 +10,7 @@ const PromptHeader = ({ title, description }: Props) => {
     <>
       <div className="mt-[64px] flex flex-col gap-[12px]">
         <p className="text-black custom-h1 max-phone:text-[24px]">{title}</p>
-        <p className="custom-h3 text-gray950 max-phone:text-[14px]">{description}</p>
+        <p className="custom-label1 text-gray950 max-phone:text-[14px]">{description}</p>
       </div>
 
       <div className="flex items-center justify-end gap-[8px] cursor-pointer mt-[20px]">

@@ -140,7 +140,7 @@ const SignupView = ({ setView, email, setEmail, tempToken, setTempToken }: Login
       <div className="w-full">
         <p className="max-phone:hidden custom-h2 mb-[8px] text-black">회원가입하기</p>
         <p className="hidden max-phone:block custom-h4 mb-[8px] text-black">회원가입하기</p>
-        <p className="max-phone:hidden custom-h3 mb-[24px] text-black">
+        <p className="max-phone:hidden custom-label1 mb-[24px] text-black">
           프롬프트 플레이스에서 나를 위한 프롬프트를 찾아보세요
         </p>
         <p className="hidden max-phone:block custom-body2 mb-[24px] text-black">
