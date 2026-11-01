@@ -12,15 +12,16 @@ interface ResultCardProps {
   icon: string;
   title: string;
   description: string;
+  path: string;
   handleShowLoginModal: (callback: () => void) => void;
   children: ReactNode;
 }
 
-const ResultCard = ({ icon, title, description, handleShowLoginModal, children }: ResultCardProps) => {
+const ResultCard = ({ icon, title, description, path, handleShowLoginModal, children }: ResultCardProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    handleShowLoginModal(() => navigate('/create'));
+    handleShowLoginModal(() => navigate(path));
   };
 
   return (
@@ -68,6 +69,7 @@ const CreatePrompt = () => {
             icon={textIcon}
             title="텍스트 결과"
             description="프롬프트를 입력하면 텍스트 결과가 나와요"
+            path="/create/text"
             handleShowLoginModal={handleShowLoginModal}>
             <div className="px-5 py-4 rounded-xl bg-secondary w-full min-h-[162px]">
               <p className="custom-body2 text-text-tertiary max-phone:text-[12px]">
@@ -86,6 +88,7 @@ const CreatePrompt = () => {
             icon={imageIcon}
             title="이미지 결과"
             description="프롬프트를 입력하면 이미지 결과가 나와요"
+            path="/create/img"
             handleShowLoginModal={handleShowLoginModal}>
             <div className="w-full h-[162px]">
               <img
