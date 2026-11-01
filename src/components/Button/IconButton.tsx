@@ -41,7 +41,8 @@ const iconButtonTheme = {
   buttonType: {
     round:
       'px-[29px] max-phone:px-[12px] py-[21px] rounded-[50px] text-xl max-phone:text-[18px] font-medium leading-[25px] max-phone:leading-[13px] gap-[15px] max-phone:gap-[5px]',
-    squareBig: 'custom-h4 px-[20px] py-[12px] max-lg:py-[11px] rounded-[10px] text-[14px] leading-[18px] gap-[8px]',
+    squareBig:
+      'custom-h4 shrink-0 h-[48px] max-lg:h-[42px] px-[20px] rounded-[10px] text-[14px] leading-[18px] gap-[8px]',
     squareMd:
       'px-[20px] max-lg:px-[8px] py-[10px] max-lg:py-[2px] rounded-[10px] max-lg:rounded-[4px] h-[45px] max-lg:h-auto text-xl max-lg:text-[10px] font-medium leading-[25px] max-lg:leading-[13px] gap-[15px] max-lg:gap-[4px]',
     squreSm:
@@ -96,7 +97,9 @@ const IconButton = ({ buttonType, style, imgType, textButton, text, onClick, typ
       {imgType === 'attach' && (
         <AttachIcon className="w-[24px] h-[24px] max-lg:w-[12px] max-lg:h-[12px] text-primary group-hover:text-primary-hover group-active:text-primary-pressed" />
       )}
-      {imgType === 'download' && <DownloadIcon className="w-[20px] h-[20px] max-lg:w-[14px] max-lg:h-[14px] text-gray-500" />}
+      {imgType === 'download' && (
+        <DownloadIcon className="w-[20px] h-[20px] max-lg:w-[14px] max-lg:h-[14px] text-gray-500" />
+      )}
       {imgType === 'alert' && <AlertIcon className="w-[24px] h-[24px] max-lg:w-[12px] max-lg:h-[12px]" />}
       {imgType === 'copy' && <CopyIcon className="w-[20px] h-[20px] max-lg:w-[13px] max-lg:h-[13px]" />}
       {imgType === 'LogoutIcon' && <LogoutIcon className="w-[24px] h-[24px]" />}
