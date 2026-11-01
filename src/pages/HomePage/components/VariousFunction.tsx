@@ -75,8 +75,8 @@ interface GuideSectionProps {
 const GuideSection = ({ title, description, type, posts, onClickItem, onClickMore }: GuideSectionProps) => (
   <section className="p-10 max-lg:p-8 max-phone:p-5 text-left w-full h-full flex flex-col gap-6 max-phone:gap-4">
     <div className="flex flex-col gap-2">
-      <h3 className="custom-h1 max-lg:custom-h2 max-phone:custom-h4">{title}</h3>
-      <p className="custom-label1 max-phone:custom-label2">{description}</p>
+      <h3 className="custom-h1 max-lg:custom-h2 max-phone:text-[18px]">{title}</h3>
+      <p className="custom-label1 max-phone:text-[14px]">{description}</p>
     </div>
 
     <div className="bg-background-subtle rounded-xl px-5 py-1.5">
@@ -156,7 +156,9 @@ const VariousFunction = () => {
     <>
       <div className="w-full bg-white px-[102px] pt-12 max-phone:pt-8 max-lg:px-10 max-phone:px-5 pb-24 max-phone:pb-16">
         <div className="w-full max-w-[1440px] mx-auto">
-          <h2 className="custom-h2 mb-10 max-lg:mb-8 max-phone:mb-6">프롬프트 플레이스의 다양한 기능</h2>
+          <h2 className="custom-h2 max-phone:text-[20px] mb-10 max-lg:mb-8 max-phone:mb-6">
+            프롬프트 플레이스의 다양한 기능
+          </h2>
 
           <div className="flex max-lg:flex-col gap-5 max-phone:gap-3 items-start">
             <GuideSection
