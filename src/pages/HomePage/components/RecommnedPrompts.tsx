@@ -1,17 +1,22 @@
+import { useState } from 'react';
 import PromptCard from '@/components/PromptCard';
 import useGetPromptList from '@/hooks/queries/MainPage/useGetPromptList';
 import PromptMobileCard from './PromptMobileCard';
 
+import ArrowIcon from '@/assets/icon-arrow-down.svg?react';
+
 const RecommnedPrompts = () => {
   const { data } = useGetPromptList();
+  const [isMobileExpanded, setIsMobileExpanded] = useState(false);
 
   const top8Lists = [2381, 2273, 2383, 2380, 2357, 2272, 2384, 2295];
   const displayData = data?.data.filter((prompt) => top8Lists.includes(prompt.prompt_id)).slice(0, 8);
+  const mobileDisplayData = isMobileExpanded ? displayData : displayData?.slice(0, 4);
 
   return (
     <div className="mt-[104px] mb-[72px] max-phone:mb-[56px]">
       <div className="px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
-        <p className="custom-h2 max-phone:text-[20px]">지금 HOT한 이미지 프롬프트 🔥</p>
+        <p className="custom-h2 max-phone:text-[20px]">관리자가 추천하는 프롬프트 TOP 8</p>
       </div>
 
       <div className="max-phone:hidden mt-[40px] max-phone:mt-[20px] overflow-x-auto pl-[102px] pb-[24px] max-lg:pl-[40px] max-phone:px-[20px]">
@@ -24,10 +29,23 @@ const RecommnedPrompts = () => {
 
       <div className="phone:hidden mt-[40px] max-phone:mt-[20px] pl-[102px] pb-[24px] max-lg:pl-[40px] max-phone:px-[20px]">
         <div className="flex flex-col gap-[8px]">
-          {displayData?.map((prompt) => (
+          {mobileDisplayData?.map((prompt) => (
             <PromptMobileCard key={prompt.prompt_id} prompt={prompt} />
           ))}
         </div>
+        {(displayData?.length ?? 0) > 4 && (
+          <button
+            type="button"
+            onClick={() => setIsMobileExpanded((expanded) => !expanded)}
+            className="mt-4 w-full rounded-md border border-white-stroke py-3 custom-button1 text-text-on-white">
+            {isMobileExpanded ? '접기' : '더보기'}
+            <ArrowIcon
+              className={`ml-2 inline-block text-text-on-white transition-transform duration-300 ${
+                isMobileExpanded ? 'rotate-180' : 'rotate-0'
+              }`}
+            />
+          </button>
+        )}
       </div>
     </div>
   );
