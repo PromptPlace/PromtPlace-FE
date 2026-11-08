@@ -155,7 +155,7 @@ const VariousFunction = () => {
   return (
     <>
       <div className="w-full bg-white px-[102px] pt-12 max-phone:pt-8 max-lg:px-10 max-phone:px-5 pb-24 max-phone:pb-16">
-        <div className="w-full max-w-[1440px] mx-auto">
+        <div className="w-full max-w-[1236px] mx-auto">
           <h2 className="custom-h2 max-phone:text-[20px] mb-10 max-lg:mb-8 max-phone:mb-6">
             프롬프트 플레이스의 다양한 기능
           </h2>
