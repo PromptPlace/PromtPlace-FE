@@ -15,15 +15,17 @@ const RecommnedPrompts = () => {
 
   return (
     <div className="mt-[104px] mb-[72px] max-phone:mb-[56px]">
-      <div className="px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
+      <div className="mx-auto max-w-[1440px] px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
         <p className="custom-h2 max-phone:text-[20px]">관리자가 추천하는 프롬프트 TOP 8</p>
       </div>
 
-      <div className="max-phone:hidden mt-[40px] max-phone:mt-[20px] overflow-x-auto pl-[102px] pb-[24px] max-lg:pl-[40px] max-phone:px-[20px]">
-        <div className="grid grid-cols-4 overflow-x-auto gap-[20px] min-w-[1236px] ">
-          {displayData?.map((prompt) => (
-            <PromptCard key={prompt.prompt_id} prompt={prompt} />
-          ))}
+      <div className="max-phone:hidden mx-auto mt-[40px] max-w-[1440px] overflow-x-auto px-[102px] pb-[24px] max-lg:px-[40px]">
+        <div className="flex w-full justify-start">
+          <div className="grid w-[1236px] shrink-0 grid-cols-4 gap-[20px]">
+            {displayData?.map((prompt) => (
+              <PromptCard key={prompt.prompt_id} prompt={prompt} />
+            ))}
+          </div>
         </div>
       </div>
 
