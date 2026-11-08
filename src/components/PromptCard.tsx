@@ -83,7 +83,7 @@ const PromptCard = ({ prompt }: PromptCardProps) => {
           </div>
         </div>
 
-        <div className="custom-body3 inline-flex justify-between items-start self-stretch text-text-muted bg-background py-2 px-3 rounded-lg">
+        <div className="custom-body3 inline-flex justify-between items-start self-stretch text-text-muted bg-background py-2 px-3 rounded-sm">
           <div>{prompt?.user?.nickname}</div>
           <div>{new Date(prompt.created_at).toLocaleDateString('ko-KR')}</div>
         </div>
