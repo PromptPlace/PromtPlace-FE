@@ -15,37 +15,39 @@ const RecommnedPrompts = () => {
 
   return (
     <div className="mt-[104px] mb-[72px] max-phone:mb-[56px]">
-      <div className="px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
-        <p className="custom-h2 max-phone:text-[20px]">관리자가 추천하는 프롬프트 TOP 8</p>
-      </div>
+      <div className="w-full px-[102px] max-lg:px-[40px] max-phone:px-[20px]">
+        <div className="mx-auto w-full max-w-[1236px]">
+          <p className="custom-h2 max-phone:text-[20px]">관리자가 추천하는 프롬프트 TOP 8</p>
 
-      <div className="max-phone:hidden mt-[40px] max-phone:mt-[20px] overflow-x-auto pl-[102px] pb-[24px] max-lg:pl-[40px] max-phone:px-[20px]">
-        <div className="grid grid-cols-4 overflow-x-auto gap-[20px] min-w-[1236px] ">
-          {displayData?.map((prompt) => (
-            <PromptCard key={prompt.prompt_id} prompt={prompt} />
-          ))}
-        </div>
-      </div>
+          <div className="max-phone:hidden mt-[40px] -ml-[102px] w-[calc(100%+204px)] overflow-x-auto pb-[24px] pl-[102px] pr-[102px] max-lg:-ml-[40px] max-lg:w-[calc(100%+80px)] max-lg:pl-[40px] max-lg:pr-[40px]">
+            <div className="grid w-[1236px] shrink-0 grid-cols-4 gap-[20px]">
+              {displayData?.map((prompt) => (
+                <PromptCard key={prompt.prompt_id} prompt={prompt} />
+              ))}
+            </div>
+          </div>
 
-      <div className="phone:hidden mt-[40px] max-phone:mt-[20px] pl-[102px] pb-[24px] max-lg:pl-[40px] max-phone:px-[20px]">
-        <div className="flex flex-col gap-[8px]">
-          {mobileDisplayData?.map((prompt) => (
-            <PromptMobileCard key={prompt.prompt_id} prompt={prompt} />
-          ))}
+          <div className="phone:hidden mt-[40px] max-phone:mt-[20px] pb-[24px]">
+            <div className="flex flex-col gap-[8px]">
+              {mobileDisplayData?.map((prompt) => (
+                <PromptMobileCard key={prompt.prompt_id} prompt={prompt} />
+              ))}
+            </div>
+            {(displayData?.length ?? 0) > 4 && (
+              <button
+                type="button"
+                onClick={() => setIsMobileExpanded((expanded) => !expanded)}
+                className="mt-4 w-full rounded-md border border-white-stroke py-3 custom-button1 text-text-on-white">
+                {isMobileExpanded ? '접기' : '더보기'}
+                <ArrowIcon
+                  className={`ml-2 inline-block text-text-on-white transition-transform duration-300 ${
+                    isMobileExpanded ? 'rotate-180' : 'rotate-0'
+                  }`}
+                />
+              </button>
+            )}
+          </div>
         </div>
-        {(displayData?.length ?? 0) > 4 && (
-          <button
-            type="button"
-            onClick={() => setIsMobileExpanded((expanded) => !expanded)}
-            className="mt-4 w-full rounded-md border border-white-stroke py-3 custom-button1 text-text-on-white">
-            {isMobileExpanded ? '접기' : '더보기'}
-            <ArrowIcon
-              className={`ml-2 inline-block text-text-on-white transition-transform duration-300 ${
-                isMobileExpanded ? 'rotate-180' : 'rotate-0'
-              }`}
-            />
-          </button>
-        )}
       </div>
     </div>
   );

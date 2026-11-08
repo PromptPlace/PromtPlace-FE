@@ -54,7 +54,7 @@ const CreatePrompt = () => {
 
   return (
     <div className="w-full px-[102px] max-lg:px-[40px] max-phone:px-[20px] pt-[64px] max-phone:pt-[48px] bg-white">
-      <div className="flex gap-[40px] max-lg:gap-[32px] max-phone:gap-[24px] py-[40px] max-lg:py-0 flex-col">
+      <div className="flex gap-[40px] max-lg:gap-[32px] max-phone:gap-[24px] py-[40px] max-lg:py-0 flex-col max-w-[1236px] w-full mx-auto">
         <section className="flex flex-col gap-[20px] shrink-0">
           <div className="flex flex-col gap-[8px]">
             <p className="custom-h1 max-phone:text-[24px]">프롬프트 올리기</p>
