@@ -79,7 +79,7 @@ const GuideSection = ({ title, description, type, posts, onClickItem, onClickMor
       <p className="custom-label1 max-phone:text-[14px]">{description}</p>
     </div>
 
-    <div className="bg-background-subtle rounded-xl px-5 py-1.5">
+    <div className="bg-background-subtle rounded-xl px-5 py-1.5 min-h-[313px]">
       {posts.length === 0 ? (
         <p className="text-[#9CA3AF] text-[12px] font-light">게시글이 없습니다.</p>
       ) : (
