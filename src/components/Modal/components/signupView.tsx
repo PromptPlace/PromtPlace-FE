@@ -5,6 +5,7 @@ import type { ModalView } from '@/types/LoginPage/auth';
 import useRequestSignupEmailCode from '@/hooks/mutations/LoginPage/useRequestSignupEmailCode';
 import useVerifySignupAuthcode from '@/hooks/mutations/LoginPage/useVerifySignupAuthCode';
 import Timer from './Timer';
+import SocialLoginSection from './socialLoginSection';
 import type { signupVerifyCodeResponse } from '@/types/LoginPage/auth';
 
 interface LoginViewProps {
@@ -192,7 +193,9 @@ const SignupView = ({ setView, email, setEmail, tempToken, setTempToken }: Login
           다음
         </button>
       </form>
-      <nav aria-label="계정 보조 메뉴" className="flex mt-[28px] gap-[32px] custom-h5 max-phone:text-[14px] mb-[40px]">
+      <nav
+        aria-label="계정 보조 메뉴"
+        className="flex mt-[28px] gap-[32px] custom-h5 max-phone:text-[14px] mb-[40px] max-phone:mb-[32px]">
         <button className="text-black" onClick={() => setView('login')}>
           로그인하기
         </button>
@@ -200,6 +203,7 @@ const SignupView = ({ setView, email, setEmail, tempToken, setTempToken }: Login
           비밀번호 찾기
         </button>
       </nav>
+      <SocialLoginSection label="간편 회원가입 하기" />
     </div>
   );
 };
