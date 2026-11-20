@@ -22,7 +22,8 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
   const [repeatPassword, setRepeatPassword] = useState('');
   const [errorRepeat, setErrorRepeat] = useState<RepeatPasswordStatus>('default');
 
-  const isDisabled = errorRepeat !== 'match';
+  // 비밀번호 규칙을 만족하고, 확인란까지 일치해야 다음으로 넘어갈 수 있음
+  const isDisabled = error !== 'valid' || errorRepeat !== 'match';
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -43,8 +44,8 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
       return;
     }
 
-    //영문, 숫자, 특수문자 조합으로 8자 이상의 비밀번호인지 확인
-    const isValid = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).{8,}$/.test(password);
+    // 백엔드(signup.service validatePasswordPolicy)와 동일한 규칙: 영문 소문자 + 숫자 + 특수문자 포함 8자 이상
+    const isValid = /^(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
 
     if (isValid) {
       setError('valid');
@@ -130,7 +131,7 @@ const InitPasswordView = ({ setView, email, setEmail, password, setPassword }: L
           {error === 'valid' && <p className="text-primary custom-button2 mt-[4px]">사용 가능한 비밀번호예요.</p>}
           {error === 'invalid' && (
             <p className="text-alert custom-button2 mt-[4px]">
-              영문, 숫자, 특수문자 조합으로 8자 이상의 비밀번호를 입력해주세요.
+              영문 소문자, 숫자, 특수문자를 포함해 8자 이상 입력해주세요.
             </p>
           )}
         </div>
