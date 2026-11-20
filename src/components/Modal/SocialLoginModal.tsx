@@ -1,7 +1,7 @@
 import PromptPlaceLogo from '@assets/logo/text/text-logo-login.svg';
 import PromptPlacePavicon from '@assets/logo/app/app-logo-gradient.svg';
 import { Link } from 'react-router-dom';
-import { useState, useLayoutEffect, useEffect } from 'react';
+import { useState, useLayoutEffect, useEffect, useRef } from 'react';
 import exitIcon from '@assets/icon-exit.svg';
 import LoginView from './components/loginView';
 import SignupView from './components/signupView';
@@ -42,7 +42,8 @@ const SocialLoginModal = ({ isOpen, onClose, initialView = 'login' }: SocialLogi
 
   const [scale, setScale] = useState(1);
   const BASE_WIDTH = 656; // 👈 모달의 기본 너비(w-[656px])
-  const BASE_HEIGHT = 850;
+  const BASE_HEIGHT = 850; // 실제 높이를 측정하지 못했을 때의 기본값
+  const modalRef = useRef<HTMLDivElement>(null);
   const MIN_SCALE = 0.6;
   const BREAKPOINT_LG = 1024;
   // 3. (✅ 추가) 윈도우 크기에 따라 scale 값을 계산하는 로직
@@ -51,7 +52,9 @@ const SocialLoginModal = ({ isOpen, onClose, initialView = 'login' }: SocialLogi
       const currentWidth = window.innerWidth;
       if (currentWidth > BREAKPOINT_LG) {
         const widthScale = (window.innerWidth - 40) / BASE_WIDTH;
-        const heightScale = (window.innerHeight - 40) / BASE_HEIGHT;
+        // 화면(뷰)마다 내용 높이가 달라서 실제 모달 높이로 계산 (transform은 offsetHeight에 영향 없음)
+        const modalHeight = modalRef.current?.offsetHeight || BASE_HEIGHT;
+        const heightScale = (window.innerHeight - 40) / modalHeight;
         const base = Math.min(1, widthScale, heightScale); // 둘 중 더 작은 쪽 기준
         const newScale = Math.pow(base, 1.5); // ← 이 수치만 조절하면 됨
         const finalScale = Math.max(newScale, MIN_SCALE);
@@ -67,7 +70,7 @@ const SocialLoginModal = ({ isOpen, onClose, initialView = 'login' }: SocialLogi
 
     // 컴포넌트가 사라질 때 이벤트 리스너 제거
     return () => window.removeEventListener('resize', handleResize);
-  }, []); // [] 빈 배열: 처음 한 번만 실행
+  }, [isOpen, view]); // 모달이 열리거나 뷰(로그인/회원가입 등)가 바뀌면 다시 계산
 
   //뷰 렌더링함수
   const renderView = () => {
@@ -134,8 +137,9 @@ const SocialLoginModal = ({ isOpen, onClose, initialView = 'login' }: SocialLogi
   return (
     <div onClick={onClose} className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-110">
       <div
+        ref={modalRef}
         onClick={(e) => e.stopPropagation()}
-        className="relative flex justify-center items-center lg:max-w-[656px] lg:max-h-[850px]  py-[48px]  flex-col px-[56px] max-lg:px-[40px] max-phone:px-[20px] rounded-[16px]  bg-white shadow-gradient
+        className="relative flex justify-center items-center lg:max-w-[656px] py-[48px]  flex-col px-[56px] max-lg:px-[40px] max-phone:px-[20px] rounded-[16px]  bg-white shadow-gradient
       origin-center max-lg:w-full max-lg:h-full max-lg:rounded-none "
         style={{ transform: `scale(${scale})` }}>
         <button className="flex  gap-[4px] py-[3px] h-[22px] self-end" onClick={onClose}>
