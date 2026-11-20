@@ -1,54 +1,17 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PrimaryButton from '@components/Button/PrimaryButton';
-import GoogleIcon from '@assets/icon-google-logo.svg';
-import NaverIcon from '@assets/icon-naver-logo.svg';
 import eye_visible from '@assets/icon-eye-visible.svg';
 import eye_invisible from '@assets/icon-eye-invisible.svg';
 import type { ModalView } from '@/types/LoginPage/auth';
 import { useAuth } from '@/context/AuthContext';
+import SocialLoginSection from './socialLoginSection';
+
+const CALLBACK_URL = new URL('auth/callback', window.location.origin).toString();
 
 interface LoginViewProps {
   setView: (view: ModalView) => void;
 }
-
-//소셜 로그인 버튼 컴포넌트
-const SocialButton = ({ icon, onClick }: { icon: string; text: string; onClick: () => void }) => (
-  <button
-    onClick={onClick}
-    className="w-[56px] h-[56px] max-phone:w-[40px] max-phone:h-[40px] border-[0.5px] border-text-on-white rounded-[50px] px-[16px] py-[16px] max-phone:px-[12px] max-phone:py-[12px] flex items-center shadow-[0_1px_3px_0_rgba(0,0,0,0.08)]
-    hover:bg-secondary hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.12)]
-    active:bg-secondary-pressed">
-    <img src={icon} alt="소셜 로고" className="w-[24px] max-lg:w-[20px] h-[24px] max-lg:h-[20px]" />
-  </button>
-);
-
-//소셜 로그인
-const CALLBACK_URL = new URL('auth/callback', window.location.origin).toString();
-
-const handleGoogleLogin = () => {
-  sessionStorage.setItem('prevPath', window.location.pathname + window.location.search);
-  // 1. 필요한 정보들을 정의합니다.
-  const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-  // 2. 모든 파라미터를 조합하여 Google 인증 URL을 생성합니다.
-  const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${CALLBACK_URL}&response_type=code&scope=openid%20profile%20email`;
-  sessionStorage.setItem('login_provider', 'google');
-  // 3. 생성된 URL로 페이지 전체를 이동시킵니다. (핵심)
-  window.location.href = googleAuthUrl;
-};
-
-const handleNaverLogin = () => {
-  const NAVER_CLIENT_ID = import.meta.env.VITE_NAVER_CLIENT_ID;
-  sessionStorage.setItem('prevPath', window.location.pathname + window.location.search);
-  sessionStorage.setItem('login_provider', 'naver');
-  const STATE = crypto.randomUUID(); // CSRF 방지를 위한 임의 문자열
-  sessionStorage.setItem('naver_state', STATE);
-
-  const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&redirect_uri=${encodeURIComponent(
-    CALLBACK_URL,
-  )}&state=${STATE}`;
-  window.location.href = naverAuthUrl;
-};
 
 export const handleKakaoLogin = () => {
   const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
@@ -177,18 +140,7 @@ const LoginView = ({ setView }: LoginViewProps) => {
           비밀번호 찾기
         </button>
       </nav>
-      <section className="flex flex-col items-center w-full gap-[16px] mx-[114px] mb-[40px] max-phone:mb-[32px]">
-        <div className="flex items-center w-[464px]">
-          {/* 1. 왼쪽 선 */}
-          <div className="flex-1 border-t border-gray-200"></div>
-          <p className="custom-body3 text-gray-400">간편 로그인 하기</p>
-          <div className="flex-1 border-t border-gray-200"></div>
-        </div>
-        <div className="flex gap-[32px]">
-          <SocialButton icon={GoogleIcon} text="구글로 로그인" onClick={handleGoogleLogin} />
-          <SocialButton icon={NaverIcon} text="네이버로 로그인" onClick={handleNaverLogin} />
-        </div>
-      </section>
+      <SocialLoginSection label="간편 로그인 하기" />
     </div>
   );
 };
