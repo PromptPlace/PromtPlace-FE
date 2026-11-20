@@ -1,7 +1,7 @@
 import PromptPlaceLogo from '@assets/logo/text/text-logo-login.svg';
 import PromptPlacePavicon from '@assets/logo/app/app-logo-gradient.svg';
 import { Link } from 'react-router-dom';
-import { useState, useLayoutEffect, useEffect } from 'react';
+import { useState, useLayoutEffect, useEffect, useRef } from 'react';
 import exitIcon from '@assets/icon-exit.svg';
 import SignupView from './components/signupView';
 import ForgotPasswordView from './components/forgotPassword';
@@ -26,6 +26,7 @@ interface SocialLoginModalProps {
 }
 
 const NewLoginSwitchModal = ({ isOpen, onClose, initialView = 'login' }: SocialLoginModalProps) => {
+  const mouseDownOnOverlay = useRef(false);
   const [view, setView] = useState<ModalView>(initialView);
   const [signupEmail, setsignUpEmail] = useState<string>('');
   const [signupPassword, setsignUpPassword] = useState<string>('');
@@ -132,7 +133,17 @@ const NewLoginSwitchModal = ({ isOpen, onClose, initialView = 'login' }: SocialL
 
   if (!isOpen) return null;
   return (
-    <div onClick={onClose} className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-110">
+    <div
+      // 모달 안(입력창 등)에서 드래그를 시작해 바깥에서 마우스를 놓으면 click이 배경에서 발생해 모달이 꺼지던 문제 방지:
+      // 마우스를 누른 곳과 뗀 곳이 모두 배경일 때만 닫기
+      onMouseDown={(e) => {
+        mouseDownOnOverlay.current = e.target === e.currentTarget;
+      }}
+      onClick={(e) => {
+        if (mouseDownOnOverlay.current && e.target === e.currentTarget) onClose();
+        mouseDownOnOverlay.current = false;
+      }}
+      className="fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-40 z-110">
       <div
         onClick={(e) => e.stopPropagation()}
         className="relative flex  justify-center items-center max-w-[656px] max-h-[850px]  py-[48px]  flex-col px-[56px] rounded-[16px]  bg-white shadow-gradient
