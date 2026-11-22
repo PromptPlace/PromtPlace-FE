@@ -1,7 +1,6 @@
 import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 import { lazyRoutes } from './routes';
 import HomeLayout from '@/layouts/HomeLayout';
-import ProtectedLayout from '@/layouts/ProtectedLayout';
 import AdminLayout from '@/layouts/AdminLayout';
 import ChattingLayout from '@/layouts/ChattingLayout';
 
