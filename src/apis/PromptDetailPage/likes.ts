@@ -1,7 +1,6 @@
 import { axiosInstance } from '@/apis/axios';
 import type { AxiosResponse } from 'axios';
 import type { NewLikedPromptResponse } from '@/types/MyPage/prompt';
-import type { CommonResponse } from '@/types/common';
 
 type Msg = { message: string; statusCode?: number };
 
