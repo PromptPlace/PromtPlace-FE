@@ -1,4 +1,4 @@
-import { LOCAL_STORAGE_KEY,SESSION_STORAGE_KEY } from '@/constants/key';
+import { SESSION_STORAGE_KEY } from '@/constants/key';
 import axios from 'axios';
 
 export const axiosInstance = axios.create({
