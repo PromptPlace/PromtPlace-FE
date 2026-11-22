@@ -71,8 +71,8 @@ const PromptAuthorAndReview = ({
   const { id } = useParams<{ id: string }>();
   const promptId = Number(id);
   const { user: me } = useAuth();
-  const myId = me?.user_id ?? null;
-  const isLoggedIn = myId !== null;
+  // AuthContext 기본값(비로그인)이 user_id: -1 이므로, 양수일 때만 로그인으로 판단한
+  const myId = me && Number(me.user_id) > 0 ? Number(me.user_id) : null;
   const member_id = user?.user_id;
 
   const queryClient = useQueryClient();
@@ -178,26 +178,20 @@ const PromptAuthorAndReview = ({
   };
 
   const handleFollow = () => {
-    if (!member_id || isToggling) return;
-    if (isMyself) return;
+    if (!member_id || isToggling || isMyself) return;
 
-    if (!isLoggedIn) {
-      alert('로그인이 필요합니다.');
+    handleShowLoginModal(() => {
+      if (!ready) return;
 
-      handleShowLoginModal(() => {});
-      return;
-    }
-
-    if (!ready) return;
-
-    setIsToggling(true);
-    try {
-      if (isFollow) mutateUnFollow({ member_id });
-      else mutateFollow({ member_id });
-      setIsFollow((prev) => !prev);
-    } finally {
-      setIsToggling(false);
-    }
+      setIsToggling(true);
+      try {
+        if (isFollow) mutateUnFollow({ member_id });
+        else mutateFollow({ member_id });
+        setIsFollow((prev) => !prev);
+      } finally {
+        setIsToggling(false);
+      }
+    });
   };
 
   const getSNSIcons = () => {

@@ -29,15 +29,11 @@ export const postRequestPayment = async (
     pay_type: 'card',
     refund_policy_agreed: refundPolicyAgreed,
   };
-  const { data } = await axios.post(
-    `${import.meta.env.VITE_SERVER_API_URL}/api/prompts/purchases/requests`,
-    payload,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+  const { data } = await axios.post(`${import.meta.env.VITE_SERVER_API_URL}/api/prompts/purchases/requests`, payload, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
     },
-  );
+  });
   return data;
 };
 
@@ -46,14 +42,10 @@ export const postCompletePurchase = async (
 ): Promise<ResponseCompletePurchaseDTO> => {
   const token = sessionStorage.getItem('accessToken'); // 토큰 가져오기
   const accessToken = token?.replace(/^"|"$/g, ''); // 앞뒤 큰따옴표 제거
-  const { data } = await axios.post(
-    `${import.meta.env.VITE_SERVER_API_URL}/api/prompts/purchases/complete`,
-    payload,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+  const { data } = await axios.post(`${import.meta.env.VITE_SERVER_API_URL}/api/prompts/purchases/complete`, payload, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
     },
-  );
+  });
   return data;
 };

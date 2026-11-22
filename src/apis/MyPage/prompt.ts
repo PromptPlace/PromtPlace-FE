@@ -2,11 +2,10 @@ import { axiosInstance } from '@/apis/axios.ts';
 import type {
   ApiResponse,
   DownloadedPromptDTO,
-  LikedPromptDTO,
   NewLikedPromptResponse,
   AuthoredPromptsApiResponse,
   NewAuthoredPromptsApiResponse,
-  NewDownloadedPromptsApiResponse
+  NewDownloadedPromptsApiResponse,
 } from '@/types/MyPage/prompt';
 import type { PaginationDto } from '@/types/MyPage/common.ts';
 
@@ -57,4 +56,4 @@ export const getMyPrompts = async ({ pageParam = 0 }): Promise<NewAuthoredPrompt
 export const getMyDownloadedPrompts = async (): Promise<NewDownloadedPromptsApiResponse> => {
   const { data } = await axiosInstance.get(`/api/prompts/downloads`);
   return data;
-}
+};

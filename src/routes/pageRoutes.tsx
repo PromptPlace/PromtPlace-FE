@@ -1,7 +1,6 @@
 import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 import { lazyRoutes } from './routes';
 import HomeLayout from '@/layouts/HomeLayout';
-import ProtectedLayout from '@/layouts/ProtectedLayout';
 import AdminLayout from '@/layouts/AdminLayout';
 import ChattingLayout from '@/layouts/ChattingLayout';
 
@@ -14,24 +13,22 @@ export const publicRoutes: RouteObject[] = [
       { index: true, element: <lazyRoutes.HomePage /> },
       { path: 'prompt', element: <lazyRoutes.MainPage /> },
       { path: 'prompt/:id', element: <lazyRoutes.PromptDetailPage /> },
+
       { path: 'purchase/result', element: <lazyRoutes.PurchaseResultPage /> },
+
       { path: 'create', element: <lazyRoutes.PromptLandingPage /> },
       { path: 'create/text', element: <lazyRoutes.PromptCreateTextPage /> },
       { path: 'create/img', element: <lazyRoutes.PromptCreateImgPage /> },
+
       { path: 'guide/tip', element: <lazyRoutes.PromptTipePage /> },
       { path: 'guide/tip/:id', element: <lazyRoutes.PromptTipDetailPage /> },
       { path: 'guide/notice', element: <lazyRoutes.PromptNoticePage /> },
       { path: 'guide/notice/:id', element: <lazyRoutes.PromptNoticeDetailPage /> },
+
       { path: 'profile/:id', element: <lazyRoutes.ProfilePage /> },
-      // { path: '/test', element: <lazyRoutes.TestPage /> },
-      // { path: 'test/modal', element: <lazyRoutes.SellerModalTestPage /> },
-      // { path: 'test/notregister', element: <lazyRoutes.SellerNotRegisteredTestPage /> },
       { path: 'mypage', element: <lazyRoutes.MyPage /> },
       { path: '/auth/callback', element: <lazyRoutes.SocialLoginCallbackPage /> },
-      // { path: 'guide/tip', element: <lazyRoutes.PromptGuidePage type="tip" /> },
-      // { path: 'guide/notice', element: <lazyRoutes.PromptNoticePage /> },
-      // { path: 'guide/tip/create', element: <lazyRoutes.PromptGuideCreatePage type="tip" /> },
-      // { path: 'guide/notice/create', element: <lazyRoutes.PromptGuideCreatePage type="notice" /> },
+
       { path: 'chat', element: <lazyRoutes.ChatPage /> },
       { path: 'chat/:roomId', element: <lazyRoutes.ChatRoomPage /> },
     ],
@@ -41,7 +38,6 @@ export const publicRoutes: RouteObject[] = [
 export const protectedRoutes: RouteObject[] = [
   {
     path: '/mypage',
-    //element: <ProtectedLayout />,
     element: <HomeLayout />,
     children: [
       { path: 'message/message', element: <lazyRoutes.MyMessagePage type="message" /> },
@@ -68,16 +64,26 @@ export const adminRoutes: RouteObject[] = [
     path: '/admin',
     element: <AdminLayout />,
     children: [
-      //ex: { path: 'report', element: <lazyRoutes.AdminReportPage /> },
       { path: 'complaint', element: <lazyRoutes.AdminComplaintPage /> },
+      { path: 'complaint/:id', element: <lazyRoutes.AdminComplaintDetailPage /> },
+
       { path: 'guide/tip/create', element: <lazyRoutes.PromptGuideCreatePage type="tip" /> },
       { path: 'guide/notice/create', element: <lazyRoutes.PromptGuideCreatePage type="notice" /> },
-      { path: 'complaint/:id', element: <lazyRoutes.AdminComplaintDetailPage /> },
+
       { path: 'dashboard', element: <lazyRoutes.AdminDashboardPage /> },
       { path: 'dashboard/sellers', element: <lazyRoutes.AdminSellerDetailPage /> },
-      { path: 'dashboard/sellers/individual/:userId', element: <lazyRoutes.AdminSellerFormPage type="individual" /> },
-      { path: 'dashboard/sellers/business/:userId', element: <lazyRoutes.AdminSellerFormPage type="business" /> },
-      { path: 'dashboard/sellers/pending/:userId', element: <lazyRoutes.AdminSellerFormPage type="pending" /> },
+      {
+        path: 'dashboard/sellers/individual/:userId',
+        element: <lazyRoutes.AdminSellerFormPage type="individual" />,
+      },
+      {
+        path: 'dashboard/sellers/business/:userId',
+        element: <lazyRoutes.AdminSellerFormPage type="business" />,
+      },
+      {
+        path: 'dashboard/sellers/pending/:userId',
+        element: <lazyRoutes.AdminSellerFormPage type="pending" />,
+      },
     ],
   },
 ];
