@@ -42,6 +42,16 @@ const SocialCallbackPage = () => {
         }
       }
 
+      if (provider === 'google') {
+        const state = searchParams.get('state');
+        const storedState = sessionStorage.getItem('google_state');
+        if (state !== storedState) {
+          alert('구글 로그인 요청이 유효하지 않습니다. (state 불일치)');
+          navigate('/login');
+          return;
+        }
+      }
+
       // 2. 만약 authCode가 존재한다면, 로그인 절차를 진행합니다.
       try {
         // 3. 기존에 구현해둔 login 함수를 호출합니다!
@@ -52,6 +62,9 @@ const SocialCallbackPage = () => {
         sessionStorage.removeItem('login_provider');
         if (provider === 'naver') {
           sessionStorage.removeItem('naver_state');
+        }
+        if (provider === 'google') {
+          sessionStorage.removeItem('google_state');
         }
 
         // 4. 로그인 성공 시, 메인 페이지로 이동시킵니다.-> 그대로 머무도록 수정
